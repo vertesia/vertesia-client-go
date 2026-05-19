@@ -1,0 +1,10 @@
+# Paths are relative to the generated openapi/ package.
+
+api/
+docs/
+.github/
+.travis.yml
+README.md
+git_push.sh
+go.mod
+go.sum

@@ -1,0 +1,23 @@
+generatorName: go
+inputSpec: ./spec/vertesia-openapi.json
+outputDir: ./openapi
+
+gitHost: github.com
+gitUserId: vertesia
+gitRepoId: vertesia-client-go
+
+globalProperties:
+  modelTests: "false"
+  apiTests: "false"
+  modelDocs: "false"
+  apiDocs: "false"
+
+additionalProperties:
+  enumClassPrefix: true
+  enumUnknownDefaultCase: true
+  disallowAdditionalPropertiesIfNotPresent: false
+  packageName: openapi
+  isGoSubmodule: false
+  withGoMod: false
+  packageVersion: 1.2.0
+  licenseName: Apache-2.0

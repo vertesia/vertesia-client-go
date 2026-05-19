@@ -1,0 +1,10 @@
+# The generator now writes into ./openapi. Keep repository-owned root files out
+# of the generator output by configuring outputDir instead of moving files after
+# generation.
+
+openapi/api/
+openapi/docs/
+openapi/.github/
+openapi/.travis.yml
+openapi/README.md
+openapi/git_push.sh

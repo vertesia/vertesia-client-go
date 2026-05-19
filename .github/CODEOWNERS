@@ -1,0 +1,6 @@
+# Generated OpenAPI output is updated by internal generation automation.
+# Human SDK surface changes should go through normal review.
+
+* @vertesia/engineering
+/openapi/ @vertesia/engineering
+/spec/ @vertesia/engineering
