@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version, for example v1.2.3
+        required: true
+        type: string
+      prerelease:
+        description: Mark the GitHub Release as a prerelease
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate version
+        id: version
+        shell: bash
+        run: |
+          version="${{ inputs.version }}"
+          if [[ ! "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Version must be semver with a leading v, for example v1.2.3" >&2
+            exit 1
+          fi
+          if git rev-parse "$version" >/dev/null 2>&1; then
+            echo "Tag $version already exists" >&2
+            exit 1
+          fi
+          package_version="${version#v}"
+          spec_version="$(jq -r '.info.version' spec/vertesia-openapi.json)"
+          if [[ "$spec_version" != "$package_version" ]]; then
+            echo "OpenAPI spec info.version is $spec_version, want $package_version" >&2
+            exit 1
+          fi
+          configured_version="$(awk -F': ' '/packageVersion:/ {print $2}' openapi-generator-config.yaml | tr -d '\"')"
+          if [[ "$configured_version" != "$package_version" ]]; then
+            echo "openapi-generator-config.yaml packageVersion is $configured_version, want OpenAPI spec info.version $package_version" >&2
+            exit 1
+          fi
+          echo "tag=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.version.outputs.tag }}" -m "${{ steps.version.outputs.tag }}"
+          git push origin "${{ steps.version.outputs.tag }}"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          prerelease_flag=""
+          if [[ "${{ inputs.prerelease }}" == "true" ]]; then
+            prerelease_flag="--prerelease"
+          fi
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --title "${{ steps.version.outputs.tag }}" \
+            --generate-notes \
+            $prerelease_flag

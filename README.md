@@ -1,6 +1,6 @@
 # Vertesia Go Client
 
-Go SDK for the Vertesia API.
+Go client for the Vertesia API.
 
 ```sh
 go get github.com/vertesia/vertesia-client-go
@@ -40,7 +40,7 @@ sets the stable `x-api-version` header.
 
 ## Authentication
 
-Use an `sk-` secret key when you want the SDK to exchange credentials through
+Use an `sk-` secret key when you want the client to exchange credentials through
 STS:
 
 ```go
@@ -86,7 +86,7 @@ client, err := vertesia.NewClient(vertesia.ClientOptions{
 })
 ```
 
-For public SDK usage, prefer the default global API or a hosted Vertesia region.
+For public client usage, prefer the default global API or a hosted Vertesia region.
 Studio and Store requests are routed through the same public API host.
 
 `Site` is available as an advanced override when you need to provide the exact
@@ -141,7 +141,7 @@ go test ./...
 
 Live integration tests are opt-in. They run only when `VERTESIA_LIVE_TESTS=1`
 and `VERTESIA_API_KEY` is set to a non-placeholder `sk-` secret key. For
-Vertesia developers running the SDK tests locally:
+Vertesia developers running the client tests locally:
 
 ```sh
 cp .env.example .env
@@ -163,7 +163,7 @@ code is committed so Go consumers can use normal module versioning:
 go get github.com/vertesia/vertesia-client-go@vX.Y.Z
 ```
 
-The public OpenAPI contract for the committed SDK is tracked at
+The public OpenAPI contract for the committed client is tracked at
 `spec/vertesia-openapi.json` and `spec/vertesia-openapi.yaml`. The JSON file is
 the source used to generate the committed client source; the YAML file is
 included for tools and readers that prefer YAML.
@@ -179,7 +179,7 @@ Generated files under `openapi/` and `spec/` are owned by internal generation
 automation. Do not edit or commit them manually. Pull requests that change either
 directory are rejected by CI.
 
-Hand-written SDK surface changes, such as `NewClient`, tests, examples, README,
+Hand-written client surface changes, such as `NewClient`, tests, examples, README,
 workflows, and generator configuration, should go through normal pull request
 review.
 

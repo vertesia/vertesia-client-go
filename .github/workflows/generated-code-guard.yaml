@@ -22,7 +22,7 @@ jobs:
           generated_changes="$(echo "$changed_files" | grep -E '^(openapi|spec)/' || true)"
           if [[ -n "$generated_changes" ]]; then
             echo "Generated files under openapi/ and spec/ are updated only by internal generation automation." >&2
-            echo "Move hand-written SDK changes outside those directories, or let the sync automation regenerate them." >&2
+            echo "Move hand-written client changes outside those directories, or let the sync automation regenerate them." >&2
             echo "" >&2
             echo "Generated files changed:" >&2
             echo "$generated_changes" >&2

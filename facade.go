@@ -28,7 +28,7 @@ var (
 	ErrUnsupportedAPIKey    = errors.New("unsupported Vertesia API key")
 )
 
-// ClientOptions configures the high-level Vertesia SDK client.
+// ClientOptions configures the high-level Vertesia client.
 type ClientOptions struct {
 	// Region selects a hosted Vertesia region, for example us1 or eu1.
 	Region string
@@ -52,7 +52,7 @@ type ClientOptions struct {
 	APIVersion string
 }
 
-// Client is the hand-written Vertesia SDK facade over the generated OpenAPI client.
+// Client is the hand-written Vertesia client facade over the generated OpenAPI client.
 type Client struct {
 	Studio *openapi.APIClient
 	Store  *openapi.APIClient
@@ -96,7 +96,7 @@ type Client struct {
 	WorkflowRunsAPI         *openapi.WorkflowRunsAPIService
 }
 
-// NewClient creates a high-level SDK client that routes Studio and Store APIs and injects bearer auth.
+// NewClient creates a high-level client that routes Studio and Store APIs and injects bearer auth.
 func NewClient(opts ClientOptions) (*Client, error) {
 	endpoints, err := resolveClientEndpoints(opts)
 	if err != nil {
