@@ -8,3 +8,6 @@ openapi/.github/
 openapi/.travis.yml
 openapi/README.md
 openapi/git_push.sh
+
+AGENTS.md
+CLAUDE.md
