@@ -25,6 +25,7 @@ api_prompt_templates.go
 api_remote_mcp_connections.go
 api_rendering.go
 api_roles.go
+api_secrets.go
 api_tasks.go
 api_token_service.go
 api_user_groups.go
@@ -52,6 +53,8 @@ model_adapt_tables_request.go
 model_adapted_table.go
 model_advance_process_payload.go
 model_agent_artifact_url_response.go
+model_agent_message_details.go
+model_agent_message_details_files_inner.go
 model_agent_message_type.go
 model_agent_run.go
 model_agent_run_archive_state.go
@@ -131,6 +134,9 @@ model_billing_method.go
 model_branch_definition.go
 model_branch_join_policy.go
 model_branch_node_branch_definition.go
+model_browser_use_project_configuration.go
+model_browser_use_risk_policy.go
+model_browser_use_screenshot_capture.go
 model_bulk_object_create_result.go
 model_bulk_object_create_result_failed_inner.go
 model_bulk_object_create_result_objects_inner.go
@@ -203,6 +209,7 @@ model_content_object_type_ref.go
 model_content_object_user_permissions.go
 model_content_source.go
 model_conversation_activity_state.go
+model_conversation_file.go
 model_conversation_state.go
 model_conversation_state_end_conversation.go
 model_conversation_strip_options.go
@@ -233,6 +240,7 @@ model_create_o_auth_client_payload.go
 model_create_o_auth_provider_payload.go
 model_create_or_update_api_key_payload.go
 model_create_process_definition_payload.go
+model_create_secret_request.go
 model_create_snapshot_payload.go
 model_create_table_payload.go
 model_create_tables_payload.go
@@ -307,6 +315,7 @@ model_dsl_child_workflow_step.go
 model_dsl_child_workflow_step_options.go
 model_dsl_retry_policy.go
 model_dsl_workflow_definition.go
+model_dsl_workflow_definition_response.go
 model_dsl_workflow_spec.go
 model_dsl_workflow_spec_with_activities.go
 model_dsl_workflow_spec_with_steps.go
@@ -355,6 +364,7 @@ model_file_bucket_response.go
 model_file_list_response.go
 model_file_metadata_response.go
 model_file_metadata_update_result.go
+model_file_processing_status.go
 model_find_payload.go
 model_generate_interaction_payload.go
 model_generate_test_data_payload.go
@@ -417,6 +427,7 @@ model_interaction_search_query.go
 model_interaction_status.go
 model_interaction_tags.go
 model_interaction_update_payload.go
+model_interaction_update_payload_result_schema.go
 model_interaction_visibility.go
 model_interactions_export_payload.go
 model_interactions_export_payload_versions_inner.go
@@ -433,6 +444,7 @@ model_json_schema_additional_properties.go
 model_linkup_configuration.go
 model_linkup_configuration_input.go
 model_list_agent_runs_response.go
+model_list_secrets_response.go
 model_list_workflow_runs_payload.go
 model_list_workflow_runs_response.go
 model_llm_call_type.go
@@ -440,7 +452,6 @@ model_load_balancing_env_config.go
 model_load_balancing_env_entry_config.go
 model_location.go
 model_magic_pdf_configuration.go
-model_map_string_any.go
 model_markdown_rendition_format.go
 model_mcp_o_auth_connect_response.go
 model_mcp_o_auth_disconnect_response.go
@@ -491,6 +502,7 @@ model_o_auth_registration_source.go
 model_o_auth_response_type.go
 model_o_auth_token_endpoint_auth_method.go
 model_object_search_response.go
+model_ok_boolean.go
 model_onboarding_progress.go
 model_open_ai_dalle_options.go
 model_open_ai_gpt_image_options.go
@@ -511,6 +523,7 @@ model_partial_project.go
 model_partial_project_configuration.go
 model_partial_record_supported_embedding_types_boolean.go
 model_partial_record_supported_embedding_types_embedding.go
+model_partial_website_credential_metadata.go
 model_pdf_rendering_metadata.go
 model_pdf_to_richtext_options.go
 model_pending_activity.go
@@ -622,6 +635,8 @@ model_run_type.go
 model_schema_ref.go
 model_score_aggregation_types.go
 model_search_agent_runs_response.go
+model_secret_kind.go
+model_secret_record.go
 model_semantic_column_type.go
 model_serper_configuration.go
 model_serper_configuration_input.go
@@ -692,6 +707,7 @@ model_update_o_auth_client_payload.go
 model_update_o_auth_provider_payload.go
 model_update_process_definition_payload.go
 model_update_schema_payload.go
+model_update_secret_request.go
 model_update_task_payload.go
 model_update_user_group_payload.go
 model_update_user_payload.go
@@ -710,6 +726,18 @@ model_vertex_ai_gemini_options.go
 model_vertex_ai_options.go
 model_video_metadata.go
 model_virtual_env_entry.go
+model_website_credential_capability.go
+model_website_credential_fill_request.go
+model_website_credential_fill_response.go
+model_website_credential_fill_response_filled.go
+model_website_credential_metadata.go
+model_website_credential_record.go
+model_website_credential_secret_input.go
+model_website_credential_secret_input_oauth.go
+model_website_credential_secret_input_totp.go
+model_website_credential_totp_algorithm.go
+model_website_credential_totp_metadata.go
+model_website_credential_website.go
 model_workflow_action_response.go
 model_workflow_ancestor.go
 model_workflow_definition_ref.go

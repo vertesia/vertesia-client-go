@@ -19,5 +19,5 @@ additionalProperties:
   packageName: openapi
   isGoSubmodule: false
   withGoMod: false
-  packageVersion: 1.2.0
+  packageVersion: 1.3.0
   licenseName: Apache-2.0

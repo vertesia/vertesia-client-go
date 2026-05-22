@@ -1,12 +1,12 @@
 openapi: 3.1.0
 info:
   title: Vertesia API
-  version: 1.2.0
+  version: 1.3.0
   description: The Vertesia API provides project-scoped access to interaction
     execution and content workflows. Use it to run interactions, inspect
     execution history, stream run progress, replay previous executions, and
     search content objects and collections. Authenticate requests with a bearer
-    token, or use the official `@vertesia/client` SDK for typed access from
+    token, or use the official `@vertesia/client` package for typed access from
     Node.js applications.
   contact:
     name: Vertesia
@@ -16,7 +16,7 @@ info:
     identifier: Apache-2.0
   x-scalar-sdk-installation:
     - lang: Node
-      description: "Install the **Vertesia SDK** from npm:"
+      description: "Install the **Vertesia Client** from npm:"
       source: npm install @vertesia/client
 servers:
   - url: https://api.{region}.vertesia.io/api/v1
@@ -58,7 +58,8 @@ components:
         configuration:
           $ref: "#/components/schemas/ProjectConfiguration"
         integrations:
-          $ref: "#/components/schemas/Map_string_any"
+          type: object
+          additionalProperties: true
         plugins:
           type: array
           items:
@@ -116,7 +117,8 @@ components:
         configuration:
           $ref: "#/components/schemas/ProjectConfiguration"
         integrations:
-          $ref: "#/components/schemas/Map_string_any"
+          type: object
+          additionalProperties: true
         plugins:
           type: array
           items:
@@ -191,6 +193,15 @@ components:
 
 
             Changing this value requires a full reindex to take effect.
+        browser_use:
+          $ref: "#/components/schemas/BrowserUseProjectConfiguration"
+          description: Project defaults and caps for browser_use agent workstreams.
+        pdf_template_object_id:
+          type: string
+          description: Object ID of a content object containing a custom LaTeX template
+            (.latex file) to use as the branded PDF template. When set, "Export
+            as Branded PDF" uses this template instead of the built-in Vertesia
+            default template.
       required:
         - embeddings
       additionalProperties: false
@@ -245,6 +256,15 @@ components:
 
 
             Changing this value requires a full reindex to take effect.
+        browser_use:
+          $ref: "#/components/schemas/BrowserUseProjectConfiguration"
+          description: Project defaults and caps for browser_use agent workstreams.
+        pdf_template_object_id:
+          type: string
+          description: Object ID of a content object containing a custom LaTeX template
+            (.latex file) to use as the branded PDF template. When set, "Export
+            as Branded PDF" uses this template instead of the built-in Vertesia
+            default template.
       additionalProperties: false
     ProjectIntegrationConfigResponse:
       type: object
@@ -1170,6 +1190,7 @@ components:
         result_schema:
           anyOf:
             - $ref: "#/components/schemas/JSONSchema"
+            - $ref: "#/components/schemas/SchemaRef"
             - type: "null"
       additionalProperties: false
     InteractionPublishPayload:
@@ -1243,6 +1264,7 @@ components:
         result_schema:
           anyOf:
             - $ref: "#/components/schemas/JSONSchema"
+            - $ref: "#/components/schemas/SchemaRef"
             - type: "null"
         stream:
           type: boolean
@@ -1711,6 +1733,7 @@ components:
         result_schema:
           anyOf:
             - $ref: "#/components/schemas/JSONSchema"
+            - $ref: "#/components/schemas/SchemaRef"
             - type: "null"
         stream:
           type: boolean
@@ -2376,6 +2399,7 @@ components:
         result_schema:
           anyOf:
             - $ref: "#/components/schemas/JSONSchema"
+            - $ref: "#/components/schemas/SchemaRef"
             - type: "null"
         stream:
           type: boolean
@@ -3851,6 +3875,144 @@ components:
       required:
         - access_token
       additionalProperties: false
+    ListSecretsResponse:
+      type: object
+      properties:
+        secrets:
+          type: array
+          items:
+            $ref: "#/components/schemas/SecretRecord"
+      required:
+        - secrets
+      additionalProperties: false
+    SecretRecord:
+      type: object
+      properties:
+        id:
+          type: string
+        secret_ref:
+          type: string
+        kind:
+          $ref: "#/components/schemas/SecretKind"
+        project:
+          type: string
+        name:
+          type: string
+        enabled:
+          type: boolean
+        tags:
+          type: array
+          items:
+            type: string
+        properties:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        details:
+          $ref: "#/components/schemas/WebsiteCredentialRecord"
+      required:
+        - id
+        - secret_ref
+        - kind
+        - project
+        - name
+      additionalProperties: false
+    CreateSecretRequest:
+      type: object
+      properties:
+        kind:
+          $ref: "#/components/schemas/SecretKind"
+        metadata:
+          $ref: "#/components/schemas/WebsiteCredentialMetadata"
+        secret:
+          $ref: "#/components/schemas/WebsiteCredentialSecretInput"
+      required:
+        - kind
+        - metadata
+      additionalProperties: false
+    UpdateSecretRequest:
+      type: object
+      properties:
+        kind:
+          $ref: "#/components/schemas/SecretKind"
+        metadata:
+          $ref: "#/components/schemas/Partial_WebsiteCredentialMetadata"
+        secret:
+          $ref: "#/components/schemas/WebsiteCredentialSecretInput"
+        clear_username_secret:
+          type: boolean
+        clear_password:
+          type: boolean
+        clear_totp:
+          type: boolean
+        clear_oauth:
+          type: boolean
+      additionalProperties: false
+    ok_boolean:
+      type: object
+      properties:
+        ok:
+          type: boolean
+      required:
+        - ok
+      additionalProperties: false
+    WebsiteCredentialFillResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        credential_ref:
+          type: string
+        url:
+          type: string
+        title:
+          type: string
+        filled:
+          type: object
+          properties:
+            username:
+              type: boolean
+            password:
+              type: boolean
+            totp:
+              type: boolean
+            submitted:
+              type: boolean
+          required:
+            - username
+            - password
+            - totp
+            - submitted
+          additionalProperties: false
+      required:
+        - ok
+        - credential_ref
+        - url
+        - title
+        - filled
+      additionalProperties: false
+    WebsiteCredentialFillRequest:
+      type: object
+      properties:
+        username_target_id:
+          type: string
+        password_target_id:
+          type: string
+        totp_target_id:
+          type: string
+        submit_target_id:
+          type: string
+        browser_workflow_id:
+          type: string
+          description: Browser-use parent workflow id. The API resolves the Daytona
+            sandbox and observes the current page server-side before decrypting
+            the credential.
+      required:
+        - browser_workflow_id
+      additionalProperties: false
     ProjectRef:
       type: object
       properties:
@@ -3945,14 +4107,57 @@ components:
       required:
         - enabled
       additionalProperties: false
-    Map_string_any:
+    BrowserUseProjectConfiguration:
       type: object
       properties:
-        size:
-          type: number
-      required:
-        - size
+        enabled:
+          type: boolean
+          description: Enable the browser_use workflow-level tool for this project.
+            Defaults to true when omitted.
+        default_policy:
+          $ref: "#/components/schemas/BrowserUseRiskPolicy"
+          description: Risk policy used when the tool call does not specify one. Defaults
+            to low_write.
+        max_policy:
+          $ref: "#/components/schemas/BrowserUseRiskPolicy"
+          description: Maximum policy a tool call may request. Requested policies above
+            this are clamped down to the project maximum. Defaults to
+            unrestricted.
+        allowed_hosts:
+          type: array
+          items:
+            type: string
+          description: Optional project-wide host allowlist. When present, browser_use
+            calls can only request hosts contained by this list.
+        allow_file_uploads:
+          type: boolean
+          description: Allow saved Playwright scripts to hydrate artifacts/documents as
+            files inside the browser sandbox for upload flows. Defaults to true.
+        allow_playwright_scripts:
+          type: boolean
+          description: Allow the browser_playwright_script tool in browser workstreams.
+            Defaults to true.
+        capture_screenshots:
+          $ref: "#/components/schemas/BrowserUseScreenshotCapture"
+          description: Persist browser screenshots for UI progress. Defaults to on_action.
+        prefer_raw_screenshots:
+          type: boolean
+          description: Prefer unannotated screenshots in the browser-use UI widget when
+            both raw and annotated captures are available. Defaults to true.
       additionalProperties: false
+    BrowserUseRiskPolicy:
+      type: string
+      enum:
+        - read_only
+        - low_write
+        - requires_approval
+        - unrestricted
+    BrowserUseScreenshotCapture:
+      type: string
+      enum:
+        - off
+        - on_action
+        - each_turn
     GladiaConfiguration:
       type: object
       properties:
@@ -4476,6 +4681,12 @@ components:
           type: string
         properties:
           $ref: "#/components/schemas/JSONSchemaProperties"
+        items:
+          $ref: "#/components/schemas/JSONSchema"
+        format:
+          type: string
+        editor: {}
+        default: {}
         additionalProperties:
           anyOf:
             - type: boolean
@@ -5086,6 +5297,7 @@ components:
         - groq
         - watsonx
         - xai
+        - anthropic
         - virtual_lb
         - virtual_mediator
         - test
@@ -6607,7 +6819,8 @@ components:
         type:
           type: string
           const: json
-        value: {}
+        value:
+          $ref: "#/components/schemas/JSONValue"
       required:
         - type
         - value
@@ -7396,7 +7609,6 @@ components:
       required:
         - id
         - goal
-        - instructions
       additionalProperties: false
     ConversationStripOptions:
       type: object
@@ -7797,6 +8009,8 @@ components:
         - bulk_delete
         - attach
         - detach
+        - credentials_fill
+        - credentials_totp_generation
         - publish
         - unpublish
         - inference
@@ -7844,6 +8058,7 @@ components:
         result_schema:
           anyOf:
             - $ref: "#/components/schemas/JSONSchema"
+            - $ref: "#/components/schemas/SchemaRef"
             - type: "null"
         do_validate:
           type: boolean
@@ -7992,7 +8207,6 @@ components:
       required:
         - interaction
         - type
-      additionalProperties: false
     ConversationVisibility:
       type: string
       enum:
@@ -8021,6 +8235,7 @@ components:
         result_schema:
           anyOf:
             - $ref: "#/components/schemas/JSONSchema"
+            - $ref: "#/components/schemas/SchemaRef"
             - type: "null"
         do_validate:
           type: boolean
@@ -8072,7 +8287,6 @@ components:
       required:
         - interaction
         - type
-      additionalProperties: false
     PromptModalities:
       type: object
       properties:
@@ -8853,6 +9067,249 @@ components:
         revocation_endpoint:
           type: string
       additionalProperties: false
+    SecretKind:
+      type: string
+      const: website_credential
+    WebsiteCredentialRecord:
+      type: object
+      properties:
+        id:
+          type: string
+        credential_ref:
+          type: string
+        project:
+          type: string
+        name:
+          type: string
+        websites:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebsiteCredentialWebsite"
+        username:
+          type: string
+        username_hint:
+          type: string
+        username_secret_enabled:
+          type: boolean
+        properties:
+          type: object
+          additionalProperties: true
+        tags:
+          type: array
+          items:
+            type: string
+        enabled:
+          type: boolean
+        capabilities:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebsiteCredentialCapability"
+        notes:
+          type: string
+        totp_metadata:
+          $ref: "#/components/schemas/WebsiteCredentialTotpMetadata"
+        expires_at:
+          type: string
+          description: Optional ISO timestamp after which the credential is no longer
+            usable. Expired credentials are hidden from lookup and cannot be
+            filled.
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        has_username_secret:
+          type: boolean
+        has_password:
+          type: boolean
+        has_totp:
+          type: boolean
+        has_oauth:
+          type: boolean
+        password_hint:
+          type: string
+      required:
+        - id
+        - credential_ref
+        - project
+        - name
+        - websites
+        - username_secret_enabled
+        - has_username_secret
+        - has_password
+        - has_totp
+        - has_oauth
+      additionalProperties: false
+    WebsiteCredentialWebsite:
+      type: object
+      properties:
+        host:
+          type: string
+          description: Hostname this credential is allowed on. Subdomains match.
+        login_url:
+          type: string
+          description: Optional login URL used by agents as a hint.
+        allowed_origins:
+          type: array
+          items:
+            type: string
+          description: Optional narrower origin allowlist for this credential.
+      required:
+        - host
+      additionalProperties: false
+    WebsiteCredentialCapability:
+      type: string
+      enum:
+        - password
+        - totp
+        - oauth
+    WebsiteCredentialTotpMetadata:
+      type: object
+      properties:
+        algorithm:
+          $ref: "#/components/schemas/WebsiteCredentialTotpAlgorithm"
+        digits:
+          type: number
+          enum:
+            - 6
+            - 8
+        period:
+          type: number
+        issuer:
+          type: string
+        account:
+          type: string
+      additionalProperties: false
+    WebsiteCredentialTotpAlgorithm:
+      type: string
+      enum:
+        - SHA1
+        - SHA256
+        - SHA512
+    WebsiteCredentialMetadata:
+      type: object
+      properties:
+        name:
+          type: string
+        websites:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebsiteCredentialWebsite"
+        username:
+          type: string
+        username_hint:
+          type: string
+        username_secret:
+          type: boolean
+        properties:
+          type: object
+          additionalProperties: true
+        tags:
+          type: array
+          items:
+            type: string
+        enabled:
+          type: boolean
+        capabilities:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebsiteCredentialCapability"
+        notes:
+          type: string
+        totp:
+          $ref: "#/components/schemas/WebsiteCredentialTotpMetadata"
+        expires_at:
+          type: string
+          description: Optional ISO timestamp after which the credential is no longer
+            usable. Expired credentials are hidden from lookup and cannot be
+            filled.
+      required:
+        - name
+        - websites
+      additionalProperties: false
+    WebsiteCredentialSecretInput:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Optional encrypted username. Prefer metadata.username unless the
+            username itself is sensitive.
+        password:
+          type: string
+        totp:
+          type: object
+          additionalProperties: false
+          properties:
+            seed:
+              type: string
+            algorithm:
+              $ref: "#/components/schemas/WebsiteCredentialTotpAlgorithm"
+            digits:
+              type: number
+              enum:
+                - 6
+                - 8
+            period:
+              type: number
+            issuer:
+              type: string
+            account:
+              type: string
+          required:
+            - seed
+        oauth:
+          type: object
+          properties:
+            provider_id:
+              type: string
+            token_owner:
+              type: string
+              enum:
+                - user
+                - project
+            token_ref:
+              type: string
+          additionalProperties: false
+          description: Future OAuth materialization hook. The token itself remains in the
+            OAuth secret store.
+      additionalProperties: false
+    Partial_WebsiteCredentialMetadata:
+      type: object
+      properties:
+        name:
+          type: string
+        websites:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebsiteCredentialWebsite"
+        username:
+          type: string
+        username_hint:
+          type: string
+        username_secret:
+          type: boolean
+        properties:
+          type: object
+          additionalProperties: true
+        tags:
+          type: array
+          items:
+            type: string
+        enabled:
+          type: boolean
+        capabilities:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebsiteCredentialCapability"
+        notes:
+          type: string
+        totp:
+          $ref: "#/components/schemas/WebsiteCredentialTotpMetadata"
+        expires_at:
+          type: string
+          description: Optional ISO timestamp after which the credential is no longer
+            usable. Expired credentials are hidden from lookup and cannot be
+            filled.
+      additionalProperties: false
     ErrorResponse:
       type: object
       description: Standard JSON error response returned by the server error handler.
@@ -9346,6 +9803,7 @@ components:
         memo:
           anyOf:
             - type: object
+              additionalProperties: {}
             - type: "null"
         pendingActivities:
           type: array
@@ -10802,6 +11260,7 @@ components:
             type: string
         debug:
           type: boolean
+      additionalProperties: {}
     DocAnalyzerResultResponse:
       type: object
       properties:
@@ -11158,6 +11617,70 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/WorkflowDefinitionRef"
+    DSLWorkflowDefinitionResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Human-readable name or title
+        description:
+          type: string
+          description: Optional detailed description of the object
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional array of categorization tags
+        steps:
+          type: array
+          items:
+            $ref: "#/components/schemas/DSLWorkflowStep"
+        activities:
+          type: array
+          items:
+            $ref: "#/components/schemas/DSLActivitySpec"
+        vars:
+          type: object
+          additionalProperties: true
+        options:
+          $ref: "#/components/schemas/DSLActivityOptions"
+        result:
+          type: string
+        debug_mode:
+          type: boolean
+        id:
+          type: string
+          description: Unique identifier for the object
+        updated_by:
+          type: string
+          description: Identifier of the user who last modified the object
+        created_by:
+          type: string
+          description: Identifier of the user who created the object
+        created_at:
+          type: string
+          description: ISO timestamp of when the object was created
+        updated_at:
+          type: string
+          description: ISO timestamp of when the object was last updated
+        input_schema:
+          type: object
+          additionalProperties: true
+        spec_format:
+          type: string
+          enum:
+            - steps
+            - activities
+      required:
+        - created_at
+        - created_by
+        - id
+        - name
+        - spec_format
+        - updated_at
+        - updated_by
+        - vars
+      additionalProperties: false
     DSLWorkflowDefinition:
       type: object
       properties:
@@ -11639,7 +12162,9 @@ components:
           items:
             type: string
         type:
-          type: string
+          type:
+            - string
+            - "null"
         query:
           type: object
           additionalProperties: true
@@ -13618,6 +14143,9 @@ components:
           type: string
           description: Workstream ID (only when not "main")
         d:
+          anyOf:
+            - $ref: "#/components/schemas/AgentMessageDetails"
+            - type: "null"
           description: Type-specific details
         f:
           type: number
@@ -13656,6 +14184,121 @@ components:
         - 12
         - 13
         - 14
+    AgentMessageDetails:
+      type: object
+      properties:
+        event_class:
+          type: string
+        tool:
+          type: string
+        tools:
+          type: array
+          items:
+            type: string
+        streamed:
+          type: boolean
+        display_role:
+          type: string
+        activity_id:
+          type: string
+        activity_group_id:
+          type: string
+        batch_id:
+          type: string
+        tool_run_id:
+          type: string
+        tool_status:
+          type: string
+          enum:
+            - running
+            - completed
+            - error
+            - warning
+        tool_iteration:
+          type: number
+        observation: {}
+        workflow_run_id:
+          type: string
+        outputFiles:
+          type: array
+          items:
+            type: string
+        files:
+          type: array
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/ConversationFile"
+              - type: string
+        plan:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlanTask"
+        streaming_id:
+          type: string
+        chunk_index:
+          type: number
+        is_final:
+          type: boolean
+        _optimistic:
+          type: boolean
+        _messageId:
+          type: string
+    ConversationFile:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID for tracking this file (generated client-side)
+        name:
+          type: string
+          description: Original filename
+        content_type:
+          type: string
+          description: MIME type
+        size:
+          type: number
+          description: Size in bytes
+        status:
+          $ref: "#/components/schemas/FileProcessingStatus"
+          description: Current processing status
+        artifact_path:
+          type: string
+          description: Artifact path (e.g., "files/document.pdf") - set after upload
+        reference:
+          type: string
+          description: Full artifact reference URI (e.g., "artifact:files/document.pdf")
+        md_path:
+          type: string
+          description: Path to extracted text markdown (e.g., "files/document.pdf.md")
+        text_extracted:
+          type: boolean
+          description: Whether text extraction completed successfully
+        error:
+          type: string
+          description: Error message if status is ERROR
+        started_at:
+          type: number
+          description: Timestamp when upload started
+        completed_at:
+          type: number
+          description: Timestamp when processing completed
+      required:
+        - id
+        - name
+        - content_type
+        - size
+        - status
+        - started_at
+      additionalProperties: false
+      description: Represents a file being processed in a conversation workflow.
+    FileProcessingStatus:
+      type: string
+      enum:
+        - uploading
+        - processing
+        - ready
+        - error
+      description: Status of a file being processed for conversation use.
     Partial_AgentMessage:
       type: object
       properties:
@@ -13667,7 +14310,8 @@ components:
           $ref: "#/components/schemas/AgentMessageType"
         message:
           type: string
-        details: {}
+        details:
+          $ref: "#/components/schemas/AgentMessageDetails"
         workstream_id:
           type: string
       additionalProperties: false
@@ -15124,8 +15768,7 @@ components:
           type: string
           description: External identifier for integration with other systems
         properties:
-          type: object
-          additionalProperties: true
+          $ref: "#/components/schemas/JSONObject"
           description: The object properties. This is a JSON object that describes the
             object, matching the object type schema
         metadata:
@@ -21569,7 +22212,7 @@ paths:
                 message: Request validation failed.
       x-codeSamples:
         - lang: TypeScript
-          label: Vertesia SDK
+          label: Vertesia Client
           source: |-
             import { VertesiaClient } from '@vertesia/client';
 
@@ -21801,7 +22444,7 @@ paths:
                 message: Request validation failed.
       x-codeSamples:
         - lang: TypeScript
-          label: Vertesia SDK
+          label: Vertesia Client
           source: |-
             import { VertesiaClient } from '@vertesia/client';
 
@@ -21883,7 +22526,7 @@ paths:
                 message: Request validation failed.
       x-codeSamples:
         - lang: TypeScript
-          label: Vertesia SDK
+          label: Vertesia Client
           source: |-
             import { VertesiaClient } from '@vertesia/client';
 
@@ -21977,7 +22620,7 @@ paths:
                 message: Request validation failed.
       x-codeSamples:
         - lang: TypeScript
-          label: Vertesia SDK
+          label: Vertesia Client
           source: |-
             import { VertesiaClient } from '@vertesia/client';
 
@@ -22088,7 +22731,7 @@ paths:
                 message: Request validation failed.
       x-codeSamples:
         - lang: TypeScript
-          label: Vertesia SDK
+          label: Vertesia Client
           source: |-
             import { VertesiaClient } from '@vertesia/client';
 
@@ -22164,7 +22807,7 @@ paths:
                 message: Request validation failed.
       x-codeSamples:
         - lang: TypeScript
-          label: Vertesia SDK
+          label: Vertesia Client
           source: |-
             import { VertesiaClient } from '@vertesia/client';
 
@@ -22242,7 +22885,7 @@ paths:
                 message: Request validation failed.
       x-codeSamples:
         - lang: TypeScript
-          label: Vertesia SDK
+          label: Vertesia Client
           source: |-
             import { VertesiaClient } from '@vertesia/client';
 
@@ -23404,6 +24047,8 @@ paths:
                 - bulk_delete
                 - attach
                 - detach
+                - credentials_fill
+                - credentials_totp_generation
                 - publish
                 - unpublish
                 - inference
@@ -27725,6 +28370,442 @@ paths:
         description: Optional Vertesia API version header. Use `20260319` for the
           current stable API shape.
         x-vertesia-global-header: true
+  /secrets:
+    get:
+      operationId: ListSecrets
+      tags:
+        - Secrets
+      summary: List secrets
+      description: Lists project-scoped secrets. This version returns
+        website_credential secrets. Secret values are never returned.
+      security:
+        - bearerAuth: []
+        - OpenID: []
+      parameters:
+        - name: project_id
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Project scope for top-level secret APIs. Must match the
+              authenticated project context.
+          description: Project scope for top-level secret APIs. Must match the
+            authenticated project context.
+        - name: kind
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - website_credential
+          style: form
+        - name: host
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: enabled
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Secrets.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListSecretsResponse"
+        "500":
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Internal Server Error
+                status: 500
+                message: Internal server error.
+        4XX:
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Bad Request
+                status: 400
+                message: Request validation failed.
+      x-vertesia-permissions: []
+      x-vertesia-source:
+        file: ../../apps/studio-server/src/api/secrets.ts
+        className: SecretsResource
+        methodName: listSecrets
+    post:
+      operationId: CreateSecret
+      tags:
+        - Secrets
+      summary: Create secret
+      description: >-
+        Creates a project-scoped website_credential secret. Secret values are
+        encrypted and never returned.
+
+
+        **Required permissions:** `project:admin`
+      security:
+        - bearerAuth: []
+        - OpenID: []
+      parameters:
+        - name: project_id
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Project scope for top-level secret APIs. Must match the
+              authenticated project context.
+          description: Project scope for top-level secret APIs. Must match the
+            authenticated project context.
+      responses:
+        "200":
+          description: Created secret metadata.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecretRecord"
+        "500":
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Internal Server Error
+                status: 500
+                message: Internal server error.
+        4XX:
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Bad Request
+                status: 400
+                message: Request validation failed.
+      x-vertesia-permissions:
+        - project:admin
+      x-vertesia-source:
+        file: ../../apps/studio-server/src/api/secrets.ts
+        className: SecretsResource
+        methodName: createSecret
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSecretRequest"
+    parameters:
+      - name: x-api-version
+        in: header
+        required: false
+        schema:
+          type: string
+          example: "20260319"
+        description: Optional Vertesia API version header. Use `20260319` for the
+          current stable API shape.
+        x-vertesia-global-header: true
+  /secrets/{secretId}:
+    get:
+      operationId: GetSecret
+      tags:
+        - Secrets
+      summary: Retrieve secret metadata
+      description: Retrieves one project-scoped secret. Secret values are never returned.
+      security:
+        - bearerAuth: []
+        - OpenID: []
+      parameters:
+        - name: secretId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: project_id
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Project scope for top-level secret APIs. Must match the
+              authenticated project context.
+          description: Project scope for top-level secret APIs. Must match the
+            authenticated project context.
+        - name: kind
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - website_credential
+          style: form
+      responses:
+        "200":
+          description: Secret metadata.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecretRecord"
+        "500":
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Internal Server Error
+                status: 500
+                message: Internal server error.
+        4XX:
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Bad Request
+                status: 400
+                message: Request validation failed.
+      x-vertesia-permissions: []
+      x-vertesia-source:
+        file: ../../apps/studio-server/src/api/secrets.ts
+        className: SecretsResource
+        methodName: getSecret
+    put:
+      operationId: UpdateSecret
+      tags:
+        - Secrets
+      summary: Update secret
+      description: |-
+        Updates secret metadata and write-only secret values.
+
+        **Required permissions:** `project:admin`
+      security:
+        - bearerAuth: []
+        - OpenID: []
+      parameters:
+        - name: secretId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: project_id
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Project scope for top-level secret APIs. Must match the
+              authenticated project context.
+          description: Project scope for top-level secret APIs. Must match the
+            authenticated project context.
+        - name: kind
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - website_credential
+          style: form
+      responses:
+        "200":
+          description: Updated secret metadata.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SecretRecord"
+        "500":
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Internal Server Error
+                status: 500
+                message: Internal server error.
+        4XX:
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Bad Request
+                status: 400
+                message: Request validation failed.
+      x-vertesia-permissions:
+        - project:admin
+      x-vertesia-source:
+        file: ../../apps/studio-server/src/api/secrets.ts
+        className: SecretsResource
+        methodName: updateSecret
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSecretRequest"
+    delete:
+      operationId: DeleteSecret
+      tags:
+        - Secrets
+      summary: Delete secret
+      description: |-
+        Deletes a project-scoped secret and its encrypted value bundle.
+
+        **Required permissions:** `project:admin`
+      security:
+        - bearerAuth: []
+        - OpenID: []
+      parameters:
+        - name: secretId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: project_id
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Project scope for top-level secret APIs. Must match the
+              authenticated project context.
+          description: Project scope for top-level secret APIs. Must match the
+            authenticated project context.
+        - name: kind
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - website_credential
+          style: form
+      responses:
+        "200":
+          description: Delete result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ok_boolean"
+        "500":
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Internal Server Error
+                status: 500
+                message: Internal server error.
+        4XX:
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Bad Request
+                status: 400
+                message: Request validation failed.
+      x-vertesia-permissions:
+        - project:admin
+      x-vertesia-source:
+        file: ../../apps/studio-server/src/api/secrets.ts
+        className: SecretsResource
+        methodName: deleteSecret
+    parameters:
+      - name: x-api-version
+        in: header
+        required: false
+        schema:
+          type: string
+          example: "20260319"
+        description: Optional Vertesia API version header. Use `20260319` for the
+          current stable API shape.
+        x-vertesia-global-header: true
+  /secrets/{secretId}/actions/fill-browser:
+    post:
+      operationId: FillWebsiteCredential
+      tags:
+        - Secrets
+      summary: Fill website credential into a browser-use sandbox
+      description: Resolves the browser-use sandbox server-side, observes the current
+        page, then decrypts and fills a project-scoped website credential.
+        Secret values are never returned.
+      security:
+        - bearerAuth: []
+        - OpenID: []
+      parameters:
+        - name: secretId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: project_id
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Project scope for top-level secret APIs. Must match the
+              authenticated project context.
+          description: Project scope for top-level secret APIs. Must match the
+            authenticated project context.
+      responses:
+        "200":
+          description: Fill result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebsiteCredentialFillResponse"
+        "500":
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Internal Server Error
+                status: 500
+                message: Internal server error.
+        4XX:
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Bad Request
+                status: 400
+                message: Request validation failed.
+      x-vertesia-permissions: []
+      x-vertesia-source:
+        file: ../../apps/studio-server/src/api/secrets.ts
+        className: SecretsResource
+        methodName: fillWebsiteCredential
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebsiteCredentialFillRequest"
+    parameters:
+      - name: x-api-version
+        in: header
+        required: false
+        schema:
+          type: string
+          example: "20260319"
+        description: Optional Vertesia API version header. Use `20260319` for the
+          current stable API shape.
+        x-vertesia-global-header: true
   /operations:
     post:
       operationId: RunBulkContentOperation
@@ -28934,6 +30015,11 @@ paths:
           schema:
             type: string
         - name: include_history
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: hydrate_payloads
           in: query
           required: false
           schema:
@@ -34281,7 +35367,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DSLWorkflowDefinition"
+                $ref: "#/components/schemas/DSLWorkflowDefinitionResponse"
         "500":
           description: Internal server error.
           content:
@@ -34646,6 +35732,11 @@ paths:
               - events
               - tasks
               - agent
+        - name: hydrate_payloads
+          in: query
+          required: false
+          schema:
+            type: boolean
       responses:
         "200":
           description: Workflow run details.
@@ -35308,7 +36399,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DSLWorkflowDefinition"
+                $ref: "#/components/schemas/DSLWorkflowDefinitionResponse"
         "500":
           description: Internal server error.
           content:
@@ -35359,7 +36450,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DSLWorkflowDefinition"
+                $ref: "#/components/schemas/DSLWorkflowDefinitionResponse"
         "500":
           description: Internal server error.
           content:
