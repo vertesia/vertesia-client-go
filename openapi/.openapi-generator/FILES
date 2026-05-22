@@ -533,6 +533,7 @@ model_plan.go
 model_plan_task.go
 model_post_agent_run_update_payload.go
 model_post_agent_run_update_response.go
+model_principal_identity.go
 model_process_context_definition.go
 model_process_context_response.go
 model_process_definition.go

@@ -22,6 +22,7 @@ type SystemDefaults struct {
 	ContentType   *ModelDefault `json:"content_type,omitempty"`
 	Intake        *ModelDefault `json:"intake,omitempty"`
 	Analysis      *ModelDefault `json:"analysis,omitempty"`
+	Agent         *ModelDefault `json:"agent,omitempty"`
 	NonApplicable *ModelDefault `json:"non_applicable,omitempty"`
 }
 
@@ -138,6 +139,38 @@ func (o *SystemDefaults) SetAnalysis(v ModelDefault) {
 	o.Analysis = &v
 }
 
+// GetAgent returns the Agent field value if set, zero value otherwise.
+func (o *SystemDefaults) GetAgent() ModelDefault {
+	if o == nil || IsNil(o.Agent) {
+		var ret ModelDefault
+		return ret
+	}
+	return *o.Agent
+}
+
+// GetAgentOk returns a tuple with the Agent field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SystemDefaults) GetAgentOk() (*ModelDefault, bool) {
+	if o == nil || IsNil(o.Agent) {
+		return nil, false
+	}
+	return o.Agent, true
+}
+
+// HasAgent returns a boolean if a field has been set.
+func (o *SystemDefaults) HasAgent() bool {
+	if o != nil && !IsNil(o.Agent) {
+		return true
+	}
+
+	return false
+}
+
+// SetAgent gets a reference to the given ModelDefault and assigns it to the Agent field.
+func (o *SystemDefaults) SetAgent(v ModelDefault) {
+	o.Agent = &v
+}
+
 // GetNonApplicable returns the NonApplicable field value if set, zero value otherwise.
 func (o *SystemDefaults) GetNonApplicable() ModelDefault {
 	if o == nil || IsNil(o.NonApplicable) {
@@ -188,6 +221,9 @@ func (o SystemDefaults) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Analysis) {
 		toSerialize["analysis"] = o.Analysis
+	}
+	if !IsNil(o.Agent) {
+		toSerialize["agent"] = o.Agent
 	}
 	if !IsNil(o.NonApplicable) {
 		toSerialize["non_applicable"] = o.NonApplicable
