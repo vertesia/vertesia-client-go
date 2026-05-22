@@ -13,23 +13,32 @@ on:
         type: boolean
         default: false
 
-permissions:
-  contents: write
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.version }}
+  cancel-in-progress: false
+
+permissions: {}
 
 jobs:
   release:
+    name: Release
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write # Create the release tag and GitHub Release.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Validate version
         id: version
         shell: bash
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
         run: |
-          version="${{ inputs.version }}"
+          version="$RELEASE_VERSION"
           if [[ ! "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
             echo "Version must be semver with a leading v, for example v1.2.3" >&2
             exit 1
@@ -52,23 +61,35 @@ jobs:
           echo "tag=$version" >> "$GITHUB_OUTPUT"
 
       - name: Create tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          TAG: ${{ steps.version.outputs.tag }}
+          TARGET_SHA: ${{ github.sha }}
         shell: bash
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a "${{ steps.version.outputs.tag }}" -m "${{ steps.version.outputs.tag }}"
-          git push origin "${{ steps.version.outputs.tag }}"
+          tag_sha="$(gh api "repos/$REPOSITORY/git/tags" \
+            -f tag="$TAG" \
+            -f message="$TAG" \
+            -f object="$TARGET_SHA" \
+            -f type=commit \
+            --jq .sha)"
+          gh api "repos/$REPOSITORY/git/refs" \
+            -f ref="refs/tags/$TAG" \
+            -f sha="$tag_sha"
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
+          PRERELEASE: ${{ inputs.prerelease }}
+          TAG: ${{ steps.version.outputs.tag }}
         shell: bash
         run: |
-          prerelease_flag=""
-          if [[ "${{ inputs.prerelease }}" == "true" ]]; then
-            prerelease_flag="--prerelease"
+          prerelease_flag=()
+          if [[ "$PRERELEASE" == "true" ]]; then
+            prerelease_flag=(--prerelease)
           fi
-          gh release create "${{ steps.version.outputs.tag }}" \
-            --title "${{ steps.version.outputs.tag }}" \
+          gh release create "$TAG" \
+            --title "$TAG" \
             --generate-notes \
-            $prerelease_flag
+            "${prerelease_flag[@]}"

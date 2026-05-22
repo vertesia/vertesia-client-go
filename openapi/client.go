@@ -339,10 +339,96 @@ func parameterToJson(obj interface{}) (string, error) {
 	return string(jsonBuf), err
 }
 
+const redactedDebugValue = "<redacted>"
+
+func dumpRedactedRequestOut(request *http.Request) ([]byte, error) {
+	sanitized := &http.Request{
+		Method:     request.Method,
+		URL:        redactedDebugURL(request.URL),
+		Proto:      request.Proto,
+		ProtoMajor: request.ProtoMajor,
+		ProtoMinor: request.ProtoMinor,
+		Header:     redactedDebugHeader(request.Header),
+		Host:       request.Host,
+	}
+	return httputil.DumpRequestOut(sanitized, false)
+}
+
+func dumpRedactedResponse(resp *http.Response) ([]byte, error) {
+	sanitized := &http.Response{
+		Status:        resp.Status,
+		StatusCode:    resp.StatusCode,
+		Proto:         resp.Proto,
+		ProtoMajor:    resp.ProtoMajor,
+		ProtoMinor:    resp.ProtoMinor,
+		Header:        redactedDebugHeader(resp.Header),
+		ContentLength: -1,
+	}
+	return httputil.DumpResponse(sanitized, false)
+}
+
+func redactedDebugHeader(header http.Header) http.Header {
+	if header == nil {
+		return nil
+	}
+	redacted := make(http.Header, len(header))
+	for name, values := range header {
+		copied := append([]string(nil), values...)
+		if isSensitiveDebugName(name) {
+			for i := range copied {
+				copied[i] = redactedDebugValue
+			}
+		}
+		redacted[name] = copied
+	}
+	return redacted
+}
+
+func redactedDebugURL(original *url.URL) *url.URL {
+	if original == nil {
+		return nil
+	}
+	redacted := *original
+	if redacted.User != nil {
+		username := redacted.User.Username()
+		if _, hasPassword := redacted.User.Password(); hasPassword {
+			redacted.User = url.UserPassword(username, redactedDebugValue)
+		}
+	}
+	query := redacted.Query()
+	changed := false
+	for name, values := range query {
+		if isSensitiveDebugName(name) {
+			for i := range values {
+				values[i] = redactedDebugValue
+			}
+			query[name] = values
+			changed = true
+		}
+	}
+	if changed {
+		redacted.RawQuery = query.Encode()
+	}
+	return &redacted
+}
+
+func isSensitiveDebugName(name string) bool {
+	normalized := strings.ToLower(name)
+	normalized = strings.NewReplacer("-", "", "_", "").Replace(normalized)
+	switch normalized {
+	case "authorization", "proxyauthorization", "cookie", "setcookie", "xapikey", "xauthtoken":
+		return true
+	}
+	return strings.Contains(normalized, "apikey") ||
+		strings.Contains(normalized, "token") ||
+		strings.Contains(normalized, "secret") ||
+		strings.Contains(normalized, "password")
+}
+
 // callAPI do the request.
 func (c *APIClient) callAPI(request *http.Request) (*http.Response, error) {
 	if c.cfg.Debug {
-		dump, err := httputil.DumpRequestOut(request, true)
+		dump, err := dumpRedactedRequestOut(request)
 		if err != nil {
 			return nil, err
 		}
@@ -355,7 +441,7 @@ func (c *APIClient) callAPI(request *http.Request) (*http.Response, error) {
 	}
 
 	if c.cfg.Debug {
-		dump, err := httputil.DumpResponse(resp, true)
+		dump, err := dumpRedactedResponse(resp)
 		if err != nil {
 			return resp, err
 		}
