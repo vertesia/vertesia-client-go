@@ -96,11 +96,9 @@ model_app_installation_provider_binding.go
 model_app_installation_with_manifest.go
 model_app_manifest.go
 model_app_manifest_data.go
-model_app_package.go
 model_app_tool_collection.go
 model_app_ui_config.go
 model_app_ui_nav_item.go
-model_app_widget_info.go
 model_ask_user_webhook_configuration.go
 model_ask_user_webhook_configuration_input.go
 model_async_completion_options.go
@@ -599,7 +597,6 @@ model_query_validation_result.go
 model_rate_limit_request_payload.go
 model_rate_limit_request_response.go
 model_reasoning_effort.go
-model_remote_activity_definition.go
 model_render_markdown_payload.go
 model_render_markdown_start_response.go
 model_render_markdown_status_response.go
