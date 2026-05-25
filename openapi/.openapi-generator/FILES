@@ -598,6 +598,9 @@ model_query_validation_result.go
 model_rate_limit_request_payload.go
 model_rate_limit_request_response.go
 model_reasoning_effort.go
+model_reindex_agent_runs_payload.go
+model_reindex_agent_runs_response.go
+model_reindex_agent_runs_response_errors_inner.go
 model_render_markdown_payload.go
 model_render_markdown_start_response.go
 model_render_markdown_status_response.go

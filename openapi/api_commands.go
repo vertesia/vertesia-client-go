@@ -1518,6 +1518,150 @@ func (a *CommandsAPIService) RecalculateProjectEmbeddingsExecute(r ApiRecalculat
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiReindexAgentRunsRequest struct {
+	ctx                     context.Context
+	ApiService              *CommandsAPIService
+	reindexAgentRunsPayload *ReindexAgentRunsPayload
+	xApiVersion             *string
+}
+
+func (r ApiReindexAgentRunsRequest) ReindexAgentRunsPayload(reindexAgentRunsPayload ReindexAgentRunsPayload) ApiReindexAgentRunsRequest {
+	r.reindexAgentRunsPayload = &reindexAgentRunsPayload
+	return r
+}
+
+// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
+func (r ApiReindexAgentRunsRequest) XApiVersion(xApiVersion string) ApiReindexAgentRunsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiReindexAgentRunsRequest) Execute() (*ReindexAgentRunsResponse, *http.Response, error) {
+	return r.ApiService.ReindexAgentRunsExecute(r)
+}
+
+/*
+ReindexAgentRuns Reindex agent runs
+
+Rebuilds the current project agent-run Elasticsearch index directly from MongoDB. By default this recreates the stable agent-runs index before indexing.
+
+**Required permissions:** `content:admin`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiReindexAgentRunsRequest
+*/
+func (a *CommandsAPIService) ReindexAgentRuns(ctx context.Context) ApiReindexAgentRunsRequest {
+	return ApiReindexAgentRunsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return ReindexAgentRunsResponse
+func (a *CommandsAPIService) ReindexAgentRunsExecute(r ApiReindexAgentRunsRequest) (*ReindexAgentRunsResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ReindexAgentRunsResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CommandsAPIService.ReindexAgentRuns")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/indexing/agent-runs/reindex"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.reindexAgentRunsPayload == nil {
+		return localVarReturnValue, nil, reportError("reindexAgentRunsPayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	// body params
+	localVarPostBody = r.reindexAgentRunsPayload
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiRunZenoMigrationRequest struct {
 	ctx                 context.Context
 	ApiService          *CommandsAPIService
