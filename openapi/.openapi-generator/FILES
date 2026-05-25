@@ -321,6 +321,7 @@ model_dsl_workflow_step.go
 model_durable_task_status.go
 model_duration_value.go
 model_dynamic_scaling_types.go
+model_elasticsearch_backend.go
 model_email_channel.go
 model_embedding.go
 model_embedding_output.go
@@ -563,6 +564,7 @@ model_project_model_defaults.go
 model_project_plugins_update_payload.go
 model_project_ref.go
 model_project_roles.go
+model_project_search_tier.go
 model_project_token_request.go
 model_project_tool_info.go
 model_promote_dashboard_version_payload.go

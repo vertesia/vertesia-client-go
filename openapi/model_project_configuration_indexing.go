@@ -21,6 +21,10 @@ var _ MappedNullable = &ProjectConfigurationIndexing{}
 type ProjectConfigurationIndexing struct {
 	// Enable indexing for content objects in this project. When enabled, content changes trigger indexing workflows. Defaults to true - indexing is always on when ES infrastructure is available.
 	Enabled *bool `json:"enabled,omitempty"`
+	// Search tier for this project. standard uses the regional hosted Elasticsearch deployment. performance uses the regional serverless Elasticsearch project. Defaults to standard when omitted.
+	SearchTier *ProjectSearchTier `json:"search_tier,omitempty"`
+	// Elasticsearch backend override for this project. Prefer search_tier for project configuration unless an explicit backend override is needed.
+	Backend *ElasticsearchBackend `json:"backend,omitempty"`
 }
 
 // NewProjectConfigurationIndexing instantiates a new ProjectConfigurationIndexing object
@@ -72,6 +76,70 @@ func (o *ProjectConfigurationIndexing) SetEnabled(v bool) {
 	o.Enabled = &v
 }
 
+// GetSearchTier returns the SearchTier field value if set, zero value otherwise.
+func (o *ProjectConfigurationIndexing) GetSearchTier() ProjectSearchTier {
+	if o == nil || IsNil(o.SearchTier) {
+		var ret ProjectSearchTier
+		return ret
+	}
+	return *o.SearchTier
+}
+
+// GetSearchTierOk returns a tuple with the SearchTier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProjectConfigurationIndexing) GetSearchTierOk() (*ProjectSearchTier, bool) {
+	if o == nil || IsNil(o.SearchTier) {
+		return nil, false
+	}
+	return o.SearchTier, true
+}
+
+// HasSearchTier returns a boolean if a field has been set.
+func (o *ProjectConfigurationIndexing) HasSearchTier() bool {
+	if o != nil && !IsNil(o.SearchTier) {
+		return true
+	}
+
+	return false
+}
+
+// SetSearchTier gets a reference to the given ProjectSearchTier and assigns it to the SearchTier field.
+func (o *ProjectConfigurationIndexing) SetSearchTier(v ProjectSearchTier) {
+	o.SearchTier = &v
+}
+
+// GetBackend returns the Backend field value if set, zero value otherwise.
+func (o *ProjectConfigurationIndexing) GetBackend() ElasticsearchBackend {
+	if o == nil || IsNil(o.Backend) {
+		var ret ElasticsearchBackend
+		return ret
+	}
+	return *o.Backend
+}
+
+// GetBackendOk returns a tuple with the Backend field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProjectConfigurationIndexing) GetBackendOk() (*ElasticsearchBackend, bool) {
+	if o == nil || IsNil(o.Backend) {
+		return nil, false
+	}
+	return o.Backend, true
+}
+
+// HasBackend returns a boolean if a field has been set.
+func (o *ProjectConfigurationIndexing) HasBackend() bool {
+	if o != nil && !IsNil(o.Backend) {
+		return true
+	}
+
+	return false
+}
+
+// SetBackend gets a reference to the given ElasticsearchBackend and assigns it to the Backend field.
+func (o *ProjectConfigurationIndexing) SetBackend(v ElasticsearchBackend) {
+	o.Backend = &v
+}
+
 func (o ProjectConfigurationIndexing) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -84,6 +152,12 @@ func (o ProjectConfigurationIndexing) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Enabled) {
 		toSerialize["enabled"] = o.Enabled
+	}
+	if !IsNil(o.SearchTier) {
+		toSerialize["search_tier"] = o.SearchTier
+	}
+	if !IsNil(o.Backend) {
+		toSerialize["backend"] = o.Backend
 	}
 	return toSerialize, nil
 }
