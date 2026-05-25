@@ -381,7 +381,6 @@ model_get_upload_url_payload.go
 model_github_configuration.go
 model_gladia_configuration.go
 model_gladia_configuration_input.go
-model_google_project_token_response.go
 model_groq_options.go
 model_human_task_definition.go
 model_i_create_project_payload.go
