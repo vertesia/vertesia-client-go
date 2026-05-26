@@ -34,6 +34,22 @@ type IndexingStatusResponseReindexProgress struct {
 	Written float32 `json:"written"`
 	// Documents that failed to index
 	Errors float32 `json:"errors"`
+	// Embedding vectors written to target index
+	EmbeddingsWritten *float32 `json:"embeddings_written,omitempty"`
+	// Embedding vectors skipped because they were invalid or dimension-mismatched
+	SkippedEmbeddings *float32 `json:"skipped_embeddings,omitempty"`
+	// Text embedding vectors written to target index
+	EmbeddingsTextWritten *float32 `json:"embeddings_text_written,omitempty"`
+	// Image embedding vectors written to target index
+	EmbeddingsImageWritten *float32 `json:"embeddings_image_written,omitempty"`
+	// Properties embedding vectors written to target index
+	EmbeddingsPropertiesWritten *float32 `json:"embeddings_properties_written,omitempty"`
+	// Text embedding vectors skipped because they were invalid or dimension-mismatched
+	EmbeddingsTextSkipped *float32 `json:"embeddings_text_skipped,omitempty"`
+	// Image embedding vectors skipped because they were invalid or dimension-mismatched
+	EmbeddingsImageSkipped *float32 `json:"embeddings_image_skipped,omitempty"`
+	// Properties embedding vectors skipped because they were invalid or dimension-mismatched
+	EmbeddingsPropertiesSkipped *float32 `json:"embeddings_properties_skipped,omitempty"`
 	// Documents processed per second
 	DocsPerSecond float32 `json:"docs_per_second"`
 	// Elapsed time in seconds
@@ -248,6 +264,262 @@ func (o *IndexingStatusResponseReindexProgress) SetErrors(v float32) {
 	o.Errors = v
 }
 
+// GetEmbeddingsWritten returns the EmbeddingsWritten field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsWritten() float32 {
+	if o == nil || IsNil(o.EmbeddingsWritten) {
+		var ret float32
+		return ret
+	}
+	return *o.EmbeddingsWritten
+}
+
+// GetEmbeddingsWrittenOk returns a tuple with the EmbeddingsWritten field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsWrittenOk() (*float32, bool) {
+	if o == nil || IsNil(o.EmbeddingsWritten) {
+		return nil, false
+	}
+	return o.EmbeddingsWritten, true
+}
+
+// HasEmbeddingsWritten returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasEmbeddingsWritten() bool {
+	if o != nil && !IsNil(o.EmbeddingsWritten) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmbeddingsWritten gets a reference to the given float32 and assigns it to the EmbeddingsWritten field.
+func (o *IndexingStatusResponseReindexProgress) SetEmbeddingsWritten(v float32) {
+	o.EmbeddingsWritten = &v
+}
+
+// GetSkippedEmbeddings returns the SkippedEmbeddings field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetSkippedEmbeddings() float32 {
+	if o == nil || IsNil(o.SkippedEmbeddings) {
+		var ret float32
+		return ret
+	}
+	return *o.SkippedEmbeddings
+}
+
+// GetSkippedEmbeddingsOk returns a tuple with the SkippedEmbeddings field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetSkippedEmbeddingsOk() (*float32, bool) {
+	if o == nil || IsNil(o.SkippedEmbeddings) {
+		return nil, false
+	}
+	return o.SkippedEmbeddings, true
+}
+
+// HasSkippedEmbeddings returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasSkippedEmbeddings() bool {
+	if o != nil && !IsNil(o.SkippedEmbeddings) {
+		return true
+	}
+
+	return false
+}
+
+// SetSkippedEmbeddings gets a reference to the given float32 and assigns it to the SkippedEmbeddings field.
+func (o *IndexingStatusResponseReindexProgress) SetSkippedEmbeddings(v float32) {
+	o.SkippedEmbeddings = &v
+}
+
+// GetEmbeddingsTextWritten returns the EmbeddingsTextWritten field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsTextWritten() float32 {
+	if o == nil || IsNil(o.EmbeddingsTextWritten) {
+		var ret float32
+		return ret
+	}
+	return *o.EmbeddingsTextWritten
+}
+
+// GetEmbeddingsTextWrittenOk returns a tuple with the EmbeddingsTextWritten field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsTextWrittenOk() (*float32, bool) {
+	if o == nil || IsNil(o.EmbeddingsTextWritten) {
+		return nil, false
+	}
+	return o.EmbeddingsTextWritten, true
+}
+
+// HasEmbeddingsTextWritten returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasEmbeddingsTextWritten() bool {
+	if o != nil && !IsNil(o.EmbeddingsTextWritten) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmbeddingsTextWritten gets a reference to the given float32 and assigns it to the EmbeddingsTextWritten field.
+func (o *IndexingStatusResponseReindexProgress) SetEmbeddingsTextWritten(v float32) {
+	o.EmbeddingsTextWritten = &v
+}
+
+// GetEmbeddingsImageWritten returns the EmbeddingsImageWritten field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsImageWritten() float32 {
+	if o == nil || IsNil(o.EmbeddingsImageWritten) {
+		var ret float32
+		return ret
+	}
+	return *o.EmbeddingsImageWritten
+}
+
+// GetEmbeddingsImageWrittenOk returns a tuple with the EmbeddingsImageWritten field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsImageWrittenOk() (*float32, bool) {
+	if o == nil || IsNil(o.EmbeddingsImageWritten) {
+		return nil, false
+	}
+	return o.EmbeddingsImageWritten, true
+}
+
+// HasEmbeddingsImageWritten returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasEmbeddingsImageWritten() bool {
+	if o != nil && !IsNil(o.EmbeddingsImageWritten) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmbeddingsImageWritten gets a reference to the given float32 and assigns it to the EmbeddingsImageWritten field.
+func (o *IndexingStatusResponseReindexProgress) SetEmbeddingsImageWritten(v float32) {
+	o.EmbeddingsImageWritten = &v
+}
+
+// GetEmbeddingsPropertiesWritten returns the EmbeddingsPropertiesWritten field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsPropertiesWritten() float32 {
+	if o == nil || IsNil(o.EmbeddingsPropertiesWritten) {
+		var ret float32
+		return ret
+	}
+	return *o.EmbeddingsPropertiesWritten
+}
+
+// GetEmbeddingsPropertiesWrittenOk returns a tuple with the EmbeddingsPropertiesWritten field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsPropertiesWrittenOk() (*float32, bool) {
+	if o == nil || IsNil(o.EmbeddingsPropertiesWritten) {
+		return nil, false
+	}
+	return o.EmbeddingsPropertiesWritten, true
+}
+
+// HasEmbeddingsPropertiesWritten returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasEmbeddingsPropertiesWritten() bool {
+	if o != nil && !IsNil(o.EmbeddingsPropertiesWritten) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmbeddingsPropertiesWritten gets a reference to the given float32 and assigns it to the EmbeddingsPropertiesWritten field.
+func (o *IndexingStatusResponseReindexProgress) SetEmbeddingsPropertiesWritten(v float32) {
+	o.EmbeddingsPropertiesWritten = &v
+}
+
+// GetEmbeddingsTextSkipped returns the EmbeddingsTextSkipped field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsTextSkipped() float32 {
+	if o == nil || IsNil(o.EmbeddingsTextSkipped) {
+		var ret float32
+		return ret
+	}
+	return *o.EmbeddingsTextSkipped
+}
+
+// GetEmbeddingsTextSkippedOk returns a tuple with the EmbeddingsTextSkipped field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsTextSkippedOk() (*float32, bool) {
+	if o == nil || IsNil(o.EmbeddingsTextSkipped) {
+		return nil, false
+	}
+	return o.EmbeddingsTextSkipped, true
+}
+
+// HasEmbeddingsTextSkipped returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasEmbeddingsTextSkipped() bool {
+	if o != nil && !IsNil(o.EmbeddingsTextSkipped) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmbeddingsTextSkipped gets a reference to the given float32 and assigns it to the EmbeddingsTextSkipped field.
+func (o *IndexingStatusResponseReindexProgress) SetEmbeddingsTextSkipped(v float32) {
+	o.EmbeddingsTextSkipped = &v
+}
+
+// GetEmbeddingsImageSkipped returns the EmbeddingsImageSkipped field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsImageSkipped() float32 {
+	if o == nil || IsNil(o.EmbeddingsImageSkipped) {
+		var ret float32
+		return ret
+	}
+	return *o.EmbeddingsImageSkipped
+}
+
+// GetEmbeddingsImageSkippedOk returns a tuple with the EmbeddingsImageSkipped field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsImageSkippedOk() (*float32, bool) {
+	if o == nil || IsNil(o.EmbeddingsImageSkipped) {
+		return nil, false
+	}
+	return o.EmbeddingsImageSkipped, true
+}
+
+// HasEmbeddingsImageSkipped returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasEmbeddingsImageSkipped() bool {
+	if o != nil && !IsNil(o.EmbeddingsImageSkipped) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmbeddingsImageSkipped gets a reference to the given float32 and assigns it to the EmbeddingsImageSkipped field.
+func (o *IndexingStatusResponseReindexProgress) SetEmbeddingsImageSkipped(v float32) {
+	o.EmbeddingsImageSkipped = &v
+}
+
+// GetEmbeddingsPropertiesSkipped returns the EmbeddingsPropertiesSkipped field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsPropertiesSkipped() float32 {
+	if o == nil || IsNil(o.EmbeddingsPropertiesSkipped) {
+		var ret float32
+		return ret
+	}
+	return *o.EmbeddingsPropertiesSkipped
+}
+
+// GetEmbeddingsPropertiesSkippedOk returns a tuple with the EmbeddingsPropertiesSkipped field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetEmbeddingsPropertiesSkippedOk() (*float32, bool) {
+	if o == nil || IsNil(o.EmbeddingsPropertiesSkipped) {
+		return nil, false
+	}
+	return o.EmbeddingsPropertiesSkipped, true
+}
+
+// HasEmbeddingsPropertiesSkipped returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasEmbeddingsPropertiesSkipped() bool {
+	if o != nil && !IsNil(o.EmbeddingsPropertiesSkipped) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmbeddingsPropertiesSkipped gets a reference to the given float32 and assigns it to the EmbeddingsPropertiesSkipped field.
+func (o *IndexingStatusResponseReindexProgress) SetEmbeddingsPropertiesSkipped(v float32) {
+	o.EmbeddingsPropertiesSkipped = &v
+}
+
 // GetDocsPerSecond returns the DocsPerSecond field value
 func (o *IndexingStatusResponseReindexProgress) GetDocsPerSecond() float32 {
 	if o == nil {
@@ -411,6 +683,30 @@ func (o IndexingStatusResponseReindexProgress) ToMap() (map[string]interface{}, 
 	toSerialize["scanned"] = o.Scanned
 	toSerialize["written"] = o.Written
 	toSerialize["errors"] = o.Errors
+	if !IsNil(o.EmbeddingsWritten) {
+		toSerialize["embeddings_written"] = o.EmbeddingsWritten
+	}
+	if !IsNil(o.SkippedEmbeddings) {
+		toSerialize["skipped_embeddings"] = o.SkippedEmbeddings
+	}
+	if !IsNil(o.EmbeddingsTextWritten) {
+		toSerialize["embeddings_text_written"] = o.EmbeddingsTextWritten
+	}
+	if !IsNil(o.EmbeddingsImageWritten) {
+		toSerialize["embeddings_image_written"] = o.EmbeddingsImageWritten
+	}
+	if !IsNil(o.EmbeddingsPropertiesWritten) {
+		toSerialize["embeddings_properties_written"] = o.EmbeddingsPropertiesWritten
+	}
+	if !IsNil(o.EmbeddingsTextSkipped) {
+		toSerialize["embeddings_text_skipped"] = o.EmbeddingsTextSkipped
+	}
+	if !IsNil(o.EmbeddingsImageSkipped) {
+		toSerialize["embeddings_image_skipped"] = o.EmbeddingsImageSkipped
+	}
+	if !IsNil(o.EmbeddingsPropertiesSkipped) {
+		toSerialize["embeddings_properties_skipped"] = o.EmbeddingsPropertiesSkipped
+	}
 	toSerialize["docs_per_second"] = o.DocsPerSecond
 	toSerialize["elapsed_seconds"] = o.ElapsedSeconds
 	toSerialize["estimated_seconds_remaining"] = o.EstimatedSecondsRemaining.Get()
