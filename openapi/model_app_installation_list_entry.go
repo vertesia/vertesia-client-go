@@ -28,11 +28,13 @@ type AppInstallationListEntry struct {
 	// OAuth bindings created at install time via oauth_config provisioning. Maps collection identity (id or name) → OAuth provider ObjectId. Used by the runtime to resolve the correct OAuth provider without relying on manifest names.
 	OauthBindings []AppInstallationOAuthBinding `json:"oauth_bindings,omitempty"`
 	// OAuth bindings created at install time via oauth_providers provisioning. Maps provider key → OAuth provider ObjectId. Multiple collections sharing the same provider all resolve to the same OAuth provider.
-	ProviderBindings   []AppInstallationProviderBinding `json:"provider_bindings,omitempty"`
-	CreatedAt          string                           `json:"created_at"`
-	UpdatedAt          string                           `json:"updated_at"`
-	Manifest           NullableAppManifest              `json:"manifest"`
-	OauthCollectionIds []string                         `json:"oauth_collection_ids,omitempty"`
+	ProviderBindings []AppInstallationProviderBinding `json:"provider_bindings,omitempty"`
+	// Per-installation override of the manifest's access_control policy. When set, takes precedence over the manifest value. When undefined, the manifest value (or 'all' default) applies.
+	AccessControl      *AppAccessControl   `json:"access_control,omitempty"`
+	CreatedAt          string              `json:"created_at"`
+	UpdatedAt          string              `json:"updated_at"`
+	Manifest           NullableAppManifest `json:"manifest"`
+	OauthCollectionIds []string            `json:"oauth_collection_ids,omitempty"`
 }
 
 type _AppInstallationListEntry AppInstallationListEntry
@@ -235,6 +237,38 @@ func (o *AppInstallationListEntry) SetProviderBindings(v []AppInstallationProvid
 	o.ProviderBindings = v
 }
 
+// GetAccessControl returns the AccessControl field value if set, zero value otherwise.
+func (o *AppInstallationListEntry) GetAccessControl() AppAccessControl {
+	if o == nil || IsNil(o.AccessControl) {
+		var ret AppAccessControl
+		return ret
+	}
+	return *o.AccessControl
+}
+
+// GetAccessControlOk returns a tuple with the AccessControl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationListEntry) GetAccessControlOk() (*AppAccessControl, bool) {
+	if o == nil || IsNil(o.AccessControl) {
+		return nil, false
+	}
+	return o.AccessControl, true
+}
+
+// HasAccessControl returns a boolean if a field has been set.
+func (o *AppInstallationListEntry) HasAccessControl() bool {
+	if o != nil && !IsNil(o.AccessControl) {
+		return true
+	}
+
+	return false
+}
+
+// SetAccessControl gets a reference to the given AppAccessControl and assigns it to the AccessControl field.
+func (o *AppInstallationListEntry) SetAccessControl(v AppAccessControl) {
+	o.AccessControl = &v
+}
+
 // GetCreatedAt returns the CreatedAt field value
 func (o *AppInstallationListEntry) GetCreatedAt() string {
 	if o == nil {
@@ -364,6 +398,9 @@ func (o AppInstallationListEntry) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ProviderBindings) {
 		toSerialize["provider_bindings"] = o.ProviderBindings
+	}
+	if !IsNil(o.AccessControl) {
+		toSerialize["access_control"] = o.AccessControl
 	}
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt

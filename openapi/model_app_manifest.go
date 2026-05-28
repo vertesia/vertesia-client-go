@@ -53,7 +53,9 @@ type AppManifest struct {
 	Version *string `json:"version,omitempty"`
 	// Free-form tags used for classification and filtering. Platform apps carry `\"system\"` so UIs can skip install/uninstall/manage-permission controls that don't apply to synthetic installations.
 	Tags []string `json:"tags,omitempty"`
-	Id   string   `json:"id"`
+	// Access control policy for the app. Defaults to 'all' (ACE-gated everywhere) when undefined. See  {@link  AppAccessControl }  for semantics. May be overridden on the AppInstallation.
+	AccessControl *AppAccessControl `json:"access_control,omitempty"`
+	Id            string            `json:"id"`
 	// The owning account. Undefined for apps imported from a master region.
 	Account   *string `json:"account,omitempty"`
 	CreatedAt string  `json:"created_at"`
@@ -619,6 +621,38 @@ func (o *AppManifest) SetTags(v []string) {
 	o.Tags = v
 }
 
+// GetAccessControl returns the AccessControl field value if set, zero value otherwise.
+func (o *AppManifest) GetAccessControl() AppAccessControl {
+	if o == nil || IsNil(o.AccessControl) {
+		var ret AppAccessControl
+		return ret
+	}
+	return *o.AccessControl
+}
+
+// GetAccessControlOk returns a tuple with the AccessControl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppManifest) GetAccessControlOk() (*AppAccessControl, bool) {
+	if o == nil || IsNil(o.AccessControl) {
+		return nil, false
+	}
+	return o.AccessControl, true
+}
+
+// HasAccessControl returns a boolean if a field has been set.
+func (o *AppManifest) HasAccessControl() bool {
+	if o != nil && !IsNil(o.AccessControl) {
+		return true
+	}
+
+	return false
+}
+
+// SetAccessControl gets a reference to the given AppAccessControl and assigns it to the AccessControl field.
+func (o *AppManifest) SetAccessControl(v AppAccessControl) {
+	o.AccessControl = &v
+}
+
 // GetId returns the Id field value
 func (o *AppManifest) GetId() string {
 	if o == nil {
@@ -774,6 +808,9 @@ func (o AppManifest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
+	}
+	if !IsNil(o.AccessControl) {
+		toSerialize["access_control"] = o.AccessControl
 	}
 	toSerialize["id"] = o.Id
 	if !IsNil(o.Account) {

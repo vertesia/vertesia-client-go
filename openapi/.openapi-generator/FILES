@@ -86,6 +86,7 @@ model_api_key_read_response.go
 model_api_key_token_request.go
 model_api_key_types.go
 model_api_key_with_value.go
+model_app_access_control.go
 model_app_available_in.go
 model_app_capabilities.go
 model_app_installation.go

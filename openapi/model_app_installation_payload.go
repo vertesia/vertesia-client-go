@@ -22,6 +22,8 @@ var _ MappedNullable = &AppInstallationPayload{}
 type AppInstallationPayload struct {
 	AppId    string                 `json:"app_id"`
 	Settings map[string]interface{} `json:"settings,omitempty"`
+	// Per-installation override of the manifest's `access_control` policy. When provided, takes precedence over the manifest default for every access check. Sibling of `settings` — admin-controlled, not part of the app's own settings JSON.  Three send-time semantics on update:  - Field omitted entirely from the payload → leave the existing override unchanged.  - Explicit `null` → clear the override, fall back to the manifest default.  - String enum → set the override to that value.  (On install, the same shape applies; omit or pass `null` to use the manifest default.)
+	AccessControl NullableAppAccessControl `json:"access_control,omitempty"`
 	// OAuth credentials for each collection, keyed by collection.id. Legacy callers may still use collection.name for older manifests. Collected from the user at install time for collections with oauth_config.required_at_install.
 	OauthParams map[string]OAuthClientCredentials `json:"oauth_params,omitempty"`
 	// OAuth credentials for named providers, keyed by the provider key from oauth_providers. Collected from the user at install time for providers with required_at_install. Separate from oauth_params to avoid key collisions between provider keys and collection ids.
@@ -104,6 +106,49 @@ func (o *AppInstallationPayload) SetSettings(v map[string]interface{}) {
 	o.Settings = v
 }
 
+// GetAccessControl returns the AccessControl field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *AppInstallationPayload) GetAccessControl() AppAccessControl {
+	if o == nil || IsNil(o.AccessControl.Get()) {
+		var ret AppAccessControl
+		return ret
+	}
+	return *o.AccessControl.Get()
+}
+
+// GetAccessControlOk returns a tuple with the AccessControl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *AppInstallationPayload) GetAccessControlOk() (*AppAccessControl, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.AccessControl.Get(), o.AccessControl.IsSet()
+}
+
+// HasAccessControl returns a boolean if a field has been set.
+func (o *AppInstallationPayload) HasAccessControl() bool {
+	if o != nil && o.AccessControl.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetAccessControl gets a reference to the given NullableAppAccessControl and assigns it to the AccessControl field.
+func (o *AppInstallationPayload) SetAccessControl(v AppAccessControl) {
+	o.AccessControl.Set(&v)
+}
+
+// SetAccessControlNil sets the value for AccessControl to be an explicit nil
+func (o *AppInstallationPayload) SetAccessControlNil() {
+	o.AccessControl.Set(nil)
+}
+
+// UnsetAccessControl ensures that no value is present for AccessControl, not even an explicit nil
+func (o *AppInstallationPayload) UnsetAccessControl() {
+	o.AccessControl.Unset()
+}
+
 // GetOauthParams returns the OauthParams field value if set, zero value otherwise.
 func (o *AppInstallationPayload) GetOauthParams() map[string]OAuthClientCredentials {
 	if o == nil || IsNil(o.OauthParams) {
@@ -181,6 +226,9 @@ func (o AppInstallationPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize["app_id"] = o.AppId
 	if !IsNil(o.Settings) {
 		toSerialize["settings"] = o.Settings
+	}
+	if o.AccessControl.IsSet() {
+		toSerialize["access_control"] = o.AccessControl.Get()
 	}
 	if !IsNil(o.OauthParams) {
 		toSerialize["oauth_params"] = o.OauthParams
