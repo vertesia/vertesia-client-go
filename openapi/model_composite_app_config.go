@@ -20,7 +20,7 @@ var _ MappedNullable = &CompositeAppConfig{}
 
 // CompositeAppConfig CompositeApp shell configuration. This is the main configuration interface for storing CompositeApp settings. Used as the MongoDB model for persisting CompositeApp configurations.
 type CompositeAppConfig struct {
-	// The unique identifier for this CompositeApp configuration  Undefined if the configuration doesn't exists yet.
+	// The unique identifier for this CompositeApp configuration Undefined if the configuration doesn't exists yet.
 	Id *string `json:"id,omitempty"`
 	// The project this CompositeApp belongs to
 	Project string `json:"project"`

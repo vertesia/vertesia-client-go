@@ -50,6 +50,10 @@ type IndexingStatusResponseReindexProgress struct {
 	EmbeddingsImageSkipped *float32 `json:"embeddings_image_skipped,omitempty"`
 	// Properties embedding vectors skipped because they were invalid or dimension-mismatched
 	EmbeddingsPropertiesSkipped *float32 `json:"embeddings_properties_skipped,omitempty"`
+	// Oversized property string values dropped during transform (size-based pruning)
+	PropertiesValuesTrimmed *float32 `json:"properties_values_trimmed,omitempty"`
+	// Total bytes dropped from oversized property values
+	PropertiesBytesDropped *float32 `json:"properties_bytes_dropped,omitempty"`
 	// Documents processed per second
 	DocsPerSecond float32 `json:"docs_per_second"`
 	// Elapsed time in seconds
@@ -520,6 +524,70 @@ func (o *IndexingStatusResponseReindexProgress) SetEmbeddingsPropertiesSkipped(v
 	o.EmbeddingsPropertiesSkipped = &v
 }
 
+// GetPropertiesValuesTrimmed returns the PropertiesValuesTrimmed field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetPropertiesValuesTrimmed() float32 {
+	if o == nil || IsNil(o.PropertiesValuesTrimmed) {
+		var ret float32
+		return ret
+	}
+	return *o.PropertiesValuesTrimmed
+}
+
+// GetPropertiesValuesTrimmedOk returns a tuple with the PropertiesValuesTrimmed field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetPropertiesValuesTrimmedOk() (*float32, bool) {
+	if o == nil || IsNil(o.PropertiesValuesTrimmed) {
+		return nil, false
+	}
+	return o.PropertiesValuesTrimmed, true
+}
+
+// HasPropertiesValuesTrimmed returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasPropertiesValuesTrimmed() bool {
+	if o != nil && !IsNil(o.PropertiesValuesTrimmed) {
+		return true
+	}
+
+	return false
+}
+
+// SetPropertiesValuesTrimmed gets a reference to the given float32 and assigns it to the PropertiesValuesTrimmed field.
+func (o *IndexingStatusResponseReindexProgress) SetPropertiesValuesTrimmed(v float32) {
+	o.PropertiesValuesTrimmed = &v
+}
+
+// GetPropertiesBytesDropped returns the PropertiesBytesDropped field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetPropertiesBytesDropped() float32 {
+	if o == nil || IsNil(o.PropertiesBytesDropped) {
+		var ret float32
+		return ret
+	}
+	return *o.PropertiesBytesDropped
+}
+
+// GetPropertiesBytesDroppedOk returns a tuple with the PropertiesBytesDropped field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetPropertiesBytesDroppedOk() (*float32, bool) {
+	if o == nil || IsNil(o.PropertiesBytesDropped) {
+		return nil, false
+	}
+	return o.PropertiesBytesDropped, true
+}
+
+// HasPropertiesBytesDropped returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasPropertiesBytesDropped() bool {
+	if o != nil && !IsNil(o.PropertiesBytesDropped) {
+		return true
+	}
+
+	return false
+}
+
+// SetPropertiesBytesDropped gets a reference to the given float32 and assigns it to the PropertiesBytesDropped field.
+func (o *IndexingStatusResponseReindexProgress) SetPropertiesBytesDropped(v float32) {
+	o.PropertiesBytesDropped = &v
+}
+
 // GetDocsPerSecond returns the DocsPerSecond field value
 func (o *IndexingStatusResponseReindexProgress) GetDocsPerSecond() float32 {
 	if o == nil {
@@ -706,6 +774,12 @@ func (o IndexingStatusResponseReindexProgress) ToMap() (map[string]interface{}, 
 	}
 	if !IsNil(o.EmbeddingsPropertiesSkipped) {
 		toSerialize["embeddings_properties_skipped"] = o.EmbeddingsPropertiesSkipped
+	}
+	if !IsNil(o.PropertiesValuesTrimmed) {
+		toSerialize["properties_values_trimmed"] = o.PropertiesValuesTrimmed
+	}
+	if !IsNil(o.PropertiesBytesDropped) {
+		toSerialize["properties_bytes_dropped"] = o.PropertiesBytesDropped
 	}
 	toSerialize["docs_per_second"] = o.DocsPerSecond
 	toSerialize["elapsed_seconds"] = o.ElapsedSeconds

@@ -23,7 +23,7 @@ type AgentToolDefinition struct {
 	Name        string                 `json:"name"`
 	Description *string                `json:"description,omitempty"`
 	InputSchema map[string]interface{} `json:"input_schema"`
-	// The tool execution URL. It can be an absolute URL or a path in which case the URL is obtained  using the base URL of the tool server API. Ex: http://tool-server.com/api/ Example of relative URLs: \"tools/my-tool-collection\" or \"/api/tools/my-tool-collection\"
+	// The tool execution URL. It can be an absolute URL or a path in which case the URL is obtained using the base URL of the tool server API. Ex: http://tool-server.com/api/ Example of relative URLs: \"tools/my-tool-collection\" or \"/api/tools/my-tool-collection\"
 	Url *string `json:"url,omitempty"`
 	// The tool category if any - for UI purposes.
 	Category *string `json:"category,omitempty"`

@@ -40,7 +40,7 @@ type Collection struct {
 	Dynamic bool                  `json:"dynamic"`
 	Status  CollectionStatus      `json:"status"`
 	Type    *ContentObjectTypeRef `json:"type,omitempty"`
-	// A flag to indicate whether to track and sync member HEAD revisions.  The default is to sync HEAD revisions for collection members (skip_head_sync: false)
+	// A flag to indicate whether to track and sync member HEAD revisions. The default is to sync HEAD revisions for collection members (skip_head_sync: false)
 	SkipHeadSync bool `json:"skip_head_sync"`
 	// The parent collections if any. A collection can have multiple parents.
 	Parents []string `json:"parents,omitempty"`

@@ -32,7 +32,7 @@ type AppManifest struct {
 	// A color name to be used as the color of the app card (e.g. blue, red, green, etc.) If not specified a random color will be picked.
 	Color  *string `json:"color,omitempty"`
 	Status string  `json:"status"`
-	// The UI configuration of the app. If not specified and the app \"ui\" is in the app capabilities  then the ui configuration will be fetched from the endpoint property.
+	// The UI configuration of the app. If not specified and the app \"ui\" is in the app capabilities then the ui configuration will be fetched from the endpoint property.
 	Ui *AppUIConfig `json:"ui,omitempty"`
 	// A list of tool collections endpoints to be used by this app. Prefer using endpoint over tool_collections.
 	ToolCollections []ToolCollectionObject `json:"tool_collections,omitempty"`
@@ -45,7 +45,7 @@ type AppManifest struct {
 	SettingsSchema *JSONSchema `json:"settings_schema,omitempty"`
 	// Describe the capabiltities of this app - which kind of contributions it provides.
 	Capabilities []AppCapabilities `json:"capabilities,omitempty"`
-	// The app endpoint URL This URL should return a JSON object describing the contributions provided by the app. The object shape must satisfies AppPackage interface. The endpoint must support GET method and a `scope` parameter to filter which resources are included in the returned AppPackage: The supported scope values are: - ui - tools - interactions - types - processes - settings - all (the default if no scope is provided)  You can also use comma-separated values to combine scopes (e.g. \"ui,tools\").  Example:  - ?scope=ui,tools - returns only the UI configuration
+	// The app endpoint URL This URL should return a JSON object describing the contributions provided by the app. The object shape must satisfies AppPackage interface. The endpoint must support GET method and a `scope` parameter to filter which resources are included in the returned AppPackage: The supported scope values are: - ui - tools - interactions - types - processes - settings - all (the default if no scope is provided)  You can also use comma-separated values to combine scopes (e.g. \"ui,tools\").  Example: - ?scope=ui,tools - returns only the UI configuration
 	Endpoint *string `json:"endpoint,omitempty"`
 	// Optional endpoint overrides keyed by environment name. When resolving the app endpoint, if the current environment name matches a key, the corresponding URL is used instead of the main `endpoint`. Only dev environment names are allowed as keys (starting with \"desktop-\" or \"dev-\").
 	EndpointOverrides map[string]string `json:"endpoint_overrides,omitempty"`

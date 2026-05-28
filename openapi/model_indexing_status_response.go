@@ -26,8 +26,12 @@ type IndexingStatusResponse struct {
 	IndexingEnabled bool `json:"indexing_enabled"`
 	// Deprecated: Now derived from indexing_enabled - queries automatically route to index when indexing is enabled
 	// Deprecated
-	QueryEnabled bool                        `json:"query_enabled"`
-	Index        IndexingStatusResponseIndex `json:"index"`
+	QueryEnabled bool `json:"query_enabled"`
+	// Resolved Elasticsearch backend serving this project
+	Backend ElasticsearchBackend `json:"backend"`
+	// Resolved search tier for this project
+	SearchTier ProjectSearchTier           `json:"search_tier"`
+	Index      IndexingStatusResponseIndex `json:"index"`
 	// MongoDB document count for comparison
 	MongoDocumentCount float32 `json:"mongo_document_count"`
 	// Whether a reindex is currently in progress
@@ -42,11 +46,13 @@ type _IndexingStatusResponse IndexingStatusResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewIndexingStatusResponse(infrastructureEnabled bool, indexingEnabled bool, queryEnabled bool, index IndexingStatusResponseIndex, mongoDocumentCount float32, reindexInProgress bool) *IndexingStatusResponse {
+func NewIndexingStatusResponse(infrastructureEnabled bool, indexingEnabled bool, queryEnabled bool, backend ElasticsearchBackend, searchTier ProjectSearchTier, index IndexingStatusResponseIndex, mongoDocumentCount float32, reindexInProgress bool) *IndexingStatusResponse {
 	this := IndexingStatusResponse{}
 	this.InfrastructureEnabled = infrastructureEnabled
 	this.IndexingEnabled = indexingEnabled
 	this.QueryEnabled = queryEnabled
+	this.Backend = backend
+	this.SearchTier = searchTier
 	this.Index = index
 	this.MongoDocumentCount = mongoDocumentCount
 	this.ReindexInProgress = reindexInProgress
@@ -134,6 +140,54 @@ func (o *IndexingStatusResponse) GetQueryEnabledOk() (*bool, bool) {
 // Deprecated
 func (o *IndexingStatusResponse) SetQueryEnabled(v bool) {
 	o.QueryEnabled = v
+}
+
+// GetBackend returns the Backend field value
+func (o *IndexingStatusResponse) GetBackend() ElasticsearchBackend {
+	if o == nil {
+		var ret ElasticsearchBackend
+		return ret
+	}
+
+	return o.Backend
+}
+
+// GetBackendOk returns a tuple with the Backend field value
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponse) GetBackendOk() (*ElasticsearchBackend, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Backend, true
+}
+
+// SetBackend sets field value
+func (o *IndexingStatusResponse) SetBackend(v ElasticsearchBackend) {
+	o.Backend = v
+}
+
+// GetSearchTier returns the SearchTier field value
+func (o *IndexingStatusResponse) GetSearchTier() ProjectSearchTier {
+	if o == nil {
+		var ret ProjectSearchTier
+		return ret
+	}
+
+	return o.SearchTier
+}
+
+// GetSearchTierOk returns a tuple with the SearchTier field value
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponse) GetSearchTierOk() (*ProjectSearchTier, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.SearchTier, true
+}
+
+// SetSearchTier sets field value
+func (o *IndexingStatusResponse) SetSearchTier(v ProjectSearchTier) {
+	o.SearchTier = v
 }
 
 // GetIndex returns the Index field value
@@ -253,6 +307,8 @@ func (o IndexingStatusResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize["infrastructure_enabled"] = o.InfrastructureEnabled
 	toSerialize["indexing_enabled"] = o.IndexingEnabled
 	toSerialize["query_enabled"] = o.QueryEnabled
+	toSerialize["backend"] = o.Backend
+	toSerialize["search_tier"] = o.SearchTier
 	toSerialize["index"] = o.Index
 	toSerialize["mongo_document_count"] = o.MongoDocumentCount
 	toSerialize["reindex_in_progress"] = o.ReindexInProgress
@@ -275,6 +331,8 @@ func (o *IndexingStatusResponse) UnmarshalJSON(data []byte) (err error) {
 		"infrastructure_enabled",
 		"indexing_enabled",
 		"query_enabled",
+		"backend",
+		"search_tier",
 		"index",
 		"mongo_document_count",
 		"reindex_in_progress",
@@ -310,6 +368,8 @@ func (o *IndexingStatusResponse) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "infrastructure_enabled")
 		delete(additionalProperties, "indexing_enabled")
 		delete(additionalProperties, "query_enabled")
+		delete(additionalProperties, "backend")
+		delete(additionalProperties, "search_tier")
 		delete(additionalProperties, "index")
 		delete(additionalProperties, "mongo_document_count")
 		delete(additionalProperties, "reindex_in_progress")
