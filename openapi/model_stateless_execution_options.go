@@ -27,6 +27,8 @@ type StatelessExecutionOptions struct {
 	// If set to true the original response from the target LLM will be included in the response under the original_response field. This is useful for debugging and for some advanced use cases. It is ignored on streaming requests
 	IncludeOriginalResponse *bool         `json:"include_original_response,omitempty"`
 	ModelOptions            *ModelOptions `json:"model_options,omitempty"`
+	// Per-call HTTP timeouts for upstream LLM-provider calls. These override the driver's default `DriverOptions.httpTimeout` for this execution only.
+	HttpTimeout *HttpTimeoutOptions `json:"httpTimeout,omitempty"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.
 	// Deprecated
 	OutputModality *Modalities `json:"output_modality,omitempty"`
@@ -204,6 +206,38 @@ func (o *StatelessExecutionOptions) SetModelOptions(v ModelOptions) {
 	o.ModelOptions = &v
 }
 
+// GetHttpTimeout returns the HttpTimeout field value if set, zero value otherwise.
+func (o *StatelessExecutionOptions) GetHttpTimeout() HttpTimeoutOptions {
+	if o == nil || IsNil(o.HttpTimeout) {
+		var ret HttpTimeoutOptions
+		return ret
+	}
+	return *o.HttpTimeout
+}
+
+// GetHttpTimeoutOk returns a tuple with the HttpTimeout field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatelessExecutionOptions) GetHttpTimeoutOk() (*HttpTimeoutOptions, bool) {
+	if o == nil || IsNil(o.HttpTimeout) {
+		return nil, false
+	}
+	return o.HttpTimeout, true
+}
+
+// HasHttpTimeout returns a boolean if a field has been set.
+func (o *StatelessExecutionOptions) HasHttpTimeout() bool {
+	if o != nil && !IsNil(o.HttpTimeout) {
+		return true
+	}
+
+	return false
+}
+
+// SetHttpTimeout gets a reference to the given HttpTimeoutOptions and assigns it to the HttpTimeout field.
+func (o *StatelessExecutionOptions) SetHttpTimeout(v HttpTimeoutOptions) {
+	o.HttpTimeout = &v
+}
+
 // GetOutputModality returns the OutputModality field value if set, zero value otherwise.
 // Deprecated
 func (o *StatelessExecutionOptions) GetOutputModality() Modalities {
@@ -261,6 +295,9 @@ func (o StatelessExecutionOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ModelOptions) {
 		toSerialize["model_options"] = o.ModelOptions
+	}
+	if !IsNil(o.HttpTimeout) {
+		toSerialize["httpTimeout"] = o.HttpTimeout
 	}
 	if !IsNil(o.OutputModality) {
 		toSerialize["output_modality"] = o.OutputModality

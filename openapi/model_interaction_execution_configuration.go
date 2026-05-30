@@ -26,6 +26,8 @@ type InteractionExecutionConfiguration struct {
 	RunData      *RunDataStorageLevel `json:"run_data,omitempty"`
 	ConfigMode   *ConfigModes         `json:"configMode,omitempty"`
 	ModelOptions *ModelOptions        `json:"model_options,omitempty"`
+	// Per-run HTTP timeouts for upstream LLM-provider calls.
+	HttpTimeout *HttpTimeoutOptions `json:"http_timeout,omitempty"`
 }
 
 // NewInteractionExecutionConfiguration instantiates a new InteractionExecutionConfiguration object
@@ -269,6 +271,38 @@ func (o *InteractionExecutionConfiguration) SetModelOptions(v ModelOptions) {
 	o.ModelOptions = &v
 }
 
+// GetHttpTimeout returns the HttpTimeout field value if set, zero value otherwise.
+func (o *InteractionExecutionConfiguration) GetHttpTimeout() HttpTimeoutOptions {
+	if o == nil || IsNil(o.HttpTimeout) {
+		var ret HttpTimeoutOptions
+		return ret
+	}
+	return *o.HttpTimeout
+}
+
+// GetHttpTimeoutOk returns a tuple with the HttpTimeout field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InteractionExecutionConfiguration) GetHttpTimeoutOk() (*HttpTimeoutOptions, bool) {
+	if o == nil || IsNil(o.HttpTimeout) {
+		return nil, false
+	}
+	return o.HttpTimeout, true
+}
+
+// HasHttpTimeout returns a boolean if a field has been set.
+func (o *InteractionExecutionConfiguration) HasHttpTimeout() bool {
+	if o != nil && !IsNil(o.HttpTimeout) {
+		return true
+	}
+
+	return false
+}
+
+// SetHttpTimeout gets a reference to the given HttpTimeoutOptions and assigns it to the HttpTimeout field.
+func (o *InteractionExecutionConfiguration) SetHttpTimeout(v HttpTimeoutOptions) {
+	o.HttpTimeout = &v
+}
+
 func (o InteractionExecutionConfiguration) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -299,6 +333,9 @@ func (o InteractionExecutionConfiguration) ToMap() (map[string]interface{}, erro
 	}
 	if !IsNil(o.ModelOptions) {
 		toSerialize["model_options"] = o.ModelOptions
+	}
+	if !IsNil(o.HttpTimeout) {
+		toSerialize["http_timeout"] = o.HttpTimeout
 	}
 	return toSerialize, nil
 }

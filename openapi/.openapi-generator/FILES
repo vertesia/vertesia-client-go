@@ -383,6 +383,7 @@ model_github_configuration.go
 model_gladia_configuration.go
 model_gladia_configuration_input.go
 model_groq_options.go
+model_http_timeout_options.go
 model_human_task_definition.go
 model_i_create_project_payload.go
 model_image_metadata.go

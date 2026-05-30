@@ -28,8 +28,6 @@ type AsyncConversationExecutionPayload struct {
 	DoValidate   *bool                                        `json:"do_validate,omitempty"`
 	Tags         []string                                     `json:"tags,omitempty"`
 	Conversation interface{}                                  `json:"conversation,omitempty"`
-	// The tools to be used in the execution
-	ToolDefinitions []ToolDefinition `json:"tool_definitions,omitempty"`
 	// The workflow related to this Interaction Run.
 	Workflow *ExecutionRunWorkflow `json:"workflow,omitempty"`
 	// Only used by ad-hoc interactions which defines the prompt in the execution payload itself These are temporary interactions using \"tmp:\" suffix.
@@ -333,38 +331,6 @@ func (o *AsyncConversationExecutionPayload) HasConversation() bool {
 // SetConversation gets a reference to the given interface{} and assigns it to the Conversation field.
 func (o *AsyncConversationExecutionPayload) SetConversation(v interface{}) {
 	o.Conversation = v
-}
-
-// GetToolDefinitions returns the ToolDefinitions field value if set, zero value otherwise.
-func (o *AsyncConversationExecutionPayload) GetToolDefinitions() []ToolDefinition {
-	if o == nil || IsNil(o.ToolDefinitions) {
-		var ret []ToolDefinition
-		return ret
-	}
-	return o.ToolDefinitions
-}
-
-// GetToolDefinitionsOk returns a tuple with the ToolDefinitions field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *AsyncConversationExecutionPayload) GetToolDefinitionsOk() ([]ToolDefinition, bool) {
-	if o == nil || IsNil(o.ToolDefinitions) {
-		return nil, false
-	}
-	return o.ToolDefinitions, true
-}
-
-// HasToolDefinitions returns a boolean if a field has been set.
-func (o *AsyncConversationExecutionPayload) HasToolDefinitions() bool {
-	if o != nil && !IsNil(o.ToolDefinitions) {
-		return true
-	}
-
-	return false
-}
-
-// SetToolDefinitions gets a reference to the given []ToolDefinition and assigns it to the ToolDefinitions field.
-func (o *AsyncConversationExecutionPayload) SetToolDefinitions(v []ToolDefinition) {
-	o.ToolDefinitions = v
 }
 
 // GetWorkflow returns the Workflow field value if set, zero value otherwise.
@@ -1252,9 +1218,6 @@ func (o AsyncConversationExecutionPayload) ToMap() (map[string]interface{}, erro
 	if o.Conversation != nil {
 		toSerialize["conversation"] = o.Conversation
 	}
-	if !IsNil(o.ToolDefinitions) {
-		toSerialize["tool_definitions"] = o.ToolDefinitions
-	}
 	if !IsNil(o.Workflow) {
 		toSerialize["workflow"] = o.Workflow
 	}
@@ -1385,7 +1348,6 @@ func (o *AsyncConversationExecutionPayload) UnmarshalJSON(data []byte) (err erro
 		delete(additionalProperties, "do_validate")
 		delete(additionalProperties, "tags")
 		delete(additionalProperties, "conversation")
-		delete(additionalProperties, "tool_definitions")
 		delete(additionalProperties, "workflow")
 		delete(additionalProperties, "prompts")
 		delete(additionalProperties, "asyncCompletion")
