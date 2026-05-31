@@ -28,6 +28,8 @@ const (
 	PROJECTROLES_CONSUMER                 ProjectRoles = "consumer"
 	PROJECTROLES_EXECUTOR                 ProjectRoles = "executor"
 	PROJECTROLES_READER                   ProjectRoles = "reader"
+	PROJECTROLES_AUDITOR                  ProjectRoles = "auditor"
+	PROJECTROLES_SUPPORT                  ProjectRoles = "support"
 	PROJECTROLES_BILLING                  ProjectRoles = "billing"
 	PROJECTROLES_MEMBER                   ProjectRoles = "member"
 	PROJECTROLES_APP_MEMBER               ProjectRoles = "app_member"
@@ -45,6 +47,8 @@ var AllowedProjectRolesEnumValues = []ProjectRoles{
 	"consumer",
 	"executor",
 	"reader",
+	"auditor",
+	"support",
 	"billing",
 	"member",
 	"app_member",

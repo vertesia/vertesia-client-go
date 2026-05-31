@@ -504,7 +504,7 @@ GetWorkflowRun Retrieve a workflow run
 
 Retrieves workflow run status, timing, input, result, and optional execution history.
 
-**Required permissions:** `workflow:run`
+**Required permissions:** Any of `workflow:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param workflowId
@@ -660,7 +660,7 @@ GetWorkflowRunUpdates Get workflow run updates
 
 Retrieves compact workflow updates published since the provided offset.
 
-**Required permissions:** `workflow:run`
+**Required permissions:** Any of `workflow:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param workflowId
@@ -803,7 +803,7 @@ ListWorkflowRuleRuns List runs for a workflow rule
 
 Lists workflow runs started from a specific workflow rule.
 
-**Required permissions:** `workflow:admin`
+**Required permissions:** Any of `workflow:read`, `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param ruleId
@@ -945,7 +945,7 @@ ListWorkflowRuns List workflow runs
 
 Lists workflow runs with filtering, pagination, and optional rule scoping.
 
-**Required permissions:** `workflow:admin`
+**Required permissions:** Any of `workflow:read`, `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListWorkflowRunsRequest
@@ -1234,7 +1234,7 @@ QueryWorkflowRun Query a workflow run
 
 Executes a named query against a workflow run.
 
-**Required permissions:** `workflow:run`
+**Required permissions:** Any of `workflow:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param workflowId
@@ -1546,7 +1546,7 @@ StreamWorkflowRunUpdates Stream workflow run updates
 
 Streams workflow messages and updates for a workflow run.
 
-**Required permissions:** `workflow:run`
+**Required permissions:** Any of `workflow:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param workflowId

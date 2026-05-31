@@ -32,6 +32,7 @@ const (
 	PERMISSION_PROJECT_SETTINGS_WRITE   Permission = "project:settings_write"
 	PERMISSION_API_KEY_CREATE           Permission = "api_key:create"
 	PERMISSION_API_KEY_READ             Permission = "api_key:read"
+	PERMISSION_API_KEY_SECRET_READ      Permission = "api_key:secret_read"
 	PERMISSION_API_KEY_UPDATE           Permission = "api_key:update"
 	PERMISSION_API_KEY_DELETE           Permission = "api_key:delete"
 	PERMISSION_ACCOUNT_READ             Permission = "account:read"
@@ -39,15 +40,19 @@ const (
 	PERMISSION_ACCOUNT_ADMIN            Permission = "account:admin"
 	PERMISSION_ACCOUNT_BILLING          Permission = "account:billing"
 	PERMISSION_BILLING_READ             Permission = "billing:read"
+	PERMISSION_AUDIT_READ               Permission = "audit:read"
 	PERMISSION_ACCOUNT_MEMBER           Permission = "account:member"
 	PERMISSION_CONTENT_READ             Permission = "content:read"
+	PERMISSION_CONTENT_READ_ALL         Permission = "content:read_all"
 	PERMISSION_CONTENT_WRITE            Permission = "content:write"
 	PERMISSION_CONTENT_DELETE           Permission = "content:delete"
 	PERMISSION_CONTENT_ADMIN            Permission = "content:admin"
 	PERMISSION_CONTENT_SUPERADMIN       Permission = "content:superadmin"
+	PERMISSION_WORKFLOW_READ            Permission = "workflow:read"
 	PERMISSION_WORKFLOW_RUN             Permission = "workflow:run"
 	PERMISSION_WORKFLOW_ADMIN           Permission = "workflow:admin"
 	PERMISSION_WORKFLOW_SUPERADMIN      Permission = "workflow:superadmin"
+	PERMISSION_AGENT_RUN_READ           Permission = "agent_run:read"
 	PERMISSION_TASK_READ                Permission = "task:read"
 	PERMISSION_TASK_MANAGE              Permission = "task:manage"
 	PERMISSION_IAM_IMPERSONATE          Permission = "iam:impersonate"
@@ -69,6 +74,7 @@ var AllowedPermissionEnumValues = []Permission{
 	"project:settings_write",
 	"api_key:create",
 	"api_key:read",
+	"api_key:secret_read",
 	"api_key:update",
 	"api_key:delete",
 	"account:read",
@@ -76,15 +82,19 @@ var AllowedPermissionEnumValues = []Permission{
 	"account:admin",
 	"account:billing",
 	"billing:read",
+	"audit:read",
 	"account:member",
 	"content:read",
+	"content:read_all",
 	"content:write",
 	"content:delete",
 	"content:admin",
 	"content:superadmin",
+	"workflow:read",
 	"workflow:run",
 	"workflow:admin",
 	"workflow:superadmin",
+	"agent_run:read",
 	"task:read",
 	"task:manage",
 	"iam:impersonate",

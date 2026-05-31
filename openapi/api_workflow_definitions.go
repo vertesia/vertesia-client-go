@@ -325,7 +325,7 @@ GetWorkflowDefinition Retrieve a workflow definition
 
 Retrieves a DSL workflow definition by ID.
 
-**Required permissions:** `workflow:admin`
+**Required permissions:** Any of `workflow:read`, `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param workflowId
@@ -461,7 +461,7 @@ ListWorkflowDefinitions List workflow definitions
 
 Lists DSL workflow definitions in the current project.
 
-**Required permissions:** `workflow:admin`
+**Required permissions:** Any of `workflow:read`, `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListWorkflowDefinitionsRequest

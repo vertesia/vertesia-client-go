@@ -127,7 +127,7 @@ ListAuditTrailEvents List audit trail events
 
 Lists audit trail events with optional filtering by project, resource, principal, action, and time range.
 
-**Required permissions:** Any of `project:admin`, `account:admin`
+**Required permissions:** Any of `project:admin`, `account:admin`, `audit:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListAuditTrailEventsRequest

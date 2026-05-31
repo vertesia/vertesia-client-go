@@ -471,7 +471,7 @@ GetApiKeyToken Get an API key token
 
 Returns a generated auth token derived from a retrievable API key value.
 
-**Required permissions:** `api_key:read`
+**Required permissions:** `api_key:secret_read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param keyId

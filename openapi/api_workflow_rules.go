@@ -325,7 +325,7 @@ GetWorkflowRule Retrieve a workflow rule
 
 Retrieves a workflow rule by ID.
 
-**Required permissions:** `workflow:admin`
+**Required permissions:** Any of `workflow:read`, `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param ruleId
@@ -460,6 +460,8 @@ func (r ApiListWorkflowRulesRequest) Execute() ([]WorkflowRuleItem, *http.Respon
 ListWorkflowRules List workflow rules
 
 Lists workflow rules available in the current project.
+
+**Required permissions:** Any of `workflow:read`, `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListWorkflowRulesRequest

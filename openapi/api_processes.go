@@ -325,7 +325,7 @@ GetProcessDefinition Retrieve a process definition
 
 Retrieves a process definition by id.
 
-**Required permissions:** `workflow:run`
+**Required permissions:** Any of `workflow:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param processId
@@ -462,7 +462,7 @@ ListProcessDefinitionVersions List process definition versions
 
 Lists all revisions for the process definition revision bucket containing the requested process id.
 
-**Required permissions:** `workflow:run`
+**Required permissions:** Any of `workflow:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param processId
@@ -622,7 +622,7 @@ ListProcessDefinitions List process definitions
 
 Lists process definitions in the current project with optional status, process id, pagination, and revision filters. By default only the latest head revision for each process is returned; set `all_versions=true` to include every revision document.
 
-**Required permissions:** `workflow:run`
+**Required permissions:** Any of `workflow:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListProcessDefinitionsRequest
