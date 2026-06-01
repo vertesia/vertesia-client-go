@@ -54,6 +54,16 @@ type IndexingStatusResponseReindexProgress struct {
 	PropertiesValuesTrimmed *float32 `json:"properties_values_trimmed,omitempty"`
 	// Total bytes dropped from oversized property values
 	PropertiesBytesDropped *float32 `json:"properties_bytes_dropped,omitempty"`
+	// Total batcher flushes across all completed shards (cumulative)
+	BatchesFlushed *float32 `json:"batches_flushed,omitempty"`
+	// Total ES bulk requests sent across all completed shards (cumulative)
+	BulkChunksWritten *float32 `json:"bulk_chunks_written,omitempty"`
+	// Total per-document ES bulk-item failures across all shards (cumulative). Counts docs ES rejected — they aren't in the indexed set.
+	BulkErrors *float32 `json:"bulk_errors,omitempty"`
+	// Average documents per batch flush (written / batches_flushed) — useful to spot under/over-batching
+	AvgDocsPerBatch *float32 `json:"avg_docs_per_batch,omitempty"`
+	// Average chunks per batch (>1 means bulk_size_bytes cap is splitting batches frequently)
+	AvgChunksPerBatch *float32 `json:"avg_chunks_per_batch,omitempty"`
 	// Documents processed per second
 	DocsPerSecond float32 `json:"docs_per_second"`
 	// Elapsed time in seconds
@@ -588,6 +598,166 @@ func (o *IndexingStatusResponseReindexProgress) SetPropertiesBytesDropped(v floa
 	o.PropertiesBytesDropped = &v
 }
 
+// GetBatchesFlushed returns the BatchesFlushed field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetBatchesFlushed() float32 {
+	if o == nil || IsNil(o.BatchesFlushed) {
+		var ret float32
+		return ret
+	}
+	return *o.BatchesFlushed
+}
+
+// GetBatchesFlushedOk returns a tuple with the BatchesFlushed field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetBatchesFlushedOk() (*float32, bool) {
+	if o == nil || IsNil(o.BatchesFlushed) {
+		return nil, false
+	}
+	return o.BatchesFlushed, true
+}
+
+// HasBatchesFlushed returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasBatchesFlushed() bool {
+	if o != nil && !IsNil(o.BatchesFlushed) {
+		return true
+	}
+
+	return false
+}
+
+// SetBatchesFlushed gets a reference to the given float32 and assigns it to the BatchesFlushed field.
+func (o *IndexingStatusResponseReindexProgress) SetBatchesFlushed(v float32) {
+	o.BatchesFlushed = &v
+}
+
+// GetBulkChunksWritten returns the BulkChunksWritten field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetBulkChunksWritten() float32 {
+	if o == nil || IsNil(o.BulkChunksWritten) {
+		var ret float32
+		return ret
+	}
+	return *o.BulkChunksWritten
+}
+
+// GetBulkChunksWrittenOk returns a tuple with the BulkChunksWritten field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetBulkChunksWrittenOk() (*float32, bool) {
+	if o == nil || IsNil(o.BulkChunksWritten) {
+		return nil, false
+	}
+	return o.BulkChunksWritten, true
+}
+
+// HasBulkChunksWritten returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasBulkChunksWritten() bool {
+	if o != nil && !IsNil(o.BulkChunksWritten) {
+		return true
+	}
+
+	return false
+}
+
+// SetBulkChunksWritten gets a reference to the given float32 and assigns it to the BulkChunksWritten field.
+func (o *IndexingStatusResponseReindexProgress) SetBulkChunksWritten(v float32) {
+	o.BulkChunksWritten = &v
+}
+
+// GetBulkErrors returns the BulkErrors field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetBulkErrors() float32 {
+	if o == nil || IsNil(o.BulkErrors) {
+		var ret float32
+		return ret
+	}
+	return *o.BulkErrors
+}
+
+// GetBulkErrorsOk returns a tuple with the BulkErrors field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetBulkErrorsOk() (*float32, bool) {
+	if o == nil || IsNil(o.BulkErrors) {
+		return nil, false
+	}
+	return o.BulkErrors, true
+}
+
+// HasBulkErrors returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasBulkErrors() bool {
+	if o != nil && !IsNil(o.BulkErrors) {
+		return true
+	}
+
+	return false
+}
+
+// SetBulkErrors gets a reference to the given float32 and assigns it to the BulkErrors field.
+func (o *IndexingStatusResponseReindexProgress) SetBulkErrors(v float32) {
+	o.BulkErrors = &v
+}
+
+// GetAvgDocsPerBatch returns the AvgDocsPerBatch field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetAvgDocsPerBatch() float32 {
+	if o == nil || IsNil(o.AvgDocsPerBatch) {
+		var ret float32
+		return ret
+	}
+	return *o.AvgDocsPerBatch
+}
+
+// GetAvgDocsPerBatchOk returns a tuple with the AvgDocsPerBatch field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetAvgDocsPerBatchOk() (*float32, bool) {
+	if o == nil || IsNil(o.AvgDocsPerBatch) {
+		return nil, false
+	}
+	return o.AvgDocsPerBatch, true
+}
+
+// HasAvgDocsPerBatch returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasAvgDocsPerBatch() bool {
+	if o != nil && !IsNil(o.AvgDocsPerBatch) {
+		return true
+	}
+
+	return false
+}
+
+// SetAvgDocsPerBatch gets a reference to the given float32 and assigns it to the AvgDocsPerBatch field.
+func (o *IndexingStatusResponseReindexProgress) SetAvgDocsPerBatch(v float32) {
+	o.AvgDocsPerBatch = &v
+}
+
+// GetAvgChunksPerBatch returns the AvgChunksPerBatch field value if set, zero value otherwise.
+func (o *IndexingStatusResponseReindexProgress) GetAvgChunksPerBatch() float32 {
+	if o == nil || IsNil(o.AvgChunksPerBatch) {
+		var ret float32
+		return ret
+	}
+	return *o.AvgChunksPerBatch
+}
+
+// GetAvgChunksPerBatchOk returns a tuple with the AvgChunksPerBatch field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *IndexingStatusResponseReindexProgress) GetAvgChunksPerBatchOk() (*float32, bool) {
+	if o == nil || IsNil(o.AvgChunksPerBatch) {
+		return nil, false
+	}
+	return o.AvgChunksPerBatch, true
+}
+
+// HasAvgChunksPerBatch returns a boolean if a field has been set.
+func (o *IndexingStatusResponseReindexProgress) HasAvgChunksPerBatch() bool {
+	if o != nil && !IsNil(o.AvgChunksPerBatch) {
+		return true
+	}
+
+	return false
+}
+
+// SetAvgChunksPerBatch gets a reference to the given float32 and assigns it to the AvgChunksPerBatch field.
+func (o *IndexingStatusResponseReindexProgress) SetAvgChunksPerBatch(v float32) {
+	o.AvgChunksPerBatch = &v
+}
+
 // GetDocsPerSecond returns the DocsPerSecond field value
 func (o *IndexingStatusResponseReindexProgress) GetDocsPerSecond() float32 {
 	if o == nil {
@@ -780,6 +950,21 @@ func (o IndexingStatusResponseReindexProgress) ToMap() (map[string]interface{}, 
 	}
 	if !IsNil(o.PropertiesBytesDropped) {
 		toSerialize["properties_bytes_dropped"] = o.PropertiesBytesDropped
+	}
+	if !IsNil(o.BatchesFlushed) {
+		toSerialize["batches_flushed"] = o.BatchesFlushed
+	}
+	if !IsNil(o.BulkChunksWritten) {
+		toSerialize["bulk_chunks_written"] = o.BulkChunksWritten
+	}
+	if !IsNil(o.BulkErrors) {
+		toSerialize["bulk_errors"] = o.BulkErrors
+	}
+	if !IsNil(o.AvgDocsPerBatch) {
+		toSerialize["avg_docs_per_batch"] = o.AvgDocsPerBatch
+	}
+	if !IsNil(o.AvgChunksPerBatch) {
+		toSerialize["avg_chunks_per_batch"] = o.AvgChunksPerBatch
 	}
 	toSerialize["docs_per_second"] = o.DocsPerSecond
 	toSerialize["elapsed_seconds"] = o.ElapsedSeconds
