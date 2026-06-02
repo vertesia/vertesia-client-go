@@ -440,6 +440,139 @@ func (a *OAuthClientsAPIService) GetOAuthClientExecute(r ApiGetOAuthClientReques
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiGetOAuthClientScopeMetadataRequest struct {
+	ctx         context.Context
+	ApiService  *OAuthClientsAPIService
+	xApiVersion *string
+}
+
+// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
+func (r ApiGetOAuthClientScopeMetadataRequest) XApiVersion(xApiVersion string) ApiGetOAuthClientScopeMetadataRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiGetOAuthClientScopeMetadataRequest) Execute() (*OAuthClientScopeMetadata, *http.Response, error) {
+	return r.ApiService.GetOAuthClientScopeMetadataExecute(r)
+}
+
+/*
+GetOAuthClientScopeMetadata Retrieve OAuth client scope metadata
+
+Returns the OAuth scopes supported by the Vertesia OAuth server for client configuration.
+
+**Required permissions:** `account:admin`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetOAuthClientScopeMetadataRequest
+*/
+func (a *OAuthClientsAPIService) GetOAuthClientScopeMetadata(ctx context.Context) ApiGetOAuthClientScopeMetadataRequest {
+	return ApiGetOAuthClientScopeMetadataRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return OAuthClientScopeMetadata
+func (a *OAuthClientsAPIService) GetOAuthClientScopeMetadataExecute(r ApiGetOAuthClientScopeMetadataRequest) (*OAuthClientScopeMetadata, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *OAuthClientScopeMetadata
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OAuthClientsAPIService.GetOAuthClientScopeMetadata")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/oauth-clients/scope-metadata"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiListOAuthClientsRequest struct {
 	ctx         context.Context
 	ApiService  *OAuthClientsAPIService

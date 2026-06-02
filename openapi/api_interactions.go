@@ -331,7 +331,7 @@ func (r ApiDeleteInteractionRequest) Execute() (*DeleteByIdResult, *http.Respons
 /*
 DeleteInteraction Delete an interaction
 
-Deletes an interaction from the current project.
+Deletes an interaction from the current project. Pass ?cascade=true to also delete every interaction that lists this one as its parent (forward-only — never deletes ancestors).
 
 **Required permissions:** `interaction:write`
 

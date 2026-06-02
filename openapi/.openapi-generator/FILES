@@ -482,6 +482,7 @@ model_o_auth_authorize_response.go
 model_o_auth_client.go
 model_o_auth_client_create_response.go
 model_o_auth_client_credentials.go
+model_o_auth_client_scope_metadata.go
 model_o_auth_client_status.go
 model_o_auth_client_type.go
 model_o_auth_grant.go
