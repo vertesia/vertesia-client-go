@@ -20,18 +20,16 @@ var _ MappedNullable = &ExecutionEnvironmentCreatePayload{}
 
 // ExecutionEnvironmentCreatePayload struct for ExecutionEnvironmentCreatePayload
 type ExecutionEnvironmentCreatePayload struct {
-	Name          string             `json:"name"`
-	Provider      SupportedProviders `json:"provider"`
-	Description   *string            `json:"description,omitempty"`
-	EndpointUrl   *string            `json:"endpoint_url,omitempty"`
-	DefaultModel  *string            `json:"default_model,omitempty"`
-	EnabledModels []AIModel          `json:"enabled_models,omitempty"`
-	ApiKey        *string            `json:"apiKey,omitempty"`
-	Config        interface{}        `json:"config,omitempty"`
-	// Additional provider-specific settings passed through to the driver. For example, custom headers for Apigee-proxied endpoints.
-	Settings             map[string]interface{} `json:"settings,omitempty"`
-	AllowedProjects      []string               `json:"allowed_projects,omitempty"`
-	AdditionalProperties map[string]interface{}
+	Name            string                        `json:"name"`
+	Provider        SupportedProviders            `json:"provider"`
+	Description     *string                       `json:"description,omitempty"`
+	EndpointUrl     *string                       `json:"endpoint_url,omitempty"`
+	DefaultModel    *string                       `json:"default_model,omitempty"`
+	EnabledModels   []AIModel                     `json:"enabled_models,omitempty"`
+	ApiKey          *string                       `json:"apiKey,omitempty"`
+	Config          interface{}                   `json:"config,omitempty"`
+	Settings        *ExecutionEnvironmentSettings `json:"settings,omitempty"`
+	AllowedProjects []string                      `json:"allowed_projects,omitempty"`
 }
 
 type _ExecutionEnvironmentCreatePayload ExecutionEnvironmentCreatePayload
@@ -297,19 +295,19 @@ func (o *ExecutionEnvironmentCreatePayload) SetConfig(v interface{}) {
 }
 
 // GetSettings returns the Settings field value if set, zero value otherwise.
-func (o *ExecutionEnvironmentCreatePayload) GetSettings() map[string]interface{} {
+func (o *ExecutionEnvironmentCreatePayload) GetSettings() ExecutionEnvironmentSettings {
 	if o == nil || IsNil(o.Settings) {
-		var ret map[string]interface{}
+		var ret ExecutionEnvironmentSettings
 		return ret
 	}
-	return o.Settings
+	return *o.Settings
 }
 
 // GetSettingsOk returns a tuple with the Settings field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExecutionEnvironmentCreatePayload) GetSettingsOk() (map[string]interface{}, bool) {
+func (o *ExecutionEnvironmentCreatePayload) GetSettingsOk() (*ExecutionEnvironmentSettings, bool) {
 	if o == nil || IsNil(o.Settings) {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
 	return o.Settings, true
 }
@@ -323,9 +321,9 @@ func (o *ExecutionEnvironmentCreatePayload) HasSettings() bool {
 	return false
 }
 
-// SetSettings gets a reference to the given map[string]interface{} and assigns it to the Settings field.
-func (o *ExecutionEnvironmentCreatePayload) SetSettings(v map[string]interface{}) {
-	o.Settings = v
+// SetSettings gets a reference to the given ExecutionEnvironmentSettings and assigns it to the Settings field.
+func (o *ExecutionEnvironmentCreatePayload) SetSettings(v ExecutionEnvironmentSettings) {
+	o.Settings = &v
 }
 
 // GetAllowedProjects returns the AllowedProjects field value if set, zero value otherwise.
@@ -396,11 +394,6 @@ func (o ExecutionEnvironmentCreatePayload) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.AllowedProjects) {
 		toSerialize["allowed_projects"] = o.AllowedProjects
 	}
-
-	for key, value := range o.AdditionalProperties {
-		toSerialize[key] = value
-	}
-
 	return toSerialize, nil
 }
 
@@ -436,22 +429,6 @@ func (o *ExecutionEnvironmentCreatePayload) UnmarshalJSON(data []byte) (err erro
 	}
 
 	*o = ExecutionEnvironmentCreatePayload(varExecutionEnvironmentCreatePayload)
-
-	additionalProperties := make(map[string]interface{})
-
-	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "name")
-		delete(additionalProperties, "provider")
-		delete(additionalProperties, "description")
-		delete(additionalProperties, "endpoint_url")
-		delete(additionalProperties, "default_model")
-		delete(additionalProperties, "enabled_models")
-		delete(additionalProperties, "apiKey")
-		delete(additionalProperties, "config")
-		delete(additionalProperties, "settings")
-		delete(additionalProperties, "allowed_projects")
-		o.AdditionalProperties = additionalProperties
-	}
 
 	return err
 }

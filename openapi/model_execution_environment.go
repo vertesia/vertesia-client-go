@@ -29,17 +29,15 @@ type ExecutionEnvironment struct {
 	EnabledModels []AIModel          `json:"enabled_models,omitempty"`
 	ApiKey        *string            `json:"apiKey,omitempty"`
 	// Hint showing first and last characters of the API key (e.g. \"AKIA...3xQf\"). Stored alongside the encrypted key so the UI can display which key is configured.
-	ApikeyHint *string     `json:"apikey_hint,omitempty"`
-	Config     interface{} `json:"config,omitempty"`
-	// Additional provider-specific settings passed through to the driver. For example, custom headers for Apigee-proxied endpoints.
-	Settings             map[string]interface{} `json:"settings,omitempty"`
-	Account              string                 `json:"account"`
-	AllowedProjects      []string               `json:"allowed_projects,omitempty"`
-	CreatedBy            string                 `json:"created_by"`
-	UpdatedBy            string                 `json:"updated_by"`
-	CreatedAt            string                 `json:"created_at"`
-	UpdatedAt            string                 `json:"updated_at"`
-	AdditionalProperties map[string]interface{}
+	ApikeyHint      *string                       `json:"apikey_hint,omitempty"`
+	Config          interface{}                   `json:"config,omitempty"`
+	Settings        *ExecutionEnvironmentSettings `json:"settings,omitempty"`
+	Account         string                        `json:"account"`
+	AllowedProjects []string                      `json:"allowed_projects,omitempty"`
+	CreatedBy       string                        `json:"created_by"`
+	UpdatedBy       string                        `json:"updated_by"`
+	CreatedAt       string                        `json:"created_at"`
+	UpdatedAt       string                        `json:"updated_at"`
 }
 
 type _ExecutionEnvironment ExecutionEnvironment
@@ -367,19 +365,19 @@ func (o *ExecutionEnvironment) SetConfig(v interface{}) {
 }
 
 // GetSettings returns the Settings field value if set, zero value otherwise.
-func (o *ExecutionEnvironment) GetSettings() map[string]interface{} {
+func (o *ExecutionEnvironment) GetSettings() ExecutionEnvironmentSettings {
 	if o == nil || IsNil(o.Settings) {
-		var ret map[string]interface{}
+		var ret ExecutionEnvironmentSettings
 		return ret
 	}
-	return o.Settings
+	return *o.Settings
 }
 
 // GetSettingsOk returns a tuple with the Settings field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExecutionEnvironment) GetSettingsOk() (map[string]interface{}, bool) {
+func (o *ExecutionEnvironment) GetSettingsOk() (*ExecutionEnvironmentSettings, bool) {
 	if o == nil || IsNil(o.Settings) {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
 	return o.Settings, true
 }
@@ -393,9 +391,9 @@ func (o *ExecutionEnvironment) HasSettings() bool {
 	return false
 }
 
-// SetSettings gets a reference to the given map[string]interface{} and assigns it to the Settings field.
-func (o *ExecutionEnvironment) SetSettings(v map[string]interface{}) {
-	o.Settings = v
+// SetSettings gets a reference to the given ExecutionEnvironmentSettings and assigns it to the Settings field.
+func (o *ExecutionEnvironment) SetSettings(v ExecutionEnvironmentSettings) {
+	o.Settings = &v
 }
 
 // GetAccount returns the Account field value
@@ -595,11 +593,6 @@ func (o ExecutionEnvironment) ToMap() (map[string]interface{}, error) {
 	toSerialize["updated_by"] = o.UpdatedBy
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt
-
-	for key, value := range o.AdditionalProperties {
-		toSerialize[key] = value
-	}
-
 	return toSerialize, nil
 }
 
@@ -641,29 +634,6 @@ func (o *ExecutionEnvironment) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = ExecutionEnvironment(varExecutionEnvironment)
-
-	additionalProperties := make(map[string]interface{})
-
-	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "id")
-		delete(additionalProperties, "name")
-		delete(additionalProperties, "provider")
-		delete(additionalProperties, "description")
-		delete(additionalProperties, "endpoint_url")
-		delete(additionalProperties, "default_model")
-		delete(additionalProperties, "enabled_models")
-		delete(additionalProperties, "apiKey")
-		delete(additionalProperties, "apikey_hint")
-		delete(additionalProperties, "config")
-		delete(additionalProperties, "settings")
-		delete(additionalProperties, "account")
-		delete(additionalProperties, "allowed_projects")
-		delete(additionalProperties, "created_by")
-		delete(additionalProperties, "updated_by")
-		delete(additionalProperties, "created_at")
-		delete(additionalProperties, "updated_at")
-		o.AdditionalProperties = additionalProperties
-	}
 
 	return err
 }
