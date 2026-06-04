@@ -20,14 +20,15 @@ var _ MappedNullable = &ExecutionEnvironmentCreatePayload{}
 
 // ExecutionEnvironmentCreatePayload struct for ExecutionEnvironmentCreatePayload
 type ExecutionEnvironmentCreatePayload struct {
-	Name            string                        `json:"name"`
-	Provider        SupportedProviders            `json:"provider"`
-	Description     *string                       `json:"description,omitempty"`
-	EndpointUrl     *string                       `json:"endpoint_url,omitempty"`
-	DefaultModel    *string                       `json:"default_model,omitempty"`
-	EnabledModels   []AIModel                     `json:"enabled_models,omitempty"`
-	ApiKey          *string                       `json:"apiKey,omitempty"`
-	Config          interface{}                   `json:"config,omitempty"`
+	Name          string             `json:"name"`
+	Provider      SupportedProviders `json:"provider"`
+	Description   *string            `json:"description,omitempty"`
+	EndpointUrl   *string            `json:"endpoint_url,omitempty"`
+	DefaultModel  *string            `json:"default_model,omitempty"`
+	EnabledModels []AIModel          `json:"enabled_models,omitempty"`
+	ApiKey        *string            `json:"apiKey,omitempty"`
+	Config        interface{}        `json:"config,omitempty"`
+	// Additional provider-specific settings passed through to the driver. For example, custom headers for Apigee-proxied endpoints.
 	Settings        *ExecutionEnvironmentSettings `json:"settings,omitempty"`
 	AllowedProjects []string                      `json:"allowed_projects,omitempty"`
 }

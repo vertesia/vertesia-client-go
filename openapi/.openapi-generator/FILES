@@ -728,7 +728,6 @@ model_validate_url_response.go
 model_vector_search_query.go
 model_vertesia_sdk_tool_collection_object.go
 model_vertex_ai_claude_options.go
-model_vertex_ai_environment_settings.go
 model_vertex_ai_gemini_options.go
 model_vertex_ai_options.go
 model_video_metadata.go

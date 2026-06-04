@@ -12,58 +12,108 @@ package openapi
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
-// ExecutionEnvironmentSettings Additional provider-specific settings passed through to the driver. For example, custom headers for Apigee-proxied endpoints.
+// checks if the ExecutionEnvironmentSettings type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ExecutionEnvironmentSettings{}
+
+// ExecutionEnvironmentSettings struct for ExecutionEnvironmentSettings
 type ExecutionEnvironmentSettings struct {
-	VertexAIEnvironmentSettings *VertexAIEnvironmentSettings
-	MapmapOfStringAny           *map[string]interface{}
+	BucketAccessPrincipal *string `json:"bucket_access_principal,omitempty"`
+	AdditionalProperties  map[string]interface{}
 }
 
-// Unmarshal JSON data into any of the pointers in the struct
-func (dst *ExecutionEnvironmentSettings) UnmarshalJSON(data []byte) error {
-	var err error
-	// try to unmarshal JSON data into VertexAIEnvironmentSettings
-	err = json.Unmarshal(data, &dst.VertexAIEnvironmentSettings)
-	if err == nil {
-		jsonVertexAIEnvironmentSettings, _ := json.Marshal(dst.VertexAIEnvironmentSettings)
-		if string(jsonVertexAIEnvironmentSettings) == "{}" { // empty struct
-			dst.VertexAIEnvironmentSettings = nil
-		} else {
-			return nil // data stored in dst.VertexAIEnvironmentSettings, return on the first match
-		}
-	} else {
-		dst.VertexAIEnvironmentSettings = nil
-	}
+type _ExecutionEnvironmentSettings ExecutionEnvironmentSettings
 
-	// try to unmarshal JSON data into MapmapOfStringAny
-	err = json.Unmarshal(data, &dst.MapmapOfStringAny)
-	if err == nil {
-		jsonMapmapOfStringAny, _ := json.Marshal(dst.MapmapOfStringAny)
-		if string(jsonMapmapOfStringAny) == "{}" { // empty struct
-			dst.MapmapOfStringAny = nil
-		} else {
-			return nil // data stored in dst.MapmapOfStringAny, return on the first match
-		}
-	} else {
-		dst.MapmapOfStringAny = nil
-	}
-
-	return fmt.Errorf("data failed to match schemas in anyOf(ExecutionEnvironmentSettings)")
+// NewExecutionEnvironmentSettings instantiates a new ExecutionEnvironmentSettings object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewExecutionEnvironmentSettings() *ExecutionEnvironmentSettings {
+	this := ExecutionEnvironmentSettings{}
+	return &this
 }
 
-// Marshal data from the first non-nil pointers in the struct to JSON
-func (src ExecutionEnvironmentSettings) MarshalJSON() ([]byte, error) {
-	if src.VertexAIEnvironmentSettings != nil {
-		return json.Marshal(&src.VertexAIEnvironmentSettings)
+// NewExecutionEnvironmentSettingsWithDefaults instantiates a new ExecutionEnvironmentSettings object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewExecutionEnvironmentSettingsWithDefaults() *ExecutionEnvironmentSettings {
+	this := ExecutionEnvironmentSettings{}
+	return &this
+}
+
+// GetBucketAccessPrincipal returns the BucketAccessPrincipal field value if set, zero value otherwise.
+func (o *ExecutionEnvironmentSettings) GetBucketAccessPrincipal() string {
+	if o == nil || IsNil(o.BucketAccessPrincipal) {
+		var ret string
+		return ret
+	}
+	return *o.BucketAccessPrincipal
+}
+
+// GetBucketAccessPrincipalOk returns a tuple with the BucketAccessPrincipal field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExecutionEnvironmentSettings) GetBucketAccessPrincipalOk() (*string, bool) {
+	if o == nil || IsNil(o.BucketAccessPrincipal) {
+		return nil, false
+	}
+	return o.BucketAccessPrincipal, true
+}
+
+// HasBucketAccessPrincipal returns a boolean if a field has been set.
+func (o *ExecutionEnvironmentSettings) HasBucketAccessPrincipal() bool {
+	if o != nil && !IsNil(o.BucketAccessPrincipal) {
+		return true
 	}
 
-	if src.MapmapOfStringAny != nil {
-		return json.Marshal(&src.MapmapOfStringAny)
+	return false
+}
+
+// SetBucketAccessPrincipal gets a reference to the given string and assigns it to the BucketAccessPrincipal field.
+func (o *ExecutionEnvironmentSettings) SetBucketAccessPrincipal(v string) {
+	o.BucketAccessPrincipal = &v
+}
+
+func (o ExecutionEnvironmentSettings) MarshalJSON() ([]byte, error) {
+	toSerialize, err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o ExecutionEnvironmentSettings) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.BucketAccessPrincipal) {
+		toSerialize["bucket_access_principal"] = o.BucketAccessPrincipal
 	}
 
-	return nil, nil // no data in anyOf schemas
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
+	return toSerialize, nil
+}
+
+func (o *ExecutionEnvironmentSettings) UnmarshalJSON(data []byte) (err error) {
+	varExecutionEnvironmentSettings := _ExecutionEnvironmentSettings{}
+
+	err = json.Unmarshal(data, &varExecutionEnvironmentSettings)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ExecutionEnvironmentSettings(varExecutionEnvironmentSettings)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "bucket_access_principal")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableExecutionEnvironmentSettings struct {

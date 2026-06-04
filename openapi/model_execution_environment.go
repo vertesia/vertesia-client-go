@@ -29,8 +29,9 @@ type ExecutionEnvironment struct {
 	EnabledModels []AIModel          `json:"enabled_models,omitempty"`
 	ApiKey        *string            `json:"apiKey,omitempty"`
 	// Hint showing first and last characters of the API key (e.g. \"AKIA...3xQf\"). Stored alongside the encrypted key so the UI can display which key is configured.
-	ApikeyHint      *string                       `json:"apikey_hint,omitempty"`
-	Config          interface{}                   `json:"config,omitempty"`
+	ApikeyHint *string     `json:"apikey_hint,omitempty"`
+	Config     interface{} `json:"config,omitempty"`
+	// Additional provider-specific settings passed through to the driver. For example, custom headers for Apigee-proxied endpoints.
 	Settings        *ExecutionEnvironmentSettings `json:"settings,omitempty"`
 	Account         string                        `json:"account"`
 	AllowedProjects []string                      `json:"allowed_projects,omitempty"`
