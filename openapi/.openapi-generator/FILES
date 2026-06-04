@@ -28,6 +28,7 @@ api_roles.go
 api_secrets.go
 api_tasks.go
 api_token_service.go
+api_tools.go
 api_user_groups.go
 api_users.go
 api_workflow_definitions.go
@@ -70,6 +71,7 @@ model_agent_task.go
 model_agent_task_error.go
 model_agent_token_request.go
 model_agent_tool_definition.go
+model_aggregated_tool.go
 model_ai_model.go
 model_ai_model_status.go
 model_alter_table_operation.go
@@ -699,7 +701,10 @@ model_tool_collection_auth_type.go
 model_tool_collection_object.go
 model_tool_definition.go
 model_tool_reference.go
+model_tool_source.go
 model_tool_use.go
+model_tool_validation_result.go
+model_tool_validation_result_collisions_inner.go
 model_transcript.go
 model_transcript_segment.go
 model_transient_token_user_invite_token_data_array.go
@@ -723,6 +728,8 @@ model_user_channel.go
 model_user_group.go
 model_user_ref.go
 model_user_token_request.go
+model_validate_tool_names_payload.go
+model_validate_tool_names_response.go
 model_validate_url_request.go
 model_validate_url_response.go
 model_vector_search_query.go

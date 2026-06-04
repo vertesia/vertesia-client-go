@@ -106,6 +106,8 @@ type APIClient struct {
 
 	TokenServiceAPI *TokenServiceAPIService
 
+	ToolsAPI *ToolsAPIService
+
 	UserGroupsAPI *UserGroupsAPIService
 
 	UsersAPI *UsersAPIService
@@ -162,6 +164,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.SecretsAPI = (*SecretsAPIService)(&c.common)
 	c.TasksAPI = (*TasksAPIService)(&c.common)
 	c.TokenServiceAPI = (*TokenServiceAPIService)(&c.common)
+	c.ToolsAPI = (*ToolsAPIService)(&c.common)
 	c.UserGroupsAPI = (*UserGroupsAPIService)(&c.common)
 	c.UsersAPI = (*UsersAPIService)(&c.common)
 	c.WorkflowDefinitionsAPI = (*WorkflowDefinitionsAPIService)(&c.common)
