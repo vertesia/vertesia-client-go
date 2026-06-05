@@ -26,7 +26,7 @@ type ServiceAccountTokenRequest struct {
 	Algorithm *SigningAlgorithm `json:"algorithm,omitempty"`
 	AccountId string            `json:"account_id"`
 	ProjectId string            `json:"project_id"`
-	Roles     []string          `json:"roles,omitempty"`
+	Roles     []ProjectRoles    `json:"roles,omitempty"`
 	Name      *string           `json:"name,omitempty"`
 }
 
@@ -189,9 +189,9 @@ func (o *ServiceAccountTokenRequest) SetProjectId(v string) {
 }
 
 // GetRoles returns the Roles field value if set, zero value otherwise.
-func (o *ServiceAccountTokenRequest) GetRoles() []string {
+func (o *ServiceAccountTokenRequest) GetRoles() []ProjectRoles {
 	if o == nil || IsNil(o.Roles) {
-		var ret []string
+		var ret []ProjectRoles
 		return ret
 	}
 	return o.Roles
@@ -199,7 +199,7 @@ func (o *ServiceAccountTokenRequest) GetRoles() []string {
 
 // GetRolesOk returns a tuple with the Roles field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ServiceAccountTokenRequest) GetRolesOk() ([]string, bool) {
+func (o *ServiceAccountTokenRequest) GetRolesOk() ([]ProjectRoles, bool) {
 	if o == nil || IsNil(o.Roles) {
 		return nil, false
 	}
@@ -215,8 +215,8 @@ func (o *ServiceAccountTokenRequest) HasRoles() bool {
 	return false
 }
 
-// SetRoles gets a reference to the given []string and assigns it to the Roles field.
-func (o *ServiceAccountTokenRequest) SetRoles(v []string) {
+// SetRoles gets a reference to the given []ProjectRoles and assigns it to the Roles field.
+func (o *ServiceAccountTokenRequest) SetRoles(v []ProjectRoles) {
 	o.Roles = v
 }
 

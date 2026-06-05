@@ -25,6 +25,8 @@ const (
 	PROJECTROLES_MANAGER                  ProjectRoles = "manager"
 	PROJECTROLES_DEVELOPER                ProjectRoles = "developer"
 	PROJECTROLES_APPLICATION              ProjectRoles = "application"
+	PROJECTROLES_AUTOMATION               ProjectRoles = "automation"
+	PROJECTROLES_CONTENT_PROCESSOR        ProjectRoles = "content_processor"
 	PROJECTROLES_CONSUMER                 ProjectRoles = "consumer"
 	PROJECTROLES_EXECUTOR                 ProjectRoles = "executor"
 	PROJECTROLES_READER                   ProjectRoles = "reader"
@@ -44,6 +46,8 @@ var AllowedProjectRolesEnumValues = []ProjectRoles{
 	"manager",
 	"developer",
 	"application",
+	"automation",
+	"content_processor",
 	"consumer",
 	"executor",
 	"reader",
