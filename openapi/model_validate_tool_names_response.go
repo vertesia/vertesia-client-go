@@ -23,7 +23,7 @@ type ValidateToolNamesResponse struct {
 	// One entry per requested name, in the same order.
 	Results []ToolValidationResult `json:"results"`
 	// Convenience count of `results.filter(r => !r.valid).length`.
-	InvalidCount float32 `json:"invalid_count"`
+	InvalidCount int32 `json:"invalid_count"`
 }
 
 type _ValidateToolNamesResponse ValidateToolNamesResponse
@@ -32,7 +32,7 @@ type _ValidateToolNamesResponse ValidateToolNamesResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewValidateToolNamesResponse(results []ToolValidationResult, invalidCount float32) *ValidateToolNamesResponse {
+func NewValidateToolNamesResponse(results []ToolValidationResult, invalidCount int32) *ValidateToolNamesResponse {
 	this := ValidateToolNamesResponse{}
 	this.Results = results
 	this.InvalidCount = invalidCount
@@ -72,9 +72,9 @@ func (o *ValidateToolNamesResponse) SetResults(v []ToolValidationResult) {
 }
 
 // GetInvalidCount returns the InvalidCount field value
-func (o *ValidateToolNamesResponse) GetInvalidCount() float32 {
+func (o *ValidateToolNamesResponse) GetInvalidCount() int32 {
 	if o == nil {
-		var ret float32
+		var ret int32
 		return ret
 	}
 
@@ -83,7 +83,7 @@ func (o *ValidateToolNamesResponse) GetInvalidCount() float32 {
 
 // GetInvalidCountOk returns a tuple with the InvalidCount field value
 // and a boolean to check if the value has been set.
-func (o *ValidateToolNamesResponse) GetInvalidCountOk() (*float32, bool) {
+func (o *ValidateToolNamesResponse) GetInvalidCountOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -91,7 +91,7 @@ func (o *ValidateToolNamesResponse) GetInvalidCountOk() (*float32, bool) {
 }
 
 // SetInvalidCount sets field value
-func (o *ValidateToolNamesResponse) SetInvalidCount(v float32) {
+func (o *ValidateToolNamesResponse) SetInvalidCount(v int32) {
 	o.InvalidCount = v
 }
 

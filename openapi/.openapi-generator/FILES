@@ -129,7 +129,6 @@ model_bedrock_converse_options.go
 model_bedrock_gpt_oss_options.go
 model_bedrock_mistral_options.go
 model_bedrock_nova_options.go
-model_bedrock_options.go
 model_bedrock_palmyra_options.go
 model_billing_method.go
 model_branch_definition.go
@@ -510,7 +509,6 @@ model_ok_boolean.go
 model_onboarding_progress.go
 model_open_ai_dalle_options.go
 model_open_ai_gpt_image_options.go
-model_open_ai_options.go
 model_open_ai_text_options.go
 model_open_ai_thinking_options.go
 model_parallel_collect_definition.go
@@ -736,7 +734,6 @@ model_vector_search_query.go
 model_vertesia_sdk_tool_collection_object.go
 model_vertex_ai_claude_options.go
 model_vertex_ai_gemini_options.go
-model_vertex_ai_options.go
 model_video_metadata.go
 model_virtual_env_entry.go
 model_website_credential_capability.go

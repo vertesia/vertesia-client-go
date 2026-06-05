@@ -18,17 +18,80 @@ import (
 
 // ModelOptions - struct for ModelOptions
 type ModelOptions struct {
-	BedrockOptions      *BedrockOptions
-	GroqOptions         *GroqOptions
-	OpenAiOptions       *OpenAiOptions
-	TextFallbackOptions *TextFallbackOptions
-	VertexAIOptions     *VertexAIOptions
+	BedrockAI21Options          *BedrockAI21Options
+	BedrockClaudeOptions        *BedrockClaudeOptions
+	BedrockCohereCommandOptions *BedrockCohereCommandOptions
+	BedrockConverseOptions      *BedrockConverseOptions
+	BedrockGptOssOptions        *BedrockGptOssOptions
+	BedrockMistralOptions       *BedrockMistralOptions
+	BedrockNovaOptions          *BedrockNovaOptions
+	BedrockPalmyraOptions       *BedrockPalmyraOptions
+	GroqOptions                 *GroqOptions
+	ImagenOptions               *ImagenOptions
+	NovaCanvasOptions           *NovaCanvasOptions
+	OpenAiDalleOptions          *OpenAiDalleOptions
+	OpenAiGptImageOptions       *OpenAiGptImageOptions
+	OpenAiTextOptions           *OpenAiTextOptions
+	OpenAiThinkingOptions       *OpenAiThinkingOptions
+	TextFallbackOptions         *TextFallbackOptions
+	TwelvelabsPegasusOptions    *TwelvelabsPegasusOptions
+	VertexAIClaudeOptions       *VertexAIClaudeOptions
+	VertexAIGeminiOptions       *VertexAIGeminiOptions
 }
 
-// BedrockOptionsAsModelOptions is a convenience function that returns BedrockOptions wrapped in ModelOptions
-func BedrockOptionsAsModelOptions(v *BedrockOptions) ModelOptions {
+// BedrockAI21OptionsAsModelOptions is a convenience function that returns BedrockAI21Options wrapped in ModelOptions
+func BedrockAI21OptionsAsModelOptions(v *BedrockAI21Options) ModelOptions {
 	return ModelOptions{
-		BedrockOptions: v,
+		BedrockAI21Options: v,
+	}
+}
+
+// BedrockClaudeOptionsAsModelOptions is a convenience function that returns BedrockClaudeOptions wrapped in ModelOptions
+func BedrockClaudeOptionsAsModelOptions(v *BedrockClaudeOptions) ModelOptions {
+	return ModelOptions{
+		BedrockClaudeOptions: v,
+	}
+}
+
+// BedrockCohereCommandOptionsAsModelOptions is a convenience function that returns BedrockCohereCommandOptions wrapped in ModelOptions
+func BedrockCohereCommandOptionsAsModelOptions(v *BedrockCohereCommandOptions) ModelOptions {
+	return ModelOptions{
+		BedrockCohereCommandOptions: v,
+	}
+}
+
+// BedrockConverseOptionsAsModelOptions is a convenience function that returns BedrockConverseOptions wrapped in ModelOptions
+func BedrockConverseOptionsAsModelOptions(v *BedrockConverseOptions) ModelOptions {
+	return ModelOptions{
+		BedrockConverseOptions: v,
+	}
+}
+
+// BedrockGptOssOptionsAsModelOptions is a convenience function that returns BedrockGptOssOptions wrapped in ModelOptions
+func BedrockGptOssOptionsAsModelOptions(v *BedrockGptOssOptions) ModelOptions {
+	return ModelOptions{
+		BedrockGptOssOptions: v,
+	}
+}
+
+// BedrockMistralOptionsAsModelOptions is a convenience function that returns BedrockMistralOptions wrapped in ModelOptions
+func BedrockMistralOptionsAsModelOptions(v *BedrockMistralOptions) ModelOptions {
+	return ModelOptions{
+		BedrockMistralOptions: v,
+	}
+}
+
+// BedrockNovaOptionsAsModelOptions is a convenience function that returns BedrockNovaOptions wrapped in ModelOptions
+func BedrockNovaOptionsAsModelOptions(v *BedrockNovaOptions) ModelOptions {
+	return ModelOptions{
+		BedrockNovaOptions: v,
+	}
+}
+
+// BedrockPalmyraOptionsAsModelOptions is a convenience function that returns BedrockPalmyraOptions wrapped in ModelOptions
+func BedrockPalmyraOptionsAsModelOptions(v *BedrockPalmyraOptions) ModelOptions {
+	return ModelOptions{
+		BedrockPalmyraOptions: v,
 	}
 }
 
@@ -39,10 +102,45 @@ func GroqOptionsAsModelOptions(v *GroqOptions) ModelOptions {
 	}
 }
 
-// OpenAiOptionsAsModelOptions is a convenience function that returns OpenAiOptions wrapped in ModelOptions
-func OpenAiOptionsAsModelOptions(v *OpenAiOptions) ModelOptions {
+// ImagenOptionsAsModelOptions is a convenience function that returns ImagenOptions wrapped in ModelOptions
+func ImagenOptionsAsModelOptions(v *ImagenOptions) ModelOptions {
 	return ModelOptions{
-		OpenAiOptions: v,
+		ImagenOptions: v,
+	}
+}
+
+// NovaCanvasOptionsAsModelOptions is a convenience function that returns NovaCanvasOptions wrapped in ModelOptions
+func NovaCanvasOptionsAsModelOptions(v *NovaCanvasOptions) ModelOptions {
+	return ModelOptions{
+		NovaCanvasOptions: v,
+	}
+}
+
+// OpenAiDalleOptionsAsModelOptions is a convenience function that returns OpenAiDalleOptions wrapped in ModelOptions
+func OpenAiDalleOptionsAsModelOptions(v *OpenAiDalleOptions) ModelOptions {
+	return ModelOptions{
+		OpenAiDalleOptions: v,
+	}
+}
+
+// OpenAiGptImageOptionsAsModelOptions is a convenience function that returns OpenAiGptImageOptions wrapped in ModelOptions
+func OpenAiGptImageOptionsAsModelOptions(v *OpenAiGptImageOptions) ModelOptions {
+	return ModelOptions{
+		OpenAiGptImageOptions: v,
+	}
+}
+
+// OpenAiTextOptionsAsModelOptions is a convenience function that returns OpenAiTextOptions wrapped in ModelOptions
+func OpenAiTextOptionsAsModelOptions(v *OpenAiTextOptions) ModelOptions {
+	return ModelOptions{
+		OpenAiTextOptions: v,
+	}
+}
+
+// OpenAiThinkingOptionsAsModelOptions is a convenience function that returns OpenAiThinkingOptions wrapped in ModelOptions
+func OpenAiThinkingOptionsAsModelOptions(v *OpenAiThinkingOptions) ModelOptions {
+	return ModelOptions{
+		OpenAiThinkingOptions: v,
 	}
 }
 
@@ -53,10 +151,24 @@ func TextFallbackOptionsAsModelOptions(v *TextFallbackOptions) ModelOptions {
 	}
 }
 
-// VertexAIOptionsAsModelOptions is a convenience function that returns VertexAIOptions wrapped in ModelOptions
-func VertexAIOptionsAsModelOptions(v *VertexAIOptions) ModelOptions {
+// TwelvelabsPegasusOptionsAsModelOptions is a convenience function that returns TwelvelabsPegasusOptions wrapped in ModelOptions
+func TwelvelabsPegasusOptionsAsModelOptions(v *TwelvelabsPegasusOptions) ModelOptions {
 	return ModelOptions{
-		VertexAIOptions: v,
+		TwelvelabsPegasusOptions: v,
+	}
+}
+
+// VertexAIClaudeOptionsAsModelOptions is a convenience function that returns VertexAIClaudeOptions wrapped in ModelOptions
+func VertexAIClaudeOptionsAsModelOptions(v *VertexAIClaudeOptions) ModelOptions {
+	return ModelOptions{
+		VertexAIClaudeOptions: v,
+	}
+}
+
+// VertexAIGeminiOptionsAsModelOptions is a convenience function that returns VertexAIGeminiOptions wrapped in ModelOptions
+func VertexAIGeminiOptionsAsModelOptions(v *VertexAIGeminiOptions) ModelOptions {
+	return ModelOptions{
+		VertexAIGeminiOptions: v,
 	}
 }
 
@@ -64,21 +176,140 @@ func VertexAIOptionsAsModelOptions(v *VertexAIOptions) ModelOptions {
 func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
-	// try to unmarshal data into BedrockOptions
-	err = newStrictDecoder(data).Decode(&dst.BedrockOptions)
+	// try to unmarshal data into BedrockAI21Options
+	err = newStrictDecoder(data).Decode(&dst.BedrockAI21Options)
 	if err == nil {
-		jsonBedrockOptions, _ := json.Marshal(dst.BedrockOptions)
-		if string(jsonBedrockOptions) == "{}" { // empty struct
-			dst.BedrockOptions = nil
+		jsonBedrockAI21Options, _ := json.Marshal(dst.BedrockAI21Options)
+		if string(jsonBedrockAI21Options) == "{}" { // empty struct
+			dst.BedrockAI21Options = nil
 		} else {
-			if err = validator.Validate(dst.BedrockOptions); err != nil {
-				dst.BedrockOptions = nil
+			if err = validator.Validate(dst.BedrockAI21Options); err != nil {
+				dst.BedrockAI21Options = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.BedrockOptions = nil
+		dst.BedrockAI21Options = nil
+	}
+
+	// try to unmarshal data into BedrockClaudeOptions
+	err = newStrictDecoder(data).Decode(&dst.BedrockClaudeOptions)
+	if err == nil {
+		jsonBedrockClaudeOptions, _ := json.Marshal(dst.BedrockClaudeOptions)
+		if string(jsonBedrockClaudeOptions) == "{}" { // empty struct
+			dst.BedrockClaudeOptions = nil
+		} else {
+			if err = validator.Validate(dst.BedrockClaudeOptions); err != nil {
+				dst.BedrockClaudeOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.BedrockClaudeOptions = nil
+	}
+
+	// try to unmarshal data into BedrockCohereCommandOptions
+	err = newStrictDecoder(data).Decode(&dst.BedrockCohereCommandOptions)
+	if err == nil {
+		jsonBedrockCohereCommandOptions, _ := json.Marshal(dst.BedrockCohereCommandOptions)
+		if string(jsonBedrockCohereCommandOptions) == "{}" { // empty struct
+			dst.BedrockCohereCommandOptions = nil
+		} else {
+			if err = validator.Validate(dst.BedrockCohereCommandOptions); err != nil {
+				dst.BedrockCohereCommandOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.BedrockCohereCommandOptions = nil
+	}
+
+	// try to unmarshal data into BedrockConverseOptions
+	err = newStrictDecoder(data).Decode(&dst.BedrockConverseOptions)
+	if err == nil {
+		jsonBedrockConverseOptions, _ := json.Marshal(dst.BedrockConverseOptions)
+		if string(jsonBedrockConverseOptions) == "{}" { // empty struct
+			dst.BedrockConverseOptions = nil
+		} else {
+			if err = validator.Validate(dst.BedrockConverseOptions); err != nil {
+				dst.BedrockConverseOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.BedrockConverseOptions = nil
+	}
+
+	// try to unmarshal data into BedrockGptOssOptions
+	err = newStrictDecoder(data).Decode(&dst.BedrockGptOssOptions)
+	if err == nil {
+		jsonBedrockGptOssOptions, _ := json.Marshal(dst.BedrockGptOssOptions)
+		if string(jsonBedrockGptOssOptions) == "{}" { // empty struct
+			dst.BedrockGptOssOptions = nil
+		} else {
+			if err = validator.Validate(dst.BedrockGptOssOptions); err != nil {
+				dst.BedrockGptOssOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.BedrockGptOssOptions = nil
+	}
+
+	// try to unmarshal data into BedrockMistralOptions
+	err = newStrictDecoder(data).Decode(&dst.BedrockMistralOptions)
+	if err == nil {
+		jsonBedrockMistralOptions, _ := json.Marshal(dst.BedrockMistralOptions)
+		if string(jsonBedrockMistralOptions) == "{}" { // empty struct
+			dst.BedrockMistralOptions = nil
+		} else {
+			if err = validator.Validate(dst.BedrockMistralOptions); err != nil {
+				dst.BedrockMistralOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.BedrockMistralOptions = nil
+	}
+
+	// try to unmarshal data into BedrockNovaOptions
+	err = newStrictDecoder(data).Decode(&dst.BedrockNovaOptions)
+	if err == nil {
+		jsonBedrockNovaOptions, _ := json.Marshal(dst.BedrockNovaOptions)
+		if string(jsonBedrockNovaOptions) == "{}" { // empty struct
+			dst.BedrockNovaOptions = nil
+		} else {
+			if err = validator.Validate(dst.BedrockNovaOptions); err != nil {
+				dst.BedrockNovaOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.BedrockNovaOptions = nil
+	}
+
+	// try to unmarshal data into BedrockPalmyraOptions
+	err = newStrictDecoder(data).Decode(&dst.BedrockPalmyraOptions)
+	if err == nil {
+		jsonBedrockPalmyraOptions, _ := json.Marshal(dst.BedrockPalmyraOptions)
+		if string(jsonBedrockPalmyraOptions) == "{}" { // empty struct
+			dst.BedrockPalmyraOptions = nil
+		} else {
+			if err = validator.Validate(dst.BedrockPalmyraOptions); err != nil {
+				dst.BedrockPalmyraOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.BedrockPalmyraOptions = nil
 	}
 
 	// try to unmarshal data into GroqOptions
@@ -98,21 +329,106 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.GroqOptions = nil
 	}
 
-	// try to unmarshal data into OpenAiOptions
-	err = newStrictDecoder(data).Decode(&dst.OpenAiOptions)
+	// try to unmarshal data into ImagenOptions
+	err = newStrictDecoder(data).Decode(&dst.ImagenOptions)
 	if err == nil {
-		jsonOpenAiOptions, _ := json.Marshal(dst.OpenAiOptions)
-		if string(jsonOpenAiOptions) == "{}" { // empty struct
-			dst.OpenAiOptions = nil
+		jsonImagenOptions, _ := json.Marshal(dst.ImagenOptions)
+		if string(jsonImagenOptions) == "{}" { // empty struct
+			dst.ImagenOptions = nil
 		} else {
-			if err = validator.Validate(dst.OpenAiOptions); err != nil {
-				dst.OpenAiOptions = nil
+			if err = validator.Validate(dst.ImagenOptions); err != nil {
+				dst.ImagenOptions = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.OpenAiOptions = nil
+		dst.ImagenOptions = nil
+	}
+
+	// try to unmarshal data into NovaCanvasOptions
+	err = newStrictDecoder(data).Decode(&dst.NovaCanvasOptions)
+	if err == nil {
+		jsonNovaCanvasOptions, _ := json.Marshal(dst.NovaCanvasOptions)
+		if string(jsonNovaCanvasOptions) == "{}" { // empty struct
+			dst.NovaCanvasOptions = nil
+		} else {
+			if err = validator.Validate(dst.NovaCanvasOptions); err != nil {
+				dst.NovaCanvasOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.NovaCanvasOptions = nil
+	}
+
+	// try to unmarshal data into OpenAiDalleOptions
+	err = newStrictDecoder(data).Decode(&dst.OpenAiDalleOptions)
+	if err == nil {
+		jsonOpenAiDalleOptions, _ := json.Marshal(dst.OpenAiDalleOptions)
+		if string(jsonOpenAiDalleOptions) == "{}" { // empty struct
+			dst.OpenAiDalleOptions = nil
+		} else {
+			if err = validator.Validate(dst.OpenAiDalleOptions); err != nil {
+				dst.OpenAiDalleOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.OpenAiDalleOptions = nil
+	}
+
+	// try to unmarshal data into OpenAiGptImageOptions
+	err = newStrictDecoder(data).Decode(&dst.OpenAiGptImageOptions)
+	if err == nil {
+		jsonOpenAiGptImageOptions, _ := json.Marshal(dst.OpenAiGptImageOptions)
+		if string(jsonOpenAiGptImageOptions) == "{}" { // empty struct
+			dst.OpenAiGptImageOptions = nil
+		} else {
+			if err = validator.Validate(dst.OpenAiGptImageOptions); err != nil {
+				dst.OpenAiGptImageOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.OpenAiGptImageOptions = nil
+	}
+
+	// try to unmarshal data into OpenAiTextOptions
+	err = newStrictDecoder(data).Decode(&dst.OpenAiTextOptions)
+	if err == nil {
+		jsonOpenAiTextOptions, _ := json.Marshal(dst.OpenAiTextOptions)
+		if string(jsonOpenAiTextOptions) == "{}" { // empty struct
+			dst.OpenAiTextOptions = nil
+		} else {
+			if err = validator.Validate(dst.OpenAiTextOptions); err != nil {
+				dst.OpenAiTextOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.OpenAiTextOptions = nil
+	}
+
+	// try to unmarshal data into OpenAiThinkingOptions
+	err = newStrictDecoder(data).Decode(&dst.OpenAiThinkingOptions)
+	if err == nil {
+		jsonOpenAiThinkingOptions, _ := json.Marshal(dst.OpenAiThinkingOptions)
+		if string(jsonOpenAiThinkingOptions) == "{}" { // empty struct
+			dst.OpenAiThinkingOptions = nil
+		} else {
+			if err = validator.Validate(dst.OpenAiThinkingOptions); err != nil {
+				dst.OpenAiThinkingOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.OpenAiThinkingOptions = nil
 	}
 
 	// try to unmarshal data into TextFallbackOptions
@@ -132,30 +448,78 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.TextFallbackOptions = nil
 	}
 
-	// try to unmarshal data into VertexAIOptions
-	err = newStrictDecoder(data).Decode(&dst.VertexAIOptions)
+	// try to unmarshal data into TwelvelabsPegasusOptions
+	err = newStrictDecoder(data).Decode(&dst.TwelvelabsPegasusOptions)
 	if err == nil {
-		jsonVertexAIOptions, _ := json.Marshal(dst.VertexAIOptions)
-		if string(jsonVertexAIOptions) == "{}" { // empty struct
-			dst.VertexAIOptions = nil
+		jsonTwelvelabsPegasusOptions, _ := json.Marshal(dst.TwelvelabsPegasusOptions)
+		if string(jsonTwelvelabsPegasusOptions) == "{}" { // empty struct
+			dst.TwelvelabsPegasusOptions = nil
 		} else {
-			if err = validator.Validate(dst.VertexAIOptions); err != nil {
-				dst.VertexAIOptions = nil
+			if err = validator.Validate(dst.TwelvelabsPegasusOptions); err != nil {
+				dst.TwelvelabsPegasusOptions = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.VertexAIOptions = nil
+		dst.TwelvelabsPegasusOptions = nil
+	}
+
+	// try to unmarshal data into VertexAIClaudeOptions
+	err = newStrictDecoder(data).Decode(&dst.VertexAIClaudeOptions)
+	if err == nil {
+		jsonVertexAIClaudeOptions, _ := json.Marshal(dst.VertexAIClaudeOptions)
+		if string(jsonVertexAIClaudeOptions) == "{}" { // empty struct
+			dst.VertexAIClaudeOptions = nil
+		} else {
+			if err = validator.Validate(dst.VertexAIClaudeOptions); err != nil {
+				dst.VertexAIClaudeOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.VertexAIClaudeOptions = nil
+	}
+
+	// try to unmarshal data into VertexAIGeminiOptions
+	err = newStrictDecoder(data).Decode(&dst.VertexAIGeminiOptions)
+	if err == nil {
+		jsonVertexAIGeminiOptions, _ := json.Marshal(dst.VertexAIGeminiOptions)
+		if string(jsonVertexAIGeminiOptions) == "{}" { // empty struct
+			dst.VertexAIGeminiOptions = nil
+		} else {
+			if err = validator.Validate(dst.VertexAIGeminiOptions); err != nil {
+				dst.VertexAIGeminiOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.VertexAIGeminiOptions = nil
 	}
 
 	if match > 1 { // more than 1 match
 		// reset to nil
-		dst.BedrockOptions = nil
+		dst.BedrockAI21Options = nil
+		dst.BedrockClaudeOptions = nil
+		dst.BedrockCohereCommandOptions = nil
+		dst.BedrockConverseOptions = nil
+		dst.BedrockGptOssOptions = nil
+		dst.BedrockMistralOptions = nil
+		dst.BedrockNovaOptions = nil
+		dst.BedrockPalmyraOptions = nil
 		dst.GroqOptions = nil
-		dst.OpenAiOptions = nil
+		dst.ImagenOptions = nil
+		dst.NovaCanvasOptions = nil
+		dst.OpenAiDalleOptions = nil
+		dst.OpenAiGptImageOptions = nil
+		dst.OpenAiTextOptions = nil
+		dst.OpenAiThinkingOptions = nil
 		dst.TextFallbackOptions = nil
-		dst.VertexAIOptions = nil
+		dst.TwelvelabsPegasusOptions = nil
+		dst.VertexAIClaudeOptions = nil
+		dst.VertexAIGeminiOptions = nil
 
 		return fmt.Errorf("data matches more than one schema in oneOf(ModelOptions)")
 	} else if match == 1 {
@@ -167,24 +531,80 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 
 // Marshal data from the first non-nil pointers in the struct to JSON
 func (src ModelOptions) MarshalJSON() ([]byte, error) {
-	if src.BedrockOptions != nil {
-		return json.Marshal(&src.BedrockOptions)
+	if src.BedrockAI21Options != nil {
+		return json.Marshal(&src.BedrockAI21Options)
+	}
+
+	if src.BedrockClaudeOptions != nil {
+		return json.Marshal(&src.BedrockClaudeOptions)
+	}
+
+	if src.BedrockCohereCommandOptions != nil {
+		return json.Marshal(&src.BedrockCohereCommandOptions)
+	}
+
+	if src.BedrockConverseOptions != nil {
+		return json.Marshal(&src.BedrockConverseOptions)
+	}
+
+	if src.BedrockGptOssOptions != nil {
+		return json.Marshal(&src.BedrockGptOssOptions)
+	}
+
+	if src.BedrockMistralOptions != nil {
+		return json.Marshal(&src.BedrockMistralOptions)
+	}
+
+	if src.BedrockNovaOptions != nil {
+		return json.Marshal(&src.BedrockNovaOptions)
+	}
+
+	if src.BedrockPalmyraOptions != nil {
+		return json.Marshal(&src.BedrockPalmyraOptions)
 	}
 
 	if src.GroqOptions != nil {
 		return json.Marshal(&src.GroqOptions)
 	}
 
-	if src.OpenAiOptions != nil {
-		return json.Marshal(&src.OpenAiOptions)
+	if src.ImagenOptions != nil {
+		return json.Marshal(&src.ImagenOptions)
+	}
+
+	if src.NovaCanvasOptions != nil {
+		return json.Marshal(&src.NovaCanvasOptions)
+	}
+
+	if src.OpenAiDalleOptions != nil {
+		return json.Marshal(&src.OpenAiDalleOptions)
+	}
+
+	if src.OpenAiGptImageOptions != nil {
+		return json.Marshal(&src.OpenAiGptImageOptions)
+	}
+
+	if src.OpenAiTextOptions != nil {
+		return json.Marshal(&src.OpenAiTextOptions)
+	}
+
+	if src.OpenAiThinkingOptions != nil {
+		return json.Marshal(&src.OpenAiThinkingOptions)
 	}
 
 	if src.TextFallbackOptions != nil {
 		return json.Marshal(&src.TextFallbackOptions)
 	}
 
-	if src.VertexAIOptions != nil {
-		return json.Marshal(&src.VertexAIOptions)
+	if src.TwelvelabsPegasusOptions != nil {
+		return json.Marshal(&src.TwelvelabsPegasusOptions)
+	}
+
+	if src.VertexAIClaudeOptions != nil {
+		return json.Marshal(&src.VertexAIClaudeOptions)
+	}
+
+	if src.VertexAIGeminiOptions != nil {
+		return json.Marshal(&src.VertexAIGeminiOptions)
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -195,24 +615,80 @@ func (obj *ModelOptions) GetActualInstance() interface{} {
 	if obj == nil {
 		return nil
 	}
-	if obj.BedrockOptions != nil {
-		return obj.BedrockOptions
+	if obj.BedrockAI21Options != nil {
+		return obj.BedrockAI21Options
+	}
+
+	if obj.BedrockClaudeOptions != nil {
+		return obj.BedrockClaudeOptions
+	}
+
+	if obj.BedrockCohereCommandOptions != nil {
+		return obj.BedrockCohereCommandOptions
+	}
+
+	if obj.BedrockConverseOptions != nil {
+		return obj.BedrockConverseOptions
+	}
+
+	if obj.BedrockGptOssOptions != nil {
+		return obj.BedrockGptOssOptions
+	}
+
+	if obj.BedrockMistralOptions != nil {
+		return obj.BedrockMistralOptions
+	}
+
+	if obj.BedrockNovaOptions != nil {
+		return obj.BedrockNovaOptions
+	}
+
+	if obj.BedrockPalmyraOptions != nil {
+		return obj.BedrockPalmyraOptions
 	}
 
 	if obj.GroqOptions != nil {
 		return obj.GroqOptions
 	}
 
-	if obj.OpenAiOptions != nil {
-		return obj.OpenAiOptions
+	if obj.ImagenOptions != nil {
+		return obj.ImagenOptions
+	}
+
+	if obj.NovaCanvasOptions != nil {
+		return obj.NovaCanvasOptions
+	}
+
+	if obj.OpenAiDalleOptions != nil {
+		return obj.OpenAiDalleOptions
+	}
+
+	if obj.OpenAiGptImageOptions != nil {
+		return obj.OpenAiGptImageOptions
+	}
+
+	if obj.OpenAiTextOptions != nil {
+		return obj.OpenAiTextOptions
+	}
+
+	if obj.OpenAiThinkingOptions != nil {
+		return obj.OpenAiThinkingOptions
 	}
 
 	if obj.TextFallbackOptions != nil {
 		return obj.TextFallbackOptions
 	}
 
-	if obj.VertexAIOptions != nil {
-		return obj.VertexAIOptions
+	if obj.TwelvelabsPegasusOptions != nil {
+		return obj.TwelvelabsPegasusOptions
+	}
+
+	if obj.VertexAIClaudeOptions != nil {
+		return obj.VertexAIClaudeOptions
+	}
+
+	if obj.VertexAIGeminiOptions != nil {
+		return obj.VertexAIGeminiOptions
 	}
 
 	// all schemas are nil
@@ -221,24 +697,80 @@ func (obj *ModelOptions) GetActualInstance() interface{} {
 
 // Get the actual instance value
 func (obj ModelOptions) GetActualInstanceValue() interface{} {
-	if obj.BedrockOptions != nil {
-		return *obj.BedrockOptions
+	if obj.BedrockAI21Options != nil {
+		return *obj.BedrockAI21Options
+	}
+
+	if obj.BedrockClaudeOptions != nil {
+		return *obj.BedrockClaudeOptions
+	}
+
+	if obj.BedrockCohereCommandOptions != nil {
+		return *obj.BedrockCohereCommandOptions
+	}
+
+	if obj.BedrockConverseOptions != nil {
+		return *obj.BedrockConverseOptions
+	}
+
+	if obj.BedrockGptOssOptions != nil {
+		return *obj.BedrockGptOssOptions
+	}
+
+	if obj.BedrockMistralOptions != nil {
+		return *obj.BedrockMistralOptions
+	}
+
+	if obj.BedrockNovaOptions != nil {
+		return *obj.BedrockNovaOptions
+	}
+
+	if obj.BedrockPalmyraOptions != nil {
+		return *obj.BedrockPalmyraOptions
 	}
 
 	if obj.GroqOptions != nil {
 		return *obj.GroqOptions
 	}
 
-	if obj.OpenAiOptions != nil {
-		return *obj.OpenAiOptions
+	if obj.ImagenOptions != nil {
+		return *obj.ImagenOptions
+	}
+
+	if obj.NovaCanvasOptions != nil {
+		return *obj.NovaCanvasOptions
+	}
+
+	if obj.OpenAiDalleOptions != nil {
+		return *obj.OpenAiDalleOptions
+	}
+
+	if obj.OpenAiGptImageOptions != nil {
+		return *obj.OpenAiGptImageOptions
+	}
+
+	if obj.OpenAiTextOptions != nil {
+		return *obj.OpenAiTextOptions
+	}
+
+	if obj.OpenAiThinkingOptions != nil {
+		return *obj.OpenAiThinkingOptions
 	}
 
 	if obj.TextFallbackOptions != nil {
 		return *obj.TextFallbackOptions
 	}
 
-	if obj.VertexAIOptions != nil {
-		return *obj.VertexAIOptions
+	if obj.TwelvelabsPegasusOptions != nil {
+		return *obj.TwelvelabsPegasusOptions
+	}
+
+	if obj.VertexAIClaudeOptions != nil {
+		return *obj.VertexAIClaudeOptions
+	}
+
+	if obj.VertexAIGeminiOptions != nil {
+		return *obj.VertexAIGeminiOptions
 	}
 
 	// all schemas are nil
