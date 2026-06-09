@@ -27,6 +27,7 @@ const (
 	PERMISSION_RUN_READ                 Permission = "run:read"
 	PERMISSION_RUN_WRITE                Permission = "run:write"
 	PERMISSION_ENVIRONMENT_ADMIN        Permission = "environment:admin"
+	PERMISSION_APP_MANAGE               Permission = "app:manage"
 	PERMISSION_PROJECT_ADMIN            Permission = "project:admin"
 	PERMISSION_PROJECT_INTEGRATION_READ Permission = "project:integration_read"
 	PERMISSION_PROJECT_SETTINGS_WRITE   Permission = "project:settings_write"
@@ -69,6 +70,7 @@ var AllowedPermissionEnumValues = []Permission{
 	"run:read",
 	"run:write",
 	"environment:admin",
+	"app:manage",
 	"project:admin",
 	"project:integration_read",
 	"project:settings_write",
