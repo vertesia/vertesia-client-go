@@ -20,7 +20,7 @@ var _ MappedNullable = &ACECreatePayload{}
 
 // ACECreatePayload struct for ACECreatePayload
 type ACECreatePayload struct {
-	Role          ProjectRoles               `json:"role"`
+	Role          SystemRoles                `json:"role"`
 	ResourceType  AccessControlResourceType  `json:"resource_type"`
 	Resource      string                     `json:"resource"`
 	PrincipalType AccessControlPrincipalType `json:"principal_type"`
@@ -41,7 +41,7 @@ type _ACECreatePayload ACECreatePayload
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewACECreatePayload(role ProjectRoles, resourceType AccessControlResourceType, resource string, principalType AccessControlPrincipalType, principal string) *ACECreatePayload {
+func NewACECreatePayload(role SystemRoles, resourceType AccessControlResourceType, resource string, principalType AccessControlPrincipalType, principal string) *ACECreatePayload {
 	this := ACECreatePayload{}
 	this.Role = role
 	this.ResourceType = resourceType
@@ -60,9 +60,9 @@ func NewACECreatePayloadWithDefaults() *ACECreatePayload {
 }
 
 // GetRole returns the Role field value
-func (o *ACECreatePayload) GetRole() ProjectRoles {
+func (o *ACECreatePayload) GetRole() SystemRoles {
 	if o == nil {
-		var ret ProjectRoles
+		var ret SystemRoles
 		return ret
 	}
 
@@ -71,7 +71,7 @@ func (o *ACECreatePayload) GetRole() ProjectRoles {
 
 // GetRoleOk returns a tuple with the Role field value
 // and a boolean to check if the value has been set.
-func (o *ACECreatePayload) GetRoleOk() (*ProjectRoles, bool) {
+func (o *ACECreatePayload) GetRoleOk() (*SystemRoles, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -79,7 +79,7 @@ func (o *ACECreatePayload) GetRoleOk() (*ProjectRoles, bool) {
 }
 
 // SetRole sets field value
-func (o *ACECreatePayload) SetRole(v ProjectRoles) {
+func (o *ACECreatePayload) SetRole(v SystemRoles) {
 	o.Role = v
 }
 

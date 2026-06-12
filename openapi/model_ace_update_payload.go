@@ -19,7 +19,7 @@ var _ MappedNullable = &ACEUpdatePayload{}
 
 // ACEUpdatePayload struct for ACEUpdatePayload
 type ACEUpdatePayload struct {
-	Role          *ProjectRoles               `json:"role,omitempty"`
+	Role          *SystemRoles                `json:"role,omitempty"`
 	ResourceType  *AccessControlResourceType  `json:"resource_type,omitempty"`
 	Resource      *string                     `json:"resource,omitempty"`
 	PrincipalType *AccessControlPrincipalType `json:"principal_type,omitempty"`
@@ -52,9 +52,9 @@ func NewACEUpdatePayloadWithDefaults() *ACEUpdatePayload {
 }
 
 // GetRole returns the Role field value if set, zero value otherwise.
-func (o *ACEUpdatePayload) GetRole() ProjectRoles {
+func (o *ACEUpdatePayload) GetRole() SystemRoles {
 	if o == nil || IsNil(o.Role) {
-		var ret ProjectRoles
+		var ret SystemRoles
 		return ret
 	}
 	return *o.Role
@@ -62,7 +62,7 @@ func (o *ACEUpdatePayload) GetRole() ProjectRoles {
 
 // GetRoleOk returns a tuple with the Role field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ACEUpdatePayload) GetRoleOk() (*ProjectRoles, bool) {
+func (o *ACEUpdatePayload) GetRoleOk() (*SystemRoles, bool) {
 	if o == nil || IsNil(o.Role) {
 		return nil, false
 	}
@@ -78,8 +78,8 @@ func (o *ACEUpdatePayload) HasRole() bool {
 	return false
 }
 
-// SetRole gets a reference to the given ProjectRoles and assigns it to the Role field.
-func (o *ACEUpdatePayload) SetRole(v ProjectRoles) {
+// SetRole gets a reference to the given SystemRoles and assigns it to the Role field.
+func (o *ACEUpdatePayload) SetRole(v SystemRoles) {
 	o.Role = &v
 }
 

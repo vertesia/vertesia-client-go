@@ -20,20 +20,20 @@ var _ MappedNullable = &CreateOrUpdateApiKeyPayload{}
 
 // CreateOrUpdateApiKeyPayload struct for CreateOrUpdateApiKeyPayload
 type CreateOrUpdateApiKeyPayload struct {
-	Id               *string       `json:"id,omitempty"`
-	Name             *string       `json:"name,omitempty"`
-	Type             *ApiKeyTypes  `json:"type,omitempty"`
-	Role             *ProjectRoles `json:"role,omitempty"`
-	MaskedValue      *string       `json:"maskedValue,omitempty"`
-	CanRetrieveValue *bool         `json:"can_retrieve_value,omitempty"`
-	Account          *string       `json:"account,omitempty"`
-	Project          *ProjectRef   `json:"project,omitempty"`
-	Enabled          *bool         `json:"enabled,omitempty"`
-	CreatedBy        *string       `json:"created_by,omitempty"`
-	UpdatedBy        *string       `json:"updated_by,omitempty"`
-	CreatedAt        *time.Time    `json:"created_at,omitempty"`
-	UpdatedAt        *time.Time    `json:"updated_at,omitempty"`
-	ExpiresAt        *time.Time    `json:"expires_at,omitempty"`
+	Id               *string      `json:"id,omitempty"`
+	Name             *string      `json:"name,omitempty"`
+	Type             *ApiKeyTypes `json:"type,omitempty"`
+	Role             *SystemRoles `json:"role,omitempty"`
+	MaskedValue      *string      `json:"maskedValue,omitempty"`
+	CanRetrieveValue *bool        `json:"can_retrieve_value,omitempty"`
+	Account          *string      `json:"account,omitempty"`
+	Project          *ProjectRef  `json:"project,omitempty"`
+	Enabled          *bool        `json:"enabled,omitempty"`
+	CreatedBy        *string      `json:"created_by,omitempty"`
+	UpdatedBy        *string      `json:"updated_by,omitempty"`
+	CreatedAt        *time.Time   `json:"created_at,omitempty"`
+	UpdatedAt        *time.Time   `json:"updated_at,omitempty"`
+	ExpiresAt        *time.Time   `json:"expires_at,omitempty"`
 }
 
 // NewCreateOrUpdateApiKeyPayload instantiates a new CreateOrUpdateApiKeyPayload object
@@ -150,9 +150,9 @@ func (o *CreateOrUpdateApiKeyPayload) SetType(v ApiKeyTypes) {
 }
 
 // GetRole returns the Role field value if set, zero value otherwise.
-func (o *CreateOrUpdateApiKeyPayload) GetRole() ProjectRoles {
+func (o *CreateOrUpdateApiKeyPayload) GetRole() SystemRoles {
 	if o == nil || IsNil(o.Role) {
-		var ret ProjectRoles
+		var ret SystemRoles
 		return ret
 	}
 	return *o.Role
@@ -160,7 +160,7 @@ func (o *CreateOrUpdateApiKeyPayload) GetRole() ProjectRoles {
 
 // GetRoleOk returns a tuple with the Role field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CreateOrUpdateApiKeyPayload) GetRoleOk() (*ProjectRoles, bool) {
+func (o *CreateOrUpdateApiKeyPayload) GetRoleOk() (*SystemRoles, bool) {
 	if o == nil || IsNil(o.Role) {
 		return nil, false
 	}
@@ -176,8 +176,8 @@ func (o *CreateOrUpdateApiKeyPayload) HasRole() bool {
 	return false
 }
 
-// SetRole gets a reference to the given ProjectRoles and assigns it to the Role field.
-func (o *CreateOrUpdateApiKeyPayload) SetRole(v ProjectRoles) {
+// SetRole gets a reference to the given SystemRoles and assigns it to the Role field.
+func (o *CreateOrUpdateApiKeyPayload) SetRole(v SystemRoles) {
 	o.Role = &v
 }
 

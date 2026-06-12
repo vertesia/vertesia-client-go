@@ -21,21 +21,21 @@ var _ MappedNullable = &ApiKeyWithValue{}
 
 // ApiKeyWithValue struct for ApiKeyWithValue
 type ApiKeyWithValue struct {
-	Id               string       `json:"id"`
-	Name             string       `json:"name"`
-	Type             ApiKeyTypes  `json:"type"`
-	Role             ProjectRoles `json:"role"`
-	MaskedValue      *string      `json:"maskedValue,omitempty"`
-	CanRetrieveValue *bool        `json:"can_retrieve_value,omitempty"`
-	Account          string       `json:"account"`
-	Project          ProjectRef   `json:"project"`
-	Enabled          bool         `json:"enabled"`
-	CreatedBy        string       `json:"created_by"`
-	UpdatedBy        string       `json:"updated_by"`
-	CreatedAt        time.Time    `json:"created_at"`
-	UpdatedAt        time.Time    `json:"updated_at"`
-	ExpiresAt        *time.Time   `json:"expires_at,omitempty"`
-	Value            string       `json:"value"`
+	Id               string      `json:"id"`
+	Name             string      `json:"name"`
+	Type             ApiKeyTypes `json:"type"`
+	Role             SystemRoles `json:"role"`
+	MaskedValue      *string     `json:"maskedValue,omitempty"`
+	CanRetrieveValue *bool       `json:"can_retrieve_value,omitempty"`
+	Account          string      `json:"account"`
+	Project          ProjectRef  `json:"project"`
+	Enabled          bool        `json:"enabled"`
+	CreatedBy        string      `json:"created_by"`
+	UpdatedBy        string      `json:"updated_by"`
+	CreatedAt        time.Time   `json:"created_at"`
+	UpdatedAt        time.Time   `json:"updated_at"`
+	ExpiresAt        *time.Time  `json:"expires_at,omitempty"`
+	Value            string      `json:"value"`
 }
 
 type _ApiKeyWithValue ApiKeyWithValue
@@ -44,7 +44,7 @@ type _ApiKeyWithValue ApiKeyWithValue
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewApiKeyWithValue(id string, name string, type_ ApiKeyTypes, role ProjectRoles, account string, project ProjectRef, enabled bool, createdBy string, updatedBy string, createdAt time.Time, updatedAt time.Time, value string) *ApiKeyWithValue {
+func NewApiKeyWithValue(id string, name string, type_ ApiKeyTypes, role SystemRoles, account string, project ProjectRef, enabled bool, createdBy string, updatedBy string, createdAt time.Time, updatedAt time.Time, value string) *ApiKeyWithValue {
 	this := ApiKeyWithValue{}
 	this.Id = id
 	this.Name = name
@@ -142,9 +142,9 @@ func (o *ApiKeyWithValue) SetType(v ApiKeyTypes) {
 }
 
 // GetRole returns the Role field value
-func (o *ApiKeyWithValue) GetRole() ProjectRoles {
+func (o *ApiKeyWithValue) GetRole() SystemRoles {
 	if o == nil {
-		var ret ProjectRoles
+		var ret SystemRoles
 		return ret
 	}
 
@@ -153,7 +153,7 @@ func (o *ApiKeyWithValue) GetRole() ProjectRoles {
 
 // GetRoleOk returns a tuple with the Role field value
 // and a boolean to check if the value has been set.
-func (o *ApiKeyWithValue) GetRoleOk() (*ProjectRoles, bool) {
+func (o *ApiKeyWithValue) GetRoleOk() (*SystemRoles, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -161,7 +161,7 @@ func (o *ApiKeyWithValue) GetRoleOk() (*ProjectRoles, bool) {
 }
 
 // SetRole sets field value
-func (o *ApiKeyWithValue) SetRole(v ProjectRoles) {
+func (o *ApiKeyWithValue) SetRole(v SystemRoles) {
 	o.Role = v
 }
 

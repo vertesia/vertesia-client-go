@@ -21,21 +21,21 @@ var _ MappedNullable = &ApiKeyReadResponse{}
 
 // ApiKeyReadResponse struct for ApiKeyReadResponse
 type ApiKeyReadResponse struct {
-	Id               string       `json:"id"`
-	Name             string       `json:"name"`
-	Type             ApiKeyTypes  `json:"type"`
-	Role             ProjectRoles `json:"role"`
-	MaskedValue      *string      `json:"maskedValue,omitempty"`
-	CanRetrieveValue *bool        `json:"can_retrieve_value,omitempty"`
-	Account          string       `json:"account"`
-	Project          ProjectRef   `json:"project"`
-	Enabled          bool         `json:"enabled"`
-	CreatedBy        string       `json:"created_by"`
-	UpdatedBy        string       `json:"updated_by"`
-	CreatedAt        time.Time    `json:"created_at"`
-	UpdatedAt        time.Time    `json:"updated_at"`
-	ExpiresAt        *time.Time   `json:"expires_at,omitempty"`
-	Value            *string      `json:"value,omitempty"`
+	Id               string      `json:"id"`
+	Name             string      `json:"name"`
+	Type             ApiKeyTypes `json:"type"`
+	Role             SystemRoles `json:"role"`
+	MaskedValue      *string     `json:"maskedValue,omitempty"`
+	CanRetrieveValue *bool       `json:"can_retrieve_value,omitempty"`
+	Account          string      `json:"account"`
+	Project          ProjectRef  `json:"project"`
+	Enabled          bool        `json:"enabled"`
+	CreatedBy        string      `json:"created_by"`
+	UpdatedBy        string      `json:"updated_by"`
+	CreatedAt        time.Time   `json:"created_at"`
+	UpdatedAt        time.Time   `json:"updated_at"`
+	ExpiresAt        *time.Time  `json:"expires_at,omitempty"`
+	Value            *string     `json:"value,omitempty"`
 }
 
 type _ApiKeyReadResponse ApiKeyReadResponse
@@ -44,7 +44,7 @@ type _ApiKeyReadResponse ApiKeyReadResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewApiKeyReadResponse(id string, name string, type_ ApiKeyTypes, role ProjectRoles, account string, project ProjectRef, enabled bool, createdBy string, updatedBy string, createdAt time.Time, updatedAt time.Time) *ApiKeyReadResponse {
+func NewApiKeyReadResponse(id string, name string, type_ ApiKeyTypes, role SystemRoles, account string, project ProjectRef, enabled bool, createdBy string, updatedBy string, createdAt time.Time, updatedAt time.Time) *ApiKeyReadResponse {
 	this := ApiKeyReadResponse{}
 	this.Id = id
 	this.Name = name
@@ -141,9 +141,9 @@ func (o *ApiKeyReadResponse) SetType(v ApiKeyTypes) {
 }
 
 // GetRole returns the Role field value
-func (o *ApiKeyReadResponse) GetRole() ProjectRoles {
+func (o *ApiKeyReadResponse) GetRole() SystemRoles {
 	if o == nil {
-		var ret ProjectRoles
+		var ret SystemRoles
 		return ret
 	}
 
@@ -152,7 +152,7 @@ func (o *ApiKeyReadResponse) GetRole() ProjectRoles {
 
 // GetRoleOk returns a tuple with the Role field value
 // and a boolean to check if the value has been set.
-func (o *ApiKeyReadResponse) GetRoleOk() (*ProjectRoles, bool) {
+func (o *ApiKeyReadResponse) GetRoleOk() (*SystemRoles, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -160,7 +160,7 @@ func (o *ApiKeyReadResponse) GetRoleOk() (*ProjectRoles, bool) {
 }
 
 // SetRole sets field value
-func (o *ApiKeyReadResponse) SetRole(v ProjectRoles) {
+func (o *ApiKeyReadResponse) SetRole(v SystemRoles) {
 	o.Role = v
 }
 

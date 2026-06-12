@@ -20,8 +20,8 @@ var _ MappedNullable = &InviteUserRequestPayload{}
 
 // InviteUserRequestPayload struct for InviteUserRequestPayload
 type InviteUserRequestPayload struct {
-	Email string       `json:"email"`
-	Role  ProjectRoles `json:"role"`
+	Email string      `json:"email"`
+	Role  SystemRoles `json:"role"`
 }
 
 type _InviteUserRequestPayload InviteUserRequestPayload
@@ -30,7 +30,7 @@ type _InviteUserRequestPayload InviteUserRequestPayload
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewInviteUserRequestPayload(email string, role ProjectRoles) *InviteUserRequestPayload {
+func NewInviteUserRequestPayload(email string, role SystemRoles) *InviteUserRequestPayload {
 	this := InviteUserRequestPayload{}
 	this.Email = email
 	this.Role = role
@@ -70,9 +70,9 @@ func (o *InviteUserRequestPayload) SetEmail(v string) {
 }
 
 // GetRole returns the Role field value
-func (o *InviteUserRequestPayload) GetRole() ProjectRoles {
+func (o *InviteUserRequestPayload) GetRole() SystemRoles {
 	if o == nil {
-		var ret ProjectRoles
+		var ret SystemRoles
 		return ret
 	}
 
@@ -81,7 +81,7 @@ func (o *InviteUserRequestPayload) GetRole() ProjectRoles {
 
 // GetRoleOk returns a tuple with the Role field value
 // and a boolean to check if the value has been set.
-func (o *InviteUserRequestPayload) GetRoleOk() (*ProjectRoles, bool) {
+func (o *InviteUserRequestPayload) GetRoleOk() (*SystemRoles, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -89,7 +89,7 @@ func (o *InviteUserRequestPayload) GetRoleOk() (*ProjectRoles, bool) {
 }
 
 // SetRole sets field value
-func (o *InviteUserRequestPayload) SetRole(v ProjectRoles) {
+func (o *InviteUserRequestPayload) SetRole(v SystemRoles) {
 	o.Role = v
 }
 

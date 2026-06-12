@@ -23,7 +23,7 @@ type CompositeAppNavItemPermissions struct {
 	GroupsAllowed []string `json:"groupsAllowed,omitempty"`
 	// User IDs who can see this item.
 	UsersAllowed []string `json:"usersAllowed,omitempty"`
-	// ProjectRoles values (e.g. \"developer\", \"manager\") whose holders can see this item.
+	// SystemRoles values (e.g. \"developer\", \"manager\") whose holders can see this item.
 	RolesAllowed []string `json:"rolesAllowed,omitempty"`
 }
 

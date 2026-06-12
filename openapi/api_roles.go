@@ -40,7 +40,7 @@ func (r ApiListRolesRequest) Execute() ([]RoleDefinition, *http.Response, error)
 /*
 ListRoles List built-in roles
 
-Lists the built-in roles and the permissions included in each role.
+Lists every built-in role across all partitions (system, content, …) and the permissions each role grants.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListRolesRequest
@@ -69,6 +69,137 @@ func (a *RolesAPIService) ListRolesExecute(r ApiListRolesRequest) ([]RoleDefinit
 	}
 
 	localVarPath := localBasePath + "/iam/roles"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListSystemRolesRequest struct {
+	ctx         context.Context
+	ApiService  *RolesAPIService
+	xApiVersion *string
+}
+
+// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
+func (r ApiListSystemRolesRequest) XApiVersion(xApiVersion string) ApiListSystemRolesRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiListSystemRolesRequest) Execute() ([]SystemRoleDefinition, *http.Response, error) {
+	return r.ApiService.ListSystemRolesExecute(r)
+}
+
+/*
+ListSystemRoles List system roles
+
+Lists system-domain roles only. Permissions are `Permission` enum values — suited for client-side permission gating (button visibility, route guards). ABAC roles are excluded and must be consumed via the JWT `content_security` claim at the data layer.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListSystemRolesRequest
+*/
+func (a *RolesAPIService) ListSystemRoles(ctx context.Context) ApiListSystemRolesRequest {
+	return ApiListSystemRolesRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return []SystemRoleDefinition
+func (a *RolesAPIService) ListSystemRolesExecute(r ApiListSystemRolesRequest) ([]SystemRoleDefinition, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []SystemRoleDefinition
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RolesAPIService.ListSystemRoles")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/iam/roles/system"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}

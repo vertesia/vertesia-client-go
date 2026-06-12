@@ -15,40 +15,40 @@ import (
 	"fmt"
 )
 
-// checks if the RoleDefinition type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &RoleDefinition{}
+// checks if the SystemRoleDefinition type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &SystemRoleDefinition{}
 
-// RoleDefinition Wire shape of a role returned by the IAM `/roles` endpoint.  Permissions are typed `string[]` because role names span multiple partitions (system, content, future tasks/etc.) and each partition has its own vocabulary. For the tightly-typed system-only view (with `permissions: Permission[]`) use `SystemRoleDefinition` and the `/roles/system` endpoint.  NOTE: this interface is intentionally non-generic. The OpenAPI generator doesn't handle TypeScript generics cleanly in array response types and produces a degenerate `RoleDefinitionArray` schema. Keeping the wire shapes concrete avoids that. `SystemRoleDefinition` extends and narrows `permissions` to `Permission[]`.
-type RoleDefinition struct {
-	Name        string     `json:"name"`
-	Permissions []string   `json:"permissions"`
-	Domain      RoleDomain `json:"domain"`
+// SystemRoleDefinition Tightly-typed view of a system-domain role: permissions are central `Permission` enum values. Returned by `client.iam.roles.listSystem()` and by the server's `/roles/system` endpoint.
+type SystemRoleDefinition struct {
+	Name        string       `json:"name"`
+	Permissions []Permission `json:"permissions"`
+	Domain      RoleDomain   `json:"domain"`
 }
 
-type _RoleDefinition RoleDefinition
+type _SystemRoleDefinition SystemRoleDefinition
 
-// NewRoleDefinition instantiates a new RoleDefinition object
+// NewSystemRoleDefinition instantiates a new SystemRoleDefinition object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewRoleDefinition(name string, permissions []string, domain RoleDomain) *RoleDefinition {
-	this := RoleDefinition{}
+func NewSystemRoleDefinition(name string, permissions []Permission, domain RoleDomain) *SystemRoleDefinition {
+	this := SystemRoleDefinition{}
 	this.Name = name
 	this.Permissions = permissions
 	this.Domain = domain
 	return &this
 }
 
-// NewRoleDefinitionWithDefaults instantiates a new RoleDefinition object
+// NewSystemRoleDefinitionWithDefaults instantiates a new SystemRoleDefinition object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewRoleDefinitionWithDefaults() *RoleDefinition {
-	this := RoleDefinition{}
+func NewSystemRoleDefinitionWithDefaults() *SystemRoleDefinition {
+	this := SystemRoleDefinition{}
 	return &this
 }
 
 // GetName returns the Name field value
-func (o *RoleDefinition) GetName() string {
+func (o *SystemRoleDefinition) GetName() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -59,7 +59,7 @@ func (o *RoleDefinition) GetName() string {
 
 // GetNameOk returns a tuple with the Name field value
 // and a boolean to check if the value has been set.
-func (o *RoleDefinition) GetNameOk() (*string, bool) {
+func (o *SystemRoleDefinition) GetNameOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -67,14 +67,14 @@ func (o *RoleDefinition) GetNameOk() (*string, bool) {
 }
 
 // SetName sets field value
-func (o *RoleDefinition) SetName(v string) {
+func (o *SystemRoleDefinition) SetName(v string) {
 	o.Name = v
 }
 
 // GetPermissions returns the Permissions field value
-func (o *RoleDefinition) GetPermissions() []string {
+func (o *SystemRoleDefinition) GetPermissions() []Permission {
 	if o == nil {
-		var ret []string
+		var ret []Permission
 		return ret
 	}
 
@@ -83,7 +83,7 @@ func (o *RoleDefinition) GetPermissions() []string {
 
 // GetPermissionsOk returns a tuple with the Permissions field value
 // and a boolean to check if the value has been set.
-func (o *RoleDefinition) GetPermissionsOk() ([]string, bool) {
+func (o *SystemRoleDefinition) GetPermissionsOk() ([]Permission, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -91,12 +91,12 @@ func (o *RoleDefinition) GetPermissionsOk() ([]string, bool) {
 }
 
 // SetPermissions sets field value
-func (o *RoleDefinition) SetPermissions(v []string) {
+func (o *SystemRoleDefinition) SetPermissions(v []Permission) {
 	o.Permissions = v
 }
 
 // GetDomain returns the Domain field value
-func (o *RoleDefinition) GetDomain() RoleDomain {
+func (o *SystemRoleDefinition) GetDomain() RoleDomain {
 	if o == nil {
 		var ret RoleDomain
 		return ret
@@ -107,7 +107,7 @@ func (o *RoleDefinition) GetDomain() RoleDomain {
 
 // GetDomainOk returns a tuple with the Domain field value
 // and a boolean to check if the value has been set.
-func (o *RoleDefinition) GetDomainOk() (*RoleDomain, bool) {
+func (o *SystemRoleDefinition) GetDomainOk() (*RoleDomain, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -115,11 +115,11 @@ func (o *RoleDefinition) GetDomainOk() (*RoleDomain, bool) {
 }
 
 // SetDomain sets field value
-func (o *RoleDefinition) SetDomain(v RoleDomain) {
+func (o *SystemRoleDefinition) SetDomain(v RoleDomain) {
 	o.Domain = v
 }
 
-func (o RoleDefinition) MarshalJSON() ([]byte, error) {
+func (o SystemRoleDefinition) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -127,7 +127,7 @@ func (o RoleDefinition) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o RoleDefinition) ToMap() (map[string]interface{}, error) {
+func (o SystemRoleDefinition) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["name"] = o.Name
 	toSerialize["permissions"] = o.Permissions
@@ -135,7 +135,7 @@ func (o RoleDefinition) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-func (o *RoleDefinition) UnmarshalJSON(data []byte) (err error) {
+func (o *SystemRoleDefinition) UnmarshalJSON(data []byte) (err error) {
 	// This validates that all required properties are included in the JSON object
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
@@ -159,51 +159,51 @@ func (o *RoleDefinition) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
-	varRoleDefinition := _RoleDefinition{}
+	varSystemRoleDefinition := _SystemRoleDefinition{}
 
-	err = json.Unmarshal(data, &varRoleDefinition)
+	err = json.Unmarshal(data, &varSystemRoleDefinition)
 
 	if err != nil {
 		return err
 	}
 
-	*o = RoleDefinition(varRoleDefinition)
+	*o = SystemRoleDefinition(varSystemRoleDefinition)
 
 	return err
 }
 
-type NullableRoleDefinition struct {
-	value *RoleDefinition
+type NullableSystemRoleDefinition struct {
+	value *SystemRoleDefinition
 	isSet bool
 }
 
-func (v NullableRoleDefinition) Get() *RoleDefinition {
+func (v NullableSystemRoleDefinition) Get() *SystemRoleDefinition {
 	return v.value
 }
 
-func (v *NullableRoleDefinition) Set(val *RoleDefinition) {
+func (v *NullableSystemRoleDefinition) Set(val *SystemRoleDefinition) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableRoleDefinition) IsSet() bool {
+func (v NullableSystemRoleDefinition) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableRoleDefinition) Unset() {
+func (v *NullableSystemRoleDefinition) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableRoleDefinition(val *RoleDefinition) *NullableRoleDefinition {
-	return &NullableRoleDefinition{value: val, isSet: true}
+func NewNullableSystemRoleDefinition(val *SystemRoleDefinition) *NullableSystemRoleDefinition {
+	return &NullableSystemRoleDefinition{value: val, isSet: true}
 }
 
-func (v NullableRoleDefinition) MarshalJSON() ([]byte, error) {
+func (v NullableSystemRoleDefinition) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableRoleDefinition) UnmarshalJSON(src []byte) error {
+func (v *NullableSystemRoleDefinition) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

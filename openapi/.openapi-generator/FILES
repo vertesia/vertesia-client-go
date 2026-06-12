@@ -566,7 +566,6 @@ model_project_integration_list_response.go
 model_project_model_defaults.go
 model_project_plugins_update_payload.go
 model_project_ref.go
-model_project_roles.go
 model_project_search_tier.go
 model_project_token_request.go
 model_project_tool_info.go
@@ -624,6 +623,7 @@ model_retry_process_node_payload.go
 model_revert_process_definition_payload.go
 model_revision_info.go
 model_role_definition.go
+model_role_domain.go
 model_run_analytics_group_by.go
 model_run_analytics_query.go
 model_run_analytics_result.go
@@ -677,6 +677,8 @@ model_supported_integrations_resend.go
 model_supported_integrations_serper.go
 model_supported_providers.go
 model_system_defaults.go
+model_system_role_definition.go
+model_system_roles.go
 model_task.go
 model_task_field.go
 model_task_field_type.go
