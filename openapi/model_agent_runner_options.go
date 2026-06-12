@@ -35,6 +35,8 @@ type AgentRunnerOptions struct {
 	SearchScope *AgentSearchScope `json:"search_scope,omitempty"`
 	// The ID of the collection to restrict agent operations to. When specified, the agent's search and retrieval operations are limited to documents within this collection'.
 	CollectionId *string `json:"collection_id,omitempty"`
+	// Optional user-facing template for rendering run input as the first conversation entry. Supports {{field_name}}, {{nested.field}}, {{items.0.name}}, and {{json}} placeholders resolved from the run data.
+	RequestTemplate *string `json:"request_template,omitempty"`
 }
 
 // NewAgentRunnerOptions instantiates a new AgentRunnerOptions object
@@ -310,6 +312,38 @@ func (o *AgentRunnerOptions) SetCollectionId(v string) {
 	o.CollectionId = &v
 }
 
+// GetRequestTemplate returns the RequestTemplate field value if set, zero value otherwise.
+func (o *AgentRunnerOptions) GetRequestTemplate() string {
+	if o == nil || IsNil(o.RequestTemplate) {
+		var ret string
+		return ret
+	}
+	return *o.RequestTemplate
+}
+
+// GetRequestTemplateOk returns a tuple with the RequestTemplate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRunnerOptions) GetRequestTemplateOk() (*string, bool) {
+	if o == nil || IsNil(o.RequestTemplate) {
+		return nil, false
+	}
+	return o.RequestTemplate, true
+}
+
+// HasRequestTemplate returns a boolean if a field has been set.
+func (o *AgentRunnerOptions) HasRequestTemplate() bool {
+	if o != nil && !IsNil(o.RequestTemplate) {
+		return true
+	}
+
+	return false
+}
+
+// SetRequestTemplate gets a reference to the given string and assigns it to the RequestTemplate field.
+func (o *AgentRunnerOptions) SetRequestTemplate(v string) {
+	o.RequestTemplate = &v
+}
+
 func (o AgentRunnerOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -343,6 +377,9 @@ func (o AgentRunnerOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.CollectionId) {
 		toSerialize["collection_id"] = o.CollectionId
+	}
+	if !IsNil(o.RequestTemplate) {
+		toSerialize["request_template"] = o.RequestTemplate
 	}
 	return toSerialize, nil
 }

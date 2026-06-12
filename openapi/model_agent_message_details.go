@@ -22,14 +22,18 @@ type AgentMessageDetails struct {
 	EventClass           *string                         `json:"event_class,omitempty"`
 	Tool                 *string                         `json:"tool,omitempty"`
 	Tools                []string                        `json:"tools,omitempty"`
+	ToolEvent            *string                         `json:"tool_event,omitempty"`
 	Streamed             *bool                           `json:"streamed,omitempty"`
 	DisplayRole          *string                         `json:"display_role,omitempty"`
 	ActivityId           *string                         `json:"activity_id,omitempty"`
 	ActivityGroupId      *string                         `json:"activity_group_id,omitempty"`
 	BatchId              *string                         `json:"batch_id,omitempty"`
 	ToolRunId            *string                         `json:"tool_run_id,omitempty"`
+	ToolUseId            *string                         `json:"tool_use_id,omitempty"`
 	ToolStatus           *string                         `json:"tool_status,omitempty"`
 	ToolIteration        *float32                        `json:"tool_iteration,omitempty"`
+	MessageToHuman       *string                         `json:"message_to_human,omitempty"`
+	DurationMs           *float32                        `json:"duration_ms,omitempty"`
 	Observation          interface{}                     `json:"observation,omitempty"`
 	WorkflowRunId        *string                         `json:"workflow_run_id,omitempty"`
 	OutputFiles          []string                        `json:"outputFiles,omitempty"`
@@ -156,6 +160,38 @@ func (o *AgentMessageDetails) HasTools() bool {
 // SetTools gets a reference to the given []string and assigns it to the Tools field.
 func (o *AgentMessageDetails) SetTools(v []string) {
 	o.Tools = v
+}
+
+// GetToolEvent returns the ToolEvent field value if set, zero value otherwise.
+func (o *AgentMessageDetails) GetToolEvent() string {
+	if o == nil || IsNil(o.ToolEvent) {
+		var ret string
+		return ret
+	}
+	return *o.ToolEvent
+}
+
+// GetToolEventOk returns a tuple with the ToolEvent field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentMessageDetails) GetToolEventOk() (*string, bool) {
+	if o == nil || IsNil(o.ToolEvent) {
+		return nil, false
+	}
+	return o.ToolEvent, true
+}
+
+// HasToolEvent returns a boolean if a field has been set.
+func (o *AgentMessageDetails) HasToolEvent() bool {
+	if o != nil && !IsNil(o.ToolEvent) {
+		return true
+	}
+
+	return false
+}
+
+// SetToolEvent gets a reference to the given string and assigns it to the ToolEvent field.
+func (o *AgentMessageDetails) SetToolEvent(v string) {
+	o.ToolEvent = &v
 }
 
 // GetStreamed returns the Streamed field value if set, zero value otherwise.
@@ -350,6 +386,38 @@ func (o *AgentMessageDetails) SetToolRunId(v string) {
 	o.ToolRunId = &v
 }
 
+// GetToolUseId returns the ToolUseId field value if set, zero value otherwise.
+func (o *AgentMessageDetails) GetToolUseId() string {
+	if o == nil || IsNil(o.ToolUseId) {
+		var ret string
+		return ret
+	}
+	return *o.ToolUseId
+}
+
+// GetToolUseIdOk returns a tuple with the ToolUseId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentMessageDetails) GetToolUseIdOk() (*string, bool) {
+	if o == nil || IsNil(o.ToolUseId) {
+		return nil, false
+	}
+	return o.ToolUseId, true
+}
+
+// HasToolUseId returns a boolean if a field has been set.
+func (o *AgentMessageDetails) HasToolUseId() bool {
+	if o != nil && !IsNil(o.ToolUseId) {
+		return true
+	}
+
+	return false
+}
+
+// SetToolUseId gets a reference to the given string and assigns it to the ToolUseId field.
+func (o *AgentMessageDetails) SetToolUseId(v string) {
+	o.ToolUseId = &v
+}
+
 // GetToolStatus returns the ToolStatus field value if set, zero value otherwise.
 func (o *AgentMessageDetails) GetToolStatus() string {
 	if o == nil || IsNil(o.ToolStatus) {
@@ -412,6 +480,70 @@ func (o *AgentMessageDetails) HasToolIteration() bool {
 // SetToolIteration gets a reference to the given float32 and assigns it to the ToolIteration field.
 func (o *AgentMessageDetails) SetToolIteration(v float32) {
 	o.ToolIteration = &v
+}
+
+// GetMessageToHuman returns the MessageToHuman field value if set, zero value otherwise.
+func (o *AgentMessageDetails) GetMessageToHuman() string {
+	if o == nil || IsNil(o.MessageToHuman) {
+		var ret string
+		return ret
+	}
+	return *o.MessageToHuman
+}
+
+// GetMessageToHumanOk returns a tuple with the MessageToHuman field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentMessageDetails) GetMessageToHumanOk() (*string, bool) {
+	if o == nil || IsNil(o.MessageToHuman) {
+		return nil, false
+	}
+	return o.MessageToHuman, true
+}
+
+// HasMessageToHuman returns a boolean if a field has been set.
+func (o *AgentMessageDetails) HasMessageToHuman() bool {
+	if o != nil && !IsNil(o.MessageToHuman) {
+		return true
+	}
+
+	return false
+}
+
+// SetMessageToHuman gets a reference to the given string and assigns it to the MessageToHuman field.
+func (o *AgentMessageDetails) SetMessageToHuman(v string) {
+	o.MessageToHuman = &v
+}
+
+// GetDurationMs returns the DurationMs field value if set, zero value otherwise.
+func (o *AgentMessageDetails) GetDurationMs() float32 {
+	if o == nil || IsNil(o.DurationMs) {
+		var ret float32
+		return ret
+	}
+	return *o.DurationMs
+}
+
+// GetDurationMsOk returns a tuple with the DurationMs field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentMessageDetails) GetDurationMsOk() (*float32, bool) {
+	if o == nil || IsNil(o.DurationMs) {
+		return nil, false
+	}
+	return o.DurationMs, true
+}
+
+// HasDurationMs returns a boolean if a field has been set.
+func (o *AgentMessageDetails) HasDurationMs() bool {
+	if o != nil && !IsNil(o.DurationMs) {
+		return true
+	}
+
+	return false
+}
+
+// SetDurationMs gets a reference to the given float32 and assigns it to the DurationMs field.
+func (o *AgentMessageDetails) SetDurationMs(v float32) {
+	o.DurationMs = &v
 }
 
 // GetObservation returns the Observation field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -754,6 +886,9 @@ func (o AgentMessageDetails) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Tools) {
 		toSerialize["tools"] = o.Tools
 	}
+	if !IsNil(o.ToolEvent) {
+		toSerialize["tool_event"] = o.ToolEvent
+	}
 	if !IsNil(o.Streamed) {
 		toSerialize["streamed"] = o.Streamed
 	}
@@ -772,11 +907,20 @@ func (o AgentMessageDetails) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ToolRunId) {
 		toSerialize["tool_run_id"] = o.ToolRunId
 	}
+	if !IsNil(o.ToolUseId) {
+		toSerialize["tool_use_id"] = o.ToolUseId
+	}
 	if !IsNil(o.ToolStatus) {
 		toSerialize["tool_status"] = o.ToolStatus
 	}
 	if !IsNil(o.ToolIteration) {
 		toSerialize["tool_iteration"] = o.ToolIteration
+	}
+	if !IsNil(o.MessageToHuman) {
+		toSerialize["message_to_human"] = o.MessageToHuman
+	}
+	if !IsNil(o.DurationMs) {
+		toSerialize["duration_ms"] = o.DurationMs
 	}
 	if o.Observation != nil {
 		toSerialize["observation"] = o.Observation
@@ -833,14 +977,18 @@ func (o *AgentMessageDetails) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "event_class")
 		delete(additionalProperties, "tool")
 		delete(additionalProperties, "tools")
+		delete(additionalProperties, "tool_event")
 		delete(additionalProperties, "streamed")
 		delete(additionalProperties, "display_role")
 		delete(additionalProperties, "activity_id")
 		delete(additionalProperties, "activity_group_id")
 		delete(additionalProperties, "batch_id")
 		delete(additionalProperties, "tool_run_id")
+		delete(additionalProperties, "tool_use_id")
 		delete(additionalProperties, "tool_status")
 		delete(additionalProperties, "tool_iteration")
+		delete(additionalProperties, "message_to_human")
+		delete(additionalProperties, "duration_ms")
 		delete(additionalProperties, "observation")
 		delete(additionalProperties, "workflow_run_id")
 		delete(additionalProperties, "outputFiles")
