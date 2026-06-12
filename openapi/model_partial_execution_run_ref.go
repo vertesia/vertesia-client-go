@@ -20,11 +20,10 @@ var _ MappedNullable = &PartialExecutionRunRef{}
 
 // PartialExecutionRunRef struct for PartialExecutionRunRef
 type PartialExecutionRunRef struct {
-	Id              *string                               `json:"id,omitempty"`
-	Parent          *InteractionExecutionResultParent     `json:"parent,omitempty"`
-	Evaluation      *InteractionExecutionResultEvaluation `json:"evaluation,omitempty"`
-	Tags            []string                              `json:"tags,omitempty"`
-	InteractionCode *string                               `json:"interaction_code,omitempty"`
+	Id         *string                               `json:"id,omitempty"`
+	Parent     *InteractionExecutionResultParent     `json:"parent,omitempty"`
+	Evaluation *InteractionExecutionResultEvaluation `json:"evaluation,omitempty"`
+	Tags       []string                              `json:"tags,omitempty"`
 	// Environment reference - populated with full object in API responses
 	Environment   *ExecutionEnvironmentRef           `json:"environment,omitempty"`
 	ModelId       *string                            `json:"modelId,omitempty"`
@@ -199,38 +198,6 @@ func (o *PartialExecutionRunRef) HasTags() bool {
 // SetTags gets a reference to the given []string and assigns it to the Tags field.
 func (o *PartialExecutionRunRef) SetTags(v []string) {
 	o.Tags = v
-}
-
-// GetInteractionCode returns the InteractionCode field value if set, zero value otherwise.
-func (o *PartialExecutionRunRef) GetInteractionCode() string {
-	if o == nil || IsNil(o.InteractionCode) {
-		var ret string
-		return ret
-	}
-	return *o.InteractionCode
-}
-
-// GetInteractionCodeOk returns a tuple with the InteractionCode field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *PartialExecutionRunRef) GetInteractionCodeOk() (*string, bool) {
-	if o == nil || IsNil(o.InteractionCode) {
-		return nil, false
-	}
-	return o.InteractionCode, true
-}
-
-// HasInteractionCode returns a boolean if a field has been set.
-func (o *PartialExecutionRunRef) HasInteractionCode() bool {
-	if o != nil && !IsNil(o.InteractionCode) {
-		return true
-	}
-
-	return false
-}
-
-// SetInteractionCode gets a reference to the given string and assigns it to the InteractionCode field.
-func (o *PartialExecutionRunRef) SetInteractionCode(v string) {
-	o.InteractionCode = &v
 }
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
@@ -963,9 +930,6 @@ func (o PartialExecutionRunRef) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
-	if !IsNil(o.InteractionCode) {
-		toSerialize["interaction_code"] = o.InteractionCode
-	}
 	if !IsNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
@@ -1058,7 +1022,6 @@ func (o *PartialExecutionRunRef) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "parent")
 		delete(additionalProperties, "evaluation")
 		delete(additionalProperties, "tags")
-		delete(additionalProperties, "interaction_code")
 		delete(additionalProperties, "environment")
 		delete(additionalProperties, "modelId")
 		delete(additionalProperties, "result_schema")

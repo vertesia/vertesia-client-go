@@ -21,14 +21,14 @@ var _ MappedNullable = &ExecutionRun{}
 
 // ExecutionRun struct for ExecutionRun
 type ExecutionRun struct {
-	Id              string                                `json:"id"`
-	Parent          *InteractionExecutionResultParent     `json:"parent,omitempty"`
-	Evaluation      *InteractionExecutionResultEvaluation `json:"evaluation,omitempty"`
-	Result          []CompletionResult                    `json:"result"`
-	Parameters      interface{}                           `json:"parameters"`
-	Tags            []string                              `json:"tags,omitempty"`
-	Interaction     *Interaction                          `json:"interaction,omitempty"`
-	InteractionCode *string                               `json:"interaction_code,omitempty"`
+	Id         string                                `json:"id"`
+	Parent     *InteractionExecutionResultParent     `json:"parent,omitempty"`
+	Evaluation *InteractionExecutionResultEvaluation `json:"evaluation,omitempty"`
+	Result     []CompletionResult                    `json:"result"`
+	Parameters interface{}                           `json:"parameters"`
+	Tags       []string                              `json:"tags,omitempty"`
+	// Interaction reference. Stored interactions may be populated as full Interaction documents; in-code interactions are represented as refs whose `id` is the namespaced interaction id.
+	Interaction *InteractionRef `json:"interaction,omitempty"`
 	// Environment reference - populated with full object in API responses
 	Environment   ExecutionEnvironmentRef           `json:"environment"`
 	ModelId       *string                           `json:"modelId,omitempty"`
@@ -261,9 +261,9 @@ func (o *ExecutionRun) SetTags(v []string) {
 }
 
 // GetInteraction returns the Interaction field value if set, zero value otherwise.
-func (o *ExecutionRun) GetInteraction() Interaction {
+func (o *ExecutionRun) GetInteraction() InteractionRef {
 	if o == nil || IsNil(o.Interaction) {
-		var ret Interaction
+		var ret InteractionRef
 		return ret
 	}
 	return *o.Interaction
@@ -271,7 +271,7 @@ func (o *ExecutionRun) GetInteraction() Interaction {
 
 // GetInteractionOk returns a tuple with the Interaction field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExecutionRun) GetInteractionOk() (*Interaction, bool) {
+func (o *ExecutionRun) GetInteractionOk() (*InteractionRef, bool) {
 	if o == nil || IsNil(o.Interaction) {
 		return nil, false
 	}
@@ -287,41 +287,9 @@ func (o *ExecutionRun) HasInteraction() bool {
 	return false
 }
 
-// SetInteraction gets a reference to the given Interaction and assigns it to the Interaction field.
-func (o *ExecutionRun) SetInteraction(v Interaction) {
+// SetInteraction gets a reference to the given InteractionRef and assigns it to the Interaction field.
+func (o *ExecutionRun) SetInteraction(v InteractionRef) {
 	o.Interaction = &v
-}
-
-// GetInteractionCode returns the InteractionCode field value if set, zero value otherwise.
-func (o *ExecutionRun) GetInteractionCode() string {
-	if o == nil || IsNil(o.InteractionCode) {
-		var ret string
-		return ret
-	}
-	return *o.InteractionCode
-}
-
-// GetInteractionCodeOk returns a tuple with the InteractionCode field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ExecutionRun) GetInteractionCodeOk() (*string, bool) {
-	if o == nil || IsNil(o.InteractionCode) {
-		return nil, false
-	}
-	return o.InteractionCode, true
-}
-
-// HasInteractionCode returns a boolean if a field has been set.
-func (o *ExecutionRun) HasInteractionCode() bool {
-	if o != nil && !IsNil(o.InteractionCode) {
-		return true
-	}
-
-	return false
-}
-
-// SetInteractionCode gets a reference to the given string and assigns it to the InteractionCode field.
-func (o *ExecutionRun) SetInteractionCode(v string) {
-	o.InteractionCode = &v
 }
 
 // GetEnvironment returns the Environment field value
@@ -939,9 +907,6 @@ func (o ExecutionRun) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Interaction) {
 		toSerialize["interaction"] = o.Interaction
 	}
-	if !IsNil(o.InteractionCode) {
-		toSerialize["interaction_code"] = o.InteractionCode
-	}
 	toSerialize["environment"] = o.Environment
 	if !IsNil(o.ModelId) {
 		toSerialize["modelId"] = o.ModelId
@@ -1046,7 +1011,6 @@ func (o *ExecutionRun) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "parameters")
 		delete(additionalProperties, "tags")
 		delete(additionalProperties, "interaction")
-		delete(additionalProperties, "interaction_code")
 		delete(additionalProperties, "environment")
 		delete(additionalProperties, "modelId")
 		delete(additionalProperties, "result_schema")

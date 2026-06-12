@@ -22,7 +22,7 @@ var _ MappedNullable = &InCodeTypeRef{}
 type InCodeTypeRef struct {
 	RefType string `json:"ref_type"`
 	// Namespaced identifier for in-code types (e.g. \"sys:Invoice\", \"app:myapp:Contract\")
-	Code string `json:"code"`
+	Id   string `json:"id"`
 	Name string `json:"name"`
 }
 
@@ -32,10 +32,10 @@ type _InCodeTypeRef InCodeTypeRef
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewInCodeTypeRef(refType string, code string, name string) *InCodeTypeRef {
+func NewInCodeTypeRef(refType string, id string, name string) *InCodeTypeRef {
 	this := InCodeTypeRef{}
 	this.RefType = refType
-	this.Code = code
+	this.Id = id
 	this.Name = name
 	return &this
 }
@@ -72,28 +72,28 @@ func (o *InCodeTypeRef) SetRefType(v string) {
 	o.RefType = v
 }
 
-// GetCode returns the Code field value
-func (o *InCodeTypeRef) GetCode() string {
+// GetId returns the Id field value
+func (o *InCodeTypeRef) GetId() string {
 	if o == nil {
 		var ret string
 		return ret
 	}
 
-	return o.Code
+	return o.Id
 }
 
-// GetCodeOk returns a tuple with the Code field value
+// GetIdOk returns a tuple with the Id field value
 // and a boolean to check if the value has been set.
-func (o *InCodeTypeRef) GetCodeOk() (*string, bool) {
+func (o *InCodeTypeRef) GetIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.Code, true
+	return &o.Id, true
 }
 
-// SetCode sets field value
-func (o *InCodeTypeRef) SetCode(v string) {
-	o.Code = v
+// SetId sets field value
+func (o *InCodeTypeRef) SetId(v string) {
+	o.Id = v
 }
 
 // GetName returns the Name field value
@@ -131,7 +131,7 @@ func (o InCodeTypeRef) MarshalJSON() ([]byte, error) {
 func (o InCodeTypeRef) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["ref_type"] = o.RefType
-	toSerialize["code"] = o.Code
+	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
 	return toSerialize, nil
 }
@@ -142,7 +142,7 @@ func (o *InCodeTypeRef) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"ref_type",
-		"code",
+		"id",
 		"name",
 	}
 

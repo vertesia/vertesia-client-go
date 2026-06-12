@@ -41,10 +41,8 @@ type CostAnalyticsQuery struct {
 	RunId *string `json:"run_id,omitempty"`
 	// Filter by agent run ID
 	AgentRunId *string `json:"agent_run_id,omitempty"`
-	// Filter by saved-interaction ObjectId
+	// Filter by interaction id: stored ObjectId or namespaced in-code id
 	InteractionId *string `json:"interaction_id,omitempty"`
-	// Filter by in-code interaction code (e.g. \"@sys:chat\")
-	InteractionCode *string `json:"interaction_code,omitempty"`
 	// Filter by principal (bare user or API key id; matched against the suffix of principal_id)
 	PrincipalId *string `json:"principal_id,omitempty"`
 	// Filter by account ID (set automatically by server)
@@ -490,38 +488,6 @@ func (o *CostAnalyticsQuery) SetInteractionId(v string) {
 	o.InteractionId = &v
 }
 
-// GetInteractionCode returns the InteractionCode field value if set, zero value otherwise.
-func (o *CostAnalyticsQuery) GetInteractionCode() string {
-	if o == nil || IsNil(o.InteractionCode) {
-		var ret string
-		return ret
-	}
-	return *o.InteractionCode
-}
-
-// GetInteractionCodeOk returns a tuple with the InteractionCode field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *CostAnalyticsQuery) GetInteractionCodeOk() (*string, bool) {
-	if o == nil || IsNil(o.InteractionCode) {
-		return nil, false
-	}
-	return o.InteractionCode, true
-}
-
-// HasInteractionCode returns a boolean if a field has been set.
-func (o *CostAnalyticsQuery) HasInteractionCode() bool {
-	if o != nil && !IsNil(o.InteractionCode) {
-		return true
-	}
-
-	return false
-}
-
-// SetInteractionCode gets a reference to the given string and assigns it to the InteractionCode field.
-func (o *CostAnalyticsQuery) SetInteractionCode(v string) {
-	o.InteractionCode = &v
-}
-
 // GetPrincipalId returns the PrincipalId field value if set, zero value otherwise.
 func (o *CostAnalyticsQuery) GetPrincipalId() string {
 	if o == nil || IsNil(o.PrincipalId) {
@@ -730,9 +696,6 @@ func (o CostAnalyticsQuery) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.InteractionId) {
 		toSerialize["interaction_id"] = o.InteractionId
-	}
-	if !IsNil(o.InteractionCode) {
-		toSerialize["interaction_code"] = o.InteractionCode
 	}
 	if !IsNil(o.PrincipalId) {
 		toSerialize["principal_id"] = o.PrincipalId
