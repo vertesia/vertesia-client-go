@@ -19,6 +19,7 @@ var _ MappedNullable = &AgentMessageDetails{}
 
 // AgentMessageDetails struct for AgentMessageDetails
 type AgentMessageDetails struct {
+	Ack                  *string                         `json:"ack,omitempty"`
 	EventClass           *string                         `json:"event_class,omitempty"`
 	Tool                 *string                         `json:"tool,omitempty"`
 	Tools                []string                        `json:"tools,omitempty"`
@@ -35,15 +36,20 @@ type AgentMessageDetails struct {
 	MessageToHuman       *string                         `json:"message_to_human,omitempty"`
 	DurationMs           *float32                        `json:"duration_ms,omitempty"`
 	Observation          interface{}                     `json:"observation,omitempty"`
+	TokenUsage           *ExecutionTokenUsage            `json:"token_usage,omitempty"`
+	CheckpointAt         *float32                        `json:"checkpoint_at,omitempty"`
+	CheckpointThreshold  *float32                        `json:"checkpoint_threshold,omitempty"`
 	WorkflowRunId        *string                         `json:"workflow_run_id,omitempty"`
 	OutputFiles          []string                        `json:"outputFiles,omitempty"`
 	Files                []AgentMessageDetailsFilesInner `json:"files,omitempty"`
 	Plan                 []PlanTask                      `json:"plan,omitempty"`
 	StreamingId          *string                         `json:"streaming_id,omitempty"`
+	StreamingIdScope     *string                         `json:"streaming_id_scope,omitempty"`
 	ChunkIndex           *float32                        `json:"chunk_index,omitempty"`
 	IsFinal              *bool                           `json:"is_final,omitempty"`
 	Optimistic           *bool                           `json:"_optimistic,omitempty"`
 	MessageId            *string                         `json:"_messageId,omitempty"`
+	DeliveryStatus       *string                         `json:"_deliveryStatus,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -64,6 +70,38 @@ func NewAgentMessageDetails() *AgentMessageDetails {
 func NewAgentMessageDetailsWithDefaults() *AgentMessageDetails {
 	this := AgentMessageDetails{}
 	return &this
+}
+
+// GetAck returns the Ack field value if set, zero value otherwise.
+func (o *AgentMessageDetails) GetAck() string {
+	if o == nil || IsNil(o.Ack) {
+		var ret string
+		return ret
+	}
+	return *o.Ack
+}
+
+// GetAckOk returns a tuple with the Ack field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentMessageDetails) GetAckOk() (*string, bool) {
+	if o == nil || IsNil(o.Ack) {
+		return nil, false
+	}
+	return o.Ack, true
+}
+
+// HasAck returns a boolean if a field has been set.
+func (o *AgentMessageDetails) HasAck() bool {
+	if o != nil && !IsNil(o.Ack) {
+		return true
+	}
+
+	return false
+}
+
+// SetAck gets a reference to the given string and assigns it to the Ack field.
+func (o *AgentMessageDetails) SetAck(v string) {
+	o.Ack = &v
 }
 
 // GetEventClass returns the EventClass field value if set, zero value otherwise.
@@ -579,6 +617,102 @@ func (o *AgentMessageDetails) SetObservation(v interface{}) {
 	o.Observation = v
 }
 
+// GetTokenUsage returns the TokenUsage field value if set, zero value otherwise.
+func (o *AgentMessageDetails) GetTokenUsage() ExecutionTokenUsage {
+	if o == nil || IsNil(o.TokenUsage) {
+		var ret ExecutionTokenUsage
+		return ret
+	}
+	return *o.TokenUsage
+}
+
+// GetTokenUsageOk returns a tuple with the TokenUsage field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentMessageDetails) GetTokenUsageOk() (*ExecutionTokenUsage, bool) {
+	if o == nil || IsNil(o.TokenUsage) {
+		return nil, false
+	}
+	return o.TokenUsage, true
+}
+
+// HasTokenUsage returns a boolean if a field has been set.
+func (o *AgentMessageDetails) HasTokenUsage() bool {
+	if o != nil && !IsNil(o.TokenUsage) {
+		return true
+	}
+
+	return false
+}
+
+// SetTokenUsage gets a reference to the given ExecutionTokenUsage and assigns it to the TokenUsage field.
+func (o *AgentMessageDetails) SetTokenUsage(v ExecutionTokenUsage) {
+	o.TokenUsage = &v
+}
+
+// GetCheckpointAt returns the CheckpointAt field value if set, zero value otherwise.
+func (o *AgentMessageDetails) GetCheckpointAt() float32 {
+	if o == nil || IsNil(o.CheckpointAt) {
+		var ret float32
+		return ret
+	}
+	return *o.CheckpointAt
+}
+
+// GetCheckpointAtOk returns a tuple with the CheckpointAt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentMessageDetails) GetCheckpointAtOk() (*float32, bool) {
+	if o == nil || IsNil(o.CheckpointAt) {
+		return nil, false
+	}
+	return o.CheckpointAt, true
+}
+
+// HasCheckpointAt returns a boolean if a field has been set.
+func (o *AgentMessageDetails) HasCheckpointAt() bool {
+	if o != nil && !IsNil(o.CheckpointAt) {
+		return true
+	}
+
+	return false
+}
+
+// SetCheckpointAt gets a reference to the given float32 and assigns it to the CheckpointAt field.
+func (o *AgentMessageDetails) SetCheckpointAt(v float32) {
+	o.CheckpointAt = &v
+}
+
+// GetCheckpointThreshold returns the CheckpointThreshold field value if set, zero value otherwise.
+func (o *AgentMessageDetails) GetCheckpointThreshold() float32 {
+	if o == nil || IsNil(o.CheckpointThreshold) {
+		var ret float32
+		return ret
+	}
+	return *o.CheckpointThreshold
+}
+
+// GetCheckpointThresholdOk returns a tuple with the CheckpointThreshold field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentMessageDetails) GetCheckpointThresholdOk() (*float32, bool) {
+	if o == nil || IsNil(o.CheckpointThreshold) {
+		return nil, false
+	}
+	return o.CheckpointThreshold, true
+}
+
+// HasCheckpointThreshold returns a boolean if a field has been set.
+func (o *AgentMessageDetails) HasCheckpointThreshold() bool {
+	if o != nil && !IsNil(o.CheckpointThreshold) {
+		return true
+	}
+
+	return false
+}
+
+// SetCheckpointThreshold gets a reference to the given float32 and assigns it to the CheckpointThreshold field.
+func (o *AgentMessageDetails) SetCheckpointThreshold(v float32) {
+	o.CheckpointThreshold = &v
+}
+
 // GetWorkflowRunId returns the WorkflowRunId field value if set, zero value otherwise.
 func (o *AgentMessageDetails) GetWorkflowRunId() string {
 	if o == nil || IsNil(o.WorkflowRunId) {
@@ -739,6 +873,38 @@ func (o *AgentMessageDetails) SetStreamingId(v string) {
 	o.StreamingId = &v
 }
 
+// GetStreamingIdScope returns the StreamingIdScope field value if set, zero value otherwise.
+func (o *AgentMessageDetails) GetStreamingIdScope() string {
+	if o == nil || IsNil(o.StreamingIdScope) {
+		var ret string
+		return ret
+	}
+	return *o.StreamingIdScope
+}
+
+// GetStreamingIdScopeOk returns a tuple with the StreamingIdScope field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentMessageDetails) GetStreamingIdScopeOk() (*string, bool) {
+	if o == nil || IsNil(o.StreamingIdScope) {
+		return nil, false
+	}
+	return o.StreamingIdScope, true
+}
+
+// HasStreamingIdScope returns a boolean if a field has been set.
+func (o *AgentMessageDetails) HasStreamingIdScope() bool {
+	if o != nil && !IsNil(o.StreamingIdScope) {
+		return true
+	}
+
+	return false
+}
+
+// SetStreamingIdScope gets a reference to the given string and assigns it to the StreamingIdScope field.
+func (o *AgentMessageDetails) SetStreamingIdScope(v string) {
+	o.StreamingIdScope = &v
+}
+
 // GetChunkIndex returns the ChunkIndex field value if set, zero value otherwise.
 func (o *AgentMessageDetails) GetChunkIndex() float32 {
 	if o == nil || IsNil(o.ChunkIndex) {
@@ -867,6 +1033,38 @@ func (o *AgentMessageDetails) SetMessageId(v string) {
 	o.MessageId = &v
 }
 
+// GetDeliveryStatus returns the DeliveryStatus field value if set, zero value otherwise.
+func (o *AgentMessageDetails) GetDeliveryStatus() string {
+	if o == nil || IsNil(o.DeliveryStatus) {
+		var ret string
+		return ret
+	}
+	return *o.DeliveryStatus
+}
+
+// GetDeliveryStatusOk returns a tuple with the DeliveryStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentMessageDetails) GetDeliveryStatusOk() (*string, bool) {
+	if o == nil || IsNil(o.DeliveryStatus) {
+		return nil, false
+	}
+	return o.DeliveryStatus, true
+}
+
+// HasDeliveryStatus returns a boolean if a field has been set.
+func (o *AgentMessageDetails) HasDeliveryStatus() bool {
+	if o != nil && !IsNil(o.DeliveryStatus) {
+		return true
+	}
+
+	return false
+}
+
+// SetDeliveryStatus gets a reference to the given string and assigns it to the DeliveryStatus field.
+func (o *AgentMessageDetails) SetDeliveryStatus(v string) {
+	o.DeliveryStatus = &v
+}
+
 func (o AgentMessageDetails) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -877,6 +1075,9 @@ func (o AgentMessageDetails) MarshalJSON() ([]byte, error) {
 
 func (o AgentMessageDetails) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Ack) {
+		toSerialize["ack"] = o.Ack
+	}
 	if !IsNil(o.EventClass) {
 		toSerialize["event_class"] = o.EventClass
 	}
@@ -925,6 +1126,15 @@ func (o AgentMessageDetails) ToMap() (map[string]interface{}, error) {
 	if o.Observation != nil {
 		toSerialize["observation"] = o.Observation
 	}
+	if !IsNil(o.TokenUsage) {
+		toSerialize["token_usage"] = o.TokenUsage
+	}
+	if !IsNil(o.CheckpointAt) {
+		toSerialize["checkpoint_at"] = o.CheckpointAt
+	}
+	if !IsNil(o.CheckpointThreshold) {
+		toSerialize["checkpoint_threshold"] = o.CheckpointThreshold
+	}
 	if !IsNil(o.WorkflowRunId) {
 		toSerialize["workflow_run_id"] = o.WorkflowRunId
 	}
@@ -940,6 +1150,9 @@ func (o AgentMessageDetails) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.StreamingId) {
 		toSerialize["streaming_id"] = o.StreamingId
 	}
+	if !IsNil(o.StreamingIdScope) {
+		toSerialize["streaming_id_scope"] = o.StreamingIdScope
+	}
 	if !IsNil(o.ChunkIndex) {
 		toSerialize["chunk_index"] = o.ChunkIndex
 	}
@@ -951,6 +1164,9 @@ func (o AgentMessageDetails) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.MessageId) {
 		toSerialize["_messageId"] = o.MessageId
+	}
+	if !IsNil(o.DeliveryStatus) {
+		toSerialize["_deliveryStatus"] = o.DeliveryStatus
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -974,6 +1190,7 @@ func (o *AgentMessageDetails) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "ack")
 		delete(additionalProperties, "event_class")
 		delete(additionalProperties, "tool")
 		delete(additionalProperties, "tools")
@@ -990,15 +1207,20 @@ func (o *AgentMessageDetails) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "message_to_human")
 		delete(additionalProperties, "duration_ms")
 		delete(additionalProperties, "observation")
+		delete(additionalProperties, "token_usage")
+		delete(additionalProperties, "checkpoint_at")
+		delete(additionalProperties, "checkpoint_threshold")
 		delete(additionalProperties, "workflow_run_id")
 		delete(additionalProperties, "outputFiles")
 		delete(additionalProperties, "files")
 		delete(additionalProperties, "plan")
 		delete(additionalProperties, "streaming_id")
+		delete(additionalProperties, "streaming_id_scope")
 		delete(additionalProperties, "chunk_index")
 		delete(additionalProperties, "is_final")
 		delete(additionalProperties, "_optimistic")
 		delete(additionalProperties, "_messageId")
+		delete(additionalProperties, "_deliveryStatus")
 		o.AdditionalProperties = additionalProperties
 	}
 

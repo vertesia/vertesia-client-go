@@ -69,6 +69,8 @@ type ConversationState struct {
 	UnlockedTools []string `json:"unlocked_tools,omitempty"`
 	// Activity ID from the latest LLM call (for deduplication with streamed content). Set by streamToRedis when completing async activities.
 	LatestActivityId *string `json:"latest_activity_id,omitempty"`
+	// Stable streaming ID from the latest LLM call. Unlike Temporal activity IDs, this is scoped to the concrete workflow run that produced the stream, so it remains safe across continue-as-new.
+	LatestStreamingId *string `json:"latest_streaming_id,omitempty"`
 	// Mapping of skill names to their related tools. When a skill is called, its related tools are added to unlocked_tools.
 	SkillToolMap map[string][]string `json:"skill_tool_map,omitempty"`
 	// Current activity group ID for internal tool-execution progress messages. All updates emitted during one tool-execution cycle should share this ID.
@@ -866,6 +868,38 @@ func (o *ConversationState) SetLatestActivityId(v string) {
 	o.LatestActivityId = &v
 }
 
+// GetLatestStreamingId returns the LatestStreamingId field value if set, zero value otherwise.
+func (o *ConversationState) GetLatestStreamingId() string {
+	if o == nil || IsNil(o.LatestStreamingId) {
+		var ret string
+		return ret
+	}
+	return *o.LatestStreamingId
+}
+
+// GetLatestStreamingIdOk returns a tuple with the LatestStreamingId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetLatestStreamingIdOk() (*string, bool) {
+	if o == nil || IsNil(o.LatestStreamingId) {
+		return nil, false
+	}
+	return o.LatestStreamingId, true
+}
+
+// HasLatestStreamingId returns a boolean if a field has been set.
+func (o *ConversationState) HasLatestStreamingId() bool {
+	if o != nil && !IsNil(o.LatestStreamingId) {
+		return true
+	}
+
+	return false
+}
+
+// SetLatestStreamingId gets a reference to the given string and assigns it to the LatestStreamingId field.
+func (o *ConversationState) SetLatestStreamingId(v string) {
+	o.LatestStreamingId = &v
+}
+
 // GetSkillToolMap returns the SkillToolMap field value if set, zero value otherwise.
 func (o *ConversationState) GetSkillToolMap() map[string][]string {
 	if o == nil || IsNil(o.SkillToolMap) {
@@ -1101,6 +1135,9 @@ func (o ConversationState) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.LatestActivityId) {
 		toSerialize["latest_activity_id"] = o.LatestActivityId
 	}
+	if !IsNil(o.LatestStreamingId) {
+		toSerialize["latest_streaming_id"] = o.LatestStreamingId
+	}
 	if !IsNil(o.SkillToolMap) {
 		toSerialize["skill_tool_map"] = o.SkillToolMap
 	}
@@ -1188,6 +1225,7 @@ func (o *ConversationState) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "end_conversation")
 		delete(additionalProperties, "unlocked_tools")
 		delete(additionalProperties, "latest_activity_id")
+		delete(additionalProperties, "latest_streaming_id")
 		delete(additionalProperties, "skill_tool_map")
 		delete(additionalProperties, "active_activity_group_id")
 		delete(additionalProperties, "finish_reason")
