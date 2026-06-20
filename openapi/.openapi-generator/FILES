@@ -278,6 +278,8 @@ model_data_store_archive_result.go
 model_data_store_download_info.go
 model_data_store_full_schema_response.go
 model_data_store_item.go
+model_data_store_mutate_rows_payload.go
+model_data_store_mutate_rows_result.go
 model_data_store_schema_response.go
 model_data_store_status.go
 model_data_store_table_detail.go

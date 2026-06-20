@@ -30,6 +30,8 @@ type DataColumnForAI struct {
 	Nullable bool `json:"nullable"`
 	// Whether primary key
 	PrimaryKey bool `json:"primary_key"`
+	// Whether sequence-backed auto-increment is enabled
+	AutoIncrement bool `json:"auto_increment"`
 	// Example values
 	Examples []string `json:"examples,omitempty"`
 }
@@ -40,11 +42,12 @@ type _DataColumnForAI DataColumnForAI
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDataColumnForAI(type_ DataColumnType, nullable bool, primaryKey bool) *DataColumnForAI {
+func NewDataColumnForAI(type_ DataColumnType, nullable bool, primaryKey bool, autoIncrement bool) *DataColumnForAI {
 	this := DataColumnForAI{}
 	this.Type = type_
 	this.Nullable = nullable
 	this.PrimaryKey = primaryKey
+	this.AutoIncrement = autoIncrement
 	return &this
 }
 
@@ -192,6 +195,30 @@ func (o *DataColumnForAI) SetPrimaryKey(v bool) {
 	o.PrimaryKey = v
 }
 
+// GetAutoIncrement returns the AutoIncrement field value
+func (o *DataColumnForAI) GetAutoIncrement() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.AutoIncrement
+}
+
+// GetAutoIncrementOk returns a tuple with the AutoIncrement field value
+// and a boolean to check if the value has been set.
+func (o *DataColumnForAI) GetAutoIncrementOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.AutoIncrement, true
+}
+
+// SetAutoIncrement sets field value
+func (o *DataColumnForAI) SetAutoIncrement(v bool) {
+	o.AutoIncrement = v
+}
+
 // GetExamples returns the Examples field value if set, zero value otherwise.
 func (o *DataColumnForAI) GetExamples() []string {
 	if o == nil || IsNil(o.Examples) {
@@ -243,6 +270,7 @@ func (o DataColumnForAI) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["nullable"] = o.Nullable
 	toSerialize["primary_key"] = o.PrimaryKey
+	toSerialize["auto_increment"] = o.AutoIncrement
 	if !IsNil(o.Examples) {
 		toSerialize["examples"] = o.Examples
 	}
@@ -257,6 +285,7 @@ func (o *DataColumnForAI) UnmarshalJSON(data []byte) (err error) {
 		"type",
 		"nullable",
 		"primary_key",
+		"auto_increment",
 	}
 
 	allProperties := make(map[string]interface{})

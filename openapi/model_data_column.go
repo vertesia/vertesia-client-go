@@ -32,6 +32,8 @@ type DataColumn struct {
 	Default *string `json:"default,omitempty"`
 	// Whether this is the primary key
 	PrimaryKey *bool `json:"primary_key,omitempty"`
+	// Whether this column should use a sequence-backed auto-increment default
+	AutoIncrement *bool `json:"auto_increment,omitempty"`
 	// Whether values must be unique
 	Unique *bool `json:"unique,omitempty"`
 	// Semantic type for AI understanding
@@ -237,6 +239,38 @@ func (o *DataColumn) SetPrimaryKey(v bool) {
 	o.PrimaryKey = &v
 }
 
+// GetAutoIncrement returns the AutoIncrement field value if set, zero value otherwise.
+func (o *DataColumn) GetAutoIncrement() bool {
+	if o == nil || IsNil(o.AutoIncrement) {
+		var ret bool
+		return ret
+	}
+	return *o.AutoIncrement
+}
+
+// GetAutoIncrementOk returns a tuple with the AutoIncrement field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DataColumn) GetAutoIncrementOk() (*bool, bool) {
+	if o == nil || IsNil(o.AutoIncrement) {
+		return nil, false
+	}
+	return o.AutoIncrement, true
+}
+
+// HasAutoIncrement returns a boolean if a field has been set.
+func (o *DataColumn) HasAutoIncrement() bool {
+	if o != nil && !IsNil(o.AutoIncrement) {
+		return true
+	}
+
+	return false
+}
+
+// SetAutoIncrement gets a reference to the given bool and assigns it to the AutoIncrement field.
+func (o *DataColumn) SetAutoIncrement(v bool) {
+	o.AutoIncrement = &v
+}
+
 // GetUnique returns the Unique field value if set, zero value otherwise.
 func (o *DataColumn) GetUnique() bool {
 	if o == nil || IsNil(o.Unique) {
@@ -356,6 +390,9 @@ func (o DataColumn) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.PrimaryKey) {
 		toSerialize["primary_key"] = o.PrimaryKey
+	}
+	if !IsNil(o.AutoIncrement) {
+		toSerialize["auto_increment"] = o.AutoIncrement
 	}
 	if !IsNil(o.Unique) {
 		toSerialize["unique"] = o.Unique
