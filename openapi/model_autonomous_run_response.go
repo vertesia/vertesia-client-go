@@ -33,6 +33,8 @@ type AutonomousRunResponse struct {
 	ToolNames []string `json:"tool_names,omitempty"`
 	// Scoped collection (if any)
 	CollectionId *string `json:"collection_id,omitempty"`
+	// Denylist of MCP tool-collection ids deactivated for this run. `undefined`/empty means all installed/connected MCP collections are active (back-compat, and new servers stay active by default). Listed collections are excluded even if connected.
+	DisabledMcpCollections []string `json:"disabled_mcp_collections,omitempty"`
 	// Content type linked to this run — defines the schema for `properties`
 	ContentType *ContentObjectTypeRef `json:"content_type,omitempty"`
 	// Conversation/process visibility
@@ -316,6 +318,38 @@ func (o *AutonomousRunResponse) HasCollectionId() bool {
 // SetCollectionId gets a reference to the given string and assigns it to the CollectionId field.
 func (o *AutonomousRunResponse) SetCollectionId(v string) {
 	o.CollectionId = &v
+}
+
+// GetDisabledMcpCollections returns the DisabledMcpCollections field value if set, zero value otherwise.
+func (o *AutonomousRunResponse) GetDisabledMcpCollections() []string {
+	if o == nil || IsNil(o.DisabledMcpCollections) {
+		var ret []string
+		return ret
+	}
+	return o.DisabledMcpCollections
+}
+
+// GetDisabledMcpCollectionsOk returns a tuple with the DisabledMcpCollections field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AutonomousRunResponse) GetDisabledMcpCollectionsOk() ([]string, bool) {
+	if o == nil || IsNil(o.DisabledMcpCollections) {
+		return nil, false
+	}
+	return o.DisabledMcpCollections, true
+}
+
+// HasDisabledMcpCollections returns a boolean if a field has been set.
+func (o *AutonomousRunResponse) HasDisabledMcpCollections() bool {
+	if o != nil && !IsNil(o.DisabledMcpCollections) {
+		return true
+	}
+
+	return false
+}
+
+// SetDisabledMcpCollections gets a reference to the given []string and assigns it to the DisabledMcpCollections field.
+func (o *AutonomousRunResponse) SetDisabledMcpCollections(v []string) {
+	o.DisabledMcpCollections = v
 }
 
 // GetContentType returns the ContentType field value if set, zero value otherwise.
@@ -1347,6 +1381,9 @@ func (o AutonomousRunResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CollectionId) {
 		toSerialize["collection_id"] = o.CollectionId
 	}
+	if !IsNil(o.DisabledMcpCollections) {
+		toSerialize["disabled_mcp_collections"] = o.DisabledMcpCollections
+	}
 	if !IsNil(o.ContentType) {
 		toSerialize["content_type"] = o.ContentType
 	}
@@ -1487,6 +1524,7 @@ func (o *AutonomousRunResponse) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "interactive")
 		delete(additionalProperties, "tool_names")
 		delete(additionalProperties, "collection_id")
+		delete(additionalProperties, "disabled_mcp_collections")
 		delete(additionalProperties, "content_type")
 		delete(additionalProperties, "visibility")
 		delete(additionalProperties, "tags")

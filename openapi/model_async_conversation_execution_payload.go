@@ -54,6 +54,8 @@ type AsyncConversationExecutionPayload struct {
 	SearchScope *AgentSearchScopeCollection `json:"search_scope,omitempty"`
 	// The collection in which this workflow is executing
 	CollectionId *string `json:"collection_id,omitempty"`
+	// Denylist of MCP tool-collection ids deactivated for this conversation. `undefined`/empty means all installed/connected MCP collections are active (back-compat, and new servers stay active by default). Listed collections are excluded even if connected. Can be updated mid-conversation via the MCP config signal.
+	DisabledMcpCollections []string `json:"disabled_mcp_collections,omitempty"`
 	// The token threshold in thousands (K) for creating checkpoints. If total tokens exceed this value, a checkpoint will be created. If not specified, the default is computed from the selected model context window (75%).
 	CheckpointTokens *float32 `json:"checkpoint_tokens,omitempty"`
 	// Configuration for stripping large data (images, text) from conversation history to prevent JSON serialization issues and reduce storage bloat.
@@ -773,6 +775,38 @@ func (o *AsyncConversationExecutionPayload) SetCollectionId(v string) {
 	o.CollectionId = &v
 }
 
+// GetDisabledMcpCollections returns the DisabledMcpCollections field value if set, zero value otherwise.
+func (o *AsyncConversationExecutionPayload) GetDisabledMcpCollections() []string {
+	if o == nil || IsNil(o.DisabledMcpCollections) {
+		var ret []string
+		return ret
+	}
+	return o.DisabledMcpCollections
+}
+
+// GetDisabledMcpCollectionsOk returns a tuple with the DisabledMcpCollections field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AsyncConversationExecutionPayload) GetDisabledMcpCollectionsOk() ([]string, bool) {
+	if o == nil || IsNil(o.DisabledMcpCollections) {
+		return nil, false
+	}
+	return o.DisabledMcpCollections, true
+}
+
+// HasDisabledMcpCollections returns a boolean if a field has been set.
+func (o *AsyncConversationExecutionPayload) HasDisabledMcpCollections() bool {
+	if o != nil && !IsNil(o.DisabledMcpCollections) {
+		return true
+	}
+
+	return false
+}
+
+// SetDisabledMcpCollections gets a reference to the given []string and assigns it to the DisabledMcpCollections field.
+func (o *AsyncConversationExecutionPayload) SetDisabledMcpCollections(v []string) {
+	o.DisabledMcpCollections = v
+}
+
 // GetCheckpointTokens returns the CheckpointTokens field value if set, zero value otherwise.
 func (o *AsyncConversationExecutionPayload) GetCheckpointTokens() float32 {
 	if o == nil || IsNil(o.CheckpointTokens) {
@@ -1258,6 +1292,9 @@ func (o AsyncConversationExecutionPayload) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.CollectionId) {
 		toSerialize["collection_id"] = o.CollectionId
 	}
+	if !IsNil(o.DisabledMcpCollections) {
+		toSerialize["disabled_mcp_collections"] = o.DisabledMcpCollections
+	}
 	if !IsNil(o.CheckpointTokens) {
 		toSerialize["checkpoint_tokens"] = o.CheckpointTokens
 	}
@@ -1362,6 +1399,7 @@ func (o *AsyncConversationExecutionPayload) UnmarshalJSON(data []byte) (err erro
 		delete(additionalProperties, "disable_interaction_tools")
 		delete(additionalProperties, "search_scope")
 		delete(additionalProperties, "collection_id")
+		delete(additionalProperties, "disabled_mcp_collections")
 		delete(additionalProperties, "checkpoint_tokens")
 		delete(additionalProperties, "strip_options")
 		delete(additionalProperties, "task_id")

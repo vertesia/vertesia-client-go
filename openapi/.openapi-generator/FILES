@@ -531,6 +531,7 @@ model_partial_website_credential_metadata.go
 model_pdf_rendering_metadata.go
 model_pdf_to_richtext_options.go
 model_pending_activity.go
+model_pending_mcp_connection.go
 model_permission.go
 model_pick_content_object_type_item_id_name_description_tags_object_schema_table_layout_is_chunkable_strict_mode.go
 model_plan.go

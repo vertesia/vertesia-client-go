@@ -73,6 +73,10 @@ type ConversationState struct {
 	LatestStreamingId *string `json:"latest_streaming_id,omitempty"`
 	// Mapping of skill names to their related tools. When a skill is called, its related tools are added to unlocked_tools.
 	SkillToolMap map[string][]string `json:"skill_tool_map,omitempty"`
+	// Denylist of MCP tool-collection ids deactivated for this conversation. `undefined`/empty means all installed/connected MCP collections are active. Updated mid-conversation via the MCP config signal; consumed when tools are re-discovered.
+	DisabledMcpCollections []string `json:"disabled_mcp_collections,omitempty"`
+	// MCP servers that are active (not disabled) and accessible to the user but not yet OAuth-connected. Surfaced to the agent (via discover_tools) so it can offer to connect.
+	PendingMcpConnections []PendingMcpConnection `json:"pending_mcp_connections,omitempty"`
 	// Current activity group ID for internal tool-execution progress messages. All updates emitted during one tool-execution cycle should share this ID.
 	ActiveActivityGroupId *string `json:"active_activity_group_id,omitempty"`
 	// LLM stop reason from the latest call (e.g., \"stop\", \"length\", \"tool_use\")
@@ -932,6 +936,70 @@ func (o *ConversationState) SetSkillToolMap(v map[string][]string) {
 	o.SkillToolMap = v
 }
 
+// GetDisabledMcpCollections returns the DisabledMcpCollections field value if set, zero value otherwise.
+func (o *ConversationState) GetDisabledMcpCollections() []string {
+	if o == nil || IsNil(o.DisabledMcpCollections) {
+		var ret []string
+		return ret
+	}
+	return o.DisabledMcpCollections
+}
+
+// GetDisabledMcpCollectionsOk returns a tuple with the DisabledMcpCollections field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetDisabledMcpCollectionsOk() ([]string, bool) {
+	if o == nil || IsNil(o.DisabledMcpCollections) {
+		return nil, false
+	}
+	return o.DisabledMcpCollections, true
+}
+
+// HasDisabledMcpCollections returns a boolean if a field has been set.
+func (o *ConversationState) HasDisabledMcpCollections() bool {
+	if o != nil && !IsNil(o.DisabledMcpCollections) {
+		return true
+	}
+
+	return false
+}
+
+// SetDisabledMcpCollections gets a reference to the given []string and assigns it to the DisabledMcpCollections field.
+func (o *ConversationState) SetDisabledMcpCollections(v []string) {
+	o.DisabledMcpCollections = v
+}
+
+// GetPendingMcpConnections returns the PendingMcpConnections field value if set, zero value otherwise.
+func (o *ConversationState) GetPendingMcpConnections() []PendingMcpConnection {
+	if o == nil || IsNil(o.PendingMcpConnections) {
+		var ret []PendingMcpConnection
+		return ret
+	}
+	return o.PendingMcpConnections
+}
+
+// GetPendingMcpConnectionsOk returns a tuple with the PendingMcpConnections field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetPendingMcpConnectionsOk() ([]PendingMcpConnection, bool) {
+	if o == nil || IsNil(o.PendingMcpConnections) {
+		return nil, false
+	}
+	return o.PendingMcpConnections, true
+}
+
+// HasPendingMcpConnections returns a boolean if a field has been set.
+func (o *ConversationState) HasPendingMcpConnections() bool {
+	if o != nil && !IsNil(o.PendingMcpConnections) {
+		return true
+	}
+
+	return false
+}
+
+// SetPendingMcpConnections gets a reference to the given []PendingMcpConnection and assigns it to the PendingMcpConnections field.
+func (o *ConversationState) SetPendingMcpConnections(v []PendingMcpConnection) {
+	o.PendingMcpConnections = v
+}
+
 // GetActiveActivityGroupId returns the ActiveActivityGroupId field value if set, zero value otherwise.
 func (o *ConversationState) GetActiveActivityGroupId() string {
 	if o == nil || IsNil(o.ActiveActivityGroupId) {
@@ -1141,6 +1209,12 @@ func (o ConversationState) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SkillToolMap) {
 		toSerialize["skill_tool_map"] = o.SkillToolMap
 	}
+	if !IsNil(o.DisabledMcpCollections) {
+		toSerialize["disabled_mcp_collections"] = o.DisabledMcpCollections
+	}
+	if !IsNil(o.PendingMcpConnections) {
+		toSerialize["pending_mcp_connections"] = o.PendingMcpConnections
+	}
 	if !IsNil(o.ActiveActivityGroupId) {
 		toSerialize["active_activity_group_id"] = o.ActiveActivityGroupId
 	}
@@ -1227,6 +1301,8 @@ func (o *ConversationState) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "latest_activity_id")
 		delete(additionalProperties, "latest_streaming_id")
 		delete(additionalProperties, "skill_tool_map")
+		delete(additionalProperties, "disabled_mcp_collections")
+		delete(additionalProperties, "pending_mcp_connections")
 		delete(additionalProperties, "active_activity_group_id")
 		delete(additionalProperties, "finish_reason")
 		delete(additionalProperties, "agent_run_id")
