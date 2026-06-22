@@ -28,6 +28,14 @@ type ConversationState struct {
 	Options StatelessExecutionOptions `json:"options"`
 	// The tools to call next.
 	ToolUse []ToolUse `json:"tool_use,omitempty"`
+	// Effective side-effecting tool approval mode for this interactive conversation.
+	ToolApprovalMode *AgentToolApprovalMode `json:"tool_approval_mode,omitempty"`
+	// Run-scoped, exact-target grants created by \"allow this action for this run\".
+	ToolApprovalGrants map[string]ToolApprovalGrant `json:"tool_approval_grants,omitempty"`
+	// Buffered tool results held while approval denial pauses until the next user message.
+	PendingToolApprovalResults *PendingToolApprovalResults `json:"pending_tool_approval_results,omitempty"`
+	// Compact, redacted latest user intent for reviewer-style system interactions.
+	LatestUserMessage *string `json:"latest_user_message,omitempty"`
 	// The output of the this conversation step
 	Output []CompletionResult `json:"output"`
 	// The token usage of the this conversation step
@@ -214,6 +222,134 @@ func (o *ConversationState) HasToolUse() bool {
 // SetToolUse gets a reference to the given []ToolUse and assigns it to the ToolUse field.
 func (o *ConversationState) SetToolUse(v []ToolUse) {
 	o.ToolUse = v
+}
+
+// GetToolApprovalMode returns the ToolApprovalMode field value if set, zero value otherwise.
+func (o *ConversationState) GetToolApprovalMode() AgentToolApprovalMode {
+	if o == nil || IsNil(o.ToolApprovalMode) {
+		var ret AgentToolApprovalMode
+		return ret
+	}
+	return *o.ToolApprovalMode
+}
+
+// GetToolApprovalModeOk returns a tuple with the ToolApprovalMode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetToolApprovalModeOk() (*AgentToolApprovalMode, bool) {
+	if o == nil || IsNil(o.ToolApprovalMode) {
+		return nil, false
+	}
+	return o.ToolApprovalMode, true
+}
+
+// HasToolApprovalMode returns a boolean if a field has been set.
+func (o *ConversationState) HasToolApprovalMode() bool {
+	if o != nil && !IsNil(o.ToolApprovalMode) {
+		return true
+	}
+
+	return false
+}
+
+// SetToolApprovalMode gets a reference to the given AgentToolApprovalMode and assigns it to the ToolApprovalMode field.
+func (o *ConversationState) SetToolApprovalMode(v AgentToolApprovalMode) {
+	o.ToolApprovalMode = &v
+}
+
+// GetToolApprovalGrants returns the ToolApprovalGrants field value if set, zero value otherwise.
+func (o *ConversationState) GetToolApprovalGrants() map[string]ToolApprovalGrant {
+	if o == nil || IsNil(o.ToolApprovalGrants) {
+		var ret map[string]ToolApprovalGrant
+		return ret
+	}
+	return o.ToolApprovalGrants
+}
+
+// GetToolApprovalGrantsOk returns a tuple with the ToolApprovalGrants field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetToolApprovalGrantsOk() (map[string]ToolApprovalGrant, bool) {
+	if o == nil || IsNil(o.ToolApprovalGrants) {
+		return map[string]ToolApprovalGrant{}, false
+	}
+	return o.ToolApprovalGrants, true
+}
+
+// HasToolApprovalGrants returns a boolean if a field has been set.
+func (o *ConversationState) HasToolApprovalGrants() bool {
+	if o != nil && !IsNil(o.ToolApprovalGrants) {
+		return true
+	}
+
+	return false
+}
+
+// SetToolApprovalGrants gets a reference to the given map[string]ToolApprovalGrant and assigns it to the ToolApprovalGrants field.
+func (o *ConversationState) SetToolApprovalGrants(v map[string]ToolApprovalGrant) {
+	o.ToolApprovalGrants = v
+}
+
+// GetPendingToolApprovalResults returns the PendingToolApprovalResults field value if set, zero value otherwise.
+func (o *ConversationState) GetPendingToolApprovalResults() PendingToolApprovalResults {
+	if o == nil || IsNil(o.PendingToolApprovalResults) {
+		var ret PendingToolApprovalResults
+		return ret
+	}
+	return *o.PendingToolApprovalResults
+}
+
+// GetPendingToolApprovalResultsOk returns a tuple with the PendingToolApprovalResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetPendingToolApprovalResultsOk() (*PendingToolApprovalResults, bool) {
+	if o == nil || IsNil(o.PendingToolApprovalResults) {
+		return nil, false
+	}
+	return o.PendingToolApprovalResults, true
+}
+
+// HasPendingToolApprovalResults returns a boolean if a field has been set.
+func (o *ConversationState) HasPendingToolApprovalResults() bool {
+	if o != nil && !IsNil(o.PendingToolApprovalResults) {
+		return true
+	}
+
+	return false
+}
+
+// SetPendingToolApprovalResults gets a reference to the given PendingToolApprovalResults and assigns it to the PendingToolApprovalResults field.
+func (o *ConversationState) SetPendingToolApprovalResults(v PendingToolApprovalResults) {
+	o.PendingToolApprovalResults = &v
+}
+
+// GetLatestUserMessage returns the LatestUserMessage field value if set, zero value otherwise.
+func (o *ConversationState) GetLatestUserMessage() string {
+	if o == nil || IsNil(o.LatestUserMessage) {
+		var ret string
+		return ret
+	}
+	return *o.LatestUserMessage
+}
+
+// GetLatestUserMessageOk returns a tuple with the LatestUserMessage field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetLatestUserMessageOk() (*string, bool) {
+	if o == nil || IsNil(o.LatestUserMessage) {
+		return nil, false
+	}
+	return o.LatestUserMessage, true
+}
+
+// HasLatestUserMessage returns a boolean if a field has been set.
+func (o *ConversationState) HasLatestUserMessage() bool {
+	if o != nil && !IsNil(o.LatestUserMessage) {
+		return true
+	}
+
+	return false
+}
+
+// SetLatestUserMessage gets a reference to the given string and assigns it to the LatestUserMessage field.
+func (o *ConversationState) SetLatestUserMessage(v string) {
+	o.LatestUserMessage = &v
 }
 
 // GetOutput returns the Output field value
@@ -1144,6 +1280,18 @@ func (o ConversationState) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ToolUse) {
 		toSerialize["tool_use"] = o.ToolUse
 	}
+	if !IsNil(o.ToolApprovalMode) {
+		toSerialize["tool_approval_mode"] = o.ToolApprovalMode
+	}
+	if !IsNil(o.ToolApprovalGrants) {
+		toSerialize["tool_approval_grants"] = o.ToolApprovalGrants
+	}
+	if !IsNil(o.PendingToolApprovalResults) {
+		toSerialize["pending_tool_approval_results"] = o.PendingToolApprovalResults
+	}
+	if !IsNil(o.LatestUserMessage) {
+		toSerialize["latest_user_message"] = o.LatestUserMessage
+	}
 	toSerialize["output"] = o.Output
 	if !IsNil(o.TokenUsage) {
 		toSerialize["token_usage"] = o.TokenUsage
@@ -1278,6 +1426,10 @@ func (o *ConversationState) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "environment")
 		delete(additionalProperties, "options")
 		delete(additionalProperties, "tool_use")
+		delete(additionalProperties, "tool_approval_mode")
+		delete(additionalProperties, "tool_approval_grants")
+		delete(additionalProperties, "pending_tool_approval_results")
+		delete(additionalProperties, "latest_user_message")
 		delete(additionalProperties, "output")
 		delete(additionalProperties, "token_usage")
 		delete(additionalProperties, "parent")

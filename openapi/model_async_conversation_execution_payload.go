@@ -38,6 +38,8 @@ type AsyncConversationExecutionPayload struct {
 	// An array of endpoint URLs to be notified upon execution
 	NotifyEndpoints []string `json:"notify_endpoints,omitempty"`
 	TaskQueue       *string  `json:"task_queue,omitempty"`
+	// Effective tool approval mode for interactive agent conversations.
+	ToolApprovalMode *AgentToolApprovalMode `json:"tool_approval_mode,omitempty"`
 	// Visibility determine if the conversation should be seen by the user only or by anyone with access to the project If not specified, the default is project
 	Visibility *ConversationVisibility `json:"visibility,omitempty"`
 	// The tools to use, list of tool or function names. You can use + and - to add or remove from default, if no sign, then list replaces default
@@ -517,6 +519,38 @@ func (o *AsyncConversationExecutionPayload) HasTaskQueue() bool {
 // SetTaskQueue gets a reference to the given string and assigns it to the TaskQueue field.
 func (o *AsyncConversationExecutionPayload) SetTaskQueue(v string) {
 	o.TaskQueue = &v
+}
+
+// GetToolApprovalMode returns the ToolApprovalMode field value if set, zero value otherwise.
+func (o *AsyncConversationExecutionPayload) GetToolApprovalMode() AgentToolApprovalMode {
+	if o == nil || IsNil(o.ToolApprovalMode) {
+		var ret AgentToolApprovalMode
+		return ret
+	}
+	return *o.ToolApprovalMode
+}
+
+// GetToolApprovalModeOk returns a tuple with the ToolApprovalMode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AsyncConversationExecutionPayload) GetToolApprovalModeOk() (*AgentToolApprovalMode, bool) {
+	if o == nil || IsNil(o.ToolApprovalMode) {
+		return nil, false
+	}
+	return o.ToolApprovalMode, true
+}
+
+// HasToolApprovalMode returns a boolean if a field has been set.
+func (o *AsyncConversationExecutionPayload) HasToolApprovalMode() bool {
+	if o != nil && !IsNil(o.ToolApprovalMode) {
+		return true
+	}
+
+	return false
+}
+
+// SetToolApprovalMode gets a reference to the given AgentToolApprovalMode and assigns it to the ToolApprovalMode field.
+func (o *AsyncConversationExecutionPayload) SetToolApprovalMode(v AgentToolApprovalMode) {
+	o.ToolApprovalMode = &v
 }
 
 // GetVisibility returns the Visibility field value if set, zero value otherwise.
@@ -1268,6 +1302,9 @@ func (o AsyncConversationExecutionPayload) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.TaskQueue) {
 		toSerialize["task_queue"] = o.TaskQueue
 	}
+	if !IsNil(o.ToolApprovalMode) {
+		toSerialize["tool_approval_mode"] = o.ToolApprovalMode
+	}
 	if !IsNil(o.Visibility) {
 		toSerialize["visibility"] = o.Visibility
 	}
@@ -1391,6 +1428,7 @@ func (o *AsyncConversationExecutionPayload) UnmarshalJSON(data []byte) (err erro
 		delete(additionalProperties, "type")
 		delete(additionalProperties, "notify_endpoints")
 		delete(additionalProperties, "task_queue")
+		delete(additionalProperties, "tool_approval_mode")
 		delete(additionalProperties, "visibility")
 		delete(additionalProperties, "tool_names")
 		delete(additionalProperties, "max_iterations")

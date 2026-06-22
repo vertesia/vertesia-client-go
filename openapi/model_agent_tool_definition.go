@@ -33,8 +33,8 @@ type AgentToolDefinition struct {
 	Tools []string `json:"tools,omitempty"`
 	// MCP tool annotations providing hints about tool behavior and safety.
 	Annotations *MCPToolAnnotations `json:"annotations,omitempty"`
-	// When true, agents must obtain explicit user confirmation via `ask_user` (Yes/No) before invoking this tool. If the user answers No, the tool must not run and should return an error indicating the user declined.  Stronger than `annotations.destructiveHint` (which is only a hint) — this is a hard contract the agent is expected to honor. Set on tools that perform irreversible or destructive actions (e.g. delete_*).
-	RequiresUserConfirmation *bool `json:"requires_user_confirmation,omitempty"`
+	// Approval classification used by interactive agent approval modes. Use `requires_confirmation` for actions that must prompt even in full-control mode.
+	ApprovalClass *AgentToolApprovalClass `json:"approval_class,omitempty"`
 }
 
 type _AgentToolDefinition AgentToolDefinition
@@ -298,36 +298,36 @@ func (o *AgentToolDefinition) SetAnnotations(v MCPToolAnnotations) {
 	o.Annotations = &v
 }
 
-// GetRequiresUserConfirmation returns the RequiresUserConfirmation field value if set, zero value otherwise.
-func (o *AgentToolDefinition) GetRequiresUserConfirmation() bool {
-	if o == nil || IsNil(o.RequiresUserConfirmation) {
-		var ret bool
+// GetApprovalClass returns the ApprovalClass field value if set, zero value otherwise.
+func (o *AgentToolDefinition) GetApprovalClass() AgentToolApprovalClass {
+	if o == nil || IsNil(o.ApprovalClass) {
+		var ret AgentToolApprovalClass
 		return ret
 	}
-	return *o.RequiresUserConfirmation
+	return *o.ApprovalClass
 }
 
-// GetRequiresUserConfirmationOk returns a tuple with the RequiresUserConfirmation field value if set, nil otherwise
+// GetApprovalClassOk returns a tuple with the ApprovalClass field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AgentToolDefinition) GetRequiresUserConfirmationOk() (*bool, bool) {
-	if o == nil || IsNil(o.RequiresUserConfirmation) {
+func (o *AgentToolDefinition) GetApprovalClassOk() (*AgentToolApprovalClass, bool) {
+	if o == nil || IsNil(o.ApprovalClass) {
 		return nil, false
 	}
-	return o.RequiresUserConfirmation, true
+	return o.ApprovalClass, true
 }
 
-// HasRequiresUserConfirmation returns a boolean if a field has been set.
-func (o *AgentToolDefinition) HasRequiresUserConfirmation() bool {
-	if o != nil && !IsNil(o.RequiresUserConfirmation) {
+// HasApprovalClass returns a boolean if a field has been set.
+func (o *AgentToolDefinition) HasApprovalClass() bool {
+	if o != nil && !IsNil(o.ApprovalClass) {
 		return true
 	}
 
 	return false
 }
 
-// SetRequiresUserConfirmation gets a reference to the given bool and assigns it to the RequiresUserConfirmation field.
-func (o *AgentToolDefinition) SetRequiresUserConfirmation(v bool) {
-	o.RequiresUserConfirmation = &v
+// SetApprovalClass gets a reference to the given AgentToolApprovalClass and assigns it to the ApprovalClass field.
+func (o *AgentToolDefinition) SetApprovalClass(v AgentToolApprovalClass) {
+	o.ApprovalClass = &v
 }
 
 func (o AgentToolDefinition) MarshalJSON() ([]byte, error) {
@@ -360,8 +360,8 @@ func (o AgentToolDefinition) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Annotations) {
 		toSerialize["annotations"] = o.Annotations
 	}
-	if !IsNil(o.RequiresUserConfirmation) {
-		toSerialize["requires_user_confirmation"] = o.RequiresUserConfirmation
+	if !IsNil(o.ApprovalClass) {
+		toSerialize["approval_class"] = o.ApprovalClass
 	}
 	return toSerialize, nil
 }

@@ -29,6 +29,8 @@ type AgentRun struct {
 	Config *InteractionExecutionConfiguration `json:"config,omitempty"`
 	// Whether the agent accepts user input
 	Interactive *bool `json:"interactive,omitempty"`
+	// How side-effecting tool actions are approved for interactive runs.
+	ToolApprovalMode *AgentToolApprovalMode `json:"tool_approval_mode,omitempty"`
 	// Tools configured for this run (+/- syntax supported)
 	ToolNames []string `json:"tool_names,omitempty"`
 	// Scoped collection (if any)
@@ -255,6 +257,38 @@ func (o *AgentRun) HasInteractive() bool {
 // SetInteractive gets a reference to the given bool and assigns it to the Interactive field.
 func (o *AgentRun) SetInteractive(v bool) {
 	o.Interactive = &v
+}
+
+// GetToolApprovalMode returns the ToolApprovalMode field value if set, zero value otherwise.
+func (o *AgentRun) GetToolApprovalMode() AgentToolApprovalMode {
+	if o == nil || IsNil(o.ToolApprovalMode) {
+		var ret AgentToolApprovalMode
+		return ret
+	}
+	return *o.ToolApprovalMode
+}
+
+// GetToolApprovalModeOk returns a tuple with the ToolApprovalMode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRun) GetToolApprovalModeOk() (*AgentToolApprovalMode, bool) {
+	if o == nil || IsNil(o.ToolApprovalMode) {
+		return nil, false
+	}
+	return o.ToolApprovalMode, true
+}
+
+// HasToolApprovalMode returns a boolean if a field has been set.
+func (o *AgentRun) HasToolApprovalMode() bool {
+	if o != nil && !IsNil(o.ToolApprovalMode) {
+		return true
+	}
+
+	return false
+}
+
+// SetToolApprovalMode gets a reference to the given AgentToolApprovalMode and assigns it to the ToolApprovalMode field.
+func (o *AgentRun) SetToolApprovalMode(v AgentToolApprovalMode) {
+	o.ToolApprovalMode = &v
 }
 
 // GetToolNames returns the ToolNames field value if set, zero value otherwise.
@@ -1376,6 +1410,9 @@ func (o AgentRun) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Interactive) {
 		toSerialize["interactive"] = o.Interactive
 	}
+	if !IsNil(o.ToolApprovalMode) {
+		toSerialize["tool_approval_mode"] = o.ToolApprovalMode
+	}
 	if !IsNil(o.ToolNames) {
 		toSerialize["tool_names"] = o.ToolNames
 	}
@@ -1523,6 +1560,7 @@ func (o *AgentRun) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "data")
 		delete(additionalProperties, "config")
 		delete(additionalProperties, "interactive")
+		delete(additionalProperties, "tool_approval_mode")
 		delete(additionalProperties, "tool_names")
 		delete(additionalProperties, "collection_id")
 		delete(additionalProperties, "disabled_mcp_collections")

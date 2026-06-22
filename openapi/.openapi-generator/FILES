@@ -70,6 +70,8 @@ model_agent_search_scope_collection.go
 model_agent_task.go
 model_agent_task_error.go
 model_agent_token_request.go
+model_agent_tool_approval_class.go
+model_agent_tool_approval_mode.go
 model_agent_tool_definition.go
 model_aggregated_tool.go
 model_ai_model.go
@@ -532,6 +534,7 @@ model_pdf_rendering_metadata.go
 model_pdf_to_richtext_options.go
 model_pending_activity.go
 model_pending_mcp_connection.go
+model_pending_tool_approval_results.go
 model_permission.go
 model_pick_content_object_type_item_id_name_description_tags_object_schema_table_layout_is_chunkable_strict_mode.go
 model_plan.go
@@ -700,10 +703,12 @@ model_thinking_level.go
 model_time_resolution.go
 model_timer_task.go
 model_tool_activation_metadata.go
+model_tool_approval_grant.go
 model_tool_collection_auth_type.go
 model_tool_collection_object.go
 model_tool_definition.go
 model_tool_reference.go
+model_tool_result.go
 model_tool_source.go
 model_tool_use.go
 model_tool_validation_result.go
