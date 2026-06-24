@@ -32,12 +32,14 @@ type OAuthClient struct {
 	Status                  OAuthClientStatus            `json:"status"`
 	ProjectBindingMode      OAuthProjectBindingMode      `json:"project_binding_mode"`
 	FixedProjectId          *string                      `json:"fixed_project_id,omitempty"`
-	Metadata                map[string]interface{}       `json:"metadata,omitempty"`
-	CreatedBy               *string                      `json:"created_by,omitempty"`
-	ClientSecretConfigured  *bool                        `json:"client_secret_configured,omitempty"`
-	CreatedAt               string                       `json:"created_at"`
-	UpdatedAt               string                       `json:"updated_at"`
-	ClientId                string                       `json:"client_id"`
+	// When true (the default for new clients), the client may only be authorized for projects in its owning account/organization. Set to false to allow authorization for any project the approving user can access, regardless of account — required for OAuth/MCP clients used across organizations. The owning account itself is internal and not exposed here.
+	RestrictToOwnerAccount *bool                  `json:"restrict_to_owner_account,omitempty"`
+	Metadata               map[string]interface{} `json:"metadata,omitempty"`
+	CreatedBy              *string                `json:"created_by,omitempty"`
+	ClientSecretConfigured *bool                  `json:"client_secret_configured,omitempty"`
+	CreatedAt              string                 `json:"created_at"`
+	UpdatedAt              string                 `json:"updated_at"`
+	ClientId               string                 `json:"client_id"`
 }
 
 type _OAuthClient OAuthClient
@@ -376,6 +378,38 @@ func (o *OAuthClient) SetFixedProjectId(v string) {
 	o.FixedProjectId = &v
 }
 
+// GetRestrictToOwnerAccount returns the RestrictToOwnerAccount field value if set, zero value otherwise.
+func (o *OAuthClient) GetRestrictToOwnerAccount() bool {
+	if o == nil || IsNil(o.RestrictToOwnerAccount) {
+		var ret bool
+		return ret
+	}
+	return *o.RestrictToOwnerAccount
+}
+
+// GetRestrictToOwnerAccountOk returns a tuple with the RestrictToOwnerAccount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OAuthClient) GetRestrictToOwnerAccountOk() (*bool, bool) {
+	if o == nil || IsNil(o.RestrictToOwnerAccount) {
+		return nil, false
+	}
+	return o.RestrictToOwnerAccount, true
+}
+
+// HasRestrictToOwnerAccount returns a boolean if a field has been set.
+func (o *OAuthClient) HasRestrictToOwnerAccount() bool {
+	if o != nil && !IsNil(o.RestrictToOwnerAccount) {
+		return true
+	}
+
+	return false
+}
+
+// SetRestrictToOwnerAccount gets a reference to the given bool and assigns it to the RestrictToOwnerAccount field.
+func (o *OAuthClient) SetRestrictToOwnerAccount(v bool) {
+	o.RestrictToOwnerAccount = &v
+}
+
 // GetMetadata returns the Metadata field value if set, zero value otherwise.
 func (o *OAuthClient) GetMetadata() map[string]interface{} {
 	if o == nil || IsNil(o.Metadata) {
@@ -569,6 +603,9 @@ func (o OAuthClient) ToMap() (map[string]interface{}, error) {
 	toSerialize["project_binding_mode"] = o.ProjectBindingMode
 	if !IsNil(o.FixedProjectId) {
 		toSerialize["fixed_project_id"] = o.FixedProjectId
+	}
+	if !IsNil(o.RestrictToOwnerAccount) {
+		toSerialize["restrict_to_owner_account"] = o.RestrictToOwnerAccount
 	}
 	if !IsNil(o.Metadata) {
 		toSerialize["metadata"] = o.Metadata

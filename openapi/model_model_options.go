@@ -37,6 +37,7 @@ type ModelOptions struct {
 	TwelvelabsPegasusOptions    *TwelvelabsPegasusOptions
 	VertexAIClaudeOptions       *VertexAIClaudeOptions
 	VertexAIGeminiOptions       *VertexAIGeminiOptions
+	VertexAIGrokOptions         *VertexAIGrokOptions
 }
 
 // BedrockAI21OptionsAsModelOptions is a convenience function that returns BedrockAI21Options wrapped in ModelOptions
@@ -169,6 +170,13 @@ func VertexAIClaudeOptionsAsModelOptions(v *VertexAIClaudeOptions) ModelOptions 
 func VertexAIGeminiOptionsAsModelOptions(v *VertexAIGeminiOptions) ModelOptions {
 	return ModelOptions{
 		VertexAIGeminiOptions: v,
+	}
+}
+
+// VertexAIGrokOptionsAsModelOptions is a convenience function that returns VertexAIGrokOptions wrapped in ModelOptions
+func VertexAIGrokOptionsAsModelOptions(v *VertexAIGrokOptions) ModelOptions {
+	return ModelOptions{
+		VertexAIGrokOptions: v,
 	}
 }
 
@@ -499,6 +507,23 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.VertexAIGeminiOptions = nil
 	}
 
+	// try to unmarshal data into VertexAIGrokOptions
+	err = newStrictDecoder(data).Decode(&dst.VertexAIGrokOptions)
+	if err == nil {
+		jsonVertexAIGrokOptions, _ := json.Marshal(dst.VertexAIGrokOptions)
+		if string(jsonVertexAIGrokOptions) == "{}" { // empty struct
+			dst.VertexAIGrokOptions = nil
+		} else {
+			if err = validator.Validate(dst.VertexAIGrokOptions); err != nil {
+				dst.VertexAIGrokOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.VertexAIGrokOptions = nil
+	}
+
 	if match > 1 { // more than 1 match
 		// reset to nil
 		dst.BedrockAI21Options = nil
@@ -520,6 +545,7 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.TwelvelabsPegasusOptions = nil
 		dst.VertexAIClaudeOptions = nil
 		dst.VertexAIGeminiOptions = nil
+		dst.VertexAIGrokOptions = nil
 
 		return fmt.Errorf("data matches more than one schema in oneOf(ModelOptions)")
 	} else if match == 1 {
@@ -607,6 +633,10 @@ func (src ModelOptions) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.VertexAIGeminiOptions)
 	}
 
+	if src.VertexAIGrokOptions != nil {
+		return json.Marshal(&src.VertexAIGrokOptions)
+	}
+
 	return nil, nil // no data in oneOf schemas
 }
 
@@ -691,6 +721,10 @@ func (obj *ModelOptions) GetActualInstance() interface{} {
 		return obj.VertexAIGeminiOptions
 	}
 
+	if obj.VertexAIGrokOptions != nil {
+		return obj.VertexAIGrokOptions
+	}
+
 	// all schemas are nil
 	return nil
 }
@@ -771,6 +805,10 @@ func (obj ModelOptions) GetActualInstanceValue() interface{} {
 
 	if obj.VertexAIGeminiOptions != nil {
 		return *obj.VertexAIGeminiOptions
+	}
+
+	if obj.VertexAIGrokOptions != nil {
+		return *obj.VertexAIGrokOptions
 	}
 
 	// all schemas are nil

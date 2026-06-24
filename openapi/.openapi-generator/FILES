@@ -744,6 +744,7 @@ model_vector_search_query.go
 model_vertesia_sdk_tool_collection_object.go
 model_vertex_ai_claude_options.go
 model_vertex_ai_gemini_options.go
+model_vertex_ai_grok_options.go
 model_video_metadata.go
 model_virtual_env_entry.go
 model_website_credential_capability.go
