@@ -21,6 +21,16 @@ var _ MappedNullable = &AuditTrailEvent{}
 // AuditTrailEvent struct for AuditTrailEvent
 type AuditTrailEvent struct {
 	EventType            string         `json:"event_type"`
+	EventId              *string        `json:"event_id,omitempty"`
+	EventCategory        *EventCategory `json:"event_category,omitempty"`
+	Source               NullableString `json:"source,omitempty"`
+	RootEventId          *string        `json:"root_event_id,omitempty"`
+	CausedByEventId      *string        `json:"caused_by_event_id,omitempty"`
+	HopCount             *float32       `json:"hop_count,omitempty"`
+	AuditTrail           *bool          `json:"audit_trail,omitempty"`
+	ReplayOf             *string        `json:"replay_of,omitempty"`
+	ReplayRootEventId    *string        `json:"replay_root_event_id,omitempty"`
+	ReplayedBy           *string        `json:"replayed_by,omitempty"`
 	Action               AuditAction    `json:"action"`
 	ResourceType         string         `json:"resource_type"`
 	ResourceId           string         `json:"resource_id"`
@@ -104,6 +114,337 @@ func (o *AuditTrailEvent) GetEventTypeOk() (*string, bool) {
 // SetEventType sets field value
 func (o *AuditTrailEvent) SetEventType(v string) {
 	o.EventType = v
+}
+
+// GetEventId returns the EventId field value if set, zero value otherwise.
+func (o *AuditTrailEvent) GetEventId() string {
+	if o == nil || IsNil(o.EventId) {
+		var ret string
+		return ret
+	}
+	return *o.EventId
+}
+
+// GetEventIdOk returns a tuple with the EventId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuditTrailEvent) GetEventIdOk() (*string, bool) {
+	if o == nil || IsNil(o.EventId) {
+		return nil, false
+	}
+	return o.EventId, true
+}
+
+// HasEventId returns a boolean if a field has been set.
+func (o *AuditTrailEvent) HasEventId() bool {
+	if o != nil && !IsNil(o.EventId) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventId gets a reference to the given string and assigns it to the EventId field.
+func (o *AuditTrailEvent) SetEventId(v string) {
+	o.EventId = &v
+}
+
+// GetEventCategory returns the EventCategory field value if set, zero value otherwise.
+func (o *AuditTrailEvent) GetEventCategory() EventCategory {
+	if o == nil || IsNil(o.EventCategory) {
+		var ret EventCategory
+		return ret
+	}
+	return *o.EventCategory
+}
+
+// GetEventCategoryOk returns a tuple with the EventCategory field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuditTrailEvent) GetEventCategoryOk() (*EventCategory, bool) {
+	if o == nil || IsNil(o.EventCategory) {
+		return nil, false
+	}
+	return o.EventCategory, true
+}
+
+// HasEventCategory returns a boolean if a field has been set.
+func (o *AuditTrailEvent) HasEventCategory() bool {
+	if o != nil && !IsNil(o.EventCategory) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventCategory gets a reference to the given EventCategory and assigns it to the EventCategory field.
+func (o *AuditTrailEvent) SetEventCategory(v EventCategory) {
+	o.EventCategory = &v
+}
+
+// GetSource returns the Source field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *AuditTrailEvent) GetSource() string {
+	if o == nil || IsNil(o.Source.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.Source.Get()
+}
+
+// GetSourceOk returns a tuple with the Source field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *AuditTrailEvent) GetSourceOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Source.Get(), o.Source.IsSet()
+}
+
+// HasSource returns a boolean if a field has been set.
+func (o *AuditTrailEvent) HasSource() bool {
+	if o != nil && o.Source.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSource gets a reference to the given NullableString and assigns it to the Source field.
+func (o *AuditTrailEvent) SetSource(v string) {
+	o.Source.Set(&v)
+}
+
+// SetSourceNil sets the value for Source to be an explicit nil
+func (o *AuditTrailEvent) SetSourceNil() {
+	o.Source.Set(nil)
+}
+
+// UnsetSource ensures that no value is present for Source, not even an explicit nil
+func (o *AuditTrailEvent) UnsetSource() {
+	o.Source.Unset()
+}
+
+// GetRootEventId returns the RootEventId field value if set, zero value otherwise.
+func (o *AuditTrailEvent) GetRootEventId() string {
+	if o == nil || IsNil(o.RootEventId) {
+		var ret string
+		return ret
+	}
+	return *o.RootEventId
+}
+
+// GetRootEventIdOk returns a tuple with the RootEventId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuditTrailEvent) GetRootEventIdOk() (*string, bool) {
+	if o == nil || IsNil(o.RootEventId) {
+		return nil, false
+	}
+	return o.RootEventId, true
+}
+
+// HasRootEventId returns a boolean if a field has been set.
+func (o *AuditTrailEvent) HasRootEventId() bool {
+	if o != nil && !IsNil(o.RootEventId) {
+		return true
+	}
+
+	return false
+}
+
+// SetRootEventId gets a reference to the given string and assigns it to the RootEventId field.
+func (o *AuditTrailEvent) SetRootEventId(v string) {
+	o.RootEventId = &v
+}
+
+// GetCausedByEventId returns the CausedByEventId field value if set, zero value otherwise.
+func (o *AuditTrailEvent) GetCausedByEventId() string {
+	if o == nil || IsNil(o.CausedByEventId) {
+		var ret string
+		return ret
+	}
+	return *o.CausedByEventId
+}
+
+// GetCausedByEventIdOk returns a tuple with the CausedByEventId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuditTrailEvent) GetCausedByEventIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CausedByEventId) {
+		return nil, false
+	}
+	return o.CausedByEventId, true
+}
+
+// HasCausedByEventId returns a boolean if a field has been set.
+func (o *AuditTrailEvent) HasCausedByEventId() bool {
+	if o != nil && !IsNil(o.CausedByEventId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCausedByEventId gets a reference to the given string and assigns it to the CausedByEventId field.
+func (o *AuditTrailEvent) SetCausedByEventId(v string) {
+	o.CausedByEventId = &v
+}
+
+// GetHopCount returns the HopCount field value if set, zero value otherwise.
+func (o *AuditTrailEvent) GetHopCount() float32 {
+	if o == nil || IsNil(o.HopCount) {
+		var ret float32
+		return ret
+	}
+	return *o.HopCount
+}
+
+// GetHopCountOk returns a tuple with the HopCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuditTrailEvent) GetHopCountOk() (*float32, bool) {
+	if o == nil || IsNil(o.HopCount) {
+		return nil, false
+	}
+	return o.HopCount, true
+}
+
+// HasHopCount returns a boolean if a field has been set.
+func (o *AuditTrailEvent) HasHopCount() bool {
+	if o != nil && !IsNil(o.HopCount) {
+		return true
+	}
+
+	return false
+}
+
+// SetHopCount gets a reference to the given float32 and assigns it to the HopCount field.
+func (o *AuditTrailEvent) SetHopCount(v float32) {
+	o.HopCount = &v
+}
+
+// GetAuditTrail returns the AuditTrail field value if set, zero value otherwise.
+func (o *AuditTrailEvent) GetAuditTrail() bool {
+	if o == nil || IsNil(o.AuditTrail) {
+		var ret bool
+		return ret
+	}
+	return *o.AuditTrail
+}
+
+// GetAuditTrailOk returns a tuple with the AuditTrail field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuditTrailEvent) GetAuditTrailOk() (*bool, bool) {
+	if o == nil || IsNil(o.AuditTrail) {
+		return nil, false
+	}
+	return o.AuditTrail, true
+}
+
+// HasAuditTrail returns a boolean if a field has been set.
+func (o *AuditTrailEvent) HasAuditTrail() bool {
+	if o != nil && !IsNil(o.AuditTrail) {
+		return true
+	}
+
+	return false
+}
+
+// SetAuditTrail gets a reference to the given bool and assigns it to the AuditTrail field.
+func (o *AuditTrailEvent) SetAuditTrail(v bool) {
+	o.AuditTrail = &v
+}
+
+// GetReplayOf returns the ReplayOf field value if set, zero value otherwise.
+func (o *AuditTrailEvent) GetReplayOf() string {
+	if o == nil || IsNil(o.ReplayOf) {
+		var ret string
+		return ret
+	}
+	return *o.ReplayOf
+}
+
+// GetReplayOfOk returns a tuple with the ReplayOf field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuditTrailEvent) GetReplayOfOk() (*string, bool) {
+	if o == nil || IsNil(o.ReplayOf) {
+		return nil, false
+	}
+	return o.ReplayOf, true
+}
+
+// HasReplayOf returns a boolean if a field has been set.
+func (o *AuditTrailEvent) HasReplayOf() bool {
+	if o != nil && !IsNil(o.ReplayOf) {
+		return true
+	}
+
+	return false
+}
+
+// SetReplayOf gets a reference to the given string and assigns it to the ReplayOf field.
+func (o *AuditTrailEvent) SetReplayOf(v string) {
+	o.ReplayOf = &v
+}
+
+// GetReplayRootEventId returns the ReplayRootEventId field value if set, zero value otherwise.
+func (o *AuditTrailEvent) GetReplayRootEventId() string {
+	if o == nil || IsNil(o.ReplayRootEventId) {
+		var ret string
+		return ret
+	}
+	return *o.ReplayRootEventId
+}
+
+// GetReplayRootEventIdOk returns a tuple with the ReplayRootEventId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuditTrailEvent) GetReplayRootEventIdOk() (*string, bool) {
+	if o == nil || IsNil(o.ReplayRootEventId) {
+		return nil, false
+	}
+	return o.ReplayRootEventId, true
+}
+
+// HasReplayRootEventId returns a boolean if a field has been set.
+func (o *AuditTrailEvent) HasReplayRootEventId() bool {
+	if o != nil && !IsNil(o.ReplayRootEventId) {
+		return true
+	}
+
+	return false
+}
+
+// SetReplayRootEventId gets a reference to the given string and assigns it to the ReplayRootEventId field.
+func (o *AuditTrailEvent) SetReplayRootEventId(v string) {
+	o.ReplayRootEventId = &v
+}
+
+// GetReplayedBy returns the ReplayedBy field value if set, zero value otherwise.
+func (o *AuditTrailEvent) GetReplayedBy() string {
+	if o == nil || IsNil(o.ReplayedBy) {
+		var ret string
+		return ret
+	}
+	return *o.ReplayedBy
+}
+
+// GetReplayedByOk returns a tuple with the ReplayedBy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuditTrailEvent) GetReplayedByOk() (*string, bool) {
+	if o == nil || IsNil(o.ReplayedBy) {
+		return nil, false
+	}
+	return o.ReplayedBy, true
+}
+
+// HasReplayedBy returns a boolean if a field has been set.
+func (o *AuditTrailEvent) HasReplayedBy() bool {
+	if o != nil && !IsNil(o.ReplayedBy) {
+		return true
+	}
+
+	return false
+}
+
+// SetReplayedBy gets a reference to the given string and assigns it to the ReplayedBy field.
+func (o *AuditTrailEvent) SetReplayedBy(v string) {
+	o.ReplayedBy = &v
 }
 
 // GetAction returns the Action field value
@@ -624,6 +965,36 @@ func (o AuditTrailEvent) MarshalJSON() ([]byte, error) {
 func (o AuditTrailEvent) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["event_type"] = o.EventType
+	if !IsNil(o.EventId) {
+		toSerialize["event_id"] = o.EventId
+	}
+	if !IsNil(o.EventCategory) {
+		toSerialize["event_category"] = o.EventCategory
+	}
+	if o.Source.IsSet() {
+		toSerialize["source"] = o.Source.Get()
+	}
+	if !IsNil(o.RootEventId) {
+		toSerialize["root_event_id"] = o.RootEventId
+	}
+	if !IsNil(o.CausedByEventId) {
+		toSerialize["caused_by_event_id"] = o.CausedByEventId
+	}
+	if !IsNil(o.HopCount) {
+		toSerialize["hop_count"] = o.HopCount
+	}
+	if !IsNil(o.AuditTrail) {
+		toSerialize["audit_trail"] = o.AuditTrail
+	}
+	if !IsNil(o.ReplayOf) {
+		toSerialize["replay_of"] = o.ReplayOf
+	}
+	if !IsNil(o.ReplayRootEventId) {
+		toSerialize["replay_root_event_id"] = o.ReplayRootEventId
+	}
+	if !IsNil(o.ReplayedBy) {
+		toSerialize["replayed_by"] = o.ReplayedBy
+	}
 	toSerialize["action"] = o.Action
 	toSerialize["resource_type"] = o.ResourceType
 	toSerialize["resource_id"] = o.ResourceId
@@ -709,6 +1080,16 @@ func (o *AuditTrailEvent) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "event_type")
+		delete(additionalProperties, "event_id")
+		delete(additionalProperties, "event_category")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "root_event_id")
+		delete(additionalProperties, "caused_by_event_id")
+		delete(additionalProperties, "hop_count")
+		delete(additionalProperties, "audit_trail")
+		delete(additionalProperties, "replay_of")
+		delete(additionalProperties, "replay_root_event_id")
+		delete(additionalProperties, "replayed_by")
 		delete(additionalProperties, "action")
 		delete(additionalProperties, "resource_type")
 		delete(additionalProperties, "resource_id")

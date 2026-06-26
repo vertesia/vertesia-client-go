@@ -22,6 +22,7 @@ type UpdateAccountPayload struct {
 	Name         *string         `json:"name,omitempty"`
 	EmailDomains []string        `json:"email_domains,omitempty"`
 	Billing      *AccountBilling `json:"billing,omitempty"`
+	QuotaTier    *QuotaTier      `json:"quota_tier,omitempty"`
 }
 
 // NewUpdateAccountPayload instantiates a new UpdateAccountPayload object
@@ -137,6 +138,38 @@ func (o *UpdateAccountPayload) SetBilling(v AccountBilling) {
 	o.Billing = &v
 }
 
+// GetQuotaTier returns the QuotaTier field value if set, zero value otherwise.
+func (o *UpdateAccountPayload) GetQuotaTier() QuotaTier {
+	if o == nil || IsNil(o.QuotaTier) {
+		var ret QuotaTier
+		return ret
+	}
+	return *o.QuotaTier
+}
+
+// GetQuotaTierOk returns a tuple with the QuotaTier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateAccountPayload) GetQuotaTierOk() (*QuotaTier, bool) {
+	if o == nil || IsNil(o.QuotaTier) {
+		return nil, false
+	}
+	return o.QuotaTier, true
+}
+
+// HasQuotaTier returns a boolean if a field has been set.
+func (o *UpdateAccountPayload) HasQuotaTier() bool {
+	if o != nil && !IsNil(o.QuotaTier) {
+		return true
+	}
+
+	return false
+}
+
+// SetQuotaTier gets a reference to the given QuotaTier and assigns it to the QuotaTier field.
+func (o *UpdateAccountPayload) SetQuotaTier(v QuotaTier) {
+	o.QuotaTier = &v
+}
+
 func (o UpdateAccountPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -155,6 +188,9 @@ func (o UpdateAccountPayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Billing) {
 		toSerialize["billing"] = o.Billing
+	}
+	if !IsNil(o.QuotaTier) {
+		toSerialize["quota_tier"] = o.QuotaTier
 	}
 	return toSerialize, nil
 }

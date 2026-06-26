@@ -28,9 +28,13 @@ type CreateWorkflowRulePayload struct {
 	// Customer override for the rule When set to true the rule will not be updated by the system
 	CustomerOverride *bool `json:"customer_override,omitempty"`
 	// Optional task queue name to use when starting workflows for this rule
-	TaskQueue *string                `json:"task_queue,omitempty"`
-	Endpoint  string                 `json:"endpoint"`
-	InputType *WorkflowRuleInputType `json:"input_type,omitempty"`
+	TaskQueue *string `json:"task_queue,omitempty"`
+	// Event subscription migration status for legacy workflow-rule cutover.
+	EventSubscriptionMigrationStatus *string `json:"event_subscription_migration_status,omitempty"`
+	// Migration failure or unsupported-match reason, when applicable.
+	EventSubscriptionMigrationError *string                `json:"event_subscription_migration_error,omitempty"`
+	Endpoint                        string                 `json:"endpoint"`
+	InputType                       *WorkflowRuleInputType `json:"input_type,omitempty"`
 	// Human-readable name or title
 	Name string `json:"name"`
 	// Optional detailed description of the object
@@ -227,6 +231,70 @@ func (o *CreateWorkflowRulePayload) HasTaskQueue() bool {
 // SetTaskQueue gets a reference to the given string and assigns it to the TaskQueue field.
 func (o *CreateWorkflowRulePayload) SetTaskQueue(v string) {
 	o.TaskQueue = &v
+}
+
+// GetEventSubscriptionMigrationStatus returns the EventSubscriptionMigrationStatus field value if set, zero value otherwise.
+func (o *CreateWorkflowRulePayload) GetEventSubscriptionMigrationStatus() string {
+	if o == nil || IsNil(o.EventSubscriptionMigrationStatus) {
+		var ret string
+		return ret
+	}
+	return *o.EventSubscriptionMigrationStatus
+}
+
+// GetEventSubscriptionMigrationStatusOk returns a tuple with the EventSubscriptionMigrationStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateWorkflowRulePayload) GetEventSubscriptionMigrationStatusOk() (*string, bool) {
+	if o == nil || IsNil(o.EventSubscriptionMigrationStatus) {
+		return nil, false
+	}
+	return o.EventSubscriptionMigrationStatus, true
+}
+
+// HasEventSubscriptionMigrationStatus returns a boolean if a field has been set.
+func (o *CreateWorkflowRulePayload) HasEventSubscriptionMigrationStatus() bool {
+	if o != nil && !IsNil(o.EventSubscriptionMigrationStatus) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventSubscriptionMigrationStatus gets a reference to the given string and assigns it to the EventSubscriptionMigrationStatus field.
+func (o *CreateWorkflowRulePayload) SetEventSubscriptionMigrationStatus(v string) {
+	o.EventSubscriptionMigrationStatus = &v
+}
+
+// GetEventSubscriptionMigrationError returns the EventSubscriptionMigrationError field value if set, zero value otherwise.
+func (o *CreateWorkflowRulePayload) GetEventSubscriptionMigrationError() string {
+	if o == nil || IsNil(o.EventSubscriptionMigrationError) {
+		var ret string
+		return ret
+	}
+	return *o.EventSubscriptionMigrationError
+}
+
+// GetEventSubscriptionMigrationErrorOk returns a tuple with the EventSubscriptionMigrationError field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateWorkflowRulePayload) GetEventSubscriptionMigrationErrorOk() (*string, bool) {
+	if o == nil || IsNil(o.EventSubscriptionMigrationError) {
+		return nil, false
+	}
+	return o.EventSubscriptionMigrationError, true
+}
+
+// HasEventSubscriptionMigrationError returns a boolean if a field has been set.
+func (o *CreateWorkflowRulePayload) HasEventSubscriptionMigrationError() bool {
+	if o != nil && !IsNil(o.EventSubscriptionMigrationError) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventSubscriptionMigrationError gets a reference to the given string and assigns it to the EventSubscriptionMigrationError field.
+func (o *CreateWorkflowRulePayload) SetEventSubscriptionMigrationError(v string) {
+	o.EventSubscriptionMigrationError = &v
 }
 
 // GetEndpoint returns the Endpoint field value
@@ -462,6 +530,12 @@ func (o CreateWorkflowRulePayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.TaskQueue) {
 		toSerialize["task_queue"] = o.TaskQueue
 	}
+	if !IsNil(o.EventSubscriptionMigrationStatus) {
+		toSerialize["event_subscription_migration_status"] = o.EventSubscriptionMigrationStatus
+	}
+	if !IsNil(o.EventSubscriptionMigrationError) {
+		toSerialize["event_subscription_migration_error"] = o.EventSubscriptionMigrationError
+	}
 	toSerialize["endpoint"] = o.Endpoint
 	if !IsNil(o.InputType) {
 		toSerialize["input_type"] = o.InputType
@@ -528,6 +602,8 @@ func (o *CreateWorkflowRulePayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "debug")
 		delete(additionalProperties, "customer_override")
 		delete(additionalProperties, "task_queue")
+		delete(additionalProperties, "event_subscription_migration_status")
+		delete(additionalProperties, "event_subscription_migration_error")
 		delete(additionalProperties, "endpoint")
 		delete(additionalProperties, "input_type")
 		delete(additionalProperties, "name")

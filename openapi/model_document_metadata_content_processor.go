@@ -19,14 +19,17 @@ var _ MappedNullable = &DocumentMetadataContentProcessor{}
 
 // DocumentMetadataContentProcessor struct for DocumentMetadataContentProcessor
 type DocumentMetadataContentProcessor struct {
-	Type              *string  `json:"type,omitempty"`
-	FeaturesRequested []string `json:"features_requested,omitempty"`
-	ZonesRequested    []string `json:"zones_requested,omitempty"`
-	TableCount        *float32 `json:"table_count,omitempty"`
-	ImageCount        *float32 `json:"image_count,omitempty"`
-	ZoneCount         *float32 `json:"zone_count,omitempty"`
-	NeedsOcrCount     *float32 `json:"needs_ocr_count,omitempty"`
+	Type                 *string  `json:"type,omitempty"`
+	FeaturesRequested    []string `json:"features_requested,omitempty"`
+	ZonesRequested       []string `json:"zones_requested,omitempty"`
+	TableCount           *float32 `json:"table_count,omitempty"`
+	ImageCount           *float32 `json:"image_count,omitempty"`
+	ZoneCount            *float32 `json:"zone_count,omitempty"`
+	NeedsOcrCount        *float32 `json:"needs_ocr_count,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DocumentMetadataContentProcessor DocumentMetadataContentProcessor
 
 // NewDocumentMetadataContentProcessor instantiates a new DocumentMetadataContentProcessor object
 // This constructor will assign default values to properties that have it defined,
@@ -300,7 +303,39 @@ func (o DocumentMetadataContentProcessor) ToMap() (map[string]interface{}, error
 	if !IsNil(o.NeedsOcrCount) {
 		toSerialize["needs_ocr_count"] = o.NeedsOcrCount
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DocumentMetadataContentProcessor) UnmarshalJSON(data []byte) (err error) {
+	varDocumentMetadataContentProcessor := _DocumentMetadataContentProcessor{}
+
+	err = json.Unmarshal(data, &varDocumentMetadataContentProcessor)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DocumentMetadataContentProcessor(varDocumentMetadataContentProcessor)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "features_requested")
+		delete(additionalProperties, "zones_requested")
+		delete(additionalProperties, "table_count")
+		delete(additionalProperties, "image_count")
+		delete(additionalProperties, "zone_count")
+		delete(additionalProperties, "needs_ocr_count")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDocumentMetadataContentProcessor struct {

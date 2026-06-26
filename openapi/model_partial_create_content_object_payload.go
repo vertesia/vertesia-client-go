@@ -42,9 +42,10 @@ type PartialCreateContentObjectPayload struct {
 	// External identifier for integration with other systems
 	ExternalId *string `json:"external_id,omitempty"`
 	// The object properties. This is a JSON object that describes the object, matching the object type schema
-	Properties map[string]interface{}              `json:"properties,omitempty"`
-	Metadata   *CreateContentObjectPayloadMetadata `json:"metadata,omitempty"`
-	Tokens     *CreateContentObjectPayloadTokens   `json:"tokens,omitempty"`
+	Properties map[string]interface{} `json:"properties,omitempty"`
+	// Technical metadata of the object
+	Metadata map[string]interface{}            `json:"metadata,omitempty"`
+	Tokens   *CreateContentObjectPayloadTokens `json:"tokens,omitempty"`
 	// Revision information. This is used to track the history of the object.
 	Revision *RevisionInfo `json:"revision,omitempty"`
 	// Soft delete flag. When true, the object should be considered deleted but is still retained in the database for historical purposes.
@@ -600,19 +601,19 @@ func (o *PartialCreateContentObjectPayload) SetProperties(v map[string]interface
 }
 
 // GetMetadata returns the Metadata field value if set, zero value otherwise.
-func (o *PartialCreateContentObjectPayload) GetMetadata() CreateContentObjectPayloadMetadata {
+func (o *PartialCreateContentObjectPayload) GetMetadata() map[string]interface{} {
 	if o == nil || IsNil(o.Metadata) {
-		var ret CreateContentObjectPayloadMetadata
+		var ret map[string]interface{}
 		return ret
 	}
-	return *o.Metadata
+	return o.Metadata
 }
 
 // GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PartialCreateContentObjectPayload) GetMetadataOk() (*CreateContentObjectPayloadMetadata, bool) {
+func (o *PartialCreateContentObjectPayload) GetMetadataOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Metadata) {
-		return nil, false
+		return map[string]interface{}{}, false
 	}
 	return o.Metadata, true
 }
@@ -626,9 +627,9 @@ func (o *PartialCreateContentObjectPayload) HasMetadata() bool {
 	return false
 }
 
-// SetMetadata gets a reference to the given CreateContentObjectPayloadMetadata and assigns it to the Metadata field.
-func (o *PartialCreateContentObjectPayload) SetMetadata(v CreateContentObjectPayloadMetadata) {
-	o.Metadata = &v
+// SetMetadata gets a reference to the given map[string]interface{} and assigns it to the Metadata field.
+func (o *PartialCreateContentObjectPayload) SetMetadata(v map[string]interface{}) {
+	o.Metadata = v
 }
 
 // GetTokens returns the Tokens field value if set, zero value otherwise.

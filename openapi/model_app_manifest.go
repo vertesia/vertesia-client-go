@@ -57,9 +57,11 @@ type AppManifest struct {
 	AccessControl *AppAccessControl `json:"access_control,omitempty"`
 	Id            string            `json:"id"`
 	// The owning account. Undefined for apps imported from a master region.
-	Account   *string `json:"account,omitempty"`
-	CreatedAt string  `json:"created_at"`
-	UpdatedAt string  `json:"updated_at"`
+	Account *string `json:"account,omitempty"`
+	// Source metadata for generated or synced app manifests.
+	Source    *AppManifestSource `json:"source,omitempty"`
+	CreatedAt string             `json:"created_at"`
+	UpdatedAt string             `json:"updated_at"`
 }
 
 type _AppManifest AppManifest
@@ -709,6 +711,38 @@ func (o *AppManifest) SetAccount(v string) {
 	o.Account = &v
 }
 
+// GetSource returns the Source field value if set, zero value otherwise.
+func (o *AppManifest) GetSource() AppManifestSource {
+	if o == nil || IsNil(o.Source) {
+		var ret AppManifestSource
+		return ret
+	}
+	return *o.Source
+}
+
+// GetSourceOk returns a tuple with the Source field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppManifest) GetSourceOk() (*AppManifestSource, bool) {
+	if o == nil || IsNil(o.Source) {
+		return nil, false
+	}
+	return o.Source, true
+}
+
+// HasSource returns a boolean if a field has been set.
+func (o *AppManifest) HasSource() bool {
+	if o != nil && !IsNil(o.Source) {
+		return true
+	}
+
+	return false
+}
+
+// SetSource gets a reference to the given AppManifestSource and assigns it to the Source field.
+func (o *AppManifest) SetSource(v AppManifestSource) {
+	o.Source = &v
+}
+
 // GetCreatedAt returns the CreatedAt field value
 func (o *AppManifest) GetCreatedAt() string {
 	if o == nil {
@@ -815,6 +849,9 @@ func (o AppManifest) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	if !IsNil(o.Account) {
 		toSerialize["account"] = o.Account
+	}
+	if !IsNil(o.Source) {
+		toSerialize["source"] = o.Source
 	}
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt

@@ -20,17 +20,18 @@ var _ MappedNullable = &VideoMetadata{}
 
 // VideoMetadata struct for VideoMetadata
 type VideoMetadata struct {
-	Type           ContentNatureVideo        `json:"type"`
-	Size           *float32                  `json:"size,omitempty"`
-	Languages      []string                  `json:"languages,omitempty"`
-	Location       *Location                 `json:"location,omitempty"`
-	GenerationRuns []GenerationRunMetadata   `json:"generation_runs,omitempty"`
-	Etag           *string                   `json:"etag,omitempty"`
-	Renditions     []RenditionWithDimensions `json:"renditions,omitempty"`
-	Duration       *float32                  `json:"duration,omitempty"`
-	Transcript     *Transcript               `json:"transcript,omitempty"`
-	Dimensions     *Dimensions               `json:"dimensions,omitempty"`
-	HasAudio       *bool                     `json:"hasAudio,omitempty"`
+	Type                 ContentNatureVideo        `json:"type"`
+	Size                 *float32                  `json:"size,omitempty"`
+	Languages            []string                  `json:"languages,omitempty"`
+	Location             *Location                 `json:"location,omitempty"`
+	GenerationRuns       []GenerationRunMetadata   `json:"generation_runs,omitempty"`
+	Etag                 *string                   `json:"etag,omitempty"`
+	Renditions           []RenditionWithDimensions `json:"renditions,omitempty"`
+	Duration             *float32                  `json:"duration,omitempty"`
+	Transcript           *Transcript               `json:"transcript,omitempty"`
+	Dimensions           *Dimensions               `json:"dimensions,omitempty"`
+	HasAudio             *bool                     `json:"hasAudio,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _VideoMetadata VideoMetadata
@@ -438,6 +439,11 @@ func (o VideoMetadata) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.HasAudio) {
 		toSerialize["hasAudio"] = o.HasAudio
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -472,6 +478,23 @@ func (o *VideoMetadata) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = VideoMetadata(varVideoMetadata)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "size")
+		delete(additionalProperties, "languages")
+		delete(additionalProperties, "location")
+		delete(additionalProperties, "generation_runs")
+		delete(additionalProperties, "etag")
+		delete(additionalProperties, "renditions")
+		delete(additionalProperties, "duration")
+		delete(additionalProperties, "transcript")
+		delete(additionalProperties, "dimensions")
+		delete(additionalProperties, "hasAudio")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

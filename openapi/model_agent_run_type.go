@@ -22,6 +22,7 @@ type AgentRunType string
 const (
 	AGENTRUNTYPE_API                      AgentRunType = "api"
 	AGENTRUNTYPE_SCHEDULE                 AgentRunType = "schedule"
+	AGENTRUNTYPE_EVENT_SUBSCRIPTION       AgentRunType = "event_subscription"
 	AGENTRUNTYPE_UNKNOWN_DEFAULT_OPEN_API AgentRunType = "unknown_default_open_api"
 )
 
@@ -29,6 +30,7 @@ const (
 var AllowedAgentRunTypeEnumValues = []AgentRunType{
 	"api",
 	"schedule",
+	"event_subscription",
 	"unknown_default_open_api",
 }
 

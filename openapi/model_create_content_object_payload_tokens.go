@@ -12,7 +12,6 @@ package openapi
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the CreateContentObjectPayloadTokens type satisfies the MappedNullable interface at compile time
@@ -20,22 +19,17 @@ var _ MappedNullable = &CreateContentObjectPayloadTokens{}
 
 // CreateContentObjectPayloadTokens Token information
 type CreateContentObjectPayloadTokens struct {
-	Count    float32 `json:"count"`
-	Encoding string  `json:"encoding"`
-	Etag     string  `json:"etag"`
+	Count    *float32 `json:"count,omitempty"`
+	Encoding *string  `json:"encoding,omitempty"`
+	Etag     *string  `json:"etag,omitempty"`
 }
-
-type _CreateContentObjectPayloadTokens CreateContentObjectPayloadTokens
 
 // NewCreateContentObjectPayloadTokens instantiates a new CreateContentObjectPayloadTokens object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateContentObjectPayloadTokens(count float32, encoding string, etag string) *CreateContentObjectPayloadTokens {
+func NewCreateContentObjectPayloadTokens() *CreateContentObjectPayloadTokens {
 	this := CreateContentObjectPayloadTokens{}
-	this.Count = count
-	this.Encoding = encoding
-	this.Etag = etag
 	return &this
 }
 
@@ -47,76 +41,100 @@ func NewCreateContentObjectPayloadTokensWithDefaults() *CreateContentObjectPaylo
 	return &this
 }
 
-// GetCount returns the Count field value
+// GetCount returns the Count field value if set, zero value otherwise.
 func (o *CreateContentObjectPayloadTokens) GetCount() float32 {
-	if o == nil {
+	if o == nil || IsNil(o.Count) {
 		var ret float32
 		return ret
 	}
-
-	return o.Count
+	return *o.Count
 }
 
-// GetCountOk returns a tuple with the Count field value
+// GetCountOk returns a tuple with the Count field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CreateContentObjectPayloadTokens) GetCountOk() (*float32, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Count) {
 		return nil, false
 	}
-	return &o.Count, true
+	return o.Count, true
 }
 
-// SetCount sets field value
+// HasCount returns a boolean if a field has been set.
+func (o *CreateContentObjectPayloadTokens) HasCount() bool {
+	if o != nil && !IsNil(o.Count) {
+		return true
+	}
+
+	return false
+}
+
+// SetCount gets a reference to the given float32 and assigns it to the Count field.
 func (o *CreateContentObjectPayloadTokens) SetCount(v float32) {
-	o.Count = v
+	o.Count = &v
 }
 
-// GetEncoding returns the Encoding field value
+// GetEncoding returns the Encoding field value if set, zero value otherwise.
 func (o *CreateContentObjectPayloadTokens) GetEncoding() string {
-	if o == nil {
+	if o == nil || IsNil(o.Encoding) {
 		var ret string
 		return ret
 	}
-
-	return o.Encoding
+	return *o.Encoding
 }
 
-// GetEncodingOk returns a tuple with the Encoding field value
+// GetEncodingOk returns a tuple with the Encoding field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CreateContentObjectPayloadTokens) GetEncodingOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Encoding) {
 		return nil, false
 	}
-	return &o.Encoding, true
+	return o.Encoding, true
 }
 
-// SetEncoding sets field value
+// HasEncoding returns a boolean if a field has been set.
+func (o *CreateContentObjectPayloadTokens) HasEncoding() bool {
+	if o != nil && !IsNil(o.Encoding) {
+		return true
+	}
+
+	return false
+}
+
+// SetEncoding gets a reference to the given string and assigns it to the Encoding field.
 func (o *CreateContentObjectPayloadTokens) SetEncoding(v string) {
-	o.Encoding = v
+	o.Encoding = &v
 }
 
-// GetEtag returns the Etag field value
+// GetEtag returns the Etag field value if set, zero value otherwise.
 func (o *CreateContentObjectPayloadTokens) GetEtag() string {
-	if o == nil {
+	if o == nil || IsNil(o.Etag) {
 		var ret string
 		return ret
 	}
-
-	return o.Etag
+	return *o.Etag
 }
 
-// GetEtagOk returns a tuple with the Etag field value
+// GetEtagOk returns a tuple with the Etag field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CreateContentObjectPayloadTokens) GetEtagOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Etag) {
 		return nil, false
 	}
-	return &o.Etag, true
+	return o.Etag, true
 }
 
-// SetEtag sets field value
+// HasEtag returns a boolean if a field has been set.
+func (o *CreateContentObjectPayloadTokens) HasEtag() bool {
+	if o != nil && !IsNil(o.Etag) {
+		return true
+	}
+
+	return false
+}
+
+// SetEtag gets a reference to the given string and assigns it to the Etag field.
 func (o *CreateContentObjectPayloadTokens) SetEtag(v string) {
-	o.Etag = v
+	o.Etag = &v
 }
 
 func (o CreateContentObjectPayloadTokens) MarshalJSON() ([]byte, error) {
@@ -129,47 +147,16 @@ func (o CreateContentObjectPayloadTokens) MarshalJSON() ([]byte, error) {
 
 func (o CreateContentObjectPayloadTokens) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["count"] = o.Count
-	toSerialize["encoding"] = o.Encoding
-	toSerialize["etag"] = o.Etag
+	if !IsNil(o.Count) {
+		toSerialize["count"] = o.Count
+	}
+	if !IsNil(o.Encoding) {
+		toSerialize["encoding"] = o.Encoding
+	}
+	if !IsNil(o.Etag) {
+		toSerialize["etag"] = o.Etag
+	}
 	return toSerialize, nil
-}
-
-func (o *CreateContentObjectPayloadTokens) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"count",
-		"encoding",
-		"etag",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varCreateContentObjectPayloadTokens := _CreateContentObjectPayloadTokens{}
-
-	err = json.Unmarshal(data, &varCreateContentObjectPayloadTokens)
-
-	if err != nil {
-		return err
-	}
-
-	*o = CreateContentObjectPayloadTokens(varCreateContentObjectPayloadTokens)
-
-	return err
 }
 
 type NullableCreateContentObjectPayloadTokens struct {

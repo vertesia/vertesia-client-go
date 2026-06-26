@@ -46,8 +46,12 @@ type WorkflowRule struct {
 	// Customer override for the rule When set to true the rule will not be updated by the system
 	CustomerOverride *bool `json:"customer_override,omitempty"`
 	// Optional task queue name to use when starting workflows for this rule
-	TaskQueue            *string `json:"task_queue,omitempty"`
-	AdditionalProperties map[string]interface{}
+	TaskQueue *string `json:"task_queue,omitempty"`
+	// Event subscription migration status for legacy workflow-rule cutover.
+	EventSubscriptionMigrationStatus *string `json:"event_subscription_migration_status,omitempty"`
+	// Migration failure or unsupported-match reason, when applicable.
+	EventSubscriptionMigrationError *string `json:"event_subscription_migration_error,omitempty"`
+	AdditionalProperties            map[string]interface{}
 }
 
 type _WorkflowRule WorkflowRule
@@ -497,6 +501,70 @@ func (o *WorkflowRule) SetTaskQueue(v string) {
 	o.TaskQueue = &v
 }
 
+// GetEventSubscriptionMigrationStatus returns the EventSubscriptionMigrationStatus field value if set, zero value otherwise.
+func (o *WorkflowRule) GetEventSubscriptionMigrationStatus() string {
+	if o == nil || IsNil(o.EventSubscriptionMigrationStatus) {
+		var ret string
+		return ret
+	}
+	return *o.EventSubscriptionMigrationStatus
+}
+
+// GetEventSubscriptionMigrationStatusOk returns a tuple with the EventSubscriptionMigrationStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *WorkflowRule) GetEventSubscriptionMigrationStatusOk() (*string, bool) {
+	if o == nil || IsNil(o.EventSubscriptionMigrationStatus) {
+		return nil, false
+	}
+	return o.EventSubscriptionMigrationStatus, true
+}
+
+// HasEventSubscriptionMigrationStatus returns a boolean if a field has been set.
+func (o *WorkflowRule) HasEventSubscriptionMigrationStatus() bool {
+	if o != nil && !IsNil(o.EventSubscriptionMigrationStatus) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventSubscriptionMigrationStatus gets a reference to the given string and assigns it to the EventSubscriptionMigrationStatus field.
+func (o *WorkflowRule) SetEventSubscriptionMigrationStatus(v string) {
+	o.EventSubscriptionMigrationStatus = &v
+}
+
+// GetEventSubscriptionMigrationError returns the EventSubscriptionMigrationError field value if set, zero value otherwise.
+func (o *WorkflowRule) GetEventSubscriptionMigrationError() string {
+	if o == nil || IsNil(o.EventSubscriptionMigrationError) {
+		var ret string
+		return ret
+	}
+	return *o.EventSubscriptionMigrationError
+}
+
+// GetEventSubscriptionMigrationErrorOk returns a tuple with the EventSubscriptionMigrationError field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *WorkflowRule) GetEventSubscriptionMigrationErrorOk() (*string, bool) {
+	if o == nil || IsNil(o.EventSubscriptionMigrationError) {
+		return nil, false
+	}
+	return o.EventSubscriptionMigrationError, true
+}
+
+// HasEventSubscriptionMigrationError returns a boolean if a field has been set.
+func (o *WorkflowRule) HasEventSubscriptionMigrationError() bool {
+	if o != nil && !IsNil(o.EventSubscriptionMigrationError) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventSubscriptionMigrationError gets a reference to the given string and assigns it to the EventSubscriptionMigrationError field.
+func (o *WorkflowRule) SetEventSubscriptionMigrationError(v string) {
+	o.EventSubscriptionMigrationError = &v
+}
+
 func (o WorkflowRule) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -535,6 +603,12 @@ func (o WorkflowRule) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.TaskQueue) {
 		toSerialize["task_queue"] = o.TaskQueue
+	}
+	if !IsNil(o.EventSubscriptionMigrationStatus) {
+		toSerialize["event_subscription_migration_status"] = o.EventSubscriptionMigrationStatus
+	}
+	if !IsNil(o.EventSubscriptionMigrationError) {
+		toSerialize["event_subscription_migration_error"] = o.EventSubscriptionMigrationError
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -601,6 +675,8 @@ func (o *WorkflowRule) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "debug")
 		delete(additionalProperties, "customer_override")
 		delete(additionalProperties, "task_queue")
+		delete(additionalProperties, "event_subscription_migration_status")
+		delete(additionalProperties, "event_subscription_migration_error")
 		o.AdditionalProperties = additionalProperties
 	}
 

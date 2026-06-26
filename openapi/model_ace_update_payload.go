@@ -19,7 +19,8 @@ var _ MappedNullable = &ACEUpdatePayload{}
 
 // ACEUpdatePayload struct for ACEUpdatePayload
 type ACEUpdatePayload struct {
-	Role          *SystemRoles                `json:"role,omitempty"`
+	// Role name. Typed as `string` because role names now span multiple partitions: `SystemRoles` enum values for system-domain roles, and bare strings for ABAC-domain roles (e.g. `'content:reader'`, `'content:writer'`, `'content:manager'`). Mongoose schema validates the value against the registered role catalog via `getAllRoleNames()`.
+	Role          *string                     `json:"role,omitempty"`
 	ResourceType  *AccessControlResourceType  `json:"resource_type,omitempty"`
 	Resource      *string                     `json:"resource,omitempty"`
 	PrincipalType *AccessControlPrincipalType `json:"principal_type,omitempty"`
@@ -52,9 +53,9 @@ func NewACEUpdatePayloadWithDefaults() *ACEUpdatePayload {
 }
 
 // GetRole returns the Role field value if set, zero value otherwise.
-func (o *ACEUpdatePayload) GetRole() SystemRoles {
+func (o *ACEUpdatePayload) GetRole() string {
 	if o == nil || IsNil(o.Role) {
-		var ret SystemRoles
+		var ret string
 		return ret
 	}
 	return *o.Role
@@ -62,7 +63,7 @@ func (o *ACEUpdatePayload) GetRole() SystemRoles {
 
 // GetRoleOk returns a tuple with the Role field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ACEUpdatePayload) GetRoleOk() (*SystemRoles, bool) {
+func (o *ACEUpdatePayload) GetRoleOk() (*string, bool) {
 	if o == nil || IsNil(o.Role) {
 		return nil, false
 	}
@@ -78,8 +79,8 @@ func (o *ACEUpdatePayload) HasRole() bool {
 	return false
 }
 
-// SetRole gets a reference to the given SystemRoles and assigns it to the Role field.
-func (o *ACEUpdatePayload) SetRole(v SystemRoles) {
+// SetRole gets a reference to the given string and assigns it to the Role field.
+func (o *ACEUpdatePayload) SetRole(v string) {
 	o.Role = &v
 }
 

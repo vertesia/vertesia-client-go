@@ -15,93 +15,55 @@ import (
 	"fmt"
 )
 
-// AuditAction the model 'AuditAction'
-type AuditAction string
-
-// List of AuditAction
-const (
-	AUDITACTION_CREATE                      AuditAction = "create"
-	AUDITACTION_UPDATE                      AuditAction = "update"
-	AUDITACTION_DELETE                      AuditAction = "delete"
-	AUDITACTION_BULK_CREATE                 AuditAction = "bulk_create"
-	AUDITACTION_BULK_CHANGE_TYPE            AuditAction = "bulk_change_type"
-	AUDITACTION_BULK_UPDATE                 AuditAction = "bulk_update"
-	AUDITACTION_BULK_DELETE                 AuditAction = "bulk_delete"
-	AUDITACTION_ATTACH                      AuditAction = "attach"
-	AUDITACTION_DETACH                      AuditAction = "detach"
-	AUDITACTION_CREDENTIALS_FILL            AuditAction = "credentials_fill"
-	AUDITACTION_CREDENTIALS_TOTP_GENERATION AuditAction = "credentials_totp_generation"
-	AUDITACTION_PUBLISH                     AuditAction = "publish"
-	AUDITACTION_UNPUBLISH                   AuditAction = "unpublish"
-	AUDITACTION_INFERENCE                   AuditAction = "inference"
-	AUDITACTION_EMBEDDING                   AuditAction = "embedding"
-	AUDITACTION_IMAGE_GENERATION            AuditAction = "image_generation"
-	AUDITACTION_UNKNOWN_DEFAULT_OPEN_API    AuditAction = "unknown_default_open_api"
-)
-
-// All allowed values of AuditAction enum
-var AllowedAuditActionEnumValues = []AuditAction{
-	"create",
-	"update",
-	"delete",
-	"bulk_create",
-	"bulk_change_type",
-	"bulk_update",
-	"bulk_delete",
-	"attach",
-	"detach",
-	"credentials_fill",
-	"credentials_totp_generation",
-	"publish",
-	"unpublish",
-	"inference",
-	"embedding",
-	"image_generation",
-	"unknown_default_open_api",
+// AuditAction struct for AuditAction
+type AuditAction struct {
+	KnownAuditAction *KnownAuditAction
+	String           *string
 }
 
-func (v *AuditAction) UnmarshalJSON(src []byte) error {
-	var value string
-	err := json.Unmarshal(src, &value)
-	if err != nil {
-		return err
-	}
-	enumTypeValue := AuditAction(value)
-	for _, existing := range AllowedAuditActionEnumValues {
-		if existing == enumTypeValue {
-			*v = enumTypeValue
-			return nil
+// Unmarshal JSON data into any of the pointers in the struct
+func (dst *AuditAction) UnmarshalJSON(data []byte) error {
+	var err error
+	// try to unmarshal JSON data into KnownAuditAction
+	err = json.Unmarshal(data, &dst.KnownAuditAction)
+	if err == nil {
+		jsonKnownAuditAction, _ := json.Marshal(dst.KnownAuditAction)
+		if string(jsonKnownAuditAction) == "{}" { // empty struct
+			dst.KnownAuditAction = nil
+		} else {
+			return nil // data stored in dst.KnownAuditAction, return on the first match
 		}
-	}
-
-	*v = AUDITACTION_UNKNOWN_DEFAULT_OPEN_API
-	return nil
-}
-
-// NewAuditActionFromValue returns a pointer to a valid AuditAction
-// for the value passed as argument, or an error if the value passed is not allowed by the enum
-func NewAuditActionFromValue(v string) (*AuditAction, error) {
-	ev := AuditAction(v)
-	if ev.IsValid() {
-		return &ev, nil
 	} else {
-		return nil, fmt.Errorf("invalid value '%v' for AuditAction: valid values are %v", v, AllowedAuditActionEnumValues)
+		dst.KnownAuditAction = nil
 	}
-}
 
-// IsValid return true if the value is valid for the enum, false otherwise
-func (v AuditAction) IsValid() bool {
-	for _, existing := range AllowedAuditActionEnumValues {
-		if existing == v {
-			return true
+	// try to unmarshal JSON data into String
+	err = json.Unmarshal(data, &dst.String)
+	if err == nil {
+		jsonString, _ := json.Marshal(dst.String)
+		if string(jsonString) == "{}" { // empty struct
+			dst.String = nil
+		} else {
+			return nil // data stored in dst.String, return on the first match
 		}
+	} else {
+		dst.String = nil
 	}
-	return false
+
+	return fmt.Errorf("data failed to match schemas in anyOf(AuditAction)")
 }
 
-// Ptr returns reference to AuditAction value
-func (v AuditAction) Ptr() *AuditAction {
-	return &v
+// Marshal data from the first non-nil pointers in the struct to JSON
+func (src AuditAction) MarshalJSON() ([]byte, error) {
+	if src.KnownAuditAction != nil {
+		return json.Marshal(&src.KnownAuditAction)
+	}
+
+	if src.String != nil {
+		return json.Marshal(&src.String)
+	}
+
+	return nil, nil // no data in anyOf schemas
 }
 
 type NullableAuditAction struct {

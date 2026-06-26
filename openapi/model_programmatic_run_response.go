@@ -60,6 +60,10 @@ type ProgrammaticRunResponse struct {
 	SourceType *AgentRunType `json:"source_type,omitempty"`
 	// Schedule ID — set when this run was triggered by a Temporal schedule
 	ScheduleId *string `json:"schedule_id,omitempty"`
+	// Event subscription ID — set when this run was triggered by the event bus.
+	EventSubscriptionId *string `json:"event_subscription_id,omitempty"`
+	// Event reference — set when this run was triggered by the event bus.
+	EventRef *EventRef `json:"event_ref,omitempty"`
 	// Archive lifecycle state
 	ArchiveState *AgentRunArchiveState `json:"archive_state,omitempty"`
 	// Timestamp when the document was created
@@ -680,6 +684,70 @@ func (o *ProgrammaticRunResponse) SetScheduleId(v string) {
 	o.ScheduleId = &v
 }
 
+// GetEventSubscriptionId returns the EventSubscriptionId field value if set, zero value otherwise.
+func (o *ProgrammaticRunResponse) GetEventSubscriptionId() string {
+	if o == nil || IsNil(o.EventSubscriptionId) {
+		var ret string
+		return ret
+	}
+	return *o.EventSubscriptionId
+}
+
+// GetEventSubscriptionIdOk returns a tuple with the EventSubscriptionId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProgrammaticRunResponse) GetEventSubscriptionIdOk() (*string, bool) {
+	if o == nil || IsNil(o.EventSubscriptionId) {
+		return nil, false
+	}
+	return o.EventSubscriptionId, true
+}
+
+// HasEventSubscriptionId returns a boolean if a field has been set.
+func (o *ProgrammaticRunResponse) HasEventSubscriptionId() bool {
+	if o != nil && !IsNil(o.EventSubscriptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventSubscriptionId gets a reference to the given string and assigns it to the EventSubscriptionId field.
+func (o *ProgrammaticRunResponse) SetEventSubscriptionId(v string) {
+	o.EventSubscriptionId = &v
+}
+
+// GetEventRef returns the EventRef field value if set, zero value otherwise.
+func (o *ProgrammaticRunResponse) GetEventRef() EventRef {
+	if o == nil || IsNil(o.EventRef) {
+		var ret EventRef
+		return ret
+	}
+	return *o.EventRef
+}
+
+// GetEventRefOk returns a tuple with the EventRef field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProgrammaticRunResponse) GetEventRefOk() (*EventRef, bool) {
+	if o == nil || IsNil(o.EventRef) {
+		return nil, false
+	}
+	return o.EventRef, true
+}
+
+// HasEventRef returns a boolean if a field has been set.
+func (o *ProgrammaticRunResponse) HasEventRef() bool {
+	if o != nil && !IsNil(o.EventRef) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventRef gets a reference to the given EventRef and assigns it to the EventRef field.
+func (o *ProgrammaticRunResponse) SetEventRef(v EventRef) {
+	o.EventRef = &v
+}
+
 // GetArchiveState returns the ArchiveState field value if set, zero value otherwise.
 func (o *ProgrammaticRunResponse) GetArchiveState() AgentRunArchiveState {
 	if o == nil || IsNil(o.ArchiveState) {
@@ -957,6 +1025,12 @@ func (o ProgrammaticRunResponse) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ScheduleId) {
 		toSerialize["schedule_id"] = o.ScheduleId
+	}
+	if !IsNil(o.EventSubscriptionId) {
+		toSerialize["event_subscription_id"] = o.EventSubscriptionId
+	}
+	if !IsNil(o.EventRef) {
+		toSerialize["event_ref"] = o.EventRef
 	}
 	if !IsNil(o.ArchiveState) {
 		toSerialize["archive_state"] = o.ArchiveState

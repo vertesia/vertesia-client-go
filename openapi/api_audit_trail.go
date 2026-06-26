@@ -25,7 +25,7 @@ type AuditTrailAPIService service
 type ApiListAuditTrailEventsRequest struct {
 	ctx                   context.Context
 	ApiService            *AuditTrailAPIService
-	actions               *[]string
+	actions               *[]AuditAction
 	resourceTypes         *[]string
 	resourceId            *string
 	principalId           *string
@@ -41,7 +41,7 @@ type ApiListAuditTrailEventsRequest struct {
 }
 
 // Filter by action types
-func (r ApiListAuditTrailEventsRequest) Actions(actions []string) ApiListAuditTrailEventsRequest {
+func (r ApiListAuditTrailEventsRequest) Actions(actions []AuditAction) ApiListAuditTrailEventsRequest {
 	r.actions = &actions
 	return r
 }

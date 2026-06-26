@@ -20,17 +20,19 @@ var _ MappedNullable = &Account{}
 
 // Account struct for Account
 type Account struct {
-	Id                   string            `json:"id"`
-	Name                 string            `json:"name"`
-	EmailDomains         []string          `json:"email_domains"`
-	Onboarding           AccountOnboarding `json:"onboarding"`
-	Datacenter           string            `json:"datacenter"`
-	AccountType          AccountType       `json:"account_type"`
-	Billing              AccountBilling    `json:"billing"`
-	CreatedBy            string            `json:"created_by"`
-	UpdatedBy            string            `json:"updated_by"`
-	CreatedAt            string            `json:"created_at"`
-	UpdatedAt            string            `json:"updated_at"`
+	Id           string            `json:"id"`
+	Name         string            `json:"name"`
+	EmailDomains []string          `json:"email_domains"`
+	Onboarding   AccountOnboarding `json:"onboarding"`
+	Datacenter   string            `json:"datacenter"`
+	AccountType  AccountType       `json:"account_type"`
+	Billing      AccountBilling    `json:"billing"`
+	// Quota/rate-limit tier. Unset → the deployment default tier (env `QUOTA_BASE_TIER`).
+	QuotaTier            *QuotaTier `json:"quota_tier,omitempty"`
+	CreatedBy            string     `json:"created_by"`
+	UpdatedBy            string     `json:"updated_by"`
+	CreatedAt            string     `json:"created_at"`
+	UpdatedAt            string     `json:"updated_at"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -232,6 +234,38 @@ func (o *Account) SetBilling(v AccountBilling) {
 	o.Billing = v
 }
 
+// GetQuotaTier returns the QuotaTier field value if set, zero value otherwise.
+func (o *Account) GetQuotaTier() QuotaTier {
+	if o == nil || IsNil(o.QuotaTier) {
+		var ret QuotaTier
+		return ret
+	}
+	return *o.QuotaTier
+}
+
+// GetQuotaTierOk returns a tuple with the QuotaTier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Account) GetQuotaTierOk() (*QuotaTier, bool) {
+	if o == nil || IsNil(o.QuotaTier) {
+		return nil, false
+	}
+	return o.QuotaTier, true
+}
+
+// HasQuotaTier returns a boolean if a field has been set.
+func (o *Account) HasQuotaTier() bool {
+	if o != nil && !IsNil(o.QuotaTier) {
+		return true
+	}
+
+	return false
+}
+
+// SetQuotaTier gets a reference to the given QuotaTier and assigns it to the QuotaTier field.
+func (o *Account) SetQuotaTier(v QuotaTier) {
+	o.QuotaTier = &v
+}
+
 // GetCreatedBy returns the CreatedBy field value
 func (o *Account) GetCreatedBy() string {
 	if o == nil {
@@ -345,6 +379,9 @@ func (o Account) ToMap() (map[string]interface{}, error) {
 	toSerialize["datacenter"] = o.Datacenter
 	toSerialize["account_type"] = o.AccountType
 	toSerialize["billing"] = o.Billing
+	if !IsNil(o.QuotaTier) {
+		toSerialize["quota_tier"] = o.QuotaTier
+	}
 	toSerialize["created_by"] = o.CreatedBy
 	toSerialize["updated_by"] = o.UpdatedBy
 	toSerialize["created_at"] = o.CreatedAt
@@ -409,6 +446,7 @@ func (o *Account) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "datacenter")
 		delete(additionalProperties, "account_type")
 		delete(additionalProperties, "billing")
+		delete(additionalProperties, "quota_tier")
 		delete(additionalProperties, "created_by")
 		delete(additionalProperties, "updated_by")
 		delete(additionalProperties, "created_at")

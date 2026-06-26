@@ -62,6 +62,10 @@ type AgentRunSearchHit struct {
 	ToolNames []string `json:"tool_names,omitempty"`
 	// Schedule ID (if schedule-triggered)
 	ScheduleId *string `json:"schedule_id,omitempty"`
+	// Event subscription ID (if event-triggered)
+	EventSubscriptionId *string `json:"event_subscription_id,omitempty"`
+	// Event reference (if event-triggered)
+	EventRef *EventRef `json:"event_ref,omitempty"`
 	// How the run was created
 	SourceType *AgentRunType `json:"source_type,omitempty"`
 	// Deprecated: Use source_type for creation source and run_type for runtime mode.
@@ -724,6 +728,70 @@ func (o *AgentRunSearchHit) SetScheduleId(v string) {
 	o.ScheduleId = &v
 }
 
+// GetEventSubscriptionId returns the EventSubscriptionId field value if set, zero value otherwise.
+func (o *AgentRunSearchHit) GetEventSubscriptionId() string {
+	if o == nil || IsNil(o.EventSubscriptionId) {
+		var ret string
+		return ret
+	}
+	return *o.EventSubscriptionId
+}
+
+// GetEventSubscriptionIdOk returns a tuple with the EventSubscriptionId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRunSearchHit) GetEventSubscriptionIdOk() (*string, bool) {
+	if o == nil || IsNil(o.EventSubscriptionId) {
+		return nil, false
+	}
+	return o.EventSubscriptionId, true
+}
+
+// HasEventSubscriptionId returns a boolean if a field has been set.
+func (o *AgentRunSearchHit) HasEventSubscriptionId() bool {
+	if o != nil && !IsNil(o.EventSubscriptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventSubscriptionId gets a reference to the given string and assigns it to the EventSubscriptionId field.
+func (o *AgentRunSearchHit) SetEventSubscriptionId(v string) {
+	o.EventSubscriptionId = &v
+}
+
+// GetEventRef returns the EventRef field value if set, zero value otherwise.
+func (o *AgentRunSearchHit) GetEventRef() EventRef {
+	if o == nil || IsNil(o.EventRef) {
+		var ret EventRef
+		return ret
+	}
+	return *o.EventRef
+}
+
+// GetEventRefOk returns a tuple with the EventRef field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRunSearchHit) GetEventRefOk() (*EventRef, bool) {
+	if o == nil || IsNil(o.EventRef) {
+		return nil, false
+	}
+	return o.EventRef, true
+}
+
+// HasEventRef returns a boolean if a field has been set.
+func (o *AgentRunSearchHit) HasEventRef() bool {
+	if o != nil && !IsNil(o.EventRef) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventRef gets a reference to the given EventRef and assigns it to the EventRef field.
+func (o *AgentRunSearchHit) SetEventRef(v EventRef) {
+	o.EventRef = &v
+}
+
 // GetSourceType returns the SourceType field value if set, zero value otherwise.
 func (o *AgentRunSearchHit) GetSourceType() AgentRunType {
 	if o == nil || IsNil(o.SourceType) {
@@ -899,6 +967,12 @@ func (o AgentRunSearchHit) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ScheduleId) {
 		toSerialize["schedule_id"] = o.ScheduleId
+	}
+	if !IsNil(o.EventSubscriptionId) {
+		toSerialize["event_subscription_id"] = o.EventSubscriptionId
+	}
+	if !IsNil(o.EventRef) {
+		toSerialize["event_ref"] = o.EventRef
 	}
 	if !IsNil(o.SourceType) {
 		toSerialize["source_type"] = o.SourceType

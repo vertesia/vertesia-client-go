@@ -17,12 +17,14 @@ import (
 // checks if the AceConditions type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &AceConditions{}
 
-// AceConditions Conditions attached to an ACE for dynamic matching. - `principal_props`: matched against user/group properties at token time (PrincipalSet). - `resource_props`: matched against content properties at query time (ContentSet).
+// AceConditions Conditions attached to an ACE for dynamic matching. - `principal_props`: matched against user/group properties at token time (PrincipalSet). - `resource_props`: matched against object properties at query time (ResourceSet).
 type AceConditions struct {
 	// Property conditions matched against user/group properties at token time (PrincipalSet).
 	PrincipalProps map[string]interface{} `json:"principal_props,omitempty"`
-	// Property conditions matched against content properties at query time (ContentSet).
+	// Property conditions matched against object properties at query time (ResourceSet).
 	ResourceProps map[string]interface{} `json:"resource_props,omitempty"`
+	// Kind of object the `resource_props` matches. Used to disambiguate which partition's roles apply (e.g. content roles vs task roles) and to form the JWT `content_security` key prefix (`{scope}:{verb}`). Absent → `'document'` (default; emits bare `read`/`write`/`delete` keys for backward compatibility).
+	Scope *AbacScope `json:"scope,omitempty"`
 }
 
 // NewAceConditions instantiates a new AceConditions object
@@ -106,6 +108,38 @@ func (o *AceConditions) SetResourceProps(v map[string]interface{}) {
 	o.ResourceProps = v
 }
 
+// GetScope returns the Scope field value if set, zero value otherwise.
+func (o *AceConditions) GetScope() AbacScope {
+	if o == nil || IsNil(o.Scope) {
+		var ret AbacScope
+		return ret
+	}
+	return *o.Scope
+}
+
+// GetScopeOk returns a tuple with the Scope field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AceConditions) GetScopeOk() (*AbacScope, bool) {
+	if o == nil || IsNil(o.Scope) {
+		return nil, false
+	}
+	return o.Scope, true
+}
+
+// HasScope returns a boolean if a field has been set.
+func (o *AceConditions) HasScope() bool {
+	if o != nil && !IsNil(o.Scope) {
+		return true
+	}
+
+	return false
+}
+
+// SetScope gets a reference to the given AbacScope and assigns it to the Scope field.
+func (o *AceConditions) SetScope(v AbacScope) {
+	o.Scope = &v
+}
+
 func (o AceConditions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -121,6 +155,9 @@ func (o AceConditions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ResourceProps) {
 		toSerialize["resource_props"] = o.ResourceProps
+	}
+	if !IsNil(o.Scope) {
+		toSerialize["scope"] = o.Scope
 	}
 	return toSerialize, nil
 }

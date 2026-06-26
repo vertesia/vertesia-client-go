@@ -20,7 +20,8 @@ var _ MappedNullable = &AccessControlEntry{}
 
 // AccessControlEntry struct for AccessControlEntry
 type AccessControlEntry struct {
-	Role          SystemRoles                `json:"role"`
+	// Role name. Typed as `string` because role names now span multiple partitions: `SystemRoles` enum values for system-domain roles, and bare strings for ABAC-domain roles (e.g. `'content:reader'`, `'content:writer'`, `'content:manager'`). Mongoose schema validates the value against the registered role catalog via `getAllRoleNames()`.
+	Role          string                     `json:"role"`
 	ResourceType  AccessControlResourceType  `json:"resource_type"`
 	Resource      string                     `json:"resource"`
 	PrincipalType AccessControlPrincipalType `json:"principal_type"`
@@ -44,7 +45,7 @@ type _AccessControlEntry AccessControlEntry
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAccessControlEntry(role SystemRoles, resourceType AccessControlResourceType, resource string, principalType AccessControlPrincipalType, principal string, id string) *AccessControlEntry {
+func NewAccessControlEntry(role string, resourceType AccessControlResourceType, resource string, principalType AccessControlPrincipalType, principal string, id string) *AccessControlEntry {
 	this := AccessControlEntry{}
 	this.Role = role
 	this.ResourceType = resourceType
@@ -64,9 +65,9 @@ func NewAccessControlEntryWithDefaults() *AccessControlEntry {
 }
 
 // GetRole returns the Role field value
-func (o *AccessControlEntry) GetRole() SystemRoles {
+func (o *AccessControlEntry) GetRole() string {
 	if o == nil {
-		var ret SystemRoles
+		var ret string
 		return ret
 	}
 
@@ -75,7 +76,7 @@ func (o *AccessControlEntry) GetRole() SystemRoles {
 
 // GetRoleOk returns a tuple with the Role field value
 // and a boolean to check if the value has been set.
-func (o *AccessControlEntry) GetRoleOk() (*SystemRoles, bool) {
+func (o *AccessControlEntry) GetRoleOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -83,7 +84,7 @@ func (o *AccessControlEntry) GetRoleOk() (*SystemRoles, bool) {
 }
 
 // SetRole sets field value
-func (o *AccessControlEntry) SetRole(v SystemRoles) {
+func (o *AccessControlEntry) SetRole(v string) {
 	o.Role = v
 }
 

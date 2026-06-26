@@ -20,9 +20,9 @@ var _ MappedNullable = &ObjectSearchResponse{}
 
 // ObjectSearchResponse struct for ObjectSearchResponse
 type ObjectSearchResponse struct {
-	Results      []ContentObjectItem    `json:"results"`
-	Facets       ComputedFacetResponse  `json:"facets"`
-	Aggregations map[string]interface{} `json:"aggregations,omitempty"`
+	Results      []ContentObjectItemApiResponse `json:"results"`
+	Facets       ComputedFacetResponse          `json:"facets"`
+	Aggregations map[string]interface{}         `json:"aggregations,omitempty"`
 }
 
 type _ObjectSearchResponse ObjectSearchResponse
@@ -31,7 +31,7 @@ type _ObjectSearchResponse ObjectSearchResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewObjectSearchResponse(results []ContentObjectItem, facets ComputedFacetResponse) *ObjectSearchResponse {
+func NewObjectSearchResponse(results []ContentObjectItemApiResponse, facets ComputedFacetResponse) *ObjectSearchResponse {
 	this := ObjectSearchResponse{}
 	this.Results = results
 	this.Facets = facets
@@ -47,9 +47,9 @@ func NewObjectSearchResponseWithDefaults() *ObjectSearchResponse {
 }
 
 // GetResults returns the Results field value
-func (o *ObjectSearchResponse) GetResults() []ContentObjectItem {
+func (o *ObjectSearchResponse) GetResults() []ContentObjectItemApiResponse {
 	if o == nil {
-		var ret []ContentObjectItem
+		var ret []ContentObjectItemApiResponse
 		return ret
 	}
 
@@ -58,7 +58,7 @@ func (o *ObjectSearchResponse) GetResults() []ContentObjectItem {
 
 // GetResultsOk returns a tuple with the Results field value
 // and a boolean to check if the value has been set.
-func (o *ObjectSearchResponse) GetResultsOk() ([]ContentObjectItem, bool) {
+func (o *ObjectSearchResponse) GetResultsOk() ([]ContentObjectItemApiResponse, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -66,7 +66,7 @@ func (o *ObjectSearchResponse) GetResultsOk() ([]ContentObjectItem, bool) {
 }
 
 // SetResults sets field value
-func (o *ObjectSearchResponse) SetResults(v []ContentObjectItem) {
+func (o *ObjectSearchResponse) SetResults(v []ContentObjectItemApiResponse) {
 	o.Results = v
 }
 

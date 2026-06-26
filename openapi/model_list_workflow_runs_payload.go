@@ -23,7 +23,7 @@ type ListWorkflowRunsPayload struct {
 	DocumentId *string `json:"document_id,omitempty"`
 	// The event name that triggered the workflow.
 	EventName *string `json:"event_name,omitempty"`
-	// The workflow rule ID that triggered the workflow.
+	// Legacy workflow rule ID filter, when applicable.
 	RuleId *string `json:"rule_id,omitempty"`
 	// The start time for filtering workflow runs.
 	Start *string `json:"start,omitempty"`

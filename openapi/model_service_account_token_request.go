@@ -28,6 +28,7 @@ type ServiceAccountTokenRequest struct {
 	ProjectId string            `json:"project_id"`
 	Roles     []SystemRoles     `json:"roles,omitempty"`
 	Name      *string           `json:"name,omitempty"`
+	Email     *string           `json:"email,omitempty"`
 }
 
 type _ServiceAccountTokenRequest ServiceAccountTokenRequest
@@ -252,6 +253,38 @@ func (o *ServiceAccountTokenRequest) SetName(v string) {
 	o.Name = &v
 }
 
+// GetEmail returns the Email field value if set, zero value otherwise.
+func (o *ServiceAccountTokenRequest) GetEmail() string {
+	if o == nil || IsNil(o.Email) {
+		var ret string
+		return ret
+	}
+	return *o.Email
+}
+
+// GetEmailOk returns a tuple with the Email field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ServiceAccountTokenRequest) GetEmailOk() (*string, bool) {
+	if o == nil || IsNil(o.Email) {
+		return nil, false
+	}
+	return o.Email, true
+}
+
+// HasEmail returns a boolean if a field has been set.
+func (o *ServiceAccountTokenRequest) HasEmail() bool {
+	if o != nil && !IsNil(o.Email) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmail gets a reference to the given string and assigns it to the Email field.
+func (o *ServiceAccountTokenRequest) SetEmail(v string) {
+	o.Email = &v
+}
+
 func (o ServiceAccountTokenRequest) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -276,6 +309,9 @@ func (o ServiceAccountTokenRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Name) {
 		toSerialize["name"] = o.Name
+	}
+	if !IsNil(o.Email) {
+		toSerialize["email"] = o.Email
 	}
 	return toSerialize, nil
 }

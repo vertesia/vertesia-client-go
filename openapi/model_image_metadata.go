@@ -20,14 +20,15 @@ var _ MappedNullable = &ImageMetadata{}
 
 // ImageMetadata struct for ImageMetadata
 type ImageMetadata struct {
-	Type           ContentNatureImage        `json:"type"`
-	Size           *float32                  `json:"size,omitempty"`
-	Languages      []string                  `json:"languages,omitempty"`
-	Location       *Location                 `json:"location,omitempty"`
-	GenerationRuns []GenerationRunMetadata   `json:"generation_runs,omitempty"`
-	Etag           *string                   `json:"etag,omitempty"`
-	Renditions     []RenditionWithDimensions `json:"renditions,omitempty"`
-	Dimensions     *Dimensions               `json:"dimensions,omitempty"`
+	Type                 ContentNatureImage        `json:"type"`
+	Size                 *float32                  `json:"size,omitempty"`
+	Languages            []string                  `json:"languages,omitempty"`
+	Location             *Location                 `json:"location,omitempty"`
+	GenerationRuns       []GenerationRunMetadata   `json:"generation_runs,omitempty"`
+	Etag                 *string                   `json:"etag,omitempty"`
+	Renditions           []RenditionWithDimensions `json:"renditions,omitempty"`
+	Dimensions           *Dimensions               `json:"dimensions,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ImageMetadata ImageMetadata
@@ -330,6 +331,11 @@ func (o ImageMetadata) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Dimensions) {
 		toSerialize["dimensions"] = o.Dimensions
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -364,6 +370,20 @@ func (o *ImageMetadata) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = ImageMetadata(varImageMetadata)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "size")
+		delete(additionalProperties, "languages")
+		delete(additionalProperties, "location")
+		delete(additionalProperties, "generation_runs")
+		delete(additionalProperties, "etag")
+		delete(additionalProperties, "renditions")
+		delete(additionalProperties, "dimensions")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

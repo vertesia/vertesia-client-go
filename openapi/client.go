@@ -74,6 +74,12 @@ type APIClient struct {
 
 	EnvironmentsAPI *EnvironmentsAPIService
 
+	EventIngestChannelsAPI *EventIngestChannelsAPIService
+
+	EventSubscriptionsAPI *EventSubscriptionsAPIService
+
+	EventsAPI *EventsAPIService
+
 	FilesAPI *FilesAPIService
 
 	InteractionRunsAPI *InteractionRunsAPIService
@@ -93,6 +99,8 @@ type APIClient struct {
 	ProjectsAPI *ProjectsAPIService
 
 	PromptTemplatesAPI *PromptTemplatesAPIService
+
+	QuotaAPI *QuotaAPIService
 
 	RemoteMCPConnectionsAPI *RemoteMCPConnectionsAPIService
 
@@ -148,6 +156,9 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.CostsAPI = (*CostsAPIService)(&c.common)
 	c.DataAPI = (*DataAPIService)(&c.common)
 	c.EnvironmentsAPI = (*EnvironmentsAPIService)(&c.common)
+	c.EventIngestChannelsAPI = (*EventIngestChannelsAPIService)(&c.common)
+	c.EventSubscriptionsAPI = (*EventSubscriptionsAPIService)(&c.common)
+	c.EventsAPI = (*EventsAPIService)(&c.common)
 	c.FilesAPI = (*FilesAPIService)(&c.common)
 	c.InteractionRunsAPI = (*InteractionRunsAPIService)(&c.common)
 	c.InteractionsAPI = (*InteractionsAPIService)(&c.common)
@@ -158,6 +169,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.ProcessesAPI = (*ProcessesAPIService)(&c.common)
 	c.ProjectsAPI = (*ProjectsAPIService)(&c.common)
 	c.PromptTemplatesAPI = (*PromptTemplatesAPIService)(&c.common)
+	c.QuotaAPI = (*QuotaAPIService)(&c.common)
 	c.RemoteMCPConnectionsAPI = (*RemoteMCPConnectionsAPIService)(&c.common)
 	c.RenderingAPI = (*RenderingAPIService)(&c.common)
 	c.RolesAPI = (*RolesAPIService)(&c.common)

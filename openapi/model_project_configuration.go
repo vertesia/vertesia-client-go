@@ -30,6 +30,8 @@ type ProjectConfiguration struct {
 	// Enable real-time streaming of agent LLM responses to clients. When enabled, LLM responses are streamed chunk-by-chunk via Redis pub/sub. Defaults to true if not specified.
 	AgentStreamingEnabled *bool                         `json:"agent_streaming_enabled,omitempty"`
 	Indexing              *ProjectConfigurationIndexing `json:"indexing,omitempty"`
+	// Standard content intake behavior.
+	Intake *ProjectIntakeConfiguration `json:"intake,omitempty"`
 	// Primary language for full-text search analysis. ISO 639-1 code (e.g., 'en', 'fr', 'ja', 'de'). Determines which Elasticsearch analyzer is used for the text field. Defaults to 'en' (English/standard analyzer).  Changing this value requires a full reindex to take effect.
 	MainLanguage *string `json:"main_language,omitempty"`
 	// Project defaults and caps for browser_use agent workstreams.
@@ -339,6 +341,38 @@ func (o *ProjectConfiguration) SetIndexing(v ProjectConfigurationIndexing) {
 	o.Indexing = &v
 }
 
+// GetIntake returns the Intake field value if set, zero value otherwise.
+func (o *ProjectConfiguration) GetIntake() ProjectIntakeConfiguration {
+	if o == nil || IsNil(o.Intake) {
+		var ret ProjectIntakeConfiguration
+		return ret
+	}
+	return *o.Intake
+}
+
+// GetIntakeOk returns a tuple with the Intake field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProjectConfiguration) GetIntakeOk() (*ProjectIntakeConfiguration, bool) {
+	if o == nil || IsNil(o.Intake) {
+		return nil, false
+	}
+	return o.Intake, true
+}
+
+// HasIntake returns a boolean if a field has been set.
+func (o *ProjectConfiguration) HasIntake() bool {
+	if o != nil && !IsNil(o.Intake) {
+		return true
+	}
+
+	return false
+}
+
+// SetIntake gets a reference to the given ProjectIntakeConfiguration and assigns it to the Intake field.
+func (o *ProjectConfiguration) SetIntake(v ProjectIntakeConfiguration) {
+	o.Intake = &v
+}
+
 // GetMainLanguage returns the MainLanguage field value if set, zero value otherwise.
 func (o *ProjectConfiguration) GetMainLanguage() string {
 	if o == nil || IsNil(o.MainLanguage) {
@@ -470,6 +504,9 @@ func (o ProjectConfiguration) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Indexing) {
 		toSerialize["indexing"] = o.Indexing
 	}
+	if !IsNil(o.Intake) {
+		toSerialize["intake"] = o.Intake
+	}
 	if !IsNil(o.MainLanguage) {
 		toSerialize["main_language"] = o.MainLanguage
 	}
@@ -531,6 +568,7 @@ func (o *ProjectConfiguration) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "storage_bucket")
 		delete(additionalProperties, "agent_streaming_enabled")
 		delete(additionalProperties, "indexing")
+		delete(additionalProperties, "intake")
 		delete(additionalProperties, "main_language")
 		delete(additionalProperties, "browser_use")
 		delete(additionalProperties, "pdf_template_object_id")

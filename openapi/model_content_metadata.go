@@ -19,14 +19,17 @@ var _ MappedNullable = &ContentMetadata{}
 
 // ContentMetadata struct for ContentMetadata
 type ContentMetadata struct {
-	Type           *ContentNature          `json:"type,omitempty"`
-	Size           *float32                `json:"size,omitempty"`
-	Languages      []string                `json:"languages,omitempty"`
-	Location       *Location               `json:"location,omitempty"`
-	GenerationRuns []GenerationRunMetadata `json:"generation_runs,omitempty"`
-	Etag           *string                 `json:"etag,omitempty"`
-	Renditions     []Rendition             `json:"renditions,omitempty"`
+	Type                 *ContentNature          `json:"type,omitempty"`
+	Size                 *float32                `json:"size,omitempty"`
+	Languages            []string                `json:"languages,omitempty"`
+	Location             *Location               `json:"location,omitempty"`
+	GenerationRuns       []GenerationRunMetadata `json:"generation_runs,omitempty"`
+	Etag                 *string                 `json:"etag,omitempty"`
+	Renditions           []Rendition             `json:"renditions,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ContentMetadata ContentMetadata
 
 // NewContentMetadata instantiates a new ContentMetadata object
 // This constructor will assign default values to properties that have it defined,
@@ -300,7 +303,39 @@ func (o ContentMetadata) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Renditions) {
 		toSerialize["renditions"] = o.Renditions
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ContentMetadata) UnmarshalJSON(data []byte) (err error) {
+	varContentMetadata := _ContentMetadata{}
+
+	err = json.Unmarshal(data, &varContentMetadata)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ContentMetadata(varContentMetadata)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "size")
+		delete(additionalProperties, "languages")
+		delete(additionalProperties, "location")
+		delete(additionalProperties, "generation_runs")
+		delete(additionalProperties, "etag")
+		delete(additionalProperties, "renditions")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableContentMetadata struct {
