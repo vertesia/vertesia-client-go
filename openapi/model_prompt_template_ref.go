@@ -28,6 +28,7 @@ type PromptTemplateRef struct {
 	Version     float32       `json:"version"`
 	Status      PromptStatus  `json:"status"`
 	ContentType *TemplateType `json:"content_type,omitempty"`
+	Tags        []string      `json:"tags,omitempty"`
 	CreatedAt   time.Time     `json:"created_at"`
 	UpdatedAt   time.Time     `json:"updated_at"`
 }
@@ -242,6 +243,38 @@ func (o *PromptTemplateRef) SetContentType(v TemplateType) {
 	o.ContentType = &v
 }
 
+// GetTags returns the Tags field value if set, zero value otherwise.
+func (o *PromptTemplateRef) GetTags() []string {
+	if o == nil || IsNil(o.Tags) {
+		var ret []string
+		return ret
+	}
+	return o.Tags
+}
+
+// GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PromptTemplateRef) GetTagsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Tags) {
+		return nil, false
+	}
+	return o.Tags, true
+}
+
+// HasTags returns a boolean if a field has been set.
+func (o *PromptTemplateRef) HasTags() bool {
+	if o != nil && !IsNil(o.Tags) {
+		return true
+	}
+
+	return false
+}
+
+// SetTags gets a reference to the given []string and assigns it to the Tags field.
+func (o *PromptTemplateRef) SetTags(v []string) {
+	o.Tags = v
+}
+
 // GetCreatedAt returns the CreatedAt field value
 func (o *PromptTemplateRef) GetCreatedAt() time.Time {
 	if o == nil {
@@ -310,6 +343,9 @@ func (o PromptTemplateRef) ToMap() (map[string]interface{}, error) {
 	toSerialize["status"] = o.Status
 	if !IsNil(o.ContentType) {
 		toSerialize["content_type"] = o.ContentType
+	}
+	if !IsNil(o.Tags) {
+		toSerialize["tags"] = o.Tags
 	}
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt

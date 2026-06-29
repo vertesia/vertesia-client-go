@@ -208,6 +208,11 @@ model_content_nature_video.go
 model_content_object_api_response.go
 model_content_object_api_response_tokens.go
 model_content_object_api_revision.go
+model_content_object_export_artifact.go
+model_content_object_export_artifact_file.go
+model_content_object_export_progress.go
+model_content_object_export_result.go
+model_content_object_export_status_response.go
 model_content_object_item_api_response.go
 model_content_object_processing_priority.go
 model_content_object_status.go
@@ -302,6 +307,7 @@ model_data_table_for_ai.go
 model_data_table_semantic_type.go
 model_data_table_summary.go
 model_delete_by_id_result.go
+model_delete_content_object_export_response.go
 model_delete_content_object_result.go
 model_delete_count_result.go
 model_delete_file_result.go
@@ -353,6 +359,7 @@ model_embeddings_result.go
 model_embeddings_status_response.go
 model_embeddings_status_response_vector_index.go
 model_embeddings_token_usage.go
+model_enable_environment_model_payload.go
 model_environment_token_request.go
 model_error_response.go
 model_event_category.go
@@ -391,6 +398,8 @@ model_execution_run_ref.go
 model_execution_run_status.go
 model_execution_run_workflow.go
 model_execution_token_usage.go
+model_export_content_objects_filter.go
+model_export_content_objects_include_options.go
 model_export_properties_payload.go
 model_export_properties_response.go
 model_facet_spec.go
@@ -480,6 +489,7 @@ model_known_audit_action.go
 model_linkup_configuration.go
 model_linkup_configuration_input.go
 model_list_agent_runs_response.go
+model_list_content_object_exports_response.go
 model_list_event_deliveries_payload.go
 model_list_event_deliveries_response.go
 model_list_secrets_response.go
@@ -710,6 +720,8 @@ model_signing_algorithm.go
 model_skill_context_triggers.go
 model_sort_option.go
 model_sort_order.go
+model_start_content_object_export_request.go
+model_start_content_object_export_response.go
 model_start_project_reindex_payload.go
 model_stateless_execution_options.go
 model_stored_type_ref.go
@@ -718,6 +730,7 @@ model_streaming_telemetry_context.go
 model_stripe_billing_status_response.go
 model_success_response.go
 model_supervised_run_response.go
+model_supported_embedding_types.go
 model_supported_integrations.go
 model_supported_integrations_ask_user_webhook.go
 model_supported_integrations_aws.go

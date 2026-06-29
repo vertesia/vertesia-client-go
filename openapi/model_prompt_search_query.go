@@ -24,6 +24,7 @@ type PromptSearchQuery struct {
 	Limit             *float32 `json:"limit,omitempty"`
 	Offset            *float32 `json:"offset,omitempty"`
 	Role              *string  `json:"role,omitempty"`
+	Tags              []string `json:"tags,omitempty"`
 	MatchInteractions *bool    `json:"matchInteractions,omitempty"`
 }
 
@@ -204,6 +205,38 @@ func (o *PromptSearchQuery) SetRole(v string) {
 	o.Role = &v
 }
 
+// GetTags returns the Tags field value if set, zero value otherwise.
+func (o *PromptSearchQuery) GetTags() []string {
+	if o == nil || IsNil(o.Tags) {
+		var ret []string
+		return ret
+	}
+	return o.Tags
+}
+
+// GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PromptSearchQuery) GetTagsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Tags) {
+		return nil, false
+	}
+	return o.Tags, true
+}
+
+// HasTags returns a boolean if a field has been set.
+func (o *PromptSearchQuery) HasTags() bool {
+	if o != nil && !IsNil(o.Tags) {
+		return true
+	}
+
+	return false
+}
+
+// SetTags gets a reference to the given []string and assigns it to the Tags field.
+func (o *PromptSearchQuery) SetTags(v []string) {
+	o.Tags = v
+}
+
 // GetMatchInteractions returns the MatchInteractions field value if set, zero value otherwise.
 func (o *PromptSearchQuery) GetMatchInteractions() bool {
 	if o == nil || IsNil(o.MatchInteractions) {
@@ -260,6 +293,9 @@ func (o PromptSearchQuery) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Role) {
 		toSerialize["role"] = o.Role
+	}
+	if !IsNil(o.Tags) {
+		toSerialize["tags"] = o.Tags
 	}
 	if !IsNil(o.MatchInteractions) {
 		toSerialize["matchInteractions"] = o.MatchInteractions

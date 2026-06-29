@@ -304,6 +304,295 @@ func (a *EnvironmentsAPIService) DeleteEnvironmentExecute(r ApiDeleteEnvironment
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiDisableEnvironmentModelRequest struct {
+	ctx         context.Context
+	ApiService  *EnvironmentsAPIService
+	envId       string
+	modelId     string
+	xApiVersion *string
+}
+
+// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
+func (r ApiDisableEnvironmentModelRequest) XApiVersion(xApiVersion string) ApiDisableEnvironmentModelRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiDisableEnvironmentModelRequest) Execute() (*ExecutionEnvironment, *http.Response, error) {
+	return r.ApiService.DisableEnvironmentModelExecute(r)
+}
+
+/*
+DisableEnvironmentModel Disable an environment model
+
+Removes one enabled model from an environment without replacing the full enabled model list. Disabling a model that is not enabled succeeds without changing the environment.
+
+**Required permissions:** `environment:admin`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param envId
+	@param modelId
+	@return ApiDisableEnvironmentModelRequest
+*/
+func (a *EnvironmentsAPIService) DisableEnvironmentModel(ctx context.Context, envId string, modelId string) ApiDisableEnvironmentModelRequest {
+	return ApiDisableEnvironmentModelRequest{
+		ApiService: a,
+		ctx:        ctx,
+		envId:      envId,
+		modelId:    modelId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return ExecutionEnvironment
+func (a *EnvironmentsAPIService) DisableEnvironmentModelExecute(r ApiDisableEnvironmentModelRequest) (*ExecutionEnvironment, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ExecutionEnvironment
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EnvironmentsAPIService.DisableEnvironmentModel")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/environments/{envId}/models/enabled/{modelId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"envId"+"}", url.PathEscape(parameterValueToString(r.envId, "envId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"modelId"+"}", url.PathEscape(parameterValueToString(r.modelId, "modelId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiEnableEnvironmentModelRequest struct {
+	ctx                           context.Context
+	ApiService                    *EnvironmentsAPIService
+	envId                         string
+	enableEnvironmentModelPayload *EnableEnvironmentModelPayload
+	xApiVersion                   *string
+}
+
+func (r ApiEnableEnvironmentModelRequest) EnableEnvironmentModelPayload(enableEnvironmentModelPayload EnableEnvironmentModelPayload) ApiEnableEnvironmentModelRequest {
+	r.enableEnvironmentModelPayload = &enableEnvironmentModelPayload
+	return r
+}
+
+// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
+func (r ApiEnableEnvironmentModelRequest) XApiVersion(xApiVersion string) ApiEnableEnvironmentModelRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiEnableEnvironmentModelRequest) Execute() (*ExecutionEnvironment, *http.Response, error) {
+	return r.ApiService.EnableEnvironmentModelExecute(r)
+}
+
+/*
+EnableEnvironmentModel Enable an environment model
+
+Adds one model to an environment without replacing the full enabled model list. The model_id must resolve from the provider model listing for this environment.
+
+**Required permissions:** `environment:admin`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param envId
+	@return ApiEnableEnvironmentModelRequest
+*/
+func (a *EnvironmentsAPIService) EnableEnvironmentModel(ctx context.Context, envId string) ApiEnableEnvironmentModelRequest {
+	return ApiEnableEnvironmentModelRequest{
+		ApiService: a,
+		ctx:        ctx,
+		envId:      envId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return ExecutionEnvironment
+func (a *EnvironmentsAPIService) EnableEnvironmentModelExecute(r ApiEnableEnvironmentModelRequest) (*ExecutionEnvironment, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ExecutionEnvironment
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EnvironmentsAPIService.EnableEnvironmentModel")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/environments/{envId}/models/enabled"
+	localVarPath = strings.Replace(localVarPath, "{"+"envId"+"}", url.PathEscape(parameterValueToString(r.envId, "envId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.enableEnvironmentModelPayload == nil {
+		return localVarReturnValue, nil, reportError("enableEnvironmentModelPayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	// body params
+	localVarPostBody = r.enableEnvironmentModelPayload
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiGenerateEmbeddingsRequest struct {
 	ctx                  context.Context
 	ApiService           *EnvironmentsAPIService

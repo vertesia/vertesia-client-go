@@ -1148,6 +1148,7 @@ type ApiListPromptsRequest struct {
 	limit             *float32
 	offset            *float32
 	role              *string
+	tags              *[]string
 	matchInteractions *bool
 	xApiVersion       *string
 }
@@ -1177,6 +1178,11 @@ func (r ApiListPromptsRequest) Role(role string) ApiListPromptsRequest {
 	return r
 }
 
+func (r ApiListPromptsRequest) Tags(tags []string) ApiListPromptsRequest {
+	r.tags = &tags
+	return r
+}
+
 func (r ApiListPromptsRequest) MatchInteractions(matchInteractions bool) ApiListPromptsRequest {
 	r.matchInteractions = &matchInteractions
 	return r
@@ -1195,7 +1201,7 @@ func (r ApiListPromptsRequest) Execute() ([]PromptTemplateRef, *http.Response, e
 /*
 ListPrompts List prompts
 
-Lists draft prompt templates in the current project with optional filtering by name, role, and interaction references.
+Lists draft prompt templates in the current project with optional filtering by name, role, tags, and interaction references.
 
 **Required permissions:** `interaction:read`
 
@@ -1253,6 +1259,17 @@ func (a *PromptTemplatesAPIService) ListPromptsExecute(r ApiListPromptsRequest) 
 	}
 	if r.role != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "role", r.role, "form", "")
+	}
+	if r.tags != nil {
+		t := *r.tags
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "tags", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "tags", t, "form", "multi")
+		}
 	}
 	if r.matchInteractions != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "matchInteractions", r.matchInteractions, "form", "")
