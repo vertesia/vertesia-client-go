@@ -21,7 +21,7 @@ type ProjectIntegrationConfigRequest struct {
 	AskUserWebhookConfigurationInput *AskUserWebhookConfigurationInput
 	AwsConfiguration                 *AwsConfiguration
 	ExaConfigurationInput            *ExaConfigurationInput
-	GithubConfiguration              *GithubConfiguration
+	GithubConfigurationInput         *GithubConfigurationInput
 	GladiaConfigurationInput         *GladiaConfigurationInput
 	LinkupConfigurationInput         *LinkupConfigurationInput
 	MagicPdfConfiguration            *MagicPdfConfiguration
@@ -50,10 +50,10 @@ func ExaConfigurationInputAsProjectIntegrationConfigRequest(v *ExaConfigurationI
 	}
 }
 
-// GithubConfigurationAsProjectIntegrationConfigRequest is a convenience function that returns GithubConfiguration wrapped in ProjectIntegrationConfigRequest
-func GithubConfigurationAsProjectIntegrationConfigRequest(v *GithubConfiguration) ProjectIntegrationConfigRequest {
+// GithubConfigurationInputAsProjectIntegrationConfigRequest is a convenience function that returns GithubConfigurationInput wrapped in ProjectIntegrationConfigRequest
+func GithubConfigurationInputAsProjectIntegrationConfigRequest(v *GithubConfigurationInput) ProjectIntegrationConfigRequest {
 	return ProjectIntegrationConfigRequest{
-		GithubConfiguration: v,
+		GithubConfigurationInput: v,
 	}
 }
 
@@ -147,21 +147,21 @@ func (dst *ProjectIntegrationConfigRequest) UnmarshalJSON(data []byte) error {
 		dst.ExaConfigurationInput = nil
 	}
 
-	// try to unmarshal data into GithubConfiguration
-	err = newStrictDecoder(data).Decode(&dst.GithubConfiguration)
+	// try to unmarshal data into GithubConfigurationInput
+	err = newStrictDecoder(data).Decode(&dst.GithubConfigurationInput)
 	if err == nil {
-		jsonGithubConfiguration, _ := json.Marshal(dst.GithubConfiguration)
-		if string(jsonGithubConfiguration) == "{}" { // empty struct
-			dst.GithubConfiguration = nil
+		jsonGithubConfigurationInput, _ := json.Marshal(dst.GithubConfigurationInput)
+		if string(jsonGithubConfigurationInput) == "{}" { // empty struct
+			dst.GithubConfigurationInput = nil
 		} else {
-			if err = validator.Validate(dst.GithubConfiguration); err != nil {
-				dst.GithubConfiguration = nil
+			if err = validator.Validate(dst.GithubConfigurationInput); err != nil {
+				dst.GithubConfigurationInput = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.GithubConfiguration = nil
+		dst.GithubConfigurationInput = nil
 	}
 
 	// try to unmarshal data into GladiaConfigurationInput
@@ -254,7 +254,7 @@ func (dst *ProjectIntegrationConfigRequest) UnmarshalJSON(data []byte) error {
 		dst.AskUserWebhookConfigurationInput = nil
 		dst.AwsConfiguration = nil
 		dst.ExaConfigurationInput = nil
-		dst.GithubConfiguration = nil
+		dst.GithubConfigurationInput = nil
 		dst.GladiaConfigurationInput = nil
 		dst.LinkupConfigurationInput = nil
 		dst.MagicPdfConfiguration = nil
@@ -283,8 +283,8 @@ func (src ProjectIntegrationConfigRequest) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.ExaConfigurationInput)
 	}
 
-	if src.GithubConfiguration != nil {
-		return json.Marshal(&src.GithubConfiguration)
+	if src.GithubConfigurationInput != nil {
+		return json.Marshal(&src.GithubConfigurationInput)
 	}
 
 	if src.GladiaConfigurationInput != nil {
@@ -327,8 +327,8 @@ func (obj *ProjectIntegrationConfigRequest) GetActualInstance() interface{} {
 		return obj.ExaConfigurationInput
 	}
 
-	if obj.GithubConfiguration != nil {
-		return obj.GithubConfiguration
+	if obj.GithubConfigurationInput != nil {
+		return obj.GithubConfigurationInput
 	}
 
 	if obj.GladiaConfigurationInput != nil {
@@ -369,8 +369,8 @@ func (obj ProjectIntegrationConfigRequest) GetActualInstanceValue() interface{} 
 		return *obj.ExaConfigurationInput
 	}
 
-	if obj.GithubConfiguration != nil {
-		return *obj.GithubConfiguration
+	if obj.GithubConfigurationInput != nil {
+		return *obj.GithubConfigurationInput
 	}
 
 	if obj.GladiaConfigurationInput != nil {

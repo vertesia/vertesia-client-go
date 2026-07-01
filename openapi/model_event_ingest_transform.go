@@ -25,8 +25,14 @@ type EventIngestTransform struct {
 	ResourceTypePath *string `json:"resource_type_path,omitempty"`
 	// Dot-path to the value used as `event.resource_id`.
 	ResourceIdPath *string `json:"resource_id_path,omitempty"`
+	// Request **header** carrying the event family (e.g. GitHub's `x-github-event`), captured into `event.details.event_type`. Lets subscriptions and `resource_rules` discriminate event shapes when one channel receives heterogeneous payloads whose `action` alone is ambiguous (e.g. `created` for both an issue comment and a PR review comment).
+	EventTypeHeader *string `json:"event_type_header,omitempty"`
+	// Ordered conditional rules for `resource_type` + `resource_id` (first match wins). Used when a single `resource_id_path` can't serve every payload shape. Falls back to `resource_type_path` / `resource_id_path` / channel defaults when no rule matches.
+	ResourceRules []EventIngestResourceRule `json:"resource_rules,omitempty"`
 	// Dot-path to a deduplication key (same semantics as `idempotency_key`).
 	IdempotencyKeyPath *string `json:"idempotency_key_path,omitempty"`
+	// Request **header** to use as the deduplication key when the body has no stable per-delivery id — e.g. GitHub App's `x-github-delivery`, unique per delivery for all event types, which is the only reliable dedup key when one App webhook delivers heterogeneous payloads (issues + comments) to a single channel. Lower precedence than `idempotency_key_path`.
+	IdempotencyKeyHeader *string `json:"idempotency_key_header,omitempty"`
 	// Dot-path to an ISO 8601 event timestamp.
 	TimestampPath *string `json:"timestamp_path,omitempty"`
 	// Static fields merged into `event.details`.
@@ -149,6 +155,70 @@ func (o *EventIngestTransform) SetResourceIdPath(v string) {
 	o.ResourceIdPath = &v
 }
 
+// GetEventTypeHeader returns the EventTypeHeader field value if set, zero value otherwise.
+func (o *EventIngestTransform) GetEventTypeHeader() string {
+	if o == nil || IsNil(o.EventTypeHeader) {
+		var ret string
+		return ret
+	}
+	return *o.EventTypeHeader
+}
+
+// GetEventTypeHeaderOk returns a tuple with the EventTypeHeader field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EventIngestTransform) GetEventTypeHeaderOk() (*string, bool) {
+	if o == nil || IsNil(o.EventTypeHeader) {
+		return nil, false
+	}
+	return o.EventTypeHeader, true
+}
+
+// HasEventTypeHeader returns a boolean if a field has been set.
+func (o *EventIngestTransform) HasEventTypeHeader() bool {
+	if o != nil && !IsNil(o.EventTypeHeader) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventTypeHeader gets a reference to the given string and assigns it to the EventTypeHeader field.
+func (o *EventIngestTransform) SetEventTypeHeader(v string) {
+	o.EventTypeHeader = &v
+}
+
+// GetResourceRules returns the ResourceRules field value if set, zero value otherwise.
+func (o *EventIngestTransform) GetResourceRules() []EventIngestResourceRule {
+	if o == nil || IsNil(o.ResourceRules) {
+		var ret []EventIngestResourceRule
+		return ret
+	}
+	return o.ResourceRules
+}
+
+// GetResourceRulesOk returns a tuple with the ResourceRules field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EventIngestTransform) GetResourceRulesOk() ([]EventIngestResourceRule, bool) {
+	if o == nil || IsNil(o.ResourceRules) {
+		return nil, false
+	}
+	return o.ResourceRules, true
+}
+
+// HasResourceRules returns a boolean if a field has been set.
+func (o *EventIngestTransform) HasResourceRules() bool {
+	if o != nil && !IsNil(o.ResourceRules) {
+		return true
+	}
+
+	return false
+}
+
+// SetResourceRules gets a reference to the given []EventIngestResourceRule and assigns it to the ResourceRules field.
+func (o *EventIngestTransform) SetResourceRules(v []EventIngestResourceRule) {
+	o.ResourceRules = v
+}
+
 // GetIdempotencyKeyPath returns the IdempotencyKeyPath field value if set, zero value otherwise.
 func (o *EventIngestTransform) GetIdempotencyKeyPath() string {
 	if o == nil || IsNil(o.IdempotencyKeyPath) {
@@ -179,6 +249,38 @@ func (o *EventIngestTransform) HasIdempotencyKeyPath() bool {
 // SetIdempotencyKeyPath gets a reference to the given string and assigns it to the IdempotencyKeyPath field.
 func (o *EventIngestTransform) SetIdempotencyKeyPath(v string) {
 	o.IdempotencyKeyPath = &v
+}
+
+// GetIdempotencyKeyHeader returns the IdempotencyKeyHeader field value if set, zero value otherwise.
+func (o *EventIngestTransform) GetIdempotencyKeyHeader() string {
+	if o == nil || IsNil(o.IdempotencyKeyHeader) {
+		var ret string
+		return ret
+	}
+	return *o.IdempotencyKeyHeader
+}
+
+// GetIdempotencyKeyHeaderOk returns a tuple with the IdempotencyKeyHeader field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EventIngestTransform) GetIdempotencyKeyHeaderOk() (*string, bool) {
+	if o == nil || IsNil(o.IdempotencyKeyHeader) {
+		return nil, false
+	}
+	return o.IdempotencyKeyHeader, true
+}
+
+// HasIdempotencyKeyHeader returns a boolean if a field has been set.
+func (o *EventIngestTransform) HasIdempotencyKeyHeader() bool {
+	if o != nil && !IsNil(o.IdempotencyKeyHeader) {
+		return true
+	}
+
+	return false
+}
+
+// SetIdempotencyKeyHeader gets a reference to the given string and assigns it to the IdempotencyKeyHeader field.
+func (o *EventIngestTransform) SetIdempotencyKeyHeader(v string) {
+	o.IdempotencyKeyHeader = &v
 }
 
 // GetTimestampPath returns the TimestampPath field value if set, zero value otherwise.
@@ -264,8 +366,17 @@ func (o EventIngestTransform) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ResourceIdPath) {
 		toSerialize["resource_id_path"] = o.ResourceIdPath
 	}
+	if !IsNil(o.EventTypeHeader) {
+		toSerialize["event_type_header"] = o.EventTypeHeader
+	}
+	if !IsNil(o.ResourceRules) {
+		toSerialize["resource_rules"] = o.ResourceRules
+	}
 	if !IsNil(o.IdempotencyKeyPath) {
 		toSerialize["idempotency_key_path"] = o.IdempotencyKeyPath
+	}
+	if !IsNil(o.IdempotencyKeyHeader) {
+		toSerialize["idempotency_key_header"] = o.IdempotencyKeyHeader
 	}
 	if !IsNil(o.TimestampPath) {
 		toSerialize["timestamp_path"] = o.TimestampPath
@@ -298,7 +409,10 @@ func (o *EventIngestTransform) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "action_path")
 		delete(additionalProperties, "resource_type_path")
 		delete(additionalProperties, "resource_id_path")
+		delete(additionalProperties, "event_type_header")
+		delete(additionalProperties, "resource_rules")
 		delete(additionalProperties, "idempotency_key_path")
+		delete(additionalProperties, "idempotency_key_header")
 		delete(additionalProperties, "timestamp_path")
 		delete(additionalProperties, "static_details")
 		o.AdditionalProperties = additionalProperties

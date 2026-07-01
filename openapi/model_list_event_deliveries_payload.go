@@ -25,6 +25,16 @@ type ListEventDeliveriesPayload struct {
 	SubscriptionId *string                     `json:"subscription_id,omitempty"`
 	Status         []EventDeliveryIntentStatus `json:"status,omitempty"`
 	OutboxStatus   []EventOutboxStatus         `json:"outbox_status,omitempty"`
+	// Filter by outbox event category (e.g. external, content).
+	EventCategory []EventCategory `json:"event_category,omitempty"`
+	// Filter by outbox action (e.g. opened, created).
+	Action []string `json:"action,omitempty"`
+	// Filter by outbox resource type (e.g. github_issue, content_object).
+	ResourceType []string `json:"resource_type,omitempty"`
+	// Sort field (default created_at).
+	SortBy *EventDeliverySortField `json:"sort_by,omitempty"`
+	// Sort order (default desc).
+	SortOrder *string `json:"sort_order,omitempty"`
 }
 
 // NewListEventDeliveriesPayload instantiates a new ListEventDeliveriesPayload object
@@ -236,6 +246,166 @@ func (o *ListEventDeliveriesPayload) SetOutboxStatus(v []EventOutboxStatus) {
 	o.OutboxStatus = v
 }
 
+// GetEventCategory returns the EventCategory field value if set, zero value otherwise.
+func (o *ListEventDeliveriesPayload) GetEventCategory() []EventCategory {
+	if o == nil || IsNil(o.EventCategory) {
+		var ret []EventCategory
+		return ret
+	}
+	return o.EventCategory
+}
+
+// GetEventCategoryOk returns a tuple with the EventCategory field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListEventDeliveriesPayload) GetEventCategoryOk() ([]EventCategory, bool) {
+	if o == nil || IsNil(o.EventCategory) {
+		return nil, false
+	}
+	return o.EventCategory, true
+}
+
+// HasEventCategory returns a boolean if a field has been set.
+func (o *ListEventDeliveriesPayload) HasEventCategory() bool {
+	if o != nil && !IsNil(o.EventCategory) {
+		return true
+	}
+
+	return false
+}
+
+// SetEventCategory gets a reference to the given []EventCategory and assigns it to the EventCategory field.
+func (o *ListEventDeliveriesPayload) SetEventCategory(v []EventCategory) {
+	o.EventCategory = v
+}
+
+// GetAction returns the Action field value if set, zero value otherwise.
+func (o *ListEventDeliveriesPayload) GetAction() []string {
+	if o == nil || IsNil(o.Action) {
+		var ret []string
+		return ret
+	}
+	return o.Action
+}
+
+// GetActionOk returns a tuple with the Action field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListEventDeliveriesPayload) GetActionOk() ([]string, bool) {
+	if o == nil || IsNil(o.Action) {
+		return nil, false
+	}
+	return o.Action, true
+}
+
+// HasAction returns a boolean if a field has been set.
+func (o *ListEventDeliveriesPayload) HasAction() bool {
+	if o != nil && !IsNil(o.Action) {
+		return true
+	}
+
+	return false
+}
+
+// SetAction gets a reference to the given []string and assigns it to the Action field.
+func (o *ListEventDeliveriesPayload) SetAction(v []string) {
+	o.Action = v
+}
+
+// GetResourceType returns the ResourceType field value if set, zero value otherwise.
+func (o *ListEventDeliveriesPayload) GetResourceType() []string {
+	if o == nil || IsNil(o.ResourceType) {
+		var ret []string
+		return ret
+	}
+	return o.ResourceType
+}
+
+// GetResourceTypeOk returns a tuple with the ResourceType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListEventDeliveriesPayload) GetResourceTypeOk() ([]string, bool) {
+	if o == nil || IsNil(o.ResourceType) {
+		return nil, false
+	}
+	return o.ResourceType, true
+}
+
+// HasResourceType returns a boolean if a field has been set.
+func (o *ListEventDeliveriesPayload) HasResourceType() bool {
+	if o != nil && !IsNil(o.ResourceType) {
+		return true
+	}
+
+	return false
+}
+
+// SetResourceType gets a reference to the given []string and assigns it to the ResourceType field.
+func (o *ListEventDeliveriesPayload) SetResourceType(v []string) {
+	o.ResourceType = v
+}
+
+// GetSortBy returns the SortBy field value if set, zero value otherwise.
+func (o *ListEventDeliveriesPayload) GetSortBy() EventDeliverySortField {
+	if o == nil || IsNil(o.SortBy) {
+		var ret EventDeliverySortField
+		return ret
+	}
+	return *o.SortBy
+}
+
+// GetSortByOk returns a tuple with the SortBy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListEventDeliveriesPayload) GetSortByOk() (*EventDeliverySortField, bool) {
+	if o == nil || IsNil(o.SortBy) {
+		return nil, false
+	}
+	return o.SortBy, true
+}
+
+// HasSortBy returns a boolean if a field has been set.
+func (o *ListEventDeliveriesPayload) HasSortBy() bool {
+	if o != nil && !IsNil(o.SortBy) {
+		return true
+	}
+
+	return false
+}
+
+// SetSortBy gets a reference to the given EventDeliverySortField and assigns it to the SortBy field.
+func (o *ListEventDeliveriesPayload) SetSortBy(v EventDeliverySortField) {
+	o.SortBy = &v
+}
+
+// GetSortOrder returns the SortOrder field value if set, zero value otherwise.
+func (o *ListEventDeliveriesPayload) GetSortOrder() string {
+	if o == nil || IsNil(o.SortOrder) {
+		var ret string
+		return ret
+	}
+	return *o.SortOrder
+}
+
+// GetSortOrderOk returns a tuple with the SortOrder field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ListEventDeliveriesPayload) GetSortOrderOk() (*string, bool) {
+	if o == nil || IsNil(o.SortOrder) {
+		return nil, false
+	}
+	return o.SortOrder, true
+}
+
+// HasSortOrder returns a boolean if a field has been set.
+func (o *ListEventDeliveriesPayload) HasSortOrder() bool {
+	if o != nil && !IsNil(o.SortOrder) {
+		return true
+	}
+
+	return false
+}
+
+// SetSortOrder gets a reference to the given string and assigns it to the SortOrder field.
+func (o *ListEventDeliveriesPayload) SetSortOrder(v string) {
+	o.SortOrder = &v
+}
+
 func (o ListEventDeliveriesPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -263,6 +433,21 @@ func (o ListEventDeliveriesPayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.OutboxStatus) {
 		toSerialize["outbox_status"] = o.OutboxStatus
+	}
+	if !IsNil(o.EventCategory) {
+		toSerialize["event_category"] = o.EventCategory
+	}
+	if !IsNil(o.Action) {
+		toSerialize["action"] = o.Action
+	}
+	if !IsNil(o.ResourceType) {
+		toSerialize["resource_type"] = o.ResourceType
+	}
+	if !IsNil(o.SortBy) {
+		toSerialize["sort_by"] = o.SortBy
+	}
+	if !IsNil(o.SortOrder) {
+		toSerialize["sort_order"] = o.SortOrder
 	}
 	return toSerialize, nil
 }

@@ -20,9 +20,13 @@ var _ MappedNullable = &GithubConfiguration{}
 
 // GithubConfiguration struct for GithubConfiguration
 type GithubConfiguration struct {
-	Integration         SupportedIntegrationsGithub `json:"integration"`
-	Enabled             bool                        `json:"enabled"`
-	AllowedRepositories []string                    `json:"allowed_repositories"`
+	Integration SupportedIntegrationsGithub `json:"integration"`
+	Enabled     bool                        `json:"enabled"`
+	// Numeric GitHub App id used to mint installation tokens (non-secret).
+	GithubAppId         *string  `json:"github_app_id,omitempty"`
+	AllowedRepositories []string `json:"allowed_repositories"`
+	// True when a GitHub App private key is stored for the project (the key itself is never returned).
+	HasGithubAppPrivateKey *bool `json:"has_github_app_private_key,omitempty"`
 }
 
 type _GithubConfiguration GithubConfiguration
@@ -95,6 +99,38 @@ func (o *GithubConfiguration) SetEnabled(v bool) {
 	o.Enabled = v
 }
 
+// GetGithubAppId returns the GithubAppId field value if set, zero value otherwise.
+func (o *GithubConfiguration) GetGithubAppId() string {
+	if o == nil || IsNil(o.GithubAppId) {
+		var ret string
+		return ret
+	}
+	return *o.GithubAppId
+}
+
+// GetGithubAppIdOk returns a tuple with the GithubAppId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *GithubConfiguration) GetGithubAppIdOk() (*string, bool) {
+	if o == nil || IsNil(o.GithubAppId) {
+		return nil, false
+	}
+	return o.GithubAppId, true
+}
+
+// HasGithubAppId returns a boolean if a field has been set.
+func (o *GithubConfiguration) HasGithubAppId() bool {
+	if o != nil && !IsNil(o.GithubAppId) {
+		return true
+	}
+
+	return false
+}
+
+// SetGithubAppId gets a reference to the given string and assigns it to the GithubAppId field.
+func (o *GithubConfiguration) SetGithubAppId(v string) {
+	o.GithubAppId = &v
+}
+
 // GetAllowedRepositories returns the AllowedRepositories field value
 func (o *GithubConfiguration) GetAllowedRepositories() []string {
 	if o == nil {
@@ -119,6 +155,38 @@ func (o *GithubConfiguration) SetAllowedRepositories(v []string) {
 	o.AllowedRepositories = v
 }
 
+// GetHasGithubAppPrivateKey returns the HasGithubAppPrivateKey field value if set, zero value otherwise.
+func (o *GithubConfiguration) GetHasGithubAppPrivateKey() bool {
+	if o == nil || IsNil(o.HasGithubAppPrivateKey) {
+		var ret bool
+		return ret
+	}
+	return *o.HasGithubAppPrivateKey
+}
+
+// GetHasGithubAppPrivateKeyOk returns a tuple with the HasGithubAppPrivateKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *GithubConfiguration) GetHasGithubAppPrivateKeyOk() (*bool, bool) {
+	if o == nil || IsNil(o.HasGithubAppPrivateKey) {
+		return nil, false
+	}
+	return o.HasGithubAppPrivateKey, true
+}
+
+// HasHasGithubAppPrivateKey returns a boolean if a field has been set.
+func (o *GithubConfiguration) HasHasGithubAppPrivateKey() bool {
+	if o != nil && !IsNil(o.HasGithubAppPrivateKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetHasGithubAppPrivateKey gets a reference to the given bool and assigns it to the HasGithubAppPrivateKey field.
+func (o *GithubConfiguration) SetHasGithubAppPrivateKey(v bool) {
+	o.HasGithubAppPrivateKey = &v
+}
+
 func (o GithubConfiguration) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -131,7 +199,13 @@ func (o GithubConfiguration) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["integration"] = o.Integration
 	toSerialize["enabled"] = o.Enabled
+	if !IsNil(o.GithubAppId) {
+		toSerialize["github_app_id"] = o.GithubAppId
+	}
 	toSerialize["allowed_repositories"] = o.AllowedRepositories
+	if !IsNil(o.HasGithubAppPrivateKey) {
+		toSerialize["has_github_app_private_key"] = o.HasGithubAppPrivateKey
+	}
 	return toSerialize, nil
 }
 

@@ -21,6 +21,8 @@ var _ MappedNullable = &AgentEventDeliveryTarget{}
 // AgentEventDeliveryTarget struct for AgentEventDeliveryTarget
 type AgentEventDeliveryTarget struct {
 	Type string `json:"type"`
+	// Behavior when an event matches. Defaults to `start`.
+	OnMatch *AgentDeliveryMatchMode `json:"on_match,omitempty"`
 	// Interaction ID, app ref, or system ref. Defaults to the general-purpose system agent.
 	InteractionRef *string                            `json:"interaction_ref,omitempty"`
 	Data           map[string]interface{}             `json:"data,omitempty"`
@@ -32,6 +34,31 @@ type AgentEventDeliveryTarget struct {
 	ToolNames      []string                           `json:"tool_names,omitempty"`
 	MaxIterations  *float32                           `json:"max_iterations,omitempty"`
 	DebugMode      *bool                              `json:"debug_mode,omitempty"`
+	// Signal sent to an existing/restarted run. Only `UserInput` is implemented.
+	SignalName *string `json:"signal_name,omitempty"`
+	// Dot-path to the message (initial instruction when starting, else the signal). Required for signal/ensure.
+	MessagePath *string `json:"message_path,omitempty"`
+	// Dot-path to a stable per-message id, carried on the signal for (future) exactly-once dedupe.
+	ClientMessageIdPath *string `json:"client_message_id_path,omitempty"`
+	// Run statuses eligible to receive the signal when a run exists. Defaults to ['running'].
+	Statuses []AgentRunStatus `json:"statuses,omitempty"`
+	// If this dot-path resolves to a value, the delivery is skipped.
+	SkipIfPathExists *string `json:"skip_if_path_exists,omitempty"`
+	// Dot-path to the message author, for the loop guard.
+	AuthorPath *string `json:"author_path,omitempty"`
+	// Regex patterns matched against the resolved author; a match skips the delivery (loop guard).
+	IgnoreAuthorPatterns []string `json:"ignore_author_patterns,omitempty"`
+	// The message must start with one of these prefixes to be delivered.
+	RequireCommandPrefixes []string `json:"require_command_prefixes,omitempty"`
+	// ...or contain one of these mentions. Combined with prefixes as OR.
+	RequireMentions []string `json:"require_mentions,omitempty"`
+	// `signal` mode only — no run yet (open/follow-up race): 'retry' (default) or 'skip'. Ignored for `ensure`.
+	MissingThread *string `json:"missing_thread,omitempty"`
+	// Behaviour when only terminal runs match: `skip` (default) or `restart` then signal.
+	OnTerminal *string `json:"on_terminal,omitempty"`
+	// Extra fields merged into the signal's metadata; same `{{event.*}}` / `$event.x` templating as `data`.
+	Metadata             map[string]interface{} `json:"metadata,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _AgentEventDeliveryTarget AgentEventDeliveryTarget
@@ -76,6 +103,38 @@ func (o *AgentEventDeliveryTarget) GetTypeOk() (*string, bool) {
 // SetType sets field value
 func (o *AgentEventDeliveryTarget) SetType(v string) {
 	o.Type = v
+}
+
+// GetOnMatch returns the OnMatch field value if set, zero value otherwise.
+func (o *AgentEventDeliveryTarget) GetOnMatch() AgentDeliveryMatchMode {
+	if o == nil || IsNil(o.OnMatch) {
+		var ret AgentDeliveryMatchMode
+		return ret
+	}
+	return *o.OnMatch
+}
+
+// GetOnMatchOk returns a tuple with the OnMatch field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentEventDeliveryTarget) GetOnMatchOk() (*AgentDeliveryMatchMode, bool) {
+	if o == nil || IsNil(o.OnMatch) {
+		return nil, false
+	}
+	return o.OnMatch, true
+}
+
+// HasOnMatch returns a boolean if a field has been set.
+func (o *AgentEventDeliveryTarget) HasOnMatch() bool {
+	if o != nil && !IsNil(o.OnMatch) {
+		return true
+	}
+
+	return false
+}
+
+// SetOnMatch gets a reference to the given AgentDeliveryMatchMode and assigns it to the OnMatch field.
+func (o *AgentEventDeliveryTarget) SetOnMatch(v AgentDeliveryMatchMode) {
+	o.OnMatch = &v
 }
 
 // GetInteractionRef returns the InteractionRef field value if set, zero value otherwise.
@@ -398,6 +457,390 @@ func (o *AgentEventDeliveryTarget) SetDebugMode(v bool) {
 	o.DebugMode = &v
 }
 
+// GetSignalName returns the SignalName field value if set, zero value otherwise.
+func (o *AgentEventDeliveryTarget) GetSignalName() string {
+	if o == nil || IsNil(o.SignalName) {
+		var ret string
+		return ret
+	}
+	return *o.SignalName
+}
+
+// GetSignalNameOk returns a tuple with the SignalName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentEventDeliveryTarget) GetSignalNameOk() (*string, bool) {
+	if o == nil || IsNil(o.SignalName) {
+		return nil, false
+	}
+	return o.SignalName, true
+}
+
+// HasSignalName returns a boolean if a field has been set.
+func (o *AgentEventDeliveryTarget) HasSignalName() bool {
+	if o != nil && !IsNil(o.SignalName) {
+		return true
+	}
+
+	return false
+}
+
+// SetSignalName gets a reference to the given string and assigns it to the SignalName field.
+func (o *AgentEventDeliveryTarget) SetSignalName(v string) {
+	o.SignalName = &v
+}
+
+// GetMessagePath returns the MessagePath field value if set, zero value otherwise.
+func (o *AgentEventDeliveryTarget) GetMessagePath() string {
+	if o == nil || IsNil(o.MessagePath) {
+		var ret string
+		return ret
+	}
+	return *o.MessagePath
+}
+
+// GetMessagePathOk returns a tuple with the MessagePath field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentEventDeliveryTarget) GetMessagePathOk() (*string, bool) {
+	if o == nil || IsNil(o.MessagePath) {
+		return nil, false
+	}
+	return o.MessagePath, true
+}
+
+// HasMessagePath returns a boolean if a field has been set.
+func (o *AgentEventDeliveryTarget) HasMessagePath() bool {
+	if o != nil && !IsNil(o.MessagePath) {
+		return true
+	}
+
+	return false
+}
+
+// SetMessagePath gets a reference to the given string and assigns it to the MessagePath field.
+func (o *AgentEventDeliveryTarget) SetMessagePath(v string) {
+	o.MessagePath = &v
+}
+
+// GetClientMessageIdPath returns the ClientMessageIdPath field value if set, zero value otherwise.
+func (o *AgentEventDeliveryTarget) GetClientMessageIdPath() string {
+	if o == nil || IsNil(o.ClientMessageIdPath) {
+		var ret string
+		return ret
+	}
+	return *o.ClientMessageIdPath
+}
+
+// GetClientMessageIdPathOk returns a tuple with the ClientMessageIdPath field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentEventDeliveryTarget) GetClientMessageIdPathOk() (*string, bool) {
+	if o == nil || IsNil(o.ClientMessageIdPath) {
+		return nil, false
+	}
+	return o.ClientMessageIdPath, true
+}
+
+// HasClientMessageIdPath returns a boolean if a field has been set.
+func (o *AgentEventDeliveryTarget) HasClientMessageIdPath() bool {
+	if o != nil && !IsNil(o.ClientMessageIdPath) {
+		return true
+	}
+
+	return false
+}
+
+// SetClientMessageIdPath gets a reference to the given string and assigns it to the ClientMessageIdPath field.
+func (o *AgentEventDeliveryTarget) SetClientMessageIdPath(v string) {
+	o.ClientMessageIdPath = &v
+}
+
+// GetStatuses returns the Statuses field value if set, zero value otherwise.
+func (o *AgentEventDeliveryTarget) GetStatuses() []AgentRunStatus {
+	if o == nil || IsNil(o.Statuses) {
+		var ret []AgentRunStatus
+		return ret
+	}
+	return o.Statuses
+}
+
+// GetStatusesOk returns a tuple with the Statuses field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentEventDeliveryTarget) GetStatusesOk() ([]AgentRunStatus, bool) {
+	if o == nil || IsNil(o.Statuses) {
+		return nil, false
+	}
+	return o.Statuses, true
+}
+
+// HasStatuses returns a boolean if a field has been set.
+func (o *AgentEventDeliveryTarget) HasStatuses() bool {
+	if o != nil && !IsNil(o.Statuses) {
+		return true
+	}
+
+	return false
+}
+
+// SetStatuses gets a reference to the given []AgentRunStatus and assigns it to the Statuses field.
+func (o *AgentEventDeliveryTarget) SetStatuses(v []AgentRunStatus) {
+	o.Statuses = v
+}
+
+// GetSkipIfPathExists returns the SkipIfPathExists field value if set, zero value otherwise.
+func (o *AgentEventDeliveryTarget) GetSkipIfPathExists() string {
+	if o == nil || IsNil(o.SkipIfPathExists) {
+		var ret string
+		return ret
+	}
+	return *o.SkipIfPathExists
+}
+
+// GetSkipIfPathExistsOk returns a tuple with the SkipIfPathExists field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentEventDeliveryTarget) GetSkipIfPathExistsOk() (*string, bool) {
+	if o == nil || IsNil(o.SkipIfPathExists) {
+		return nil, false
+	}
+	return o.SkipIfPathExists, true
+}
+
+// HasSkipIfPathExists returns a boolean if a field has been set.
+func (o *AgentEventDeliveryTarget) HasSkipIfPathExists() bool {
+	if o != nil && !IsNil(o.SkipIfPathExists) {
+		return true
+	}
+
+	return false
+}
+
+// SetSkipIfPathExists gets a reference to the given string and assigns it to the SkipIfPathExists field.
+func (o *AgentEventDeliveryTarget) SetSkipIfPathExists(v string) {
+	o.SkipIfPathExists = &v
+}
+
+// GetAuthorPath returns the AuthorPath field value if set, zero value otherwise.
+func (o *AgentEventDeliveryTarget) GetAuthorPath() string {
+	if o == nil || IsNil(o.AuthorPath) {
+		var ret string
+		return ret
+	}
+	return *o.AuthorPath
+}
+
+// GetAuthorPathOk returns a tuple with the AuthorPath field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentEventDeliveryTarget) GetAuthorPathOk() (*string, bool) {
+	if o == nil || IsNil(o.AuthorPath) {
+		return nil, false
+	}
+	return o.AuthorPath, true
+}
+
+// HasAuthorPath returns a boolean if a field has been set.
+func (o *AgentEventDeliveryTarget) HasAuthorPath() bool {
+	if o != nil && !IsNil(o.AuthorPath) {
+		return true
+	}
+
+	return false
+}
+
+// SetAuthorPath gets a reference to the given string and assigns it to the AuthorPath field.
+func (o *AgentEventDeliveryTarget) SetAuthorPath(v string) {
+	o.AuthorPath = &v
+}
+
+// GetIgnoreAuthorPatterns returns the IgnoreAuthorPatterns field value if set, zero value otherwise.
+func (o *AgentEventDeliveryTarget) GetIgnoreAuthorPatterns() []string {
+	if o == nil || IsNil(o.IgnoreAuthorPatterns) {
+		var ret []string
+		return ret
+	}
+	return o.IgnoreAuthorPatterns
+}
+
+// GetIgnoreAuthorPatternsOk returns a tuple with the IgnoreAuthorPatterns field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentEventDeliveryTarget) GetIgnoreAuthorPatternsOk() ([]string, bool) {
+	if o == nil || IsNil(o.IgnoreAuthorPatterns) {
+		return nil, false
+	}
+	return o.IgnoreAuthorPatterns, true
+}
+
+// HasIgnoreAuthorPatterns returns a boolean if a field has been set.
+func (o *AgentEventDeliveryTarget) HasIgnoreAuthorPatterns() bool {
+	if o != nil && !IsNil(o.IgnoreAuthorPatterns) {
+		return true
+	}
+
+	return false
+}
+
+// SetIgnoreAuthorPatterns gets a reference to the given []string and assigns it to the IgnoreAuthorPatterns field.
+func (o *AgentEventDeliveryTarget) SetIgnoreAuthorPatterns(v []string) {
+	o.IgnoreAuthorPatterns = v
+}
+
+// GetRequireCommandPrefixes returns the RequireCommandPrefixes field value if set, zero value otherwise.
+func (o *AgentEventDeliveryTarget) GetRequireCommandPrefixes() []string {
+	if o == nil || IsNil(o.RequireCommandPrefixes) {
+		var ret []string
+		return ret
+	}
+	return o.RequireCommandPrefixes
+}
+
+// GetRequireCommandPrefixesOk returns a tuple with the RequireCommandPrefixes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentEventDeliveryTarget) GetRequireCommandPrefixesOk() ([]string, bool) {
+	if o == nil || IsNil(o.RequireCommandPrefixes) {
+		return nil, false
+	}
+	return o.RequireCommandPrefixes, true
+}
+
+// HasRequireCommandPrefixes returns a boolean if a field has been set.
+func (o *AgentEventDeliveryTarget) HasRequireCommandPrefixes() bool {
+	if o != nil && !IsNil(o.RequireCommandPrefixes) {
+		return true
+	}
+
+	return false
+}
+
+// SetRequireCommandPrefixes gets a reference to the given []string and assigns it to the RequireCommandPrefixes field.
+func (o *AgentEventDeliveryTarget) SetRequireCommandPrefixes(v []string) {
+	o.RequireCommandPrefixes = v
+}
+
+// GetRequireMentions returns the RequireMentions field value if set, zero value otherwise.
+func (o *AgentEventDeliveryTarget) GetRequireMentions() []string {
+	if o == nil || IsNil(o.RequireMentions) {
+		var ret []string
+		return ret
+	}
+	return o.RequireMentions
+}
+
+// GetRequireMentionsOk returns a tuple with the RequireMentions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentEventDeliveryTarget) GetRequireMentionsOk() ([]string, bool) {
+	if o == nil || IsNil(o.RequireMentions) {
+		return nil, false
+	}
+	return o.RequireMentions, true
+}
+
+// HasRequireMentions returns a boolean if a field has been set.
+func (o *AgentEventDeliveryTarget) HasRequireMentions() bool {
+	if o != nil && !IsNil(o.RequireMentions) {
+		return true
+	}
+
+	return false
+}
+
+// SetRequireMentions gets a reference to the given []string and assigns it to the RequireMentions field.
+func (o *AgentEventDeliveryTarget) SetRequireMentions(v []string) {
+	o.RequireMentions = v
+}
+
+// GetMissingThread returns the MissingThread field value if set, zero value otherwise.
+func (o *AgentEventDeliveryTarget) GetMissingThread() string {
+	if o == nil || IsNil(o.MissingThread) {
+		var ret string
+		return ret
+	}
+	return *o.MissingThread
+}
+
+// GetMissingThreadOk returns a tuple with the MissingThread field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentEventDeliveryTarget) GetMissingThreadOk() (*string, bool) {
+	if o == nil || IsNil(o.MissingThread) {
+		return nil, false
+	}
+	return o.MissingThread, true
+}
+
+// HasMissingThread returns a boolean if a field has been set.
+func (o *AgentEventDeliveryTarget) HasMissingThread() bool {
+	if o != nil && !IsNil(o.MissingThread) {
+		return true
+	}
+
+	return false
+}
+
+// SetMissingThread gets a reference to the given string and assigns it to the MissingThread field.
+func (o *AgentEventDeliveryTarget) SetMissingThread(v string) {
+	o.MissingThread = &v
+}
+
+// GetOnTerminal returns the OnTerminal field value if set, zero value otherwise.
+func (o *AgentEventDeliveryTarget) GetOnTerminal() string {
+	if o == nil || IsNil(o.OnTerminal) {
+		var ret string
+		return ret
+	}
+	return *o.OnTerminal
+}
+
+// GetOnTerminalOk returns a tuple with the OnTerminal field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentEventDeliveryTarget) GetOnTerminalOk() (*string, bool) {
+	if o == nil || IsNil(o.OnTerminal) {
+		return nil, false
+	}
+	return o.OnTerminal, true
+}
+
+// HasOnTerminal returns a boolean if a field has been set.
+func (o *AgentEventDeliveryTarget) HasOnTerminal() bool {
+	if o != nil && !IsNil(o.OnTerminal) {
+		return true
+	}
+
+	return false
+}
+
+// SetOnTerminal gets a reference to the given string and assigns it to the OnTerminal field.
+func (o *AgentEventDeliveryTarget) SetOnTerminal(v string) {
+	o.OnTerminal = &v
+}
+
+// GetMetadata returns the Metadata field value if set, zero value otherwise.
+func (o *AgentEventDeliveryTarget) GetMetadata() map[string]interface{} {
+	if o == nil || IsNil(o.Metadata) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.Metadata
+}
+
+// GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentEventDeliveryTarget) GetMetadataOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.Metadata) {
+		return map[string]interface{}{}, false
+	}
+	return o.Metadata, true
+}
+
+// HasMetadata returns a boolean if a field has been set.
+func (o *AgentEventDeliveryTarget) HasMetadata() bool {
+	if o != nil && !IsNil(o.Metadata) {
+		return true
+	}
+
+	return false
+}
+
+// SetMetadata gets a reference to the given map[string]interface{} and assigns it to the Metadata field.
+func (o *AgentEventDeliveryTarget) SetMetadata(v map[string]interface{}) {
+	o.Metadata = v
+}
+
 func (o AgentEventDeliveryTarget) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -409,6 +852,9 @@ func (o AgentEventDeliveryTarget) MarshalJSON() ([]byte, error) {
 func (o AgentEventDeliveryTarget) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["type"] = o.Type
+	if !IsNil(o.OnMatch) {
+		toSerialize["on_match"] = o.OnMatch
+	}
 	if !IsNil(o.InteractionRef) {
 		toSerialize["interaction_ref"] = o.InteractionRef
 	}
@@ -439,6 +885,47 @@ func (o AgentEventDeliveryTarget) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DebugMode) {
 		toSerialize["debug_mode"] = o.DebugMode
 	}
+	if !IsNil(o.SignalName) {
+		toSerialize["signal_name"] = o.SignalName
+	}
+	if !IsNil(o.MessagePath) {
+		toSerialize["message_path"] = o.MessagePath
+	}
+	if !IsNil(o.ClientMessageIdPath) {
+		toSerialize["client_message_id_path"] = o.ClientMessageIdPath
+	}
+	if !IsNil(o.Statuses) {
+		toSerialize["statuses"] = o.Statuses
+	}
+	if !IsNil(o.SkipIfPathExists) {
+		toSerialize["skip_if_path_exists"] = o.SkipIfPathExists
+	}
+	if !IsNil(o.AuthorPath) {
+		toSerialize["author_path"] = o.AuthorPath
+	}
+	if !IsNil(o.IgnoreAuthorPatterns) {
+		toSerialize["ignore_author_patterns"] = o.IgnoreAuthorPatterns
+	}
+	if !IsNil(o.RequireCommandPrefixes) {
+		toSerialize["require_command_prefixes"] = o.RequireCommandPrefixes
+	}
+	if !IsNil(o.RequireMentions) {
+		toSerialize["require_mentions"] = o.RequireMentions
+	}
+	if !IsNil(o.MissingThread) {
+		toSerialize["missing_thread"] = o.MissingThread
+	}
+	if !IsNil(o.OnTerminal) {
+		toSerialize["on_terminal"] = o.OnTerminal
+	}
+	if !IsNil(o.Metadata) {
+		toSerialize["metadata"] = o.Metadata
+	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -473,6 +960,36 @@ func (o *AgentEventDeliveryTarget) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = AgentEventDeliveryTarget(varAgentEventDeliveryTarget)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "on_match")
+		delete(additionalProperties, "interaction_ref")
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "config")
+		delete(additionalProperties, "interactive")
+		delete(additionalProperties, "visibility")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "categories")
+		delete(additionalProperties, "tool_names")
+		delete(additionalProperties, "max_iterations")
+		delete(additionalProperties, "debug_mode")
+		delete(additionalProperties, "signal_name")
+		delete(additionalProperties, "message_path")
+		delete(additionalProperties, "client_message_id_path")
+		delete(additionalProperties, "statuses")
+		delete(additionalProperties, "skip_if_path_exists")
+		delete(additionalProperties, "author_path")
+		delete(additionalProperties, "ignore_author_patterns")
+		delete(additionalProperties, "require_command_prefixes")
+		delete(additionalProperties, "require_mentions")
+		delete(additionalProperties, "missing_thread")
+		delete(additionalProperties, "on_terminal")
+		delete(additionalProperties, "metadata")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }
