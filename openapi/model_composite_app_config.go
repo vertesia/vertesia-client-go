@@ -34,10 +34,14 @@ type CompositeAppConfig struct {
 	Switchers *CompositeAppSwitchersOverrides `json:"switchers,omitempty"`
 	// Optional sidebar display overrides
 	Sidebar *CompositeAppSidebarOverrides `json:"sidebar,omitempty"`
-	// Optional header button visibility overrides
+	// Deprecated: Use `headerMenu` instead. Optional header button visibility overrides. Still read to seed `headerMenu` defaults for configs saved before the header menu existed.
+	// Deprecated
 	Header *CompositeAppHeaderOverrides `json:"header,omitempty"`
-	// Optional user menu overrides
+	// Deprecated: Use the `user_menu` item in `headerMenu` instead. Optional user menu overrides. Still read to seed `headerMenu` defaults for configs saved before the header menu existed.
+	// Deprecated
 	UserMenu *CompositeAppUserMenuOverrides `json:"userMenu,omitempty"`
+	// Optional free-form header menu. When present, the header renders from this ordered list instead of the legacy `header`/`userMenu` flags. Built-in items (App Portal, Docs, Help, User Menu) can be hidden/relabeled/re-icon'd/redirected; custom items are arbitrary buttons.
+	HeaderMenu []CompositeAppHeaderItem `json:"headerMenu,omitempty"`
 	// Optional theme overrides (e.g. disable dark mode)
 	Theme *CompositeAppThemeOverrides `json:"theme,omitempty"`
 	// Optional home page override. When set, redirects \"/\" to the specified app route instead of the dashboard. Send null to unset.
@@ -286,6 +290,7 @@ func (o *CompositeAppConfig) SetSidebar(v CompositeAppSidebarOverrides) {
 }
 
 // GetHeader returns the Header field value if set, zero value otherwise.
+// Deprecated
 func (o *CompositeAppConfig) GetHeader() CompositeAppHeaderOverrides {
 	if o == nil || IsNil(o.Header) {
 		var ret CompositeAppHeaderOverrides
@@ -296,6 +301,7 @@ func (o *CompositeAppConfig) GetHeader() CompositeAppHeaderOverrides {
 
 // GetHeaderOk returns a tuple with the Header field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// Deprecated
 func (o *CompositeAppConfig) GetHeaderOk() (*CompositeAppHeaderOverrides, bool) {
 	if o == nil || IsNil(o.Header) {
 		return nil, false
@@ -313,11 +319,13 @@ func (o *CompositeAppConfig) HasHeader() bool {
 }
 
 // SetHeader gets a reference to the given CompositeAppHeaderOverrides and assigns it to the Header field.
+// Deprecated
 func (o *CompositeAppConfig) SetHeader(v CompositeAppHeaderOverrides) {
 	o.Header = &v
 }
 
 // GetUserMenu returns the UserMenu field value if set, zero value otherwise.
+// Deprecated
 func (o *CompositeAppConfig) GetUserMenu() CompositeAppUserMenuOverrides {
 	if o == nil || IsNil(o.UserMenu) {
 		var ret CompositeAppUserMenuOverrides
@@ -328,6 +336,7 @@ func (o *CompositeAppConfig) GetUserMenu() CompositeAppUserMenuOverrides {
 
 // GetUserMenuOk returns a tuple with the UserMenu field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// Deprecated
 func (o *CompositeAppConfig) GetUserMenuOk() (*CompositeAppUserMenuOverrides, bool) {
 	if o == nil || IsNil(o.UserMenu) {
 		return nil, false
@@ -345,8 +354,41 @@ func (o *CompositeAppConfig) HasUserMenu() bool {
 }
 
 // SetUserMenu gets a reference to the given CompositeAppUserMenuOverrides and assigns it to the UserMenu field.
+// Deprecated
 func (o *CompositeAppConfig) SetUserMenu(v CompositeAppUserMenuOverrides) {
 	o.UserMenu = &v
+}
+
+// GetHeaderMenu returns the HeaderMenu field value if set, zero value otherwise.
+func (o *CompositeAppConfig) GetHeaderMenu() []CompositeAppHeaderItem {
+	if o == nil || IsNil(o.HeaderMenu) {
+		var ret []CompositeAppHeaderItem
+		return ret
+	}
+	return o.HeaderMenu
+}
+
+// GetHeaderMenuOk returns a tuple with the HeaderMenu field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CompositeAppConfig) GetHeaderMenuOk() ([]CompositeAppHeaderItem, bool) {
+	if o == nil || IsNil(o.HeaderMenu) {
+		return nil, false
+	}
+	return o.HeaderMenu, true
+}
+
+// HasHeaderMenu returns a boolean if a field has been set.
+func (o *CompositeAppConfig) HasHeaderMenu() bool {
+	if o != nil && !IsNil(o.HeaderMenu) {
+		return true
+	}
+
+	return false
+}
+
+// SetHeaderMenu gets a reference to the given []CompositeAppHeaderItem and assigns it to the HeaderMenu field.
+func (o *CompositeAppConfig) SetHeaderMenu(v []CompositeAppHeaderItem) {
+	o.HeaderMenu = v
 }
 
 // GetTheme returns the Theme field value if set, zero value otherwise.
@@ -514,6 +556,9 @@ func (o CompositeAppConfig) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.UserMenu) {
 		toSerialize["userMenu"] = o.UserMenu
+	}
+	if !IsNil(o.HeaderMenu) {
+		toSerialize["headerMenu"] = o.HeaderMenu
 	}
 	if !IsNil(o.Theme) {
 		toSerialize["theme"] = o.Theme

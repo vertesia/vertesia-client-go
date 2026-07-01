@@ -182,6 +182,9 @@ model_complex_search_query.go
 model_composite_app_card_overrides.go
 model_composite_app_config.go
 model_composite_app_entry.go
+model_composite_app_header_item.go
+model_composite_app_header_item_kind.go
+model_composite_app_header_item_target.go
 model_composite_app_header_overrides.go
 model_composite_app_home_plugin.go
 model_composite_app_logo_overrides.go
