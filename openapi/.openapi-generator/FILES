@@ -669,6 +669,7 @@ model_quota_standing_response_admission.go
 model_quota_standing_response_llm.go
 model_quota_standing_window.go
 model_quota_tier.go
+model_quota_tier_response.go
 model_rate_limit_request_payload.go
 model_rate_limit_request_response.go
 model_reasoning_effort.go
