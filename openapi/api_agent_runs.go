@@ -2500,6 +2500,147 @@ func (a *AgentRunsAPIService) PostAgentRunUpdateExecute(r ApiPostAgentRunUpdateR
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiQueryAgentRunRequest struct {
+	ctx         context.Context
+	ApiService  *AgentRunsAPIService
+	agentRunId  string
+	queryName   string
+	xApiVersion *string
+}
+
+// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
+func (r ApiQueryAgentRunRequest) XApiVersion(xApiVersion string) ApiQueryAgentRunRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiQueryAgentRunRequest) Execute() (interface{}, *http.Response, error) {
+	return r.ApiService.QueryAgentRunExecute(r)
+}
+
+/*
+QueryAgentRun Query an agent run
+
+Runs a named query against an agent run.
+
+**Required permissions:** Any of `agent_run:read`, `workflow:run`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param agentRunId
+	@param queryName
+	@return ApiQueryAgentRunRequest
+*/
+func (a *AgentRunsAPIService) QueryAgentRun(ctx context.Context, agentRunId string, queryName string) ApiQueryAgentRunRequest {
+	return ApiQueryAgentRunRequest{
+		ApiService: a,
+		ctx:        ctx,
+		agentRunId: agentRunId,
+		queryName:  queryName,
+	}
+}
+
+// Execute executes the request
+//
+//	@return interface{}
+func (a *AgentRunsAPIService) QueryAgentRunExecute(r ApiQueryAgentRunRequest) (interface{}, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue interface{}
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AgentRunsAPIService.QueryAgentRun")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/agents/{agentRunId}/query/{queryName}"
+	localVarPath = strings.Replace(localVarPath, "{"+"agentRunId"+"}", url.PathEscape(parameterValueToString(r.agentRunId, "agentRunId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"queryName"+"}", url.PathEscape(parameterValueToString(r.queryName, "queryName")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiRestartAgentRunRequest struct {
 	ctx                  context.Context
 	ApiService           *AgentRunsAPIService
@@ -3041,6 +3182,155 @@ func (a *AgentRunsAPIService) SearchAgentRunsExecute(r ApiSearchAgentRunsRequest
 	if r.xApiVersion != nil {
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiSignalAgentRunRequest struct {
+	ctx         context.Context
+	ApiService  *AgentRunsAPIService
+	agentRunId  string
+	signalName  string
+	xApiVersion *string
+	requestBody *map[string]interface{}
+}
+
+// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
+func (r ApiSignalAgentRunRequest) XApiVersion(xApiVersion string) ApiSignalAgentRunRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiSignalAgentRunRequest) RequestBody(requestBody map[string]interface{}) ApiSignalAgentRunRequest {
+	r.requestBody = &requestBody
+	return r
+}
+
+func (r ApiSignalAgentRunRequest) Execute() (*SignalAgentResponse, *http.Response, error) {
+	return r.ApiService.SignalAgentRunExecute(r)
+}
+
+/*
+SignalAgentRun Signal an agent run
+
+Sends a named signal to an agent run.
+
+**Required permissions:** `workflow:run`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param agentRunId
+	@param signalName
+	@return ApiSignalAgentRunRequest
+*/
+func (a *AgentRunsAPIService) SignalAgentRun(ctx context.Context, agentRunId string, signalName string) ApiSignalAgentRunRequest {
+	return ApiSignalAgentRunRequest{
+		ApiService: a,
+		ctx:        ctx,
+		agentRunId: agentRunId,
+		signalName: signalName,
+	}
+}
+
+// Execute executes the request
+//
+//	@return SignalAgentResponse
+func (a *AgentRunsAPIService) SignalAgentRunExecute(r ApiSignalAgentRunRequest) (*SignalAgentResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *SignalAgentResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AgentRunsAPIService.SignalAgentRun")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/agents/{agentRunId}/signal/{signalName}"
+	localVarPath = strings.Replace(localVarPath, "{"+"agentRunId"+"}", url.PathEscape(parameterValueToString(r.agentRunId, "agentRunId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"signalName"+"}", url.PathEscape(parameterValueToString(r.signalName, "signalName")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	// body params
+	localVarPostBody = r.requestBody
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
