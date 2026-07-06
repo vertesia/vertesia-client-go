@@ -37,7 +37,9 @@ type User struct {
 	// BLP clearance level — determines max document sensitivity the user can access
 	Clearance *float32 `json:"clearance,omitempty"`
 	// Compartments the user belongs to — restricts access to documents in matching compartments
-	Compartments         []string `json:"compartments,omitempty"`
+	Compartments []string `json:"compartments,omitempty"`
+	// Free-form user metadata - restricted to internal use
+	Annotations          []string `json:"annotations,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -512,6 +514,38 @@ func (o *User) SetCompartments(v []string) {
 	o.Compartments = v
 }
 
+// GetAnnotations returns the Annotations field value if set, zero value otherwise.
+func (o *User) GetAnnotations() []string {
+	if o == nil || IsNil(o.Annotations) {
+		var ret []string
+		return ret
+	}
+	return o.Annotations
+}
+
+// GetAnnotationsOk returns a tuple with the Annotations field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *User) GetAnnotationsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Annotations) {
+		return nil, false
+	}
+	return o.Annotations, true
+}
+
+// HasAnnotations returns a boolean if a field has been set.
+func (o *User) HasAnnotations() bool {
+	if o != nil && !IsNil(o.Annotations) {
+		return true
+	}
+
+	return false
+}
+
+// SetAnnotations gets a reference to the given []string and assigns it to the Annotations field.
+func (o *User) SetAnnotations(v []string) {
+	o.Annotations = v
+}
+
 func (o User) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -558,6 +592,9 @@ func (o User) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Compartments) {
 		toSerialize["compartments"] = o.Compartments
+	}
+	if !IsNil(o.Annotations) {
+		toSerialize["annotations"] = o.Annotations
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -620,6 +657,7 @@ func (o *User) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "properties")
 		delete(additionalProperties, "clearance")
 		delete(additionalProperties, "compartments")
+		delete(additionalProperties, "annotations")
 		o.AdditionalProperties = additionalProperties
 	}
 
