@@ -626,6 +626,7 @@ model_resend_configuration_input.go
 model_resolved_environment_info.go
 model_resolved_interaction_execution_info.go
 model_resolved_runtime_config.go
+model_resource_ref.go
 model_resource_visibility.go
 model_result_storage_options.go
 model_retry_process_node_payload.go
