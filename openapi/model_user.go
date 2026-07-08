@@ -21,7 +21,7 @@ var _ MappedNullable = &User{}
 // User struct for User
 type User struct {
 	Id                  string  `json:"id"`
-	ExternalId          string  `json:"externalId"`
+	ExternalId          *string `json:"externalId,omitempty"`
 	Email               string  `json:"email"`
 	Name                string  `json:"name"`
 	Username            *string `json:"username,omitempty"`
@@ -49,10 +49,9 @@ type _User User
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUser(id string, externalId string, email string, name string) *User {
+func NewUser(id string, email string, name string) *User {
 	this := User{}
 	this.Id = id
-	this.ExternalId = externalId
 	this.Email = email
 	this.Name = name
 	return &this
@@ -90,28 +89,36 @@ func (o *User) SetId(v string) {
 	o.Id = v
 }
 
-// GetExternalId returns the ExternalId field value
+// GetExternalId returns the ExternalId field value if set, zero value otherwise.
 func (o *User) GetExternalId() string {
-	if o == nil {
+	if o == nil || IsNil(o.ExternalId) {
 		var ret string
 		return ret
 	}
-
-	return o.ExternalId
+	return *o.ExternalId
 }
 
-// GetExternalIdOk returns a tuple with the ExternalId field value
+// GetExternalIdOk returns a tuple with the ExternalId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *User) GetExternalIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.ExternalId) {
 		return nil, false
 	}
-	return &o.ExternalId, true
+	return o.ExternalId, true
 }
 
-// SetExternalId sets field value
+// HasExternalId returns a boolean if a field has been set.
+func (o *User) HasExternalId() bool {
+	if o != nil && !IsNil(o.ExternalId) {
+		return true
+	}
+
+	return false
+}
+
+// SetExternalId gets a reference to the given string and assigns it to the ExternalId field.
 func (o *User) SetExternalId(v string) {
-	o.ExternalId = v
+	o.ExternalId = &v
 }
 
 // GetEmail returns the Email field value
@@ -557,7 +564,9 @@ func (o User) MarshalJSON() ([]byte, error) {
 func (o User) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
-	toSerialize["externalId"] = o.ExternalId
+	if !IsNil(o.ExternalId) {
+		toSerialize["externalId"] = o.ExternalId
+	}
 	toSerialize["email"] = o.Email
 	toSerialize["name"] = o.Name
 	if !IsNil(o.Username) {
@@ -610,7 +619,6 @@ func (o *User) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"id",
-		"externalId",
 		"email",
 		"name",
 	}

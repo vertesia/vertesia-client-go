@@ -96,6 +96,8 @@ type AutonomousRunResponse struct {
 	// Human-readable interaction name
 	InteractionName *string        `json:"interaction_name,omitempty"`
 	InteractionRef  InteractionRef `json:"interactionRef"`
+	// Resolved environment reference (name resolved from `config.environment` id). Populated by the list endpoint; may be absent on other endpoints or when the id cannot be resolved, in which case consumers should fall back to `config.environment`.
+	EnvironmentRef *ResourceRef `json:"environmentRef,omitempty"`
 	// Conversation topic (longer description from topic analysis)
 	Topic *string `json:"topic,omitempty"`
 	// Lessons learned from the conversation (extracted at completion)
@@ -1265,6 +1267,38 @@ func (o *AutonomousRunResponse) SetInteractionRef(v InteractionRef) {
 	o.InteractionRef = v
 }
 
+// GetEnvironmentRef returns the EnvironmentRef field value if set, zero value otherwise.
+func (o *AutonomousRunResponse) GetEnvironmentRef() ResourceRef {
+	if o == nil || IsNil(o.EnvironmentRef) {
+		var ret ResourceRef
+		return ret
+	}
+	return *o.EnvironmentRef
+}
+
+// GetEnvironmentRefOk returns a tuple with the EnvironmentRef field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AutonomousRunResponse) GetEnvironmentRefOk() (*ResourceRef, bool) {
+	if o == nil || IsNil(o.EnvironmentRef) {
+		return nil, false
+	}
+	return o.EnvironmentRef, true
+}
+
+// HasEnvironmentRef returns a boolean if a field has been set.
+func (o *AutonomousRunResponse) HasEnvironmentRef() bool {
+	if o != nil && !IsNil(o.EnvironmentRef) {
+		return true
+	}
+
+	return false
+}
+
+// SetEnvironmentRef gets a reference to the given ResourceRef and assigns it to the EnvironmentRef field.
+func (o *AutonomousRunResponse) SetEnvironmentRef(v ResourceRef) {
+	o.EnvironmentRef = &v
+}
+
 // GetTopic returns the Topic field value if set, zero value otherwise.
 func (o *AutonomousRunResponse) GetTopic() string {
 	if o == nil || IsNil(o.Topic) {
@@ -1557,6 +1591,9 @@ func (o AutonomousRunResponse) ToMap() (map[string]interface{}, error) {
 		toSerialize["interaction_name"] = o.InteractionName
 	}
 	toSerialize["interactionRef"] = o.InteractionRef
+	if !IsNil(o.EnvironmentRef) {
+		toSerialize["environmentRef"] = o.EnvironmentRef
+	}
 	if !IsNil(o.Topic) {
 		toSerialize["topic"] = o.Topic
 	}
@@ -1667,6 +1704,7 @@ func (o *AutonomousRunResponse) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "updated_at")
 		delete(additionalProperties, "interaction_name")
 		delete(additionalProperties, "interactionRef")
+		delete(additionalProperties, "environmentRef")
 		delete(additionalProperties, "topic")
 		delete(additionalProperties, "lessons_learned")
 		delete(additionalProperties, "archived_at")
