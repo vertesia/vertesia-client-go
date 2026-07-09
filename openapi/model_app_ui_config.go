@@ -22,8 +22,10 @@ var _ MappedNullable = &AppUIConfig{}
 type AppUIConfig struct {
 	// The source URL of the app. The src can be a template which contain a variable named `buildId` which will be replaced with the current build id. For example: `/plugins/vertesia-review-center-${buildId}`
 	Src string `json:"src"`
-	// The isolation strategy. If not specified it defaults to shadow - shadow - use Shadow DOM to fully isolate the plugin from the host. - css - use CSS processing (like prefixing or other isolation techniques). Ligther but plugins may conflict with the host
+	// The isolation strategy. If not specified it defaults to shadow. - shadow - use Shadow DOM to fully isolate the plugin from the host. - css - inject the plugin's styles (minus the preflight) into the host document;   lighter but styles may conflict with the host.
 	Isolation *string `json:"isolation,omitempty"`
+	// When true the host modifies the app's css at load time to attempt to fix broken or missing styles. Only takes effect in css isolation mode. Defaults to false.
+	CssRebuild *bool `json:"css_rebuild,omitempty"`
 	// Navigation items for the app's sidebar UI. Only applicable for apps with UI capability in shell contexts (ie. CompositeApp shell).
 	Navigation []AppUINavItem `json:"navigation,omitempty"`
 	// Where this app's UI can be displayed. - 'app_portal': Available in the main app portal (standalone) - 'composite_app': Available within a CompositeApp shell Defaults to ['app_portal', 'composite_app'] for new apps.
@@ -106,6 +108,38 @@ func (o *AppUIConfig) SetIsolation(v string) {
 	o.Isolation = &v
 }
 
+// GetCssRebuild returns the CssRebuild field value if set, zero value otherwise.
+func (o *AppUIConfig) GetCssRebuild() bool {
+	if o == nil || IsNil(o.CssRebuild) {
+		var ret bool
+		return ret
+	}
+	return *o.CssRebuild
+}
+
+// GetCssRebuildOk returns a tuple with the CssRebuild field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppUIConfig) GetCssRebuildOk() (*bool, bool) {
+	if o == nil || IsNil(o.CssRebuild) {
+		return nil, false
+	}
+	return o.CssRebuild, true
+}
+
+// HasCssRebuild returns a boolean if a field has been set.
+func (o *AppUIConfig) HasCssRebuild() bool {
+	if o != nil && !IsNil(o.CssRebuild) {
+		return true
+	}
+
+	return false
+}
+
+// SetCssRebuild gets a reference to the given bool and assigns it to the CssRebuild field.
+func (o *AppUIConfig) SetCssRebuild(v bool) {
+	o.CssRebuild = &v
+}
+
 // GetNavigation returns the Navigation field value if set, zero value otherwise.
 func (o *AppUIConfig) GetNavigation() []AppUINavItem {
 	if o == nil || IsNil(o.Navigation) {
@@ -183,6 +217,9 @@ func (o AppUIConfig) ToMap() (map[string]interface{}, error) {
 	toSerialize["src"] = o.Src
 	if !IsNil(o.Isolation) {
 		toSerialize["isolation"] = o.Isolation
+	}
+	if !IsNil(o.CssRebuild) {
+		toSerialize["css_rebuild"] = o.CssRebuild
 	}
 	if !IsNil(o.Navigation) {
 		toSerialize["navigation"] = o.Navigation
