@@ -23,6 +23,7 @@ type ModelOptions struct {
 	BedrockCohereCommandOptions *BedrockCohereCommandOptions
 	BedrockConverseOptions      *BedrockConverseOptions
 	BedrockGptOssOptions        *BedrockGptOssOptions
+	BedrockMantleOptions        *BedrockMantleOptions
 	BedrockMistralOptions       *BedrockMistralOptions
 	BedrockNovaOptions          *BedrockNovaOptions
 	BedrockPalmyraOptions       *BedrockPalmyraOptions
@@ -72,6 +73,13 @@ func BedrockConverseOptionsAsModelOptions(v *BedrockConverseOptions) ModelOption
 func BedrockGptOssOptionsAsModelOptions(v *BedrockGptOssOptions) ModelOptions {
 	return ModelOptions{
 		BedrockGptOssOptions: v,
+	}
+}
+
+// BedrockMantleOptionsAsModelOptions is a convenience function that returns BedrockMantleOptions wrapped in ModelOptions
+func BedrockMantleOptionsAsModelOptions(v *BedrockMantleOptions) ModelOptions {
+	return ModelOptions{
+		BedrockMantleOptions: v,
 	}
 }
 
@@ -267,6 +275,23 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		}
 	} else {
 		dst.BedrockGptOssOptions = nil
+	}
+
+	// try to unmarshal data into BedrockMantleOptions
+	err = newStrictDecoder(data).Decode(&dst.BedrockMantleOptions)
+	if err == nil {
+		jsonBedrockMantleOptions, _ := json.Marshal(dst.BedrockMantleOptions)
+		if string(jsonBedrockMantleOptions) == "{}" { // empty struct
+			dst.BedrockMantleOptions = nil
+		} else {
+			if err = validator.Validate(dst.BedrockMantleOptions); err != nil {
+				dst.BedrockMantleOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.BedrockMantleOptions = nil
 	}
 
 	// try to unmarshal data into BedrockMistralOptions
@@ -531,6 +556,7 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.BedrockCohereCommandOptions = nil
 		dst.BedrockConverseOptions = nil
 		dst.BedrockGptOssOptions = nil
+		dst.BedrockMantleOptions = nil
 		dst.BedrockMistralOptions = nil
 		dst.BedrockNovaOptions = nil
 		dst.BedrockPalmyraOptions = nil
@@ -575,6 +601,10 @@ func (src ModelOptions) MarshalJSON() ([]byte, error) {
 
 	if src.BedrockGptOssOptions != nil {
 		return json.Marshal(&src.BedrockGptOssOptions)
+	}
+
+	if src.BedrockMantleOptions != nil {
+		return json.Marshal(&src.BedrockMantleOptions)
 	}
 
 	if src.BedrockMistralOptions != nil {
@@ -665,6 +695,10 @@ func (obj *ModelOptions) GetActualInstance() interface{} {
 		return obj.BedrockGptOssOptions
 	}
 
+	if obj.BedrockMantleOptions != nil {
+		return obj.BedrockMantleOptions
+	}
+
 	if obj.BedrockMistralOptions != nil {
 		return obj.BedrockMistralOptions
 	}
@@ -749,6 +783,10 @@ func (obj ModelOptions) GetActualInstanceValue() interface{} {
 
 	if obj.BedrockGptOssOptions != nil {
 		return *obj.BedrockGptOssOptions
+	}
+
+	if obj.BedrockMantleOptions != nil {
+		return *obj.BedrockMantleOptions
 	}
 
 	if obj.BedrockMistralOptions != nil {

@@ -27,6 +27,7 @@ const (
 	SUPPORTEDPROVIDERS_HUGGINGFACE_IE           SupportedProviders = "huggingface_ie"
 	SUPPORTEDPROVIDERS_REPLICATE                SupportedProviders = "replicate"
 	SUPPORTEDPROVIDERS_BEDROCK                  SupportedProviders = "bedrock"
+	SUPPORTEDPROVIDERS_BEDROCK_MANTLE           SupportedProviders = "bedrock_mantle"
 	SUPPORTEDPROVIDERS_VERTEXAI                 SupportedProviders = "vertexai"
 	SUPPORTEDPROVIDERS_TOGETHERAI               SupportedProviders = "togetherai"
 	SUPPORTEDPROVIDERS_MISTRALAI                SupportedProviders = "mistralai"
@@ -49,6 +50,7 @@ var AllowedSupportedProvidersEnumValues = []SupportedProviders{
 	"huggingface_ie",
 	"replicate",
 	"bedrock",
+	"bedrock_mantle",
 	"vertexai",
 	"togetherai",
 	"mistralai",

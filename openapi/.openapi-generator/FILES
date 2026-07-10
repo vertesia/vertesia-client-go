@@ -139,6 +139,7 @@ model_bedrock_claude_options.go
 model_bedrock_cohere_command_options.go
 model_bedrock_converse_options.go
 model_bedrock_gpt_oss_options.go
+model_bedrock_mantle_options.go
 model_bedrock_mistral_options.go
 model_bedrock_nova_options.go
 model_bedrock_palmyra_options.go
