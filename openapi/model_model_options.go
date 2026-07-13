@@ -18,27 +18,29 @@ import (
 
 // ModelOptions - struct for ModelOptions
 type ModelOptions struct {
-	BedrockAI21Options          *BedrockAI21Options
-	BedrockClaudeOptions        *BedrockClaudeOptions
-	BedrockCohereCommandOptions *BedrockCohereCommandOptions
-	BedrockConverseOptions      *BedrockConverseOptions
-	BedrockGptOssOptions        *BedrockGptOssOptions
-	BedrockMantleOptions        *BedrockMantleOptions
-	BedrockMistralOptions       *BedrockMistralOptions
-	BedrockNovaOptions          *BedrockNovaOptions
-	BedrockPalmyraOptions       *BedrockPalmyraOptions
-	GroqOptions                 *GroqOptions
-	ImagenOptions               *ImagenOptions
-	NovaCanvasOptions           *NovaCanvasOptions
-	OpenAiDalleOptions          *OpenAiDalleOptions
-	OpenAiGptImageOptions       *OpenAiGptImageOptions
-	OpenAiTextOptions           *OpenAiTextOptions
-	OpenAiThinkingOptions       *OpenAiThinkingOptions
-	TextFallbackOptions         *TextFallbackOptions
-	TwelvelabsPegasusOptions    *TwelvelabsPegasusOptions
-	VertexAIClaudeOptions       *VertexAIClaudeOptions
-	VertexAIGeminiOptions       *VertexAIGeminiOptions
-	VertexAIGrokOptions         *VertexAIGrokOptions
+	BedrockAI21Options                  *BedrockAI21Options
+	BedrockClaudeOptions                *BedrockClaudeOptions
+	BedrockCohereCommandOptions         *BedrockCohereCommandOptions
+	BedrockConverseOptions              *BedrockConverseOptions
+	BedrockGptOssOptions                *BedrockGptOssOptions
+	BedrockMantleChatCompletionsOptions *BedrockMantleChatCompletionsOptions
+	BedrockMantleClaudeOptions          *BedrockMantleClaudeOptions
+	BedrockMantleResponsesOptions       *BedrockMantleResponsesOptions
+	BedrockMistralOptions               *BedrockMistralOptions
+	BedrockNovaOptions                  *BedrockNovaOptions
+	BedrockPalmyraOptions               *BedrockPalmyraOptions
+	GroqOptions                         *GroqOptions
+	ImagenOptions                       *ImagenOptions
+	NovaCanvasOptions                   *NovaCanvasOptions
+	OpenAiDalleOptions                  *OpenAiDalleOptions
+	OpenAiGptImageOptions               *OpenAiGptImageOptions
+	OpenAiTextOptions                   *OpenAiTextOptions
+	OpenAiThinkingOptions               *OpenAiThinkingOptions
+	TextFallbackOptions                 *TextFallbackOptions
+	TwelvelabsPegasusOptions            *TwelvelabsPegasusOptions
+	VertexAIClaudeOptions               *VertexAIClaudeOptions
+	VertexAIGeminiOptions               *VertexAIGeminiOptions
+	VertexAIGrokOptions                 *VertexAIGrokOptions
 }
 
 // BedrockAI21OptionsAsModelOptions is a convenience function that returns BedrockAI21Options wrapped in ModelOptions
@@ -76,10 +78,24 @@ func BedrockGptOssOptionsAsModelOptions(v *BedrockGptOssOptions) ModelOptions {
 	}
 }
 
-// BedrockMantleOptionsAsModelOptions is a convenience function that returns BedrockMantleOptions wrapped in ModelOptions
-func BedrockMantleOptionsAsModelOptions(v *BedrockMantleOptions) ModelOptions {
+// BedrockMantleChatCompletionsOptionsAsModelOptions is a convenience function that returns BedrockMantleChatCompletionsOptions wrapped in ModelOptions
+func BedrockMantleChatCompletionsOptionsAsModelOptions(v *BedrockMantleChatCompletionsOptions) ModelOptions {
 	return ModelOptions{
-		BedrockMantleOptions: v,
+		BedrockMantleChatCompletionsOptions: v,
+	}
+}
+
+// BedrockMantleClaudeOptionsAsModelOptions is a convenience function that returns BedrockMantleClaudeOptions wrapped in ModelOptions
+func BedrockMantleClaudeOptionsAsModelOptions(v *BedrockMantleClaudeOptions) ModelOptions {
+	return ModelOptions{
+		BedrockMantleClaudeOptions: v,
+	}
+}
+
+// BedrockMantleResponsesOptionsAsModelOptions is a convenience function that returns BedrockMantleResponsesOptions wrapped in ModelOptions
+func BedrockMantleResponsesOptionsAsModelOptions(v *BedrockMantleResponsesOptions) ModelOptions {
+	return ModelOptions{
+		BedrockMantleResponsesOptions: v,
 	}
 }
 
@@ -277,21 +293,55 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.BedrockGptOssOptions = nil
 	}
 
-	// try to unmarshal data into BedrockMantleOptions
-	err = newStrictDecoder(data).Decode(&dst.BedrockMantleOptions)
+	// try to unmarshal data into BedrockMantleChatCompletionsOptions
+	err = newStrictDecoder(data).Decode(&dst.BedrockMantleChatCompletionsOptions)
 	if err == nil {
-		jsonBedrockMantleOptions, _ := json.Marshal(dst.BedrockMantleOptions)
-		if string(jsonBedrockMantleOptions) == "{}" { // empty struct
-			dst.BedrockMantleOptions = nil
+		jsonBedrockMantleChatCompletionsOptions, _ := json.Marshal(dst.BedrockMantleChatCompletionsOptions)
+		if string(jsonBedrockMantleChatCompletionsOptions) == "{}" { // empty struct
+			dst.BedrockMantleChatCompletionsOptions = nil
 		} else {
-			if err = validator.Validate(dst.BedrockMantleOptions); err != nil {
-				dst.BedrockMantleOptions = nil
+			if err = validator.Validate(dst.BedrockMantleChatCompletionsOptions); err != nil {
+				dst.BedrockMantleChatCompletionsOptions = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.BedrockMantleOptions = nil
+		dst.BedrockMantleChatCompletionsOptions = nil
+	}
+
+	// try to unmarshal data into BedrockMantleClaudeOptions
+	err = newStrictDecoder(data).Decode(&dst.BedrockMantleClaudeOptions)
+	if err == nil {
+		jsonBedrockMantleClaudeOptions, _ := json.Marshal(dst.BedrockMantleClaudeOptions)
+		if string(jsonBedrockMantleClaudeOptions) == "{}" { // empty struct
+			dst.BedrockMantleClaudeOptions = nil
+		} else {
+			if err = validator.Validate(dst.BedrockMantleClaudeOptions); err != nil {
+				dst.BedrockMantleClaudeOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.BedrockMantleClaudeOptions = nil
+	}
+
+	// try to unmarshal data into BedrockMantleResponsesOptions
+	err = newStrictDecoder(data).Decode(&dst.BedrockMantleResponsesOptions)
+	if err == nil {
+		jsonBedrockMantleResponsesOptions, _ := json.Marshal(dst.BedrockMantleResponsesOptions)
+		if string(jsonBedrockMantleResponsesOptions) == "{}" { // empty struct
+			dst.BedrockMantleResponsesOptions = nil
+		} else {
+			if err = validator.Validate(dst.BedrockMantleResponsesOptions); err != nil {
+				dst.BedrockMantleResponsesOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.BedrockMantleResponsesOptions = nil
 	}
 
 	// try to unmarshal data into BedrockMistralOptions
@@ -556,7 +606,9 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.BedrockCohereCommandOptions = nil
 		dst.BedrockConverseOptions = nil
 		dst.BedrockGptOssOptions = nil
-		dst.BedrockMantleOptions = nil
+		dst.BedrockMantleChatCompletionsOptions = nil
+		dst.BedrockMantleClaudeOptions = nil
+		dst.BedrockMantleResponsesOptions = nil
 		dst.BedrockMistralOptions = nil
 		dst.BedrockNovaOptions = nil
 		dst.BedrockPalmyraOptions = nil
@@ -603,8 +655,16 @@ func (src ModelOptions) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.BedrockGptOssOptions)
 	}
 
-	if src.BedrockMantleOptions != nil {
-		return json.Marshal(&src.BedrockMantleOptions)
+	if src.BedrockMantleChatCompletionsOptions != nil {
+		return json.Marshal(&src.BedrockMantleChatCompletionsOptions)
+	}
+
+	if src.BedrockMantleClaudeOptions != nil {
+		return json.Marshal(&src.BedrockMantleClaudeOptions)
+	}
+
+	if src.BedrockMantleResponsesOptions != nil {
+		return json.Marshal(&src.BedrockMantleResponsesOptions)
 	}
 
 	if src.BedrockMistralOptions != nil {
@@ -695,8 +755,16 @@ func (obj *ModelOptions) GetActualInstance() interface{} {
 		return obj.BedrockGptOssOptions
 	}
 
-	if obj.BedrockMantleOptions != nil {
-		return obj.BedrockMantleOptions
+	if obj.BedrockMantleChatCompletionsOptions != nil {
+		return obj.BedrockMantleChatCompletionsOptions
+	}
+
+	if obj.BedrockMantleClaudeOptions != nil {
+		return obj.BedrockMantleClaudeOptions
+	}
+
+	if obj.BedrockMantleResponsesOptions != nil {
+		return obj.BedrockMantleResponsesOptions
 	}
 
 	if obj.BedrockMistralOptions != nil {
@@ -785,8 +853,16 @@ func (obj ModelOptions) GetActualInstanceValue() interface{} {
 		return *obj.BedrockGptOssOptions
 	}
 
-	if obj.BedrockMantleOptions != nil {
-		return *obj.BedrockMantleOptions
+	if obj.BedrockMantleChatCompletionsOptions != nil {
+		return *obj.BedrockMantleChatCompletionsOptions
+	}
+
+	if obj.BedrockMantleClaudeOptions != nil {
+		return *obj.BedrockMantleClaudeOptions
+	}
+
+	if obj.BedrockMantleResponsesOptions != nil {
+		return *obj.BedrockMantleResponsesOptions
 	}
 
 	if obj.BedrockMistralOptions != nil {
