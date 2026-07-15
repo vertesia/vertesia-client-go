@@ -27,6 +27,8 @@ type StatelessExecutionOptions struct {
 	// If set to true the original response from the target LLM will be included in the response under the original_response field. This is useful for debugging and for some advanced use cases. It is ignored on streaming requests
 	IncludeOriginalResponse *bool         `json:"include_original_response,omitempty"`
 	ModelOptions            *ModelOptions `json:"model_options,omitempty"`
+	// Stable identity for prompt caching. Providers with cache routing keys receive the value directly; providers with cache breakpoints use its presence to cache the stable prefix before the final dynamic block. Providers with fully implicit caching still require an identical prompt prefix.
+	PromptCacheKey *string `json:"prompt_cache_key,omitempty"`
 	// Per-call HTTP timeouts for upstream LLM-provider calls. These override the driver's default `DriverOptions.httpTimeout` for this execution only.
 	HttpTimeout *HttpTimeoutOptions `json:"httpTimeout,omitempty"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.
@@ -206,6 +208,38 @@ func (o *StatelessExecutionOptions) SetModelOptions(v ModelOptions) {
 	o.ModelOptions = &v
 }
 
+// GetPromptCacheKey returns the PromptCacheKey field value if set, zero value otherwise.
+func (o *StatelessExecutionOptions) GetPromptCacheKey() string {
+	if o == nil || IsNil(o.PromptCacheKey) {
+		var ret string
+		return ret
+	}
+	return *o.PromptCacheKey
+}
+
+// GetPromptCacheKeyOk returns a tuple with the PromptCacheKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatelessExecutionOptions) GetPromptCacheKeyOk() (*string, bool) {
+	if o == nil || IsNil(o.PromptCacheKey) {
+		return nil, false
+	}
+	return o.PromptCacheKey, true
+}
+
+// HasPromptCacheKey returns a boolean if a field has been set.
+func (o *StatelessExecutionOptions) HasPromptCacheKey() bool {
+	if o != nil && !IsNil(o.PromptCacheKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetPromptCacheKey gets a reference to the given string and assigns it to the PromptCacheKey field.
+func (o *StatelessExecutionOptions) SetPromptCacheKey(v string) {
+	o.PromptCacheKey = &v
+}
+
 // GetHttpTimeout returns the HttpTimeout field value if set, zero value otherwise.
 func (o *StatelessExecutionOptions) GetHttpTimeout() HttpTimeoutOptions {
 	if o == nil || IsNil(o.HttpTimeout) {
@@ -295,6 +329,9 @@ func (o StatelessExecutionOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ModelOptions) {
 		toSerialize["model_options"] = o.ModelOptions
+	}
+	if !IsNil(o.PromptCacheKey) {
+		toSerialize["prompt_cache_key"] = o.PromptCacheKey
 	}
 	if !IsNil(o.HttpTimeout) {
 		toSerialize["httpTimeout"] = o.HttpTimeout
