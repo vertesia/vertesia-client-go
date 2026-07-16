@@ -34,11 +34,13 @@ type ContentObjectTypeCatalogEntry struct {
 	TableLayout []ColumnLayout `json:"table_layout,omitempty"`
 	IsChunkable *bool          `json:"is_chunkable,omitempty"`
 	// Determines if the content will be validated against the object schema a generation time and save/update time.
-	StrictMode           *bool   `json:"strict_mode,omitempty"`
-	UpdatedBy            *string `json:"updated_by,omitempty"`
-	CreatedBy            *string `json:"created_by,omitempty"`
-	CreatedAt            *string `json:"created_at,omitempty"`
-	UpdatedAt            *string `json:"updated_at,omitempty"`
+	StrictMode           *bool                    `json:"strict_mode,omitempty"`
+	Status               *ContentObjectTypeStatus `json:"status,omitempty"`
+	Intake               *ContentTypeIntakePolicy `json:"intake,omitempty"`
+	UpdatedBy            *string                  `json:"updated_by,omitempty"`
+	CreatedBy            *string                  `json:"created_by,omitempty"`
+	CreatedAt            *string                  `json:"created_at,omitempty"`
+	UpdatedAt            *string                  `json:"updated_at,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -303,6 +305,70 @@ func (o *ContentObjectTypeCatalogEntry) SetStrictMode(v bool) {
 	o.StrictMode = &v
 }
 
+// GetStatus returns the Status field value if set, zero value otherwise.
+func (o *ContentObjectTypeCatalogEntry) GetStatus() ContentObjectTypeStatus {
+	if o == nil || IsNil(o.Status) {
+		var ret ContentObjectTypeStatus
+		return ret
+	}
+	return *o.Status
+}
+
+// GetStatusOk returns a tuple with the Status field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectTypeCatalogEntry) GetStatusOk() (*ContentObjectTypeStatus, bool) {
+	if o == nil || IsNil(o.Status) {
+		return nil, false
+	}
+	return o.Status, true
+}
+
+// HasStatus returns a boolean if a field has been set.
+func (o *ContentObjectTypeCatalogEntry) HasStatus() bool {
+	if o != nil && !IsNil(o.Status) {
+		return true
+	}
+
+	return false
+}
+
+// SetStatus gets a reference to the given ContentObjectTypeStatus and assigns it to the Status field.
+func (o *ContentObjectTypeCatalogEntry) SetStatus(v ContentObjectTypeStatus) {
+	o.Status = &v
+}
+
+// GetIntake returns the Intake field value if set, zero value otherwise.
+func (o *ContentObjectTypeCatalogEntry) GetIntake() ContentTypeIntakePolicy {
+	if o == nil || IsNil(o.Intake) {
+		var ret ContentTypeIntakePolicy
+		return ret
+	}
+	return *o.Intake
+}
+
+// GetIntakeOk returns a tuple with the Intake field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectTypeCatalogEntry) GetIntakeOk() (*ContentTypeIntakePolicy, bool) {
+	if o == nil || IsNil(o.Intake) {
+		return nil, false
+	}
+	return o.Intake, true
+}
+
+// HasIntake returns a boolean if a field has been set.
+func (o *ContentObjectTypeCatalogEntry) HasIntake() bool {
+	if o != nil && !IsNil(o.Intake) {
+		return true
+	}
+
+	return false
+}
+
+// SetIntake gets a reference to the given ContentTypeIntakePolicy and assigns it to the Intake field.
+func (o *ContentObjectTypeCatalogEntry) SetIntake(v ContentTypeIntakePolicy) {
+	o.Intake = &v
+}
+
 // GetUpdatedBy returns the UpdatedBy field value if set, zero value otherwise.
 func (o *ContentObjectTypeCatalogEntry) GetUpdatedBy() string {
 	if o == nil || IsNil(o.UpdatedBy) {
@@ -461,6 +527,12 @@ func (o ContentObjectTypeCatalogEntry) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.StrictMode) {
 		toSerialize["strict_mode"] = o.StrictMode
 	}
+	if !IsNil(o.Status) {
+		toSerialize["status"] = o.Status
+	}
+	if !IsNil(o.Intake) {
+		toSerialize["intake"] = o.Intake
+	}
 	if !IsNil(o.UpdatedBy) {
 		toSerialize["updated_by"] = o.UpdatedBy
 	}
@@ -525,6 +597,8 @@ func (o *ContentObjectTypeCatalogEntry) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "table_layout")
 		delete(additionalProperties, "is_chunkable")
 		delete(additionalProperties, "strict_mode")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "intake")
 		delete(additionalProperties, "updated_by")
 		delete(additionalProperties, "created_by")
 		delete(additionalProperties, "created_at")

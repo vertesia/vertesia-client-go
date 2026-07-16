@@ -26,6 +26,10 @@ type InteractionExecutionConfiguration struct {
 	RunData      *RunDataStorageLevel `json:"run_data,omitempty"`
 	ConfigMode   *ConfigModes         `json:"configMode,omitempty"`
 	ModelOptions *ModelOptions        `json:"model_options,omitempty"`
+	// Stable provider-side routing key for automatic prompt caching.
+	PromptCacheKey *string `json:"prompt_cache_key,omitempty"`
+	// Put the result schema after the cached prefix; Vertesia still validates the returned JSON against it.
+	PromptCacheSchemaSuffix *bool `json:"prompt_cache_schema_suffix,omitempty"`
 	// Per-run HTTP timeouts for upstream LLM-provider calls.
 	HttpTimeout *HttpTimeoutOptions `json:"http_timeout,omitempty"`
 }
@@ -271,6 +275,70 @@ func (o *InteractionExecutionConfiguration) SetModelOptions(v ModelOptions) {
 	o.ModelOptions = &v
 }
 
+// GetPromptCacheKey returns the PromptCacheKey field value if set, zero value otherwise.
+func (o *InteractionExecutionConfiguration) GetPromptCacheKey() string {
+	if o == nil || IsNil(o.PromptCacheKey) {
+		var ret string
+		return ret
+	}
+	return *o.PromptCacheKey
+}
+
+// GetPromptCacheKeyOk returns a tuple with the PromptCacheKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InteractionExecutionConfiguration) GetPromptCacheKeyOk() (*string, bool) {
+	if o == nil || IsNil(o.PromptCacheKey) {
+		return nil, false
+	}
+	return o.PromptCacheKey, true
+}
+
+// HasPromptCacheKey returns a boolean if a field has been set.
+func (o *InteractionExecutionConfiguration) HasPromptCacheKey() bool {
+	if o != nil && !IsNil(o.PromptCacheKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetPromptCacheKey gets a reference to the given string and assigns it to the PromptCacheKey field.
+func (o *InteractionExecutionConfiguration) SetPromptCacheKey(v string) {
+	o.PromptCacheKey = &v
+}
+
+// GetPromptCacheSchemaSuffix returns the PromptCacheSchemaSuffix field value if set, zero value otherwise.
+func (o *InteractionExecutionConfiguration) GetPromptCacheSchemaSuffix() bool {
+	if o == nil || IsNil(o.PromptCacheSchemaSuffix) {
+		var ret bool
+		return ret
+	}
+	return *o.PromptCacheSchemaSuffix
+}
+
+// GetPromptCacheSchemaSuffixOk returns a tuple with the PromptCacheSchemaSuffix field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InteractionExecutionConfiguration) GetPromptCacheSchemaSuffixOk() (*bool, bool) {
+	if o == nil || IsNil(o.PromptCacheSchemaSuffix) {
+		return nil, false
+	}
+	return o.PromptCacheSchemaSuffix, true
+}
+
+// HasPromptCacheSchemaSuffix returns a boolean if a field has been set.
+func (o *InteractionExecutionConfiguration) HasPromptCacheSchemaSuffix() bool {
+	if o != nil && !IsNil(o.PromptCacheSchemaSuffix) {
+		return true
+	}
+
+	return false
+}
+
+// SetPromptCacheSchemaSuffix gets a reference to the given bool and assigns it to the PromptCacheSchemaSuffix field.
+func (o *InteractionExecutionConfiguration) SetPromptCacheSchemaSuffix(v bool) {
+	o.PromptCacheSchemaSuffix = &v
+}
+
 // GetHttpTimeout returns the HttpTimeout field value if set, zero value otherwise.
 func (o *InteractionExecutionConfiguration) GetHttpTimeout() HttpTimeoutOptions {
 	if o == nil || IsNil(o.HttpTimeout) {
@@ -333,6 +401,12 @@ func (o InteractionExecutionConfiguration) ToMap() (map[string]interface{}, erro
 	}
 	if !IsNil(o.ModelOptions) {
 		toSerialize["model_options"] = o.ModelOptions
+	}
+	if !IsNil(o.PromptCacheKey) {
+		toSerialize["prompt_cache_key"] = o.PromptCacheKey
+	}
+	if !IsNil(o.PromptCacheSchemaSuffix) {
+		toSerialize["prompt_cache_schema_suffix"] = o.PromptCacheSchemaSuffix
 	}
 	if !IsNil(o.HttpTimeout) {
 		toSerialize["http_timeout"] = o.HttpTimeout

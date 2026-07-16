@@ -24,6 +24,8 @@ type StoredTypeRef struct {
 	// MongoDB ObjectId string for stored types
 	Id   string `json:"id"`
 	Name string `json:"name"`
+	// Display hint from the type's intake policy (`intake.default_view`). Enriched by the API on single-object reads so clients can pick the initial view without fetching the type. Absent on list responses and older servers.
+	DefaultView *string `json:"default_view,omitempty"`
 }
 
 type _StoredTypeRef StoredTypeRef
@@ -120,6 +122,38 @@ func (o *StoredTypeRef) SetName(v string) {
 	o.Name = v
 }
 
+// GetDefaultView returns the DefaultView field value if set, zero value otherwise.
+func (o *StoredTypeRef) GetDefaultView() string {
+	if o == nil || IsNil(o.DefaultView) {
+		var ret string
+		return ret
+	}
+	return *o.DefaultView
+}
+
+// GetDefaultViewOk returns a tuple with the DefaultView field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StoredTypeRef) GetDefaultViewOk() (*string, bool) {
+	if o == nil || IsNil(o.DefaultView) {
+		return nil, false
+	}
+	return o.DefaultView, true
+}
+
+// HasDefaultView returns a boolean if a field has been set.
+func (o *StoredTypeRef) HasDefaultView() bool {
+	if o != nil && !IsNil(o.DefaultView) {
+		return true
+	}
+
+	return false
+}
+
+// SetDefaultView gets a reference to the given string and assigns it to the DefaultView field.
+func (o *StoredTypeRef) SetDefaultView(v string) {
+	o.DefaultView = &v
+}
+
 func (o StoredTypeRef) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -133,6 +167,9 @@ func (o StoredTypeRef) ToMap() (map[string]interface{}, error) {
 	toSerialize["ref_type"] = o.RefType
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
+	if !IsNil(o.DefaultView) {
+		toSerialize["default_view"] = o.DefaultView
+	}
 	return toSerialize, nil
 }
 

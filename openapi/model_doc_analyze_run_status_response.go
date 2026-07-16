@@ -20,11 +20,12 @@ var _ MappedNullable = &DocAnalyzeRunStatusResponse{}
 
 // DocAnalyzeRunStatusResponse Represents a document analysis run status
 type DocAnalyzeRunStatusResponse struct {
-	WorkflowId    NullableString          `json:"workflow_id"`
-	WorkflowRunId NullableString          `json:"workflow_run_id"`
-	Status        WorkflowExecutionStatus `json:"status"`
-	Progress      *DocAnalyzerProgress    `json:"progress,omitempty"`
-	// The output format being used for processing (markdown or xml)
+	WorkflowId    NullableString           `json:"workflow_id"`
+	WorkflowRunId NullableString           `json:"workflow_run_id"`
+	Status        WorkflowExecutionStatus  `json:"status"`
+	Phase         *DocumentProcessingPhase `json:"phase,omitempty"`
+	Progress      *DocAnalyzerProgress     `json:"progress,omitempty"`
+	// The output format being used for processing.
 	OutputFormat *DocProcessorOutputFormat `json:"output_format,omitempty"`
 }
 
@@ -126,6 +127,38 @@ func (o *DocAnalyzeRunStatusResponse) SetStatus(v WorkflowExecutionStatus) {
 	o.Status = v
 }
 
+// GetPhase returns the Phase field value if set, zero value otherwise.
+func (o *DocAnalyzeRunStatusResponse) GetPhase() DocumentProcessingPhase {
+	if o == nil || IsNil(o.Phase) {
+		var ret DocumentProcessingPhase
+		return ret
+	}
+	return *o.Phase
+}
+
+// GetPhaseOk returns a tuple with the Phase field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocAnalyzeRunStatusResponse) GetPhaseOk() (*DocumentProcessingPhase, bool) {
+	if o == nil || IsNil(o.Phase) {
+		return nil, false
+	}
+	return o.Phase, true
+}
+
+// HasPhase returns a boolean if a field has been set.
+func (o *DocAnalyzeRunStatusResponse) HasPhase() bool {
+	if o != nil && !IsNil(o.Phase) {
+		return true
+	}
+
+	return false
+}
+
+// SetPhase gets a reference to the given DocumentProcessingPhase and assigns it to the Phase field.
+func (o *DocAnalyzeRunStatusResponse) SetPhase(v DocumentProcessingPhase) {
+	o.Phase = &v
+}
+
 // GetProgress returns the Progress field value if set, zero value otherwise.
 func (o *DocAnalyzeRunStatusResponse) GetProgress() DocAnalyzerProgress {
 	if o == nil || IsNil(o.Progress) {
@@ -203,6 +236,9 @@ func (o DocAnalyzeRunStatusResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize["workflow_id"] = o.WorkflowId.Get()
 	toSerialize["workflow_run_id"] = o.WorkflowRunId.Get()
 	toSerialize["status"] = o.Status
+	if !IsNil(o.Phase) {
+		toSerialize["phase"] = o.Phase
+	}
 	if !IsNil(o.Progress) {
 		toSerialize["progress"] = o.Progress
 	}

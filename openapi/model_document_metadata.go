@@ -20,16 +20,28 @@ var _ MappedNullable = &DocumentMetadata{}
 
 // DocumentMetadata struct for DocumentMetadata
 type DocumentMetadata struct {
-	Type                 ContentNatureDocument             `json:"type"`
-	Size                 *float32                          `json:"size,omitempty"`
-	Languages            []string                          `json:"languages,omitempty"`
-	Location             *Location                         `json:"location,omitempty"`
-	GenerationRuns       []GenerationRunMetadata           `json:"generation_runs,omitempty"`
-	Etag                 *string                           `json:"etag,omitempty"`
-	Renditions           []Rendition                       `json:"renditions,omitempty"`
-	PageCount            *float32                          `json:"page_count,omitempty"`
-	ContentProcessor     *DocumentMetadataContentProcessor `json:"content_processor,omitempty"`
-	Sections             []TextSection                     `json:"sections,omitempty"`
+	Type           ContentNatureDocument   `json:"type"`
+	Size           *float32                `json:"size,omitempty"`
+	Languages      []string                `json:"languages,omitempty"`
+	Location       *Location               `json:"location,omitempty"`
+	GenerationRuns []GenerationRunMetadata `json:"generation_runs,omitempty"`
+	Etag           *string                 `json:"etag,omitempty"`
+	// ETag of text materialized from object properties by intake rendering.
+	RenderedTextEtag *string     `json:"rendered_text_etag,omitempty"`
+	Renditions       []Rendition `json:"renditions,omitempty"`
+	// Embedded/technical metadata harvested from the source file by intake (office docProps, PDF docinfo). Free-form, nature-appropriate keys.
+	Embedded map[string]interface{} `json:"embedded,omitempty"`
+	// Type-detection provenance recorded by the intake sniff pipeline.
+	TypeDetection *TypeDetectionMetadata `json:"type_detection,omitempty"`
+	// Locate-pass provenance: which pages the document map found relevant.
+	Locate *LocateMetadata `json:"locate,omitempty"`
+	// Vision-evidence provenance for the last visual extraction run.
+	VisionEvidence   *VisionEvidenceMetadata           `json:"vision_evidence,omitempty"`
+	PageCount        *float32                          `json:"page_count,omitempty"`
+	ContentProcessor *DocumentMetadataContentProcessor `json:"content_processor,omitempty"`
+	// Grounded-extraction trust signal + key data. Written by the grounded pipeline (verdict, confidence, citation counts, review status, source etag, ...) and queryable for list/filter. Open-ended so more grounded key-data can be stored without a type change.
+	Grounded             *GroundedMetadata `json:"grounded,omitempty"`
+	Sections             []TextSection     `json:"sections,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -237,6 +249,38 @@ func (o *DocumentMetadata) SetEtag(v string) {
 	o.Etag = &v
 }
 
+// GetRenderedTextEtag returns the RenderedTextEtag field value if set, zero value otherwise.
+func (o *DocumentMetadata) GetRenderedTextEtag() string {
+	if o == nil || IsNil(o.RenderedTextEtag) {
+		var ret string
+		return ret
+	}
+	return *o.RenderedTextEtag
+}
+
+// GetRenderedTextEtagOk returns a tuple with the RenderedTextEtag field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentMetadata) GetRenderedTextEtagOk() (*string, bool) {
+	if o == nil || IsNil(o.RenderedTextEtag) {
+		return nil, false
+	}
+	return o.RenderedTextEtag, true
+}
+
+// HasRenderedTextEtag returns a boolean if a field has been set.
+func (o *DocumentMetadata) HasRenderedTextEtag() bool {
+	if o != nil && !IsNil(o.RenderedTextEtag) {
+		return true
+	}
+
+	return false
+}
+
+// SetRenderedTextEtag gets a reference to the given string and assigns it to the RenderedTextEtag field.
+func (o *DocumentMetadata) SetRenderedTextEtag(v string) {
+	o.RenderedTextEtag = &v
+}
+
 // GetRenditions returns the Renditions field value if set, zero value otherwise.
 func (o *DocumentMetadata) GetRenditions() []Rendition {
 	if o == nil || IsNil(o.Renditions) {
@@ -267,6 +311,134 @@ func (o *DocumentMetadata) HasRenditions() bool {
 // SetRenditions gets a reference to the given []Rendition and assigns it to the Renditions field.
 func (o *DocumentMetadata) SetRenditions(v []Rendition) {
 	o.Renditions = v
+}
+
+// GetEmbedded returns the Embedded field value if set, zero value otherwise.
+func (o *DocumentMetadata) GetEmbedded() map[string]interface{} {
+	if o == nil || IsNil(o.Embedded) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.Embedded
+}
+
+// GetEmbeddedOk returns a tuple with the Embedded field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentMetadata) GetEmbeddedOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.Embedded) {
+		return map[string]interface{}{}, false
+	}
+	return o.Embedded, true
+}
+
+// HasEmbedded returns a boolean if a field has been set.
+func (o *DocumentMetadata) HasEmbedded() bool {
+	if o != nil && !IsNil(o.Embedded) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmbedded gets a reference to the given map[string]interface{} and assigns it to the Embedded field.
+func (o *DocumentMetadata) SetEmbedded(v map[string]interface{}) {
+	o.Embedded = v
+}
+
+// GetTypeDetection returns the TypeDetection field value if set, zero value otherwise.
+func (o *DocumentMetadata) GetTypeDetection() TypeDetectionMetadata {
+	if o == nil || IsNil(o.TypeDetection) {
+		var ret TypeDetectionMetadata
+		return ret
+	}
+	return *o.TypeDetection
+}
+
+// GetTypeDetectionOk returns a tuple with the TypeDetection field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentMetadata) GetTypeDetectionOk() (*TypeDetectionMetadata, bool) {
+	if o == nil || IsNil(o.TypeDetection) {
+		return nil, false
+	}
+	return o.TypeDetection, true
+}
+
+// HasTypeDetection returns a boolean if a field has been set.
+func (o *DocumentMetadata) HasTypeDetection() bool {
+	if o != nil && !IsNil(o.TypeDetection) {
+		return true
+	}
+
+	return false
+}
+
+// SetTypeDetection gets a reference to the given TypeDetectionMetadata and assigns it to the TypeDetection field.
+func (o *DocumentMetadata) SetTypeDetection(v TypeDetectionMetadata) {
+	o.TypeDetection = &v
+}
+
+// GetLocate returns the Locate field value if set, zero value otherwise.
+func (o *DocumentMetadata) GetLocate() LocateMetadata {
+	if o == nil || IsNil(o.Locate) {
+		var ret LocateMetadata
+		return ret
+	}
+	return *o.Locate
+}
+
+// GetLocateOk returns a tuple with the Locate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentMetadata) GetLocateOk() (*LocateMetadata, bool) {
+	if o == nil || IsNil(o.Locate) {
+		return nil, false
+	}
+	return o.Locate, true
+}
+
+// HasLocate returns a boolean if a field has been set.
+func (o *DocumentMetadata) HasLocate() bool {
+	if o != nil && !IsNil(o.Locate) {
+		return true
+	}
+
+	return false
+}
+
+// SetLocate gets a reference to the given LocateMetadata and assigns it to the Locate field.
+func (o *DocumentMetadata) SetLocate(v LocateMetadata) {
+	o.Locate = &v
+}
+
+// GetVisionEvidence returns the VisionEvidence field value if set, zero value otherwise.
+func (o *DocumentMetadata) GetVisionEvidence() VisionEvidenceMetadata {
+	if o == nil || IsNil(o.VisionEvidence) {
+		var ret VisionEvidenceMetadata
+		return ret
+	}
+	return *o.VisionEvidence
+}
+
+// GetVisionEvidenceOk returns a tuple with the VisionEvidence field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentMetadata) GetVisionEvidenceOk() (*VisionEvidenceMetadata, bool) {
+	if o == nil || IsNil(o.VisionEvidence) {
+		return nil, false
+	}
+	return o.VisionEvidence, true
+}
+
+// HasVisionEvidence returns a boolean if a field has been set.
+func (o *DocumentMetadata) HasVisionEvidence() bool {
+	if o != nil && !IsNil(o.VisionEvidence) {
+		return true
+	}
+
+	return false
+}
+
+// SetVisionEvidence gets a reference to the given VisionEvidenceMetadata and assigns it to the VisionEvidence field.
+func (o *DocumentMetadata) SetVisionEvidence(v VisionEvidenceMetadata) {
+	o.VisionEvidence = &v
 }
 
 // GetPageCount returns the PageCount field value if set, zero value otherwise.
@@ -333,6 +505,38 @@ func (o *DocumentMetadata) SetContentProcessor(v DocumentMetadataContentProcesso
 	o.ContentProcessor = &v
 }
 
+// GetGrounded returns the Grounded field value if set, zero value otherwise.
+func (o *DocumentMetadata) GetGrounded() GroundedMetadata {
+	if o == nil || IsNil(o.Grounded) {
+		var ret GroundedMetadata
+		return ret
+	}
+	return *o.Grounded
+}
+
+// GetGroundedOk returns a tuple with the Grounded field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentMetadata) GetGroundedOk() (*GroundedMetadata, bool) {
+	if o == nil || IsNil(o.Grounded) {
+		return nil, false
+	}
+	return o.Grounded, true
+}
+
+// HasGrounded returns a boolean if a field has been set.
+func (o *DocumentMetadata) HasGrounded() bool {
+	if o != nil && !IsNil(o.Grounded) {
+		return true
+	}
+
+	return false
+}
+
+// SetGrounded gets a reference to the given GroundedMetadata and assigns it to the Grounded field.
+func (o *DocumentMetadata) SetGrounded(v GroundedMetadata) {
+	o.Grounded = &v
+}
+
 // GetSections returns the Sections field value if set, zero value otherwise.
 func (o *DocumentMetadata) GetSections() []TextSection {
 	if o == nil || IsNil(o.Sections) {
@@ -391,14 +595,32 @@ func (o DocumentMetadata) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Etag) {
 		toSerialize["etag"] = o.Etag
 	}
+	if !IsNil(o.RenderedTextEtag) {
+		toSerialize["rendered_text_etag"] = o.RenderedTextEtag
+	}
 	if !IsNil(o.Renditions) {
 		toSerialize["renditions"] = o.Renditions
+	}
+	if !IsNil(o.Embedded) {
+		toSerialize["embedded"] = o.Embedded
+	}
+	if !IsNil(o.TypeDetection) {
+		toSerialize["type_detection"] = o.TypeDetection
+	}
+	if !IsNil(o.Locate) {
+		toSerialize["locate"] = o.Locate
+	}
+	if !IsNil(o.VisionEvidence) {
+		toSerialize["vision_evidence"] = o.VisionEvidence
 	}
 	if !IsNil(o.PageCount) {
 		toSerialize["page_count"] = o.PageCount
 	}
 	if !IsNil(o.ContentProcessor) {
 		toSerialize["content_processor"] = o.ContentProcessor
+	}
+	if !IsNil(o.Grounded) {
+		toSerialize["grounded"] = o.Grounded
 	}
 	if !IsNil(o.Sections) {
 		toSerialize["sections"] = o.Sections
@@ -452,9 +674,15 @@ func (o *DocumentMetadata) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "location")
 		delete(additionalProperties, "generation_runs")
 		delete(additionalProperties, "etag")
+		delete(additionalProperties, "rendered_text_etag")
 		delete(additionalProperties, "renditions")
+		delete(additionalProperties, "embedded")
+		delete(additionalProperties, "type_detection")
+		delete(additionalProperties, "locate")
+		delete(additionalProperties, "vision_evidence")
 		delete(additionalProperties, "page_count")
 		delete(additionalProperties, "content_processor")
+		delete(additionalProperties, "grounded")
 		delete(additionalProperties, "sections")
 		o.AdditionalProperties = additionalProperties
 	}

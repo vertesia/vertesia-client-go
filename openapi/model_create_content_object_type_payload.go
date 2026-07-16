@@ -20,7 +20,9 @@ var _ MappedNullable = &CreateContentObjectTypePayload{}
 
 // CreateContentObjectTypePayload struct for CreateContentObjectTypePayload
 type CreateContentObjectTypePayload struct {
-	IsChunkable *bool `json:"is_chunkable,omitempty"`
+	Status      *ContentObjectTypeStatus `json:"status,omitempty"`
+	IsChunkable *bool                    `json:"is_chunkable,omitempty"`
+	Intake      *ContentTypeIntakePolicy `json:"intake,omitempty"`
 	// This is only included in ContentObjectTypeItem if explicitly requested It is always included in ContentObjectType
 	TableLayout []ColumnLayout `json:"table_layout,omitempty"`
 	// this is only included in ContentObjectTypeItem if explicitly requested It is always included in ContentObjectType
@@ -56,6 +58,38 @@ func NewCreateContentObjectTypePayloadWithDefaults() *CreateContentObjectTypePay
 	return &this
 }
 
+// GetStatus returns the Status field value if set, zero value otherwise.
+func (o *CreateContentObjectTypePayload) GetStatus() ContentObjectTypeStatus {
+	if o == nil || IsNil(o.Status) {
+		var ret ContentObjectTypeStatus
+		return ret
+	}
+	return *o.Status
+}
+
+// GetStatusOk returns a tuple with the Status field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateContentObjectTypePayload) GetStatusOk() (*ContentObjectTypeStatus, bool) {
+	if o == nil || IsNil(o.Status) {
+		return nil, false
+	}
+	return o.Status, true
+}
+
+// HasStatus returns a boolean if a field has been set.
+func (o *CreateContentObjectTypePayload) HasStatus() bool {
+	if o != nil && !IsNil(o.Status) {
+		return true
+	}
+
+	return false
+}
+
+// SetStatus gets a reference to the given ContentObjectTypeStatus and assigns it to the Status field.
+func (o *CreateContentObjectTypePayload) SetStatus(v ContentObjectTypeStatus) {
+	o.Status = &v
+}
+
 // GetIsChunkable returns the IsChunkable field value if set, zero value otherwise.
 func (o *CreateContentObjectTypePayload) GetIsChunkable() bool {
 	if o == nil || IsNil(o.IsChunkable) {
@@ -86,6 +120,38 @@ func (o *CreateContentObjectTypePayload) HasIsChunkable() bool {
 // SetIsChunkable gets a reference to the given bool and assigns it to the IsChunkable field.
 func (o *CreateContentObjectTypePayload) SetIsChunkable(v bool) {
 	o.IsChunkable = &v
+}
+
+// GetIntake returns the Intake field value if set, zero value otherwise.
+func (o *CreateContentObjectTypePayload) GetIntake() ContentTypeIntakePolicy {
+	if o == nil || IsNil(o.Intake) {
+		var ret ContentTypeIntakePolicy
+		return ret
+	}
+	return *o.Intake
+}
+
+// GetIntakeOk returns a tuple with the Intake field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateContentObjectTypePayload) GetIntakeOk() (*ContentTypeIntakePolicy, bool) {
+	if o == nil || IsNil(o.Intake) {
+		return nil, false
+	}
+	return o.Intake, true
+}
+
+// HasIntake returns a boolean if a field has been set.
+func (o *CreateContentObjectTypePayload) HasIntake() bool {
+	if o != nil && !IsNil(o.Intake) {
+		return true
+	}
+
+	return false
+}
+
+// SetIntake gets a reference to the given ContentTypeIntakePolicy and assigns it to the Intake field.
+func (o *CreateContentObjectTypePayload) SetIntake(v ContentTypeIntakePolicy) {
+	o.Intake = &v
 }
 
 // GetTableLayout returns the TableLayout field value if set, zero value otherwise.
@@ -282,8 +348,14 @@ func (o CreateContentObjectTypePayload) MarshalJSON() ([]byte, error) {
 
 func (o CreateContentObjectTypePayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Status) {
+		toSerialize["status"] = o.Status
+	}
 	if !IsNil(o.IsChunkable) {
 		toSerialize["is_chunkable"] = o.IsChunkable
+	}
+	if !IsNil(o.Intake) {
+		toSerialize["intake"] = o.Intake
 	}
 	if !IsNil(o.TableLayout) {
 		toSerialize["table_layout"] = o.TableLayout
@@ -344,7 +416,9 @@ func (o *CreateContentObjectTypePayload) UnmarshalJSON(data []byte) (err error) 
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "status")
 		delete(additionalProperties, "is_chunkable")
+		delete(additionalProperties, "intake")
 		delete(additionalProperties, "table_layout")
 		delete(additionalProperties, "object_schema")
 		delete(additionalProperties, "strict_mode")

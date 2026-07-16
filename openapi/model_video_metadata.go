@@ -20,17 +20,27 @@ var _ MappedNullable = &VideoMetadata{}
 
 // VideoMetadata struct for VideoMetadata
 type VideoMetadata struct {
-	Type                 ContentNatureVideo        `json:"type"`
-	Size                 *float32                  `json:"size,omitempty"`
-	Languages            []string                  `json:"languages,omitempty"`
-	Location             *Location                 `json:"location,omitempty"`
-	GenerationRuns       []GenerationRunMetadata   `json:"generation_runs,omitempty"`
-	Etag                 *string                   `json:"etag,omitempty"`
-	Renditions           []RenditionWithDimensions `json:"renditions,omitempty"`
-	Duration             *float32                  `json:"duration,omitempty"`
-	Transcript           *Transcript               `json:"transcript,omitempty"`
-	Dimensions           *Dimensions               `json:"dimensions,omitempty"`
-	HasAudio             *bool                     `json:"hasAudio,omitempty"`
+	Type           ContentNatureVideo      `json:"type"`
+	Size           *float32                `json:"size,omitempty"`
+	Languages      []string                `json:"languages,omitempty"`
+	Location       *Location               `json:"location,omitempty"`
+	GenerationRuns []GenerationRunMetadata `json:"generation_runs,omitempty"`
+	Etag           *string                 `json:"etag,omitempty"`
+	// ETag of text materialized from object properties by intake rendering.
+	RenderedTextEtag *string                   `json:"rendered_text_etag,omitempty"`
+	Renditions       []RenditionWithDimensions `json:"renditions,omitempty"`
+	// Embedded/technical metadata harvested from the source file by intake (office docProps, PDF docinfo). Free-form, nature-appropriate keys.
+	Embedded map[string]interface{} `json:"embedded,omitempty"`
+	// Type-detection provenance recorded by the intake sniff pipeline.
+	TypeDetection *TypeDetectionMetadata `json:"type_detection,omitempty"`
+	// Locate-pass provenance: which pages the document map found relevant.
+	Locate *LocateMetadata `json:"locate,omitempty"`
+	// Vision-evidence provenance for the last visual extraction run.
+	VisionEvidence       *VisionEvidenceMetadata `json:"vision_evidence,omitempty"`
+	Duration             *float32                `json:"duration,omitempty"`
+	Transcript           *Transcript             `json:"transcript,omitempty"`
+	Dimensions           *Dimensions             `json:"dimensions,omitempty"`
+	HasAudio             *bool                   `json:"hasAudio,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -238,6 +248,38 @@ func (o *VideoMetadata) SetEtag(v string) {
 	o.Etag = &v
 }
 
+// GetRenderedTextEtag returns the RenderedTextEtag field value if set, zero value otherwise.
+func (o *VideoMetadata) GetRenderedTextEtag() string {
+	if o == nil || IsNil(o.RenderedTextEtag) {
+		var ret string
+		return ret
+	}
+	return *o.RenderedTextEtag
+}
+
+// GetRenderedTextEtagOk returns a tuple with the RenderedTextEtag field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VideoMetadata) GetRenderedTextEtagOk() (*string, bool) {
+	if o == nil || IsNil(o.RenderedTextEtag) {
+		return nil, false
+	}
+	return o.RenderedTextEtag, true
+}
+
+// HasRenderedTextEtag returns a boolean if a field has been set.
+func (o *VideoMetadata) HasRenderedTextEtag() bool {
+	if o != nil && !IsNil(o.RenderedTextEtag) {
+		return true
+	}
+
+	return false
+}
+
+// SetRenderedTextEtag gets a reference to the given string and assigns it to the RenderedTextEtag field.
+func (o *VideoMetadata) SetRenderedTextEtag(v string) {
+	o.RenderedTextEtag = &v
+}
+
 // GetRenditions returns the Renditions field value if set, zero value otherwise.
 func (o *VideoMetadata) GetRenditions() []RenditionWithDimensions {
 	if o == nil || IsNil(o.Renditions) {
@@ -268,6 +310,134 @@ func (o *VideoMetadata) HasRenditions() bool {
 // SetRenditions gets a reference to the given []RenditionWithDimensions and assigns it to the Renditions field.
 func (o *VideoMetadata) SetRenditions(v []RenditionWithDimensions) {
 	o.Renditions = v
+}
+
+// GetEmbedded returns the Embedded field value if set, zero value otherwise.
+func (o *VideoMetadata) GetEmbedded() map[string]interface{} {
+	if o == nil || IsNil(o.Embedded) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.Embedded
+}
+
+// GetEmbeddedOk returns a tuple with the Embedded field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VideoMetadata) GetEmbeddedOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.Embedded) {
+		return map[string]interface{}{}, false
+	}
+	return o.Embedded, true
+}
+
+// HasEmbedded returns a boolean if a field has been set.
+func (o *VideoMetadata) HasEmbedded() bool {
+	if o != nil && !IsNil(o.Embedded) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmbedded gets a reference to the given map[string]interface{} and assigns it to the Embedded field.
+func (o *VideoMetadata) SetEmbedded(v map[string]interface{}) {
+	o.Embedded = v
+}
+
+// GetTypeDetection returns the TypeDetection field value if set, zero value otherwise.
+func (o *VideoMetadata) GetTypeDetection() TypeDetectionMetadata {
+	if o == nil || IsNil(o.TypeDetection) {
+		var ret TypeDetectionMetadata
+		return ret
+	}
+	return *o.TypeDetection
+}
+
+// GetTypeDetectionOk returns a tuple with the TypeDetection field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VideoMetadata) GetTypeDetectionOk() (*TypeDetectionMetadata, bool) {
+	if o == nil || IsNil(o.TypeDetection) {
+		return nil, false
+	}
+	return o.TypeDetection, true
+}
+
+// HasTypeDetection returns a boolean if a field has been set.
+func (o *VideoMetadata) HasTypeDetection() bool {
+	if o != nil && !IsNil(o.TypeDetection) {
+		return true
+	}
+
+	return false
+}
+
+// SetTypeDetection gets a reference to the given TypeDetectionMetadata and assigns it to the TypeDetection field.
+func (o *VideoMetadata) SetTypeDetection(v TypeDetectionMetadata) {
+	o.TypeDetection = &v
+}
+
+// GetLocate returns the Locate field value if set, zero value otherwise.
+func (o *VideoMetadata) GetLocate() LocateMetadata {
+	if o == nil || IsNil(o.Locate) {
+		var ret LocateMetadata
+		return ret
+	}
+	return *o.Locate
+}
+
+// GetLocateOk returns a tuple with the Locate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VideoMetadata) GetLocateOk() (*LocateMetadata, bool) {
+	if o == nil || IsNil(o.Locate) {
+		return nil, false
+	}
+	return o.Locate, true
+}
+
+// HasLocate returns a boolean if a field has been set.
+func (o *VideoMetadata) HasLocate() bool {
+	if o != nil && !IsNil(o.Locate) {
+		return true
+	}
+
+	return false
+}
+
+// SetLocate gets a reference to the given LocateMetadata and assigns it to the Locate field.
+func (o *VideoMetadata) SetLocate(v LocateMetadata) {
+	o.Locate = &v
+}
+
+// GetVisionEvidence returns the VisionEvidence field value if set, zero value otherwise.
+func (o *VideoMetadata) GetVisionEvidence() VisionEvidenceMetadata {
+	if o == nil || IsNil(o.VisionEvidence) {
+		var ret VisionEvidenceMetadata
+		return ret
+	}
+	return *o.VisionEvidence
+}
+
+// GetVisionEvidenceOk returns a tuple with the VisionEvidence field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VideoMetadata) GetVisionEvidenceOk() (*VisionEvidenceMetadata, bool) {
+	if o == nil || IsNil(o.VisionEvidence) {
+		return nil, false
+	}
+	return o.VisionEvidence, true
+}
+
+// HasVisionEvidence returns a boolean if a field has been set.
+func (o *VideoMetadata) HasVisionEvidence() bool {
+	if o != nil && !IsNil(o.VisionEvidence) {
+		return true
+	}
+
+	return false
+}
+
+// SetVisionEvidence gets a reference to the given VisionEvidenceMetadata and assigns it to the VisionEvidence field.
+func (o *VideoMetadata) SetVisionEvidence(v VisionEvidenceMetadata) {
+	o.VisionEvidence = &v
 }
 
 // GetDuration returns the Duration field value if set, zero value otherwise.
@@ -424,8 +594,23 @@ func (o VideoMetadata) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Etag) {
 		toSerialize["etag"] = o.Etag
 	}
+	if !IsNil(o.RenderedTextEtag) {
+		toSerialize["rendered_text_etag"] = o.RenderedTextEtag
+	}
 	if !IsNil(o.Renditions) {
 		toSerialize["renditions"] = o.Renditions
+	}
+	if !IsNil(o.Embedded) {
+		toSerialize["embedded"] = o.Embedded
+	}
+	if !IsNil(o.TypeDetection) {
+		toSerialize["type_detection"] = o.TypeDetection
+	}
+	if !IsNil(o.Locate) {
+		toSerialize["locate"] = o.Locate
+	}
+	if !IsNil(o.VisionEvidence) {
+		toSerialize["vision_evidence"] = o.VisionEvidence
 	}
 	if !IsNil(o.Duration) {
 		toSerialize["duration"] = o.Duration
@@ -488,7 +673,12 @@ func (o *VideoMetadata) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "location")
 		delete(additionalProperties, "generation_runs")
 		delete(additionalProperties, "etag")
+		delete(additionalProperties, "rendered_text_etag")
 		delete(additionalProperties, "renditions")
+		delete(additionalProperties, "embedded")
+		delete(additionalProperties, "type_detection")
+		delete(additionalProperties, "locate")
+		delete(additionalProperties, "vision_evidence")
 		delete(additionalProperties, "duration")
 		delete(additionalProperties, "transcript")
 		delete(additionalProperties, "dimensions")

@@ -35,8 +35,10 @@ type ContentObjectTypeItem struct {
 	// ISO timestamp of when the object was created
 	CreatedAt string `json:"created_at"`
 	// ISO timestamp of when the object was last updated
-	UpdatedAt   string `json:"updated_at"`
-	IsChunkable *bool  `json:"is_chunkable,omitempty"`
+	UpdatedAt   string                   `json:"updated_at"`
+	Status      *ContentObjectTypeStatus `json:"status,omitempty"`
+	IsChunkable *bool                    `json:"is_chunkable,omitempty"`
+	Intake      *ContentTypeIntakePolicy `json:"intake,omitempty"`
 	// This is only included in ContentObjectTypeItem if explicitly requested It is always included in ContentObjectType
 	TableLayout []ColumnLayout `json:"table_layout,omitempty"`
 	// this is only included in ContentObjectTypeItem if explicitly requested It is always included in ContentObjectType
@@ -278,6 +280,38 @@ func (o *ContentObjectTypeItem) SetUpdatedAt(v string) {
 	o.UpdatedAt = v
 }
 
+// GetStatus returns the Status field value if set, zero value otherwise.
+func (o *ContentObjectTypeItem) GetStatus() ContentObjectTypeStatus {
+	if o == nil || IsNil(o.Status) {
+		var ret ContentObjectTypeStatus
+		return ret
+	}
+	return *o.Status
+}
+
+// GetStatusOk returns a tuple with the Status field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectTypeItem) GetStatusOk() (*ContentObjectTypeStatus, bool) {
+	if o == nil || IsNil(o.Status) {
+		return nil, false
+	}
+	return o.Status, true
+}
+
+// HasStatus returns a boolean if a field has been set.
+func (o *ContentObjectTypeItem) HasStatus() bool {
+	if o != nil && !IsNil(o.Status) {
+		return true
+	}
+
+	return false
+}
+
+// SetStatus gets a reference to the given ContentObjectTypeStatus and assigns it to the Status field.
+func (o *ContentObjectTypeItem) SetStatus(v ContentObjectTypeStatus) {
+	o.Status = &v
+}
+
 // GetIsChunkable returns the IsChunkable field value if set, zero value otherwise.
 func (o *ContentObjectTypeItem) GetIsChunkable() bool {
 	if o == nil || IsNil(o.IsChunkable) {
@@ -308,6 +342,38 @@ func (o *ContentObjectTypeItem) HasIsChunkable() bool {
 // SetIsChunkable gets a reference to the given bool and assigns it to the IsChunkable field.
 func (o *ContentObjectTypeItem) SetIsChunkable(v bool) {
 	o.IsChunkable = &v
+}
+
+// GetIntake returns the Intake field value if set, zero value otherwise.
+func (o *ContentObjectTypeItem) GetIntake() ContentTypeIntakePolicy {
+	if o == nil || IsNil(o.Intake) {
+		var ret ContentTypeIntakePolicy
+		return ret
+	}
+	return *o.Intake
+}
+
+// GetIntakeOk returns a tuple with the Intake field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectTypeItem) GetIntakeOk() (*ContentTypeIntakePolicy, bool) {
+	if o == nil || IsNil(o.Intake) {
+		return nil, false
+	}
+	return o.Intake, true
+}
+
+// HasIntake returns a boolean if a field has been set.
+func (o *ContentObjectTypeItem) HasIntake() bool {
+	if o != nil && !IsNil(o.Intake) {
+		return true
+	}
+
+	return false
+}
+
+// SetIntake gets a reference to the given ContentTypeIntakePolicy and assigns it to the Intake field.
+func (o *ContentObjectTypeItem) SetIntake(v ContentTypeIntakePolicy) {
+	o.Intake = &v
 }
 
 // GetTableLayout returns the TableLayout field value if set, zero value otherwise.
@@ -428,8 +494,14 @@ func (o ContentObjectTypeItem) ToMap() (map[string]interface{}, error) {
 	toSerialize["created_by"] = o.CreatedBy
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt
+	if !IsNil(o.Status) {
+		toSerialize["status"] = o.Status
+	}
 	if !IsNil(o.IsChunkable) {
 		toSerialize["is_chunkable"] = o.IsChunkable
+	}
+	if !IsNil(o.Intake) {
+		toSerialize["intake"] = o.Intake
 	}
 	if !IsNil(o.TableLayout) {
 		toSerialize["table_layout"] = o.TableLayout

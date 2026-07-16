@@ -20,14 +20,12 @@ type DocProcessorOutputFormat string
 
 // List of DocProcessorOutputFormat
 const (
-	DOCPROCESSOROUTPUTFORMAT_XML                      DocProcessorOutputFormat = "xml"
 	DOCPROCESSOROUTPUTFORMAT_MARKDOWN                 DocProcessorOutputFormat = "markdown"
 	DOCPROCESSOROUTPUTFORMAT_UNKNOWN_DEFAULT_OPEN_API DocProcessorOutputFormat = "unknown_default_open_api"
 )
 
 // All allowed values of DocProcessorOutputFormat enum
 var AllowedDocProcessorOutputFormatEnumValues = []DocProcessorOutputFormat{
-	"xml",
 	"markdown",
 	"unknown_default_open_api",
 }

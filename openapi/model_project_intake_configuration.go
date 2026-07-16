@@ -19,6 +19,14 @@ var _ MappedNullable = &ProjectIntakeConfiguration{}
 
 // ProjectIntakeConfiguration struct for ProjectIntakeConfiguration
 type ProjectIntakeConfiguration struct {
+	// Master switch for the standard intake pipeline. When false, StandardIntake exits as a no-op WITHOUT touching object status (objects stay in `created`, identifiable as unprocessed). Defaults to true.
+	Enabled *bool `json:"enabled,omitempty"`
+	// Fast pre-conversion type identification for untyped documents. Absent means enabled with platform default thresholds.
+	Sniff *ProjectIntakeSniffConfiguration `json:"sniff,omitempty"`
+	// Project-level intake policy defaults. Same shape as the per-content-type policy; a type's `intake` block wins field-by-field over these defaults, which in turn win over the legacy flat fields below. `identification` is type-specific and ignored here.
+	DefaultPolicy *ContentTypeIntakePolicy `json:"default_policy,omitempty"`
+	// Project overrides for the platform vision detail profiles used by intake visual extraction (`low`/`standard`/`high`). Partial: omitted profiles or fields inherit the platform defaults. Types reference detail NAMES only; the profile settings live here.
+	VisionProfiles *PartialRecordIntakeVisionDetailPartialIntakeVisionProfileSettings `json:"vision_profiles,omitempty"`
 	// Generate table-of-content sections during standard document intake. Defaults to false.
 	GenerateToc *bool `json:"generate_toc,omitempty"`
 	// Skip table-of-content generation when the document text exceeds this many characters. Avoids sending very large documents through the TOC interactions. Unset means no limit.
@@ -46,6 +54,134 @@ func NewProjectIntakeConfiguration() *ProjectIntakeConfiguration {
 func NewProjectIntakeConfigurationWithDefaults() *ProjectIntakeConfiguration {
 	this := ProjectIntakeConfiguration{}
 	return &this
+}
+
+// GetEnabled returns the Enabled field value if set, zero value otherwise.
+func (o *ProjectIntakeConfiguration) GetEnabled() bool {
+	if o == nil || IsNil(o.Enabled) {
+		var ret bool
+		return ret
+	}
+	return *o.Enabled
+}
+
+// GetEnabledOk returns a tuple with the Enabled field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProjectIntakeConfiguration) GetEnabledOk() (*bool, bool) {
+	if o == nil || IsNil(o.Enabled) {
+		return nil, false
+	}
+	return o.Enabled, true
+}
+
+// HasEnabled returns a boolean if a field has been set.
+func (o *ProjectIntakeConfiguration) HasEnabled() bool {
+	if o != nil && !IsNil(o.Enabled) {
+		return true
+	}
+
+	return false
+}
+
+// SetEnabled gets a reference to the given bool and assigns it to the Enabled field.
+func (o *ProjectIntakeConfiguration) SetEnabled(v bool) {
+	o.Enabled = &v
+}
+
+// GetSniff returns the Sniff field value if set, zero value otherwise.
+func (o *ProjectIntakeConfiguration) GetSniff() ProjectIntakeSniffConfiguration {
+	if o == nil || IsNil(o.Sniff) {
+		var ret ProjectIntakeSniffConfiguration
+		return ret
+	}
+	return *o.Sniff
+}
+
+// GetSniffOk returns a tuple with the Sniff field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProjectIntakeConfiguration) GetSniffOk() (*ProjectIntakeSniffConfiguration, bool) {
+	if o == nil || IsNil(o.Sniff) {
+		return nil, false
+	}
+	return o.Sniff, true
+}
+
+// HasSniff returns a boolean if a field has been set.
+func (o *ProjectIntakeConfiguration) HasSniff() bool {
+	if o != nil && !IsNil(o.Sniff) {
+		return true
+	}
+
+	return false
+}
+
+// SetSniff gets a reference to the given ProjectIntakeSniffConfiguration and assigns it to the Sniff field.
+func (o *ProjectIntakeConfiguration) SetSniff(v ProjectIntakeSniffConfiguration) {
+	o.Sniff = &v
+}
+
+// GetDefaultPolicy returns the DefaultPolicy field value if set, zero value otherwise.
+func (o *ProjectIntakeConfiguration) GetDefaultPolicy() ContentTypeIntakePolicy {
+	if o == nil || IsNil(o.DefaultPolicy) {
+		var ret ContentTypeIntakePolicy
+		return ret
+	}
+	return *o.DefaultPolicy
+}
+
+// GetDefaultPolicyOk returns a tuple with the DefaultPolicy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProjectIntakeConfiguration) GetDefaultPolicyOk() (*ContentTypeIntakePolicy, bool) {
+	if o == nil || IsNil(o.DefaultPolicy) {
+		return nil, false
+	}
+	return o.DefaultPolicy, true
+}
+
+// HasDefaultPolicy returns a boolean if a field has been set.
+func (o *ProjectIntakeConfiguration) HasDefaultPolicy() bool {
+	if o != nil && !IsNil(o.DefaultPolicy) {
+		return true
+	}
+
+	return false
+}
+
+// SetDefaultPolicy gets a reference to the given ContentTypeIntakePolicy and assigns it to the DefaultPolicy field.
+func (o *ProjectIntakeConfiguration) SetDefaultPolicy(v ContentTypeIntakePolicy) {
+	o.DefaultPolicy = &v
+}
+
+// GetVisionProfiles returns the VisionProfiles field value if set, zero value otherwise.
+func (o *ProjectIntakeConfiguration) GetVisionProfiles() PartialRecordIntakeVisionDetailPartialIntakeVisionProfileSettings {
+	if o == nil || IsNil(o.VisionProfiles) {
+		var ret PartialRecordIntakeVisionDetailPartialIntakeVisionProfileSettings
+		return ret
+	}
+	return *o.VisionProfiles
+}
+
+// GetVisionProfilesOk returns a tuple with the VisionProfiles field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProjectIntakeConfiguration) GetVisionProfilesOk() (*PartialRecordIntakeVisionDetailPartialIntakeVisionProfileSettings, bool) {
+	if o == nil || IsNil(o.VisionProfiles) {
+		return nil, false
+	}
+	return o.VisionProfiles, true
+}
+
+// HasVisionProfiles returns a boolean if a field has been set.
+func (o *ProjectIntakeConfiguration) HasVisionProfiles() bool {
+	if o != nil && !IsNil(o.VisionProfiles) {
+		return true
+	}
+
+	return false
+}
+
+// SetVisionProfiles gets a reference to the given PartialRecordIntakeVisionDetailPartialIntakeVisionProfileSettings and assigns it to the VisionProfiles field.
+func (o *ProjectIntakeConfiguration) SetVisionProfiles(v PartialRecordIntakeVisionDetailPartialIntakeVisionProfileSettings) {
+	o.VisionProfiles = &v
 }
 
 // GetGenerateToc returns the GenerateToc field value if set, zero value otherwise.
@@ -218,6 +354,18 @@ func (o ProjectIntakeConfiguration) MarshalJSON() ([]byte, error) {
 
 func (o ProjectIntakeConfiguration) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Enabled) {
+		toSerialize["enabled"] = o.Enabled
+	}
+	if !IsNil(o.Sniff) {
+		toSerialize["sniff"] = o.Sniff
+	}
+	if !IsNil(o.DefaultPolicy) {
+		toSerialize["default_policy"] = o.DefaultPolicy
+	}
+	if !IsNil(o.VisionProfiles) {
+		toSerialize["vision_profiles"] = o.VisionProfiles
+	}
 	if !IsNil(o.GenerateToc) {
 		toSerialize["generate_toc"] = o.GenerateToc
 	}

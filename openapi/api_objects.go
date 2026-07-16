@@ -22,164 +22,16 @@ import (
 // ObjectsAPIService ObjectsAPI service
 type ObjectsAPIService service
 
-type ApiAdaptObjectTablesRequest struct {
-	ctx                context.Context
-	ApiService         *ObjectsAPIService
-	objectId           string
-	adaptTablesRequest *AdaptTablesRequest
-	xApiVersion        *string
-}
-
-func (r ApiAdaptObjectTablesRequest) AdaptTablesRequest(adaptTablesRequest AdaptTablesRequest) ApiAdaptObjectTablesRequest {
-	r.adaptTablesRequest = &adaptTablesRequest
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
-func (r ApiAdaptObjectTablesRequest) XApiVersion(xApiVersion string) ApiAdaptObjectTablesRequest {
-	r.xApiVersion = &xApiVersion
-	return r
-}
-
-func (r ApiAdaptObjectTablesRequest) Execute() (*WorkflowRunStatus, *http.Response, error) {
-	return r.ApiService.AdaptObjectTablesExecute(r)
-}
-
-/*
-AdaptObjectTables Adapt extracted document tables
-
-Starts a table-adaptation workflow to normalize extracted tables into a target schema.
-
-**Required permissions:** `content:read`
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param objectId
-	@return ApiAdaptObjectTablesRequest
-*/
-func (a *ObjectsAPIService) AdaptObjectTables(ctx context.Context, objectId string) ApiAdaptObjectTablesRequest {
-	return ApiAdaptObjectTablesRequest{
-		ApiService: a,
-		ctx:        ctx,
-		objectId:   objectId,
-	}
-}
-
-// Execute executes the request
-//
-//	@return WorkflowRunStatus
-func (a *ObjectsAPIService) AdaptObjectTablesExecute(r ApiAdaptObjectTablesRequest) (*WorkflowRunStatus, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodPost
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *WorkflowRunStatus
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ObjectsAPIService.AdaptObjectTables")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/objects/{objectId}/analyze/adapt_tables"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectId"+"}", url.PathEscape(parameterValueToString(r.objectId, "objectId")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.adaptTablesRequest == nil {
-		return localVarReturnValue, nil, reportError("adaptTablesRequest is required and must be specified")
-	}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
-	// body params
-	localVarPostBody = r.adaptTablesRequest
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
 type ApiAnalyzeObjectDocumentRequest struct {
-	ctx                  context.Context
-	ApiService           *ObjectsAPIService
-	objectId             string
-	pdfToRichtextOptions *PdfToRichtextOptions
-	xApiVersion          *string
+	ctx                 context.Context
+	ApiService          *ObjectsAPIService
+	objectId            string
+	documentPrepOptions *DocumentPrepOptions
+	xApiVersion         *string
 }
 
-func (r ApiAnalyzeObjectDocumentRequest) PdfToRichtextOptions(pdfToRichtextOptions PdfToRichtextOptions) ApiAnalyzeObjectDocumentRequest {
-	r.pdfToRichtextOptions = &pdfToRichtextOptions
+func (r ApiAnalyzeObjectDocumentRequest) DocumentPrepOptions(documentPrepOptions DocumentPrepOptions) ApiAnalyzeObjectDocumentRequest {
+	r.documentPrepOptions = &documentPrepOptions
 	return r
 }
 
@@ -194,9 +46,9 @@ func (r ApiAnalyzeObjectDocumentRequest) Execute() (*DocAnalyzeRunStatusResponse
 }
 
 /*
-AnalyzeObjectDocument Start document analysis
+AnalyzeObjectDocument Start document prep
 
-Starts document analysis for a content object and returns the workflow run metadata.
+Starts markdown document prep for a content object and returns the workflow run metadata.
 
 **Required permissions:** `content:write`
 
@@ -234,8 +86,8 @@ func (a *ObjectsAPIService) AnalyzeObjectDocumentExecute(r ApiAnalyzeObjectDocum
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.pdfToRichtextOptions == nil {
-		return localVarReturnValue, nil, reportError("pdfToRichtextOptions is required and must be specified")
+	if r.documentPrepOptions == nil {
+		return localVarReturnValue, nil, reportError("documentPrepOptions is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -259,7 +111,7 @@ func (a *ObjectsAPIService) AnalyzeObjectDocumentExecute(r ApiAnalyzeObjectDocum
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.pdfToRichtextOptions
+	localVarPostBody = r.documentPrepOptions
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1492,284 +1344,6 @@ func (a *ObjectsAPIService) ExportObjectPropertiesExecute(r ApiExportObjectPrope
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiGetAdaptedObjectTablesRequest struct {
-	ctx         context.Context
-	ApiService  *ObjectsAPIService
-	objectId    string
-	xApiVersion *string
-}
-
-// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
-func (r ApiGetAdaptedObjectTablesRequest) XApiVersion(xApiVersion string) ApiGetAdaptedObjectTablesRequest {
-	r.xApiVersion = &xApiVersion
-	return r
-}
-
-func (r ApiGetAdaptedObjectTablesRequest) Execute() (*map[string]AdaptedTable, *http.Response, error) {
-	return r.ApiService.GetAdaptedObjectTablesExecute(r)
-}
-
-/*
-GetAdaptedObjectTables Get adapted document tables
-
-Returns table-adaptation workflow results in raw JSON, flattened JSON, or CSV format.
-
-**Required permissions:** `content:read`
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param objectId
-	@return ApiGetAdaptedObjectTablesRequest
-*/
-func (a *ObjectsAPIService) GetAdaptedObjectTables(ctx context.Context, objectId string) ApiGetAdaptedObjectTablesRequest {
-	return ApiGetAdaptedObjectTablesRequest{
-		ApiService: a,
-		ctx:        ctx,
-		objectId:   objectId,
-	}
-}
-
-// Execute executes the request
-//
-//	@return map[string]AdaptedTable
-func (a *ObjectsAPIService) GetAdaptedObjectTablesExecute(r ApiGetAdaptedObjectTablesRequest) (*map[string]AdaptedTable, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *map[string]AdaptedTable
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ObjectsAPIService.GetAdaptedObjectTables")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/objects/{objectId}/analyze/adapt_tables"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectId"+"}", url.PathEscape(parameterValueToString(r.objectId, "objectId")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiGetAdaptedObjectTablesByRunRequest struct {
-	ctx         context.Context
-	ApiService  *ObjectsAPIService
-	objectId    string
-	runId       string
-	xApiVersion *string
-}
-
-// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
-func (r ApiGetAdaptedObjectTablesByRunRequest) XApiVersion(xApiVersion string) ApiGetAdaptedObjectTablesByRunRequest {
-	r.xApiVersion = &xApiVersion
-	return r
-}
-
-func (r ApiGetAdaptedObjectTablesByRunRequest) Execute() (*map[string]AdaptedTable, *http.Response, error) {
-	return r.ApiService.GetAdaptedObjectTablesByRunExecute(r)
-}
-
-/*
-GetAdaptedObjectTablesByRun Get adapted document tables for a workflow run
-
-Returns table-adaptation workflow results for a specific workflow run in raw JSON, flattened JSON, or CSV format.
-
-**Required permissions:** `content:read`
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param objectId
-	@param runId
-	@return ApiGetAdaptedObjectTablesByRunRequest
-*/
-func (a *ObjectsAPIService) GetAdaptedObjectTablesByRun(ctx context.Context, objectId string, runId string) ApiGetAdaptedObjectTablesByRunRequest {
-	return ApiGetAdaptedObjectTablesByRunRequest{
-		ApiService: a,
-		ctx:        ctx,
-		objectId:   objectId,
-		runId:      runId,
-	}
-}
-
-// Execute executes the request
-//
-//	@return map[string]AdaptedTable
-func (a *ObjectsAPIService) GetAdaptedObjectTablesByRunExecute(r ApiGetAdaptedObjectTablesByRunRequest) (*map[string]AdaptedTable, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *map[string]AdaptedTable
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ObjectsAPIService.GetAdaptedObjectTablesByRun")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/objects/{objectId}/analyze/adapt_tables/{runId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectId"+"}", url.PathEscape(parameterValueToString(r.objectId, "objectId")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"runId"+"}", url.PathEscape(parameterValueToString(r.runId, "runId")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
 type ApiGetContentObjectExportDownloadUrlRequest struct {
 	ctx         context.Context
 	ApiService  *ObjectsAPIService
@@ -2324,143 +1898,6 @@ func (a *ObjectsAPIService) GetObjectContentSourceExecute(r ApiGetObjectContentS
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiGetObjectDocumentAnalysisRequest struct {
-	ctx         context.Context
-	ApiService  *ObjectsAPIService
-	objectId    string
-	xApiVersion *string
-}
-
-// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
-func (r ApiGetObjectDocumentAnalysisRequest) XApiVersion(xApiVersion string) ApiGetObjectDocumentAnalysisRequest {
-	r.xApiVersion = &xApiVersion
-	return r
-}
-
-func (r ApiGetObjectDocumentAnalysisRequest) Execute() (*DocAnalyzerResultResponse, *http.Response, error) {
-	return r.ApiService.GetObjectDocumentAnalysisExecute(r)
-}
-
-/*
-GetObjectDocumentAnalysis Get document analysis results
-
-Returns the completed document analysis output, including extracted document text, tables, images, and annotated file URL when available.
-
-**Required permissions:** `content:read`
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param objectId
-	@return ApiGetObjectDocumentAnalysisRequest
-*/
-func (a *ObjectsAPIService) GetObjectDocumentAnalysis(ctx context.Context, objectId string) ApiGetObjectDocumentAnalysisRequest {
-	return ApiGetObjectDocumentAnalysisRequest{
-		ApiService: a,
-		ctx:        ctx,
-		objectId:   objectId,
-	}
-}
-
-// Execute executes the request
-//
-//	@return DocAnalyzerResultResponse
-func (a *ObjectsAPIService) GetObjectDocumentAnalysisExecute(r ApiGetObjectDocumentAnalysisRequest) (*DocAnalyzerResultResponse, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *DocAnalyzerResultResponse
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ObjectsAPIService.GetObjectDocumentAnalysis")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/objects/{objectId}/analyze/results"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectId"+"}", url.PathEscape(parameterValueToString(r.objectId, "objectId")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
 type ApiGetObjectDocumentAnalysisStatusRequest struct {
 	ctx         context.Context
 	ApiService  *ObjectsAPIService
@@ -2479,9 +1916,9 @@ func (r ApiGetObjectDocumentAnalysisStatusRequest) Execute() (*DocAnalyzeRunStat
 }
 
 /*
-GetObjectDocumentAnalysisStatus Get document analysis status
+GetObjectDocumentAnalysisStatus Get document prep status
 
-Retrieves the status and progress for the current document analysis workflow.
+Retrieves status and progress for markdown prep or grounded extraction on this object.
 
 **Required permissions:** `content:read`
 
@@ -2598,7 +2035,7 @@ func (a *ObjectsAPIService) GetObjectDocumentAnalysisStatusExecute(r ApiGetObjec
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiGetObjectDocumentAnnotatedPdfRequest struct {
+type ApiGetObjectDocumentGroundedExtractionResultRequest struct {
 	ctx         context.Context
 	ApiService  *ObjectsAPIService
 	objectId    string
@@ -2606,28 +2043,28 @@ type ApiGetObjectDocumentAnnotatedPdfRequest struct {
 }
 
 // Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
-func (r ApiGetObjectDocumentAnnotatedPdfRequest) XApiVersion(xApiVersion string) ApiGetObjectDocumentAnnotatedPdfRequest {
+func (r ApiGetObjectDocumentGroundedExtractionResultRequest) XApiVersion(xApiVersion string) ApiGetObjectDocumentGroundedExtractionResultRequest {
 	r.xApiVersion = &xApiVersion
 	return r
 }
 
-func (r ApiGetObjectDocumentAnnotatedPdfRequest) Execute() (*AnnotatedPdfResponse, *http.Response, error) {
-	return r.ApiService.GetObjectDocumentAnnotatedPdfExecute(r)
+func (r ApiGetObjectDocumentGroundedExtractionResultRequest) Execute() (*GroundedExtractionResultResponse, *http.Response, error) {
+	return r.ApiService.GetObjectDocumentGroundedExtractionResultExecute(r)
 }
 
 /*
-GetObjectDocumentAnnotatedPdf Get annotated document PDF
+GetObjectDocumentGroundedExtractionResult Get grounded extraction result
 
-Returns a download URL for the annotated PDF produced by document analysis when available.
+Returns the extracted grounded data, trust verdict, verification breakdown, and artifact URL.
 
 **Required permissions:** `content:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param objectId
-	@return ApiGetObjectDocumentAnnotatedPdfRequest
+	@return ApiGetObjectDocumentGroundedExtractionResultRequest
 */
-func (a *ObjectsAPIService) GetObjectDocumentAnnotatedPdf(ctx context.Context, objectId string) ApiGetObjectDocumentAnnotatedPdfRequest {
-	return ApiGetObjectDocumentAnnotatedPdfRequest{
+func (a *ObjectsAPIService) GetObjectDocumentGroundedExtractionResult(ctx context.Context, objectId string) ApiGetObjectDocumentGroundedExtractionResultRequest {
+	return ApiGetObjectDocumentGroundedExtractionResultRequest{
 		ApiService: a,
 		ctx:        ctx,
 		objectId:   objectId,
@@ -2636,158 +2073,21 @@ func (a *ObjectsAPIService) GetObjectDocumentAnnotatedPdf(ctx context.Context, o
 
 // Execute executes the request
 //
-//	@return AnnotatedPdfResponse
-func (a *ObjectsAPIService) GetObjectDocumentAnnotatedPdfExecute(r ApiGetObjectDocumentAnnotatedPdfRequest) (*AnnotatedPdfResponse, *http.Response, error) {
+//	@return GroundedExtractionResultResponse
+func (a *ObjectsAPIService) GetObjectDocumentGroundedExtractionResultExecute(r ApiGetObjectDocumentGroundedExtractionResultRequest) (*GroundedExtractionResultResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *AnnotatedPdfResponse
+		localVarReturnValue *GroundedExtractionResultResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ObjectsAPIService.GetObjectDocumentAnnotatedPdf")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ObjectsAPIService.GetObjectDocumentGroundedExtractionResult")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/objects/{objectId}/analyze/annotated"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectId"+"}", url.PathEscape(parameterValueToString(r.objectId, "objectId")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiGetObjectDocumentXmlRequest struct {
-	ctx         context.Context
-	ApiService  *ObjectsAPIService
-	objectId    string
-	xApiVersion *string
-}
-
-// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
-func (r ApiGetObjectDocumentXmlRequest) XApiVersion(xApiVersion string) ApiGetObjectDocumentXmlRequest {
-	r.xApiVersion = &xApiVersion
-	return r
-}
-
-func (r ApiGetObjectDocumentXmlRequest) Execute() (string, *http.Response, error) {
-	return r.ApiService.GetObjectDocumentXmlExecute(r)
-}
-
-/*
-GetObjectDocumentXml Get analyzed document XML
-
-Returns the stored rich-text XML representation for the analyzed document.
-
-**Required permissions:** `content:read`
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param objectId
-	@return ApiGetObjectDocumentXmlRequest
-*/
-func (a *ObjectsAPIService) GetObjectDocumentXml(ctx context.Context, objectId string) ApiGetObjectDocumentXmlRequest {
-	return ApiGetObjectDocumentXmlRequest{
-		ApiService: a,
-		ctx:        ctx,
-		objectId:   objectId,
-	}
-}
-
-// Execute executes the request
-//
-//	@return string
-func (a *ObjectsAPIService) GetObjectDocumentXmlExecute(r ApiGetObjectDocumentXmlRequest) (string, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue string
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ObjectsAPIService.GetObjectDocumentXml")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/objects/{objectId}/analyze/xml"
+	localVarPath := localBasePath + "/objects/{objectId}/analyze/grounded/result"
 	localVarPath = strings.Replace(localVarPath, "{"+"objectId"+"}", url.PathEscape(parameterValueToString(r.objectId, "objectId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
@@ -3372,280 +2672,6 @@ func (a *ObjectsAPIService) ListObjectCollectionsExecute(r ApiListObjectCollecti
 	}
 
 	localVarPath := localBasePath + "/objects/{objectId}/collections"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectId"+"}", url.PathEscape(parameterValueToString(r.objectId, "objectId")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiListObjectDocumentImagesRequest struct {
-	ctx         context.Context
-	ApiService  *ObjectsAPIService
-	objectId    string
-	xApiVersion *string
-}
-
-// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
-func (r ApiListObjectDocumentImagesRequest) XApiVersion(xApiVersion string) ApiListObjectDocumentImagesRequest {
-	r.xApiVersion = &xApiVersion
-	return r
-}
-
-func (r ApiListObjectDocumentImagesRequest) Execute() ([]DocImage, *http.Response, error) {
-	return r.ApiService.ListObjectDocumentImagesExecute(r)
-}
-
-/*
-ListObjectDocumentImages List extracted document images
-
-Returns images extracted from the analyzed document with page and description metadata.
-
-**Required permissions:** `content:read`
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param objectId
-	@return ApiListObjectDocumentImagesRequest
-*/
-func (a *ObjectsAPIService) ListObjectDocumentImages(ctx context.Context, objectId string) ApiListObjectDocumentImagesRequest {
-	return ApiListObjectDocumentImagesRequest{
-		ApiService: a,
-		ctx:        ctx,
-		objectId:   objectId,
-	}
-}
-
-// Execute executes the request
-//
-//	@return []DocImage
-func (a *ObjectsAPIService) ListObjectDocumentImagesExecute(r ApiListObjectDocumentImagesRequest) ([]DocImage, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue []DocImage
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ObjectsAPIService.ListObjectDocumentImages")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/objects/{objectId}/analyze/images"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectId"+"}", url.PathEscape(parameterValueToString(r.objectId, "objectId")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiListObjectDocumentTablesRequest struct {
-	ctx         context.Context
-	ApiService  *ObjectsAPIService
-	objectId    string
-	xApiVersion *string
-}
-
-// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
-func (r ApiListObjectDocumentTablesRequest) XApiVersion(xApiVersion string) ApiListObjectDocumentTablesRequest {
-	r.xApiVersion = &xApiVersion
-	return r
-}
-
-func (r ApiListObjectDocumentTablesRequest) Execute() ([]DocTableResponse, *http.Response, error) {
-	return r.ApiService.ListObjectDocumentTablesExecute(r)
-}
-
-/*
-ListObjectDocumentTables List extracted document tables
-
-Returns tables extracted from the analyzed document in JSON or CSV form.
-
-**Required permissions:** `content:read`
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param objectId
-	@return ApiListObjectDocumentTablesRequest
-*/
-func (a *ObjectsAPIService) ListObjectDocumentTables(ctx context.Context, objectId string) ApiListObjectDocumentTablesRequest {
-	return ApiListObjectDocumentTablesRequest{
-		ApiService: a,
-		ctx:        ctx,
-		objectId:   objectId,
-	}
-}
-
-// Execute executes the request
-//
-//	@return []DocTableResponse
-func (a *ObjectsAPIService) ListObjectDocumentTablesExecute(r ApiListObjectDocumentTablesRequest) ([]DocTableResponse, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue []DocTableResponse
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ObjectsAPIService.ListObjectDocumentTables")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/objects/{objectId}/analyze/tables"
 	localVarPath = strings.Replace(localVarPath, "{"+"objectId"+"}", url.PathEscape(parameterValueToString(r.objectId, "objectId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
@@ -4386,6 +3412,302 @@ func (a *ObjectsAPIService) StartContentObjectsExportExecute(r ApiStartContentOb
 	}
 	// body params
 	localVarPostBody = r.startContentObjectExportRequest
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiStartObjectDocumentGroundedExtractionRequest struct {
+	ctx                       context.Context
+	ApiService                *ObjectsAPIService
+	objectId                  string
+	groundedExtractionRequest *GroundedExtractionRequest
+	xApiVersion               *string
+}
+
+func (r ApiStartObjectDocumentGroundedExtractionRequest) GroundedExtractionRequest(groundedExtractionRequest GroundedExtractionRequest) ApiStartObjectDocumentGroundedExtractionRequest {
+	r.groundedExtractionRequest = &groundedExtractionRequest
+	return r
+}
+
+// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
+func (r ApiStartObjectDocumentGroundedExtractionRequest) XApiVersion(xApiVersion string) ApiStartObjectDocumentGroundedExtractionRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiStartObjectDocumentGroundedExtractionRequest) Execute() (*DocAnalyzeRunStatusResponse, *http.Response, error) {
+	return r.ApiService.StartObjectDocumentGroundedExtractionExecute(r)
+}
+
+/*
+StartObjectDocumentGroundedExtraction Start grounded extraction
+
+Starts citation-grounded structured extraction for a content object. Poll /analyze/status for progress.
+
+**Required permissions:** `content:write`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param objectId
+	@return ApiStartObjectDocumentGroundedExtractionRequest
+*/
+func (a *ObjectsAPIService) StartObjectDocumentGroundedExtraction(ctx context.Context, objectId string) ApiStartObjectDocumentGroundedExtractionRequest {
+	return ApiStartObjectDocumentGroundedExtractionRequest{
+		ApiService: a,
+		ctx:        ctx,
+		objectId:   objectId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return DocAnalyzeRunStatusResponse
+func (a *ObjectsAPIService) StartObjectDocumentGroundedExtractionExecute(r ApiStartObjectDocumentGroundedExtractionRequest) (*DocAnalyzeRunStatusResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DocAnalyzeRunStatusResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ObjectsAPIService.StartObjectDocumentGroundedExtraction")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/objects/{objectId}/analyze/grounded"
+	localVarPath = strings.Replace(localVarPath, "{"+"objectId"+"}", url.PathEscape(parameterValueToString(r.objectId, "objectId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.groundedExtractionRequest == nil {
+		return localVarReturnValue, nil, reportError("groundedExtractionRequest is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	// body params
+	localVarPostBody = r.groundedExtractionRequest
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiStartObjectGroundedExtractionAssistantRequest struct {
+	ctx                       context.Context
+	ApiService                *ObjectsAPIService
+	objectId                  string
+	groundedExtractionRequest *GroundedExtractionRequest
+	xApiVersion               *string
+}
+
+func (r ApiStartObjectGroundedExtractionAssistantRequest) GroundedExtractionRequest(groundedExtractionRequest GroundedExtractionRequest) ApiStartObjectGroundedExtractionAssistantRequest {
+	r.groundedExtractionRequest = &groundedExtractionRequest
+	return r
+}
+
+// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
+func (r ApiStartObjectGroundedExtractionAssistantRequest) XApiVersion(xApiVersion string) ApiStartObjectGroundedExtractionAssistantRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiStartObjectGroundedExtractionAssistantRequest) Execute() (*GroundedAssistantResponse, *http.Response, error) {
+	return r.ApiService.StartObjectGroundedExtractionAssistantExecute(r)
+}
+
+/*
+StartObjectGroundedExtractionAssistant Start the interactive grounded extraction assistant
+
+Records an agent run, stages the document into the agent space, and launches an interactive assistant conversation that corrects the grounded extraction under operator direction. Returns the agent_run_id used to stream/render the conversation.
+
+**Required permissions:** `content:write`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param objectId
+	@return ApiStartObjectGroundedExtractionAssistantRequest
+*/
+func (a *ObjectsAPIService) StartObjectGroundedExtractionAssistant(ctx context.Context, objectId string) ApiStartObjectGroundedExtractionAssistantRequest {
+	return ApiStartObjectGroundedExtractionAssistantRequest{
+		ApiService: a,
+		ctx:        ctx,
+		objectId:   objectId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return GroundedAssistantResponse
+func (a *ObjectsAPIService) StartObjectGroundedExtractionAssistantExecute(r ApiStartObjectGroundedExtractionAssistantRequest) (*GroundedAssistantResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GroundedAssistantResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ObjectsAPIService.StartObjectGroundedExtractionAssistant")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/objects/{objectId}/analyze/grounded/assistant"
+	localVarPath = strings.Replace(localVarPath, "{"+"objectId"+"}", url.PathEscape(parameterValueToString(r.objectId, "objectId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.groundedExtractionRequest == nil {
+		return localVarReturnValue, nil, reportError("groundedExtractionRequest is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	// body params
+	localVarPostBody = r.groundedExtractionRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

@@ -19,14 +19,16 @@ var _ MappedNullable = &DocumentMetadataContentProcessor{}
 
 // DocumentMetadataContentProcessor struct for DocumentMetadataContentProcessor
 type DocumentMetadataContentProcessor struct {
-	Type                 *string  `json:"type,omitempty"`
-	FeaturesRequested    []string `json:"features_requested,omitempty"`
-	ZonesRequested       []string `json:"zones_requested,omitempty"`
-	TableCount           *float32 `json:"table_count,omitempty"`
-	ImageCount           *float32 `json:"image_count,omitempty"`
-	ZoneCount            *float32 `json:"zone_count,omitempty"`
-	NeedsOcrCount        *float32 `json:"needs_ocr_count,omitempty"`
-	AdditionalProperties map[string]interface{}
+	Type              *string  `json:"type,omitempty"`
+	FeaturesRequested []string `json:"features_requested,omitempty"`
+	ZonesRequested    []string `json:"zones_requested,omitempty"`
+	TableCount        *float32 `json:"table_count,omitempty"`
+	ImageCount        *float32 `json:"image_count,omitempty"`
+	ZoneCount         *float32 `json:"zone_count,omitempty"`
+	NeedsOcrCount     *float32 `json:"needs_ocr_count,omitempty"`
+	// Fingerprint of source+policy used for custom conversion, to skip re-converting unchanged docs.
+	ConversionFingerprint *string `json:"conversion_fingerprint,omitempty"`
+	AdditionalProperties  map[string]interface{}
 }
 
 type _DocumentMetadataContentProcessor DocumentMetadataContentProcessor
@@ -272,6 +274,38 @@ func (o *DocumentMetadataContentProcessor) SetNeedsOcrCount(v float32) {
 	o.NeedsOcrCount = &v
 }
 
+// GetConversionFingerprint returns the ConversionFingerprint field value if set, zero value otherwise.
+func (o *DocumentMetadataContentProcessor) GetConversionFingerprint() string {
+	if o == nil || IsNil(o.ConversionFingerprint) {
+		var ret string
+		return ret
+	}
+	return *o.ConversionFingerprint
+}
+
+// GetConversionFingerprintOk returns a tuple with the ConversionFingerprint field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocumentMetadataContentProcessor) GetConversionFingerprintOk() (*string, bool) {
+	if o == nil || IsNil(o.ConversionFingerprint) {
+		return nil, false
+	}
+	return o.ConversionFingerprint, true
+}
+
+// HasConversionFingerprint returns a boolean if a field has been set.
+func (o *DocumentMetadataContentProcessor) HasConversionFingerprint() bool {
+	if o != nil && !IsNil(o.ConversionFingerprint) {
+		return true
+	}
+
+	return false
+}
+
+// SetConversionFingerprint gets a reference to the given string and assigns it to the ConversionFingerprint field.
+func (o *DocumentMetadataContentProcessor) SetConversionFingerprint(v string) {
+	o.ConversionFingerprint = &v
+}
+
 func (o DocumentMetadataContentProcessor) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -303,6 +337,9 @@ func (o DocumentMetadataContentProcessor) ToMap() (map[string]interface{}, error
 	if !IsNil(o.NeedsOcrCount) {
 		toSerialize["needs_ocr_count"] = o.NeedsOcrCount
 	}
+	if !IsNil(o.ConversionFingerprint) {
+		toSerialize["conversion_fingerprint"] = o.ConversionFingerprint
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -332,6 +369,7 @@ func (o *DocumentMetadataContentProcessor) UnmarshalJSON(data []byte) (err error
 		delete(additionalProperties, "image_count")
 		delete(additionalProperties, "zone_count")
 		delete(additionalProperties, "needs_ocr_count")
+		delete(additionalProperties, "conversion_fingerprint")
 		o.AdditionalProperties = additionalProperties
 	}
 

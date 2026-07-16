@@ -20,13 +20,14 @@ var _ MappedNullable = &DocAnalyzerProgress{}
 
 // DocAnalyzerProgress struct for DocAnalyzerProgress
 type DocAnalyzerProgress struct {
+	Phase     *DocumentProcessingPhase  `json:"phase,omitempty"`
 	Pages     DocAnalyzerProgressStatus `json:"pages"`
 	Images    DocAnalyzerProgressStatus `json:"images"`
 	Tables    DocAnalyzerProgressStatus `json:"tables"`
 	Visuals   DocAnalyzerProgressStatus `json:"visuals"`
 	StartedAt *float32                  `json:"started_at,omitempty"`
 	Percent   float32                   `json:"percent"`
-	// The output format being used for processing (markdown or xml)
+	// The output format being used for processing.
 	OutputFormat *DocProcessorOutputFormat `json:"output_format,omitempty"`
 }
 
@@ -52,6 +53,38 @@ func NewDocAnalyzerProgress(pages DocAnalyzerProgressStatus, images DocAnalyzerP
 func NewDocAnalyzerProgressWithDefaults() *DocAnalyzerProgress {
 	this := DocAnalyzerProgress{}
 	return &this
+}
+
+// GetPhase returns the Phase field value if set, zero value otherwise.
+func (o *DocAnalyzerProgress) GetPhase() DocumentProcessingPhase {
+	if o == nil || IsNil(o.Phase) {
+		var ret DocumentProcessingPhase
+		return ret
+	}
+	return *o.Phase
+}
+
+// GetPhaseOk returns a tuple with the Phase field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DocAnalyzerProgress) GetPhaseOk() (*DocumentProcessingPhase, bool) {
+	if o == nil || IsNil(o.Phase) {
+		return nil, false
+	}
+	return o.Phase, true
+}
+
+// HasPhase returns a boolean if a field has been set.
+func (o *DocAnalyzerProgress) HasPhase() bool {
+	if o != nil && !IsNil(o.Phase) {
+		return true
+	}
+
+	return false
+}
+
+// SetPhase gets a reference to the given DocumentProcessingPhase and assigns it to the Phase field.
+func (o *DocAnalyzerProgress) SetPhase(v DocumentProcessingPhase) {
+	o.Phase = &v
 }
 
 // GetPages returns the Pages field value
@@ -248,6 +281,9 @@ func (o DocAnalyzerProgress) MarshalJSON() ([]byte, error) {
 
 func (o DocAnalyzerProgress) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Phase) {
+		toSerialize["phase"] = o.Phase
+	}
 	toSerialize["pages"] = o.Pages
 	toSerialize["images"] = o.Images
 	toSerialize["tables"] = o.Tables

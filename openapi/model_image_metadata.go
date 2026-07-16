@@ -20,14 +20,24 @@ var _ MappedNullable = &ImageMetadata{}
 
 // ImageMetadata struct for ImageMetadata
 type ImageMetadata struct {
-	Type                 ContentNatureImage        `json:"type"`
-	Size                 *float32                  `json:"size,omitempty"`
-	Languages            []string                  `json:"languages,omitempty"`
-	Location             *Location                 `json:"location,omitempty"`
-	GenerationRuns       []GenerationRunMetadata   `json:"generation_runs,omitempty"`
-	Etag                 *string                   `json:"etag,omitempty"`
-	Renditions           []RenditionWithDimensions `json:"renditions,omitempty"`
-	Dimensions           *Dimensions               `json:"dimensions,omitempty"`
+	Type           ContentNatureImage      `json:"type"`
+	Size           *float32                `json:"size,omitempty"`
+	Languages      []string                `json:"languages,omitempty"`
+	Location       *Location               `json:"location,omitempty"`
+	GenerationRuns []GenerationRunMetadata `json:"generation_runs,omitempty"`
+	Etag           *string                 `json:"etag,omitempty"`
+	// ETag of text materialized from object properties by intake rendering.
+	RenderedTextEtag *string                   `json:"rendered_text_etag,omitempty"`
+	Renditions       []RenditionWithDimensions `json:"renditions,omitempty"`
+	// Embedded/technical metadata harvested from the source file by intake (office docProps, PDF docinfo). Free-form, nature-appropriate keys.
+	Embedded map[string]interface{} `json:"embedded,omitempty"`
+	// Type-detection provenance recorded by the intake sniff pipeline.
+	TypeDetection *TypeDetectionMetadata `json:"type_detection,omitempty"`
+	// Locate-pass provenance: which pages the document map found relevant.
+	Locate *LocateMetadata `json:"locate,omitempty"`
+	// Vision-evidence provenance for the last visual extraction run.
+	VisionEvidence       *VisionEvidenceMetadata `json:"vision_evidence,omitempty"`
+	Dimensions           *Dimensions             `json:"dimensions,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -235,6 +245,38 @@ func (o *ImageMetadata) SetEtag(v string) {
 	o.Etag = &v
 }
 
+// GetRenderedTextEtag returns the RenderedTextEtag field value if set, zero value otherwise.
+func (o *ImageMetadata) GetRenderedTextEtag() string {
+	if o == nil || IsNil(o.RenderedTextEtag) {
+		var ret string
+		return ret
+	}
+	return *o.RenderedTextEtag
+}
+
+// GetRenderedTextEtagOk returns a tuple with the RenderedTextEtag field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ImageMetadata) GetRenderedTextEtagOk() (*string, bool) {
+	if o == nil || IsNil(o.RenderedTextEtag) {
+		return nil, false
+	}
+	return o.RenderedTextEtag, true
+}
+
+// HasRenderedTextEtag returns a boolean if a field has been set.
+func (o *ImageMetadata) HasRenderedTextEtag() bool {
+	if o != nil && !IsNil(o.RenderedTextEtag) {
+		return true
+	}
+
+	return false
+}
+
+// SetRenderedTextEtag gets a reference to the given string and assigns it to the RenderedTextEtag field.
+func (o *ImageMetadata) SetRenderedTextEtag(v string) {
+	o.RenderedTextEtag = &v
+}
+
 // GetRenditions returns the Renditions field value if set, zero value otherwise.
 func (o *ImageMetadata) GetRenditions() []RenditionWithDimensions {
 	if o == nil || IsNil(o.Renditions) {
@@ -265,6 +307,134 @@ func (o *ImageMetadata) HasRenditions() bool {
 // SetRenditions gets a reference to the given []RenditionWithDimensions and assigns it to the Renditions field.
 func (o *ImageMetadata) SetRenditions(v []RenditionWithDimensions) {
 	o.Renditions = v
+}
+
+// GetEmbedded returns the Embedded field value if set, zero value otherwise.
+func (o *ImageMetadata) GetEmbedded() map[string]interface{} {
+	if o == nil || IsNil(o.Embedded) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.Embedded
+}
+
+// GetEmbeddedOk returns a tuple with the Embedded field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ImageMetadata) GetEmbeddedOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.Embedded) {
+		return map[string]interface{}{}, false
+	}
+	return o.Embedded, true
+}
+
+// HasEmbedded returns a boolean if a field has been set.
+func (o *ImageMetadata) HasEmbedded() bool {
+	if o != nil && !IsNil(o.Embedded) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmbedded gets a reference to the given map[string]interface{} and assigns it to the Embedded field.
+func (o *ImageMetadata) SetEmbedded(v map[string]interface{}) {
+	o.Embedded = v
+}
+
+// GetTypeDetection returns the TypeDetection field value if set, zero value otherwise.
+func (o *ImageMetadata) GetTypeDetection() TypeDetectionMetadata {
+	if o == nil || IsNil(o.TypeDetection) {
+		var ret TypeDetectionMetadata
+		return ret
+	}
+	return *o.TypeDetection
+}
+
+// GetTypeDetectionOk returns a tuple with the TypeDetection field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ImageMetadata) GetTypeDetectionOk() (*TypeDetectionMetadata, bool) {
+	if o == nil || IsNil(o.TypeDetection) {
+		return nil, false
+	}
+	return o.TypeDetection, true
+}
+
+// HasTypeDetection returns a boolean if a field has been set.
+func (o *ImageMetadata) HasTypeDetection() bool {
+	if o != nil && !IsNil(o.TypeDetection) {
+		return true
+	}
+
+	return false
+}
+
+// SetTypeDetection gets a reference to the given TypeDetectionMetadata and assigns it to the TypeDetection field.
+func (o *ImageMetadata) SetTypeDetection(v TypeDetectionMetadata) {
+	o.TypeDetection = &v
+}
+
+// GetLocate returns the Locate field value if set, zero value otherwise.
+func (o *ImageMetadata) GetLocate() LocateMetadata {
+	if o == nil || IsNil(o.Locate) {
+		var ret LocateMetadata
+		return ret
+	}
+	return *o.Locate
+}
+
+// GetLocateOk returns a tuple with the Locate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ImageMetadata) GetLocateOk() (*LocateMetadata, bool) {
+	if o == nil || IsNil(o.Locate) {
+		return nil, false
+	}
+	return o.Locate, true
+}
+
+// HasLocate returns a boolean if a field has been set.
+func (o *ImageMetadata) HasLocate() bool {
+	if o != nil && !IsNil(o.Locate) {
+		return true
+	}
+
+	return false
+}
+
+// SetLocate gets a reference to the given LocateMetadata and assigns it to the Locate field.
+func (o *ImageMetadata) SetLocate(v LocateMetadata) {
+	o.Locate = &v
+}
+
+// GetVisionEvidence returns the VisionEvidence field value if set, zero value otherwise.
+func (o *ImageMetadata) GetVisionEvidence() VisionEvidenceMetadata {
+	if o == nil || IsNil(o.VisionEvidence) {
+		var ret VisionEvidenceMetadata
+		return ret
+	}
+	return *o.VisionEvidence
+}
+
+// GetVisionEvidenceOk returns a tuple with the VisionEvidence field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ImageMetadata) GetVisionEvidenceOk() (*VisionEvidenceMetadata, bool) {
+	if o == nil || IsNil(o.VisionEvidence) {
+		return nil, false
+	}
+	return o.VisionEvidence, true
+}
+
+// HasVisionEvidence returns a boolean if a field has been set.
+func (o *ImageMetadata) HasVisionEvidence() bool {
+	if o != nil && !IsNil(o.VisionEvidence) {
+		return true
+	}
+
+	return false
+}
+
+// SetVisionEvidence gets a reference to the given VisionEvidenceMetadata and assigns it to the VisionEvidence field.
+func (o *ImageMetadata) SetVisionEvidence(v VisionEvidenceMetadata) {
+	o.VisionEvidence = &v
 }
 
 // GetDimensions returns the Dimensions field value if set, zero value otherwise.
@@ -325,8 +495,23 @@ func (o ImageMetadata) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Etag) {
 		toSerialize["etag"] = o.Etag
 	}
+	if !IsNil(o.RenderedTextEtag) {
+		toSerialize["rendered_text_etag"] = o.RenderedTextEtag
+	}
 	if !IsNil(o.Renditions) {
 		toSerialize["renditions"] = o.Renditions
+	}
+	if !IsNil(o.Embedded) {
+		toSerialize["embedded"] = o.Embedded
+	}
+	if !IsNil(o.TypeDetection) {
+		toSerialize["type_detection"] = o.TypeDetection
+	}
+	if !IsNil(o.Locate) {
+		toSerialize["locate"] = o.Locate
+	}
+	if !IsNil(o.VisionEvidence) {
+		toSerialize["vision_evidence"] = o.VisionEvidence
 	}
 	if !IsNil(o.Dimensions) {
 		toSerialize["dimensions"] = o.Dimensions
@@ -380,7 +565,12 @@ func (o *ImageMetadata) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "location")
 		delete(additionalProperties, "generation_runs")
 		delete(additionalProperties, "etag")
+		delete(additionalProperties, "rendered_text_etag")
 		delete(additionalProperties, "renditions")
+		delete(additionalProperties, "embedded")
+		delete(additionalProperties, "type_detection")
+		delete(additionalProperties, "locate")
+		delete(additionalProperties, "vision_evidence")
 		delete(additionalProperties, "dimensions")
 		o.AdditionalProperties = additionalProperties
 	}

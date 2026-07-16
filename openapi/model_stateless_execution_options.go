@@ -24,6 +24,8 @@ type StatelessExecutionOptions struct {
 	// A custom formatter to use for format the final model prompt from the input prompt segments. If no one is specified the driver will choose a formatter compatible with the target model
 	Format       *PromptFormatter `json:"format,omitempty"`
 	ResultSchema *JSONSchema      `json:"result_schema,omitempty"`
+	// Provider-specific opt-in to put the result schema after the cached prompt prefix instead of including it in native structured-output configuration. The returned JSON is still validated against result_schema by Llumiverse.
+	PromptCacheSchemaSuffix *bool `json:"prompt_cache_schema_suffix,omitempty"`
 	// If set to true the original response from the target LLM will be included in the response under the original_response field. This is useful for debugging and for some advanced use cases. It is ignored on streaming requests
 	IncludeOriginalResponse *bool         `json:"include_original_response,omitempty"`
 	ModelOptions            *ModelOptions `json:"model_options,omitempty"`
@@ -142,6 +144,38 @@ func (o *StatelessExecutionOptions) HasResultSchema() bool {
 // SetResultSchema gets a reference to the given JSONSchema and assigns it to the ResultSchema field.
 func (o *StatelessExecutionOptions) SetResultSchema(v JSONSchema) {
 	o.ResultSchema = &v
+}
+
+// GetPromptCacheSchemaSuffix returns the PromptCacheSchemaSuffix field value if set, zero value otherwise.
+func (o *StatelessExecutionOptions) GetPromptCacheSchemaSuffix() bool {
+	if o == nil || IsNil(o.PromptCacheSchemaSuffix) {
+		var ret bool
+		return ret
+	}
+	return *o.PromptCacheSchemaSuffix
+}
+
+// GetPromptCacheSchemaSuffixOk returns a tuple with the PromptCacheSchemaSuffix field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatelessExecutionOptions) GetPromptCacheSchemaSuffixOk() (*bool, bool) {
+	if o == nil || IsNil(o.PromptCacheSchemaSuffix) {
+		return nil, false
+	}
+	return o.PromptCacheSchemaSuffix, true
+}
+
+// HasPromptCacheSchemaSuffix returns a boolean if a field has been set.
+func (o *StatelessExecutionOptions) HasPromptCacheSchemaSuffix() bool {
+	if o != nil && !IsNil(o.PromptCacheSchemaSuffix) {
+		return true
+	}
+
+	return false
+}
+
+// SetPromptCacheSchemaSuffix gets a reference to the given bool and assigns it to the PromptCacheSchemaSuffix field.
+func (o *StatelessExecutionOptions) SetPromptCacheSchemaSuffix(v bool) {
+	o.PromptCacheSchemaSuffix = &v
 }
 
 // GetIncludeOriginalResponse returns the IncludeOriginalResponse field value if set, zero value otherwise.
@@ -323,6 +357,9 @@ func (o StatelessExecutionOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ResultSchema) {
 		toSerialize["result_schema"] = o.ResultSchema
+	}
+	if !IsNil(o.PromptCacheSchemaSuffix) {
+		toSerialize["prompt_cache_schema_suffix"] = o.PromptCacheSchemaSuffix
 	}
 	if !IsNil(o.IncludeOriginalResponse) {
 		toSerialize["include_original_response"] = o.IncludeOriginalResponse

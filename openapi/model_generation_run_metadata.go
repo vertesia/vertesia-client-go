@@ -24,6 +24,8 @@ type GenerationRunMetadata struct {
 	Date   string  `json:"date"`
 	Model  string  `json:"model"`
 	Target *string `json:"target,omitempty"`
+	// Fingerprint of the inputs used by property extraction (content etag, type + its object schema, source, instructions, interaction). Lets a later run skip re-extraction when nothing changed.
+	ExtractionFingerprint *string `json:"extraction_fingerprint,omitempty"`
 }
 
 type _GenerationRunMetadata GenerationRunMetadata
@@ -152,6 +154,38 @@ func (o *GenerationRunMetadata) SetTarget(v string) {
 	o.Target = &v
 }
 
+// GetExtractionFingerprint returns the ExtractionFingerprint field value if set, zero value otherwise.
+func (o *GenerationRunMetadata) GetExtractionFingerprint() string {
+	if o == nil || IsNil(o.ExtractionFingerprint) {
+		var ret string
+		return ret
+	}
+	return *o.ExtractionFingerprint
+}
+
+// GetExtractionFingerprintOk returns a tuple with the ExtractionFingerprint field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *GenerationRunMetadata) GetExtractionFingerprintOk() (*string, bool) {
+	if o == nil || IsNil(o.ExtractionFingerprint) {
+		return nil, false
+	}
+	return o.ExtractionFingerprint, true
+}
+
+// HasExtractionFingerprint returns a boolean if a field has been set.
+func (o *GenerationRunMetadata) HasExtractionFingerprint() bool {
+	if o != nil && !IsNil(o.ExtractionFingerprint) {
+		return true
+	}
+
+	return false
+}
+
+// SetExtractionFingerprint gets a reference to the given string and assigns it to the ExtractionFingerprint field.
+func (o *GenerationRunMetadata) SetExtractionFingerprint(v string) {
+	o.ExtractionFingerprint = &v
+}
+
 func (o GenerationRunMetadata) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -167,6 +201,9 @@ func (o GenerationRunMetadata) ToMap() (map[string]interface{}, error) {
 	toSerialize["model"] = o.Model
 	if !IsNil(o.Target) {
 		toSerialize["target"] = o.Target
+	}
+	if !IsNil(o.ExtractionFingerprint) {
+		toSerialize["extraction_fingerprint"] = o.ExtractionFingerprint
 	}
 	return toSerialize, nil
 }

@@ -36,6 +36,7 @@ const (
 	KNOWNAUDITACTION_INFERENCE                   KnownAuditAction = "inference"
 	KNOWNAUDITACTION_EMBEDDING                   KnownAuditAction = "embedding"
 	KNOWNAUDITACTION_IMAGE_GENERATION            KnownAuditAction = "image_generation"
+	KNOWNAUDITACTION_DOCUMENT_PROCESSED          KnownAuditAction = "document_processed"
 	KNOWNAUDITACTION_UNKNOWN_DEFAULT_OPEN_API    KnownAuditAction = "unknown_default_open_api"
 )
 
@@ -57,6 +58,7 @@ var AllowedKnownAuditActionEnumValues = []KnownAuditAction{
 	"inference",
 	"embedding",
 	"image_generation",
+	"document_processed",
 	"unknown_default_open_api",
 }
 
