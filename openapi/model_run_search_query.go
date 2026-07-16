@@ -19,27 +19,29 @@ var _ MappedNullable = &RunSearchQuery{}
 
 // RunSearchQuery struct for RunSearchQuery
 type RunSearchQuery struct {
-	Name             *string             `json:"name,omitempty"`
-	Status           *ExecutionRunStatus `json:"status,omitempty"`
-	Limit            *float32            `json:"limit,omitempty"`
-	Offset           *float32            `json:"offset,omitempty"`
-	Interaction      *string             `json:"interaction,omitempty"`
-	Environment      *string             `json:"environment,omitempty"`
-	Model            *string             `json:"model,omitempty"`
-	Tags             []string            `json:"tags,omitempty"`
-	Query            *string             `json:"query,omitempty"`
-	DefaultQueryPath *string             `json:"default_query_path,omitempty"`
-	Parent           []string            `json:"parent,omitempty"`
-	IsRoot           *bool               `json:"is_root,omitempty"`
-	Object           *string             `json:"object,omitempty"`
-	Start            *string             `json:"start,omitempty"`
-	End              *string             `json:"end,omitempty"`
-	FinishReason     *string             `json:"finish_reason,omitempty"`
-	CreatedBy        *string             `json:"created_by,omitempty"`
-	WorkflowRunIds   []string            `json:"workflow_run_ids,omitempty"`
-	WorkflowIds      []string            `json:"workflow_ids,omitempty"`
-	RunIds           []string            `json:"run_ids,omitempty"`
-	IsAgent          *bool               `json:"is_agent,omitempty"`
+	Name        *string             `json:"name,omitempty"`
+	Status      *ExecutionRunStatus `json:"status,omitempty"`
+	Limit       *float32            `json:"limit,omitempty"`
+	Offset      *float32            `json:"offset,omitempty"`
+	Interaction *string             `json:"interaction,omitempty"`
+	Environment *string             `json:"environment,omitempty"`
+	Model       *string             `json:"model,omitempty"`
+	Tags        []string            `json:"tags,omitempty"`
+	// Tags to exclude. Runs carrying any of these tags are filtered out of the results, counts, and facet buckets. Combined with `tags` (which requires all of the listed tags) as an additional `$nin` constraint on the same field.
+	ExcludeTags      []string `json:"exclude_tags,omitempty"`
+	Query            *string  `json:"query,omitempty"`
+	DefaultQueryPath *string  `json:"default_query_path,omitempty"`
+	Parent           []string `json:"parent,omitempty"`
+	IsRoot           *bool    `json:"is_root,omitempty"`
+	Object           *string  `json:"object,omitempty"`
+	Start            *string  `json:"start,omitempty"`
+	End              *string  `json:"end,omitempty"`
+	FinishReason     *string  `json:"finish_reason,omitempty"`
+	CreatedBy        *string  `json:"created_by,omitempty"`
+	WorkflowRunIds   []string `json:"workflow_run_ids,omitempty"`
+	WorkflowIds      []string `json:"workflow_ids,omitempty"`
+	RunIds           []string `json:"run_ids,omitempty"`
+	IsAgent          *bool    `json:"is_agent,omitempty"`
 }
 
 // NewRunSearchQuery instantiates a new RunSearchQuery object
@@ -313,6 +315,38 @@ func (o *RunSearchQuery) HasTags() bool {
 // SetTags gets a reference to the given []string and assigns it to the Tags field.
 func (o *RunSearchQuery) SetTags(v []string) {
 	o.Tags = v
+}
+
+// GetExcludeTags returns the ExcludeTags field value if set, zero value otherwise.
+func (o *RunSearchQuery) GetExcludeTags() []string {
+	if o == nil || IsNil(o.ExcludeTags) {
+		var ret []string
+		return ret
+	}
+	return o.ExcludeTags
+}
+
+// GetExcludeTagsOk returns a tuple with the ExcludeTags field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RunSearchQuery) GetExcludeTagsOk() ([]string, bool) {
+	if o == nil || IsNil(o.ExcludeTags) {
+		return nil, false
+	}
+	return o.ExcludeTags, true
+}
+
+// HasExcludeTags returns a boolean if a field has been set.
+func (o *RunSearchQuery) HasExcludeTags() bool {
+	if o != nil && !IsNil(o.ExcludeTags) {
+		return true
+	}
+
+	return false
+}
+
+// SetExcludeTags gets a reference to the given []string and assigns it to the ExcludeTags field.
+func (o *RunSearchQuery) SetExcludeTags(v []string) {
+	o.ExcludeTags = v
 }
 
 // GetQuery returns the Query field value if set, zero value otherwise.
@@ -764,6 +798,9 @@ func (o RunSearchQuery) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
+	}
+	if !IsNil(o.ExcludeTags) {
+		toSerialize["exclude_tags"] = o.ExcludeTags
 	}
 	if !IsNil(o.Query) {
 		toSerialize["query"] = o.Query

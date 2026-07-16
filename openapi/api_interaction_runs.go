@@ -452,6 +452,7 @@ type ApiListRunsRequest struct {
 	environment      *string
 	model            *string
 	tags             *[]string
+	excludeTags      *[]string
 	query            *string
 	defaultQueryPath *string
 	parent           *[]string
@@ -505,6 +506,12 @@ func (r ApiListRunsRequest) Model(model string) ApiListRunsRequest {
 
 func (r ApiListRunsRequest) Tags(tags []string) ApiListRunsRequest {
 	r.tags = &tags
+	return r
+}
+
+// Tags to exclude. Runs carrying any of these tags are filtered out of the results, counts, and facet buckets. Combined with &#x60;tags&#x60; (which requires all of the listed tags) as an additional &#x60;$nin&#x60; constraint on the same field.
+func (r ApiListRunsRequest) ExcludeTags(excludeTags []string) ApiListRunsRequest {
+	r.excludeTags = &excludeTags
 	return r
 }
 
@@ -652,6 +659,17 @@ func (a *InteractionRunsAPIService) ListRunsExecute(r ApiListRunsRequest) ([]Exe
 			}
 		} else {
 			parameterAddToHeaderOrQuery(localVarQueryParams, "tags", t, "form", "multi")
+		}
+	}
+	if r.excludeTags != nil {
+		t := *r.excludeTags
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "exclude_tags", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "exclude_tags", t, "form", "multi")
 		}
 	}
 	if r.query != nil {
