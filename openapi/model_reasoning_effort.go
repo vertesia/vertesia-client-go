@@ -20,17 +20,25 @@ type ReasoningEffort string
 
 // List of ReasoningEffort
 const (
+	REASONINGEFFORT_NONE                     ReasoningEffort = "none"
+	REASONINGEFFORT_MINIMAL                  ReasoningEffort = "minimal"
 	REASONINGEFFORT_LOW                      ReasoningEffort = "low"
 	REASONINGEFFORT_MEDIUM                   ReasoningEffort = "medium"
 	REASONINGEFFORT_HIGH                     ReasoningEffort = "high"
+	REASONINGEFFORT_XHIGH                    ReasoningEffort = "xhigh"
+	REASONINGEFFORT_MAX                      ReasoningEffort = "max"
 	REASONINGEFFORT_UNKNOWN_DEFAULT_OPEN_API ReasoningEffort = "unknown_default_open_api"
 )
 
 // All allowed values of ReasoningEffort enum
 var AllowedReasoningEffortEnumValues = []ReasoningEffort{
+	"none",
+	"minimal",
 	"low",
 	"medium",
 	"high",
+	"xhigh",
+	"max",
 	"unknown_default_open_api",
 }
 
