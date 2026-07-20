@@ -386,6 +386,7 @@ model_embeddings_token_usage.go
 model_enable_environment_model_payload.go
 model_environment_token_request.go
 model_error_response.go
+model_error_string_message_string.go
 model_event_category.go
 model_event_delivery_intent_status.go
 model_event_delivery_intent_summary.go
