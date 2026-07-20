@@ -27,8 +27,9 @@ type PartialProjectConfiguration struct {
 	Datacenter            *string                         `json:"datacenter,omitempty"`
 	StorageBucket         *string                         `json:"storage_bucket,omitempty"`
 	// Enable real-time streaming of agent LLM responses to clients. When enabled, LLM responses are streamed chunk-by-chunk via Redis pub/sub. Defaults to true if not specified.
-	AgentStreamingEnabled *bool                         `json:"agent_streaming_enabled,omitempty"`
-	Indexing              *ProjectConfigurationIndexing `json:"indexing,omitempty"`
+	AgentStreamingEnabled *bool `json:"agent_streaming_enabled,omitempty"`
+	// Indexing configuration for this project. Controls whether indexing and querying are enabled at the project level.
+	Indexing *ProjectIndexingConfiguration `json:"indexing,omitempty"`
 	// Standard content intake behavior.
 	Intake *ProjectIntakeConfiguration `json:"intake,omitempty"`
 	// Primary language for full-text search analysis. ISO 639-1 code (e.g., 'en', 'fr', 'ja', 'de'). Determines which Elasticsearch analyzer is used for the text field. Defaults to 'en' (English/standard analyzer).  Changing this value requires a full reindex to take effect.
@@ -316,9 +317,9 @@ func (o *PartialProjectConfiguration) SetAgentStreamingEnabled(v bool) {
 }
 
 // GetIndexing returns the Indexing field value if set, zero value otherwise.
-func (o *PartialProjectConfiguration) GetIndexing() ProjectConfigurationIndexing {
+func (o *PartialProjectConfiguration) GetIndexing() ProjectIndexingConfiguration {
 	if o == nil || IsNil(o.Indexing) {
-		var ret ProjectConfigurationIndexing
+		var ret ProjectIndexingConfiguration
 		return ret
 	}
 	return *o.Indexing
@@ -326,7 +327,7 @@ func (o *PartialProjectConfiguration) GetIndexing() ProjectConfigurationIndexing
 
 // GetIndexingOk returns a tuple with the Indexing field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PartialProjectConfiguration) GetIndexingOk() (*ProjectConfigurationIndexing, bool) {
+func (o *PartialProjectConfiguration) GetIndexingOk() (*ProjectIndexingConfiguration, bool) {
 	if o == nil || IsNil(o.Indexing) {
 		return nil, false
 	}
@@ -342,8 +343,8 @@ func (o *PartialProjectConfiguration) HasIndexing() bool {
 	return false
 }
 
-// SetIndexing gets a reference to the given ProjectConfigurationIndexing and assigns it to the Indexing field.
-func (o *PartialProjectConfiguration) SetIndexing(v ProjectConfigurationIndexing) {
+// SetIndexing gets a reference to the given ProjectIndexingConfiguration and assigns it to the Indexing field.
+func (o *PartialProjectConfiguration) SetIndexing(v ProjectIndexingConfiguration) {
 	o.Indexing = &v
 }
 

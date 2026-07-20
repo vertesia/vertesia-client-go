@@ -23,6 +23,7 @@ type ResourceRef struct {
 	Id          string   `json:"id"`
 	Name        string   `json:"name"`
 	Type        string   `json:"type"`
+	Email       *string  `json:"email,omitempty"`
 	Description *string  `json:"description,omitempty"`
 	Version     *float32 `json:"version,omitempty"`
 	Status      *string  `json:"status,omitempty"`
@@ -122,6 +123,38 @@ func (o *ResourceRef) GetTypeOk() (*string, bool) {
 // SetType sets field value
 func (o *ResourceRef) SetType(v string) {
 	o.Type = v
+}
+
+// GetEmail returns the Email field value if set, zero value otherwise.
+func (o *ResourceRef) GetEmail() string {
+	if o == nil || IsNil(o.Email) {
+		var ret string
+		return ret
+	}
+	return *o.Email
+}
+
+// GetEmailOk returns a tuple with the Email field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ResourceRef) GetEmailOk() (*string, bool) {
+	if o == nil || IsNil(o.Email) {
+		return nil, false
+	}
+	return o.Email, true
+}
+
+// HasEmail returns a boolean if a field has been set.
+func (o *ResourceRef) HasEmail() bool {
+	if o != nil && !IsNil(o.Email) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmail gets a reference to the given string and assigns it to the Email field.
+func (o *ResourceRef) SetEmail(v string) {
+	o.Email = &v
 }
 
 // GetDescription returns the Description field value if set, zero value otherwise.
@@ -297,6 +330,9 @@ func (o ResourceRef) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
 	toSerialize["type"] = o.Type
+	if !IsNil(o.Email) {
+		toSerialize["email"] = o.Email
+	}
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}

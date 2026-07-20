@@ -25,6 +25,7 @@ const (
 	APPCAPABILITIES_INTERACTIONS             AppCapabilities = "interactions"
 	APPCAPABILITIES_TYPES                    AppCapabilities = "types"
 	APPCAPABILITIES_PROCESSES                AppCapabilities = "processes"
+	APPCAPABILITIES_VIEWS                    AppCapabilities = "views"
 	APPCAPABILITIES_TEMPLATES                AppCapabilities = "templates"
 	APPCAPABILITIES_UNKNOWN_DEFAULT_OPEN_API AppCapabilities = "unknown_default_open_api"
 )
@@ -36,6 +37,7 @@ var AllowedAppCapabilitiesEnumValues = []AppCapabilities{
 	"interactions",
 	"types",
 	"processes",
+	"views",
 	"templates",
 	"unknown_default_open_api",
 }

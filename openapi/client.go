@@ -120,6 +120,8 @@ type APIClient struct {
 
 	UsersAPI *UsersAPIService
 
+	ViewsAPI *ViewsAPIService
+
 	WorkflowDefinitionsAPI *WorkflowDefinitionsAPIService
 
 	WorkflowRulesAPI *WorkflowRulesAPIService
@@ -179,6 +181,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.ToolsAPI = (*ToolsAPIService)(&c.common)
 	c.UserGroupsAPI = (*UserGroupsAPIService)(&c.common)
 	c.UsersAPI = (*UsersAPIService)(&c.common)
+	c.ViewsAPI = (*ViewsAPIService)(&c.common)
 	c.WorkflowDefinitionsAPI = (*WorkflowDefinitionsAPIService)(&c.common)
 	c.WorkflowRulesAPI = (*WorkflowRulesAPIService)(&c.common)
 	c.WorkflowRunsAPI = (*WorkflowRunsAPIService)(&c.common)
