@@ -20,6 +20,7 @@ var _ MappedNullable = &DSLActivityOptions{}
 // DSLActivityOptions The payload for a DSL activity options.
 type DSLActivityOptions struct {
 	StartToCloseTimeout    *DurationValue  `json:"startToCloseTimeout,omitempty"`
+	HeartbeatTimeout       *DurationValue  `json:"heartbeatTimeout,omitempty"`
 	ScheduleToStartTimeout *DurationValue  `json:"scheduleToStartTimeout,omitempty"`
 	ScheduleToCloseTimeout *DurationValue  `json:"scheduleToCloseTimeout,omitempty"`
 	Retry                  *DSLRetryPolicy `json:"retry,omitempty"`
@@ -72,6 +73,38 @@ func (o *DSLActivityOptions) HasStartToCloseTimeout() bool {
 // SetStartToCloseTimeout gets a reference to the given DurationValue and assigns it to the StartToCloseTimeout field.
 func (o *DSLActivityOptions) SetStartToCloseTimeout(v DurationValue) {
 	o.StartToCloseTimeout = &v
+}
+
+// GetHeartbeatTimeout returns the HeartbeatTimeout field value if set, zero value otherwise.
+func (o *DSLActivityOptions) GetHeartbeatTimeout() DurationValue {
+	if o == nil || IsNil(o.HeartbeatTimeout) {
+		var ret DurationValue
+		return ret
+	}
+	return *o.HeartbeatTimeout
+}
+
+// GetHeartbeatTimeoutOk returns a tuple with the HeartbeatTimeout field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DSLActivityOptions) GetHeartbeatTimeoutOk() (*DurationValue, bool) {
+	if o == nil || IsNil(o.HeartbeatTimeout) {
+		return nil, false
+	}
+	return o.HeartbeatTimeout, true
+}
+
+// HasHeartbeatTimeout returns a boolean if a field has been set.
+func (o *DSLActivityOptions) HasHeartbeatTimeout() bool {
+	if o != nil && !IsNil(o.HeartbeatTimeout) {
+		return true
+	}
+
+	return false
+}
+
+// SetHeartbeatTimeout gets a reference to the given DurationValue and assigns it to the HeartbeatTimeout field.
+func (o *DSLActivityOptions) SetHeartbeatTimeout(v DurationValue) {
+	o.HeartbeatTimeout = &v
 }
 
 // GetScheduleToStartTimeout returns the ScheduleToStartTimeout field value if set, zero value otherwise.
@@ -182,6 +215,9 @@ func (o DSLActivityOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.StartToCloseTimeout) {
 		toSerialize["startToCloseTimeout"] = o.StartToCloseTimeout
+	}
+	if !IsNil(o.HeartbeatTimeout) {
+		toSerialize["heartbeatTimeout"] = o.HeartbeatTimeout
 	}
 	if !IsNil(o.ScheduleToStartTimeout) {
 		toSerialize["scheduleToStartTimeout"] = o.ScheduleToStartTimeout
