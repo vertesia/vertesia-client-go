@@ -26,11 +26,10 @@ type ToolResult struct {
 	// Optional message to display in the UI instead of the content. Use this when the content is large or technical (e.g., document text) and you want to show a friendly message to the user.
 	DisplayMessage *string `json:"display_message,omitempty"`
 	// Can contain metadata returned by the tool executor.
-	Meta      map[string]interface{} `json:"meta,omitempty"`
-	ToolUseId string                 `json:"tool_use_id"`
+	Meta      *ToolResultMeta `json:"meta,omitempty"`
+	ToolUseId string          `json:"tool_use_id"`
 	// Gemini thinking models require thought_signature to be passed back with tool results. Copy this from the ToolUse.thought_signature that requested this tool call.
-	ThoughtSignature     *string `json:"thought_signature,omitempty"`
-	AdditionalProperties map[string]interface{}
+	ThoughtSignature *string `json:"thought_signature,omitempty"`
 }
 
 type _ToolResult ToolResult
@@ -168,19 +167,19 @@ func (o *ToolResult) SetDisplayMessage(v string) {
 }
 
 // GetMeta returns the Meta field value if set, zero value otherwise.
-func (o *ToolResult) GetMeta() map[string]interface{} {
+func (o *ToolResult) GetMeta() ToolResultMeta {
 	if o == nil || IsNil(o.Meta) {
-		var ret map[string]interface{}
+		var ret ToolResultMeta
 		return ret
 	}
-	return o.Meta
+	return *o.Meta
 }
 
 // GetMetaOk returns a tuple with the Meta field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ToolResult) GetMetaOk() (map[string]interface{}, bool) {
+func (o *ToolResult) GetMetaOk() (*ToolResultMeta, bool) {
 	if o == nil || IsNil(o.Meta) {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
 	return o.Meta, true
 }
@@ -194,9 +193,9 @@ func (o *ToolResult) HasMeta() bool {
 	return false
 }
 
-// SetMeta gets a reference to the given map[string]interface{} and assigns it to the Meta field.
-func (o *ToolResult) SetMeta(v map[string]interface{}) {
-	o.Meta = v
+// SetMeta gets a reference to the given ToolResultMeta and assigns it to the Meta field.
+func (o *ToolResult) SetMeta(v ToolResultMeta) {
+	o.Meta = &v
 }
 
 // GetToolUseId returns the ToolUseId field value
@@ -280,11 +279,6 @@ func (o ToolResult) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ThoughtSignature) {
 		toSerialize["thought_signature"] = o.ThoughtSignature
 	}
-
-	for key, value := range o.AdditionalProperties {
-		toSerialize[key] = value
-	}
-
 	return toSerialize, nil
 }
 
@@ -321,19 +315,6 @@ func (o *ToolResult) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = ToolResult(varToolResult)
-
-	additionalProperties := make(map[string]interface{})
-
-	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "content")
-		delete(additionalProperties, "is_error")
-		delete(additionalProperties, "files")
-		delete(additionalProperties, "display_message")
-		delete(additionalProperties, "meta")
-		delete(additionalProperties, "tool_use_id")
-		delete(additionalProperties, "thought_signature")
-		o.AdditionalProperties = additionalProperties
-	}
 
 	return err
 }

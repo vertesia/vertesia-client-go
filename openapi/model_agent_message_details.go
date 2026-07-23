@@ -19,37 +19,39 @@ var _ MappedNullable = &AgentMessageDetails{}
 
 // AgentMessageDetails struct for AgentMessageDetails
 type AgentMessageDetails struct {
-	Ack                  *string                         `json:"ack,omitempty"`
-	EventClass           *string                         `json:"event_class,omitempty"`
-	Tool                 *string                         `json:"tool,omitempty"`
-	Tools                []string                        `json:"tools,omitempty"`
-	ToolEvent            *string                         `json:"tool_event,omitempty"`
-	Streamed             *bool                           `json:"streamed,omitempty"`
-	DisplayRole          *string                         `json:"display_role,omitempty"`
-	ActivityId           *string                         `json:"activity_id,omitempty"`
-	ActivityGroupId      *string                         `json:"activity_group_id,omitempty"`
-	BatchId              *string                         `json:"batch_id,omitempty"`
-	ToolRunId            *string                         `json:"tool_run_id,omitempty"`
-	ToolUseId            *string                         `json:"tool_use_id,omitempty"`
-	ToolStatus           *string                         `json:"tool_status,omitempty"`
-	ToolIteration        *float32                        `json:"tool_iteration,omitempty"`
-	MessageToHuman       *string                         `json:"message_to_human,omitempty"`
-	DurationMs           *float32                        `json:"duration_ms,omitempty"`
-	Observation          interface{}                     `json:"observation,omitempty"`
-	TokenUsage           *ExecutionTokenUsage            `json:"token_usage,omitempty"`
-	CheckpointAt         *float32                        `json:"checkpoint_at,omitempty"`
-	CheckpointThreshold  *float32                        `json:"checkpoint_threshold,omitempty"`
-	WorkflowRunId        *string                         `json:"workflow_run_id,omitempty"`
-	OutputFiles          []string                        `json:"outputFiles,omitempty"`
-	Files                []AgentMessageDetailsFilesInner `json:"files,omitempty"`
-	Plan                 []PlanTask                      `json:"plan,omitempty"`
-	StreamingId          *string                         `json:"streaming_id,omitempty"`
-	StreamingIdScope     *string                         `json:"streaming_id_scope,omitempty"`
-	ChunkIndex           *float32                        `json:"chunk_index,omitempty"`
-	IsFinal              *bool                           `json:"is_final,omitempty"`
-	Optimistic           *bool                           `json:"_optimistic,omitempty"`
-	MessageId            *string                         `json:"_messageId,omitempty"`
-	DeliveryStatus       *string                         `json:"_deliveryStatus,omitempty"`
+	Ack                 *string                         `json:"ack,omitempty"`
+	EventClass          *string                         `json:"event_class,omitempty"`
+	Tool                *string                         `json:"tool,omitempty"`
+	Tools               []string                        `json:"tools,omitempty"`
+	ToolEvent           *string                         `json:"tool_event,omitempty"`
+	Streamed            *bool                           `json:"streamed,omitempty"`
+	DisplayRole         *string                         `json:"display_role,omitempty"`
+	ActivityId          *string                         `json:"activity_id,omitempty"`
+	ActivityGroupId     *string                         `json:"activity_group_id,omitempty"`
+	BatchId             *string                         `json:"batch_id,omitempty"`
+	ToolRunId           *string                         `json:"tool_run_id,omitempty"`
+	ToolUseId           *string                         `json:"tool_use_id,omitempty"`
+	ToolStatus          *string                         `json:"tool_status,omitempty"`
+	ToolIteration       *float32                        `json:"tool_iteration,omitempty"`
+	MessageToHuman      *string                         `json:"message_to_human,omitempty"`
+	DurationMs          *float32                        `json:"duration_ms,omitempty"`
+	Observation         interface{}                     `json:"observation,omitempty"`
+	TokenUsage          *ExecutionTokenUsage            `json:"token_usage,omitempty"`
+	CheckpointAt        *float32                        `json:"checkpoint_at,omitempty"`
+	CheckpointThreshold *float32                        `json:"checkpoint_threshold,omitempty"`
+	WorkflowRunId       *string                         `json:"workflow_run_id,omitempty"`
+	OutputFiles         []string                        `json:"outputFiles,omitempty"`
+	Files               []AgentMessageDetailsFilesInner `json:"files,omitempty"`
+	Plan                []PlanTask                      `json:"plan,omitempty"`
+	// Deep-linkable references to resources a tool created/updated/deleted (see AgentResourceReference).
+	Resources            []AgentResourceReference `json:"resources,omitempty"`
+	StreamingId          *string                  `json:"streaming_id,omitempty"`
+	StreamingIdScope     *string                  `json:"streaming_id_scope,omitempty"`
+	ChunkIndex           *float32                 `json:"chunk_index,omitempty"`
+	IsFinal              *bool                    `json:"is_final,omitempty"`
+	Optimistic           *bool                    `json:"_optimistic,omitempty"`
+	MessageId            *string                  `json:"_messageId,omitempty"`
+	DeliveryStatus       *string                  `json:"_deliveryStatus,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -841,6 +843,38 @@ func (o *AgentMessageDetails) SetPlan(v []PlanTask) {
 	o.Plan = v
 }
 
+// GetResources returns the Resources field value if set, zero value otherwise.
+func (o *AgentMessageDetails) GetResources() []AgentResourceReference {
+	if o == nil || IsNil(o.Resources) {
+		var ret []AgentResourceReference
+		return ret
+	}
+	return o.Resources
+}
+
+// GetResourcesOk returns a tuple with the Resources field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentMessageDetails) GetResourcesOk() ([]AgentResourceReference, bool) {
+	if o == nil || IsNil(o.Resources) {
+		return nil, false
+	}
+	return o.Resources, true
+}
+
+// HasResources returns a boolean if a field has been set.
+func (o *AgentMessageDetails) HasResources() bool {
+	if o != nil && !IsNil(o.Resources) {
+		return true
+	}
+
+	return false
+}
+
+// SetResources gets a reference to the given []AgentResourceReference and assigns it to the Resources field.
+func (o *AgentMessageDetails) SetResources(v []AgentResourceReference) {
+	o.Resources = v
+}
+
 // GetStreamingId returns the StreamingId field value if set, zero value otherwise.
 func (o *AgentMessageDetails) GetStreamingId() string {
 	if o == nil || IsNil(o.StreamingId) {
@@ -1147,6 +1181,9 @@ func (o AgentMessageDetails) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Plan) {
 		toSerialize["plan"] = o.Plan
 	}
+	if !IsNil(o.Resources) {
+		toSerialize["resources"] = o.Resources
+	}
 	if !IsNil(o.StreamingId) {
 		toSerialize["streaming_id"] = o.StreamingId
 	}
@@ -1214,6 +1251,7 @@ func (o *AgentMessageDetails) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "outputFiles")
 		delete(additionalProperties, "files")
 		delete(additionalProperties, "plan")
+		delete(additionalProperties, "resources")
 		delete(additionalProperties, "streaming_id")
 		delete(additionalProperties, "streaming_id_scope")
 		delete(additionalProperties, "chunk_index")

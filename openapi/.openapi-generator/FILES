@@ -63,6 +63,9 @@ model_agent_event_delivery_target.go
 model_agent_message_details.go
 model_agent_message_details_files_inner.go
 model_agent_message_type.go
+model_agent_resource_action.go
+model_agent_resource_reference.go
+model_agent_resource_type.go
 model_agent_run.go
 model_agent_run_archive_state.go
 model_agent_run_response.go
@@ -826,6 +829,7 @@ model_tool_collection_object.go
 model_tool_definition.go
 model_tool_reference.go
 model_tool_result.go
+model_tool_result_meta.go
 model_tool_source.go
 model_tool_use.go
 model_tool_validation_result.go
