@@ -34,13 +34,14 @@ type ContentObjectTypeCatalogEntry struct {
 	TableLayout []ColumnLayout `json:"table_layout,omitempty"`
 	IsChunkable *bool          `json:"is_chunkable,omitempty"`
 	// Determines if the content will be validated against the object schema a generation time and save/update time.
-	StrictMode           *bool                    `json:"strict_mode,omitempty"`
-	Status               *ContentObjectTypeStatus `json:"status,omitempty"`
-	Intake               *ContentTypeIntakePolicy `json:"intake,omitempty"`
-	UpdatedBy            *string                  `json:"updated_by,omitempty"`
-	CreatedBy            *string                  `json:"created_by,omitempty"`
-	CreatedAt            *string                  `json:"created_at,omitempty"`
-	UpdatedAt            *string                  `json:"updated_at,omitempty"`
+	StrictMode           *bool                     `json:"strict_mode,omitempty"`
+	Status               *ContentObjectTypeStatus  `json:"status,omitempty"`
+	Intake               *ContentTypeIntakePolicy  `json:"intake,omitempty"`
+	Editing              *ContentTypeEditingPolicy `json:"editing,omitempty"`
+	UpdatedBy            *string                   `json:"updated_by,omitempty"`
+	CreatedBy            *string                   `json:"created_by,omitempty"`
+	CreatedAt            *string                   `json:"created_at,omitempty"`
+	UpdatedAt            *string                   `json:"updated_at,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -369,6 +370,38 @@ func (o *ContentObjectTypeCatalogEntry) SetIntake(v ContentTypeIntakePolicy) {
 	o.Intake = &v
 }
 
+// GetEditing returns the Editing field value if set, zero value otherwise.
+func (o *ContentObjectTypeCatalogEntry) GetEditing() ContentTypeEditingPolicy {
+	if o == nil || IsNil(o.Editing) {
+		var ret ContentTypeEditingPolicy
+		return ret
+	}
+	return *o.Editing
+}
+
+// GetEditingOk returns a tuple with the Editing field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectTypeCatalogEntry) GetEditingOk() (*ContentTypeEditingPolicy, bool) {
+	if o == nil || IsNil(o.Editing) {
+		return nil, false
+	}
+	return o.Editing, true
+}
+
+// HasEditing returns a boolean if a field has been set.
+func (o *ContentObjectTypeCatalogEntry) HasEditing() bool {
+	if o != nil && !IsNil(o.Editing) {
+		return true
+	}
+
+	return false
+}
+
+// SetEditing gets a reference to the given ContentTypeEditingPolicy and assigns it to the Editing field.
+func (o *ContentObjectTypeCatalogEntry) SetEditing(v ContentTypeEditingPolicy) {
+	o.Editing = &v
+}
+
 // GetUpdatedBy returns the UpdatedBy field value if set, zero value otherwise.
 func (o *ContentObjectTypeCatalogEntry) GetUpdatedBy() string {
 	if o == nil || IsNil(o.UpdatedBy) {
@@ -533,6 +566,9 @@ func (o ContentObjectTypeCatalogEntry) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Intake) {
 		toSerialize["intake"] = o.Intake
 	}
+	if !IsNil(o.Editing) {
+		toSerialize["editing"] = o.Editing
+	}
 	if !IsNil(o.UpdatedBy) {
 		toSerialize["updated_by"] = o.UpdatedBy
 	}
@@ -599,6 +635,7 @@ func (o *ContentObjectTypeCatalogEntry) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "strict_mode")
 		delete(additionalProperties, "status")
 		delete(additionalProperties, "intake")
+		delete(additionalProperties, "editing")
 		delete(additionalProperties, "updated_by")
 		delete(additionalProperties, "created_by")
 		delete(additionalProperties, "created_at")

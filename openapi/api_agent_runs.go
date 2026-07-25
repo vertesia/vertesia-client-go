@@ -1054,6 +1054,147 @@ func (a *AgentRunsAPIService) GetAgentRunArtifactExecute(r ApiGetAgentRunArtifac
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiGetAgentRunArtifactContentRequest struct {
+	ctx         context.Context
+	ApiService  *AgentRunsAPIService
+	agentRunId  string
+	path        string
+	xApiVersion *string
+}
+
+// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
+func (r ApiGetAgentRunArtifactContentRequest) XApiVersion(xApiVersion string) ApiGetAgentRunArtifactContentRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiGetAgentRunArtifactContentRequest) Execute() (*AgentArtifactContentResponse, *http.Response, error) {
+	return r.ApiService.GetAgentRunArtifactContentExecute(r)
+}
+
+/*
+GetAgentRunArtifactContent Read editable agent artifact content
+
+Reads a text artifact and returns its blob generation token for conditional updates.
+
+**Required permissions:** Any of `agent_run:read`, `workflow:run`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param agentRunId
+	@param path
+	@return ApiGetAgentRunArtifactContentRequest
+*/
+func (a *AgentRunsAPIService) GetAgentRunArtifactContent(ctx context.Context, agentRunId string, path string) ApiGetAgentRunArtifactContentRequest {
+	return ApiGetAgentRunArtifactContentRequest{
+		ApiService: a,
+		ctx:        ctx,
+		agentRunId: agentRunId,
+		path:       path,
+	}
+}
+
+// Execute executes the request
+//
+//	@return AgentArtifactContentResponse
+func (a *AgentRunsAPIService) GetAgentRunArtifactContentExecute(r ApiGetAgentRunArtifactContentRequest) (*AgentArtifactContentResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *AgentArtifactContentResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AgentRunsAPIService.GetAgentRunArtifactContent")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/agents/{agentRunId}/artifact-content/{path}"
+	localVarPath = strings.Replace(localVarPath, "{"+"agentRunId"+"}", url.PathEscape(parameterValueToString(r.agentRunId, "agentRunId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"path"+"}", url.PathEscape(parameterValueToString(r.path, "path")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiGetAgentRunChildDetailsRequest struct {
 	ctx             context.Context
 	ApiService      *AgentRunsAPIService
@@ -3760,6 +3901,158 @@ func (a *AgentRunsAPIService) TerminateAgentRunExecute(r ApiTerminateAgentRunReq
 	if r.xApiVersion != nil {
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpdateAgentRunArtifactContentRequest struct {
+	ctx                               context.Context
+	ApiService                        *AgentRunsAPIService
+	agentRunId                        string
+	path                              string
+	updateAgentArtifactContentPayload *UpdateAgentArtifactContentPayload
+	xApiVersion                       *string
+}
+
+func (r ApiUpdateAgentRunArtifactContentRequest) UpdateAgentArtifactContentPayload(updateAgentArtifactContentPayload UpdateAgentArtifactContentPayload) ApiUpdateAgentRunArtifactContentRequest {
+	r.updateAgentArtifactContentPayload = &updateAgentArtifactContentPayload
+	return r
+}
+
+// Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
+func (r ApiUpdateAgentRunArtifactContentRequest) XApiVersion(xApiVersion string) ApiUpdateAgentRunArtifactContentRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiUpdateAgentRunArtifactContentRequest) Execute() (*UpdateAgentArtifactContentResponse, *http.Response, error) {
+	return r.ApiService.UpdateAgentRunArtifactContentExecute(r)
+}
+
+/*
+UpdateAgentRunArtifactContent Update editable agent artifact content
+
+Updates a text artifact only when its blob generation token still matches.
+
+**Required permissions:** `workflow:run`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param agentRunId
+	@param path
+	@return ApiUpdateAgentRunArtifactContentRequest
+*/
+func (a *AgentRunsAPIService) UpdateAgentRunArtifactContent(ctx context.Context, agentRunId string, path string) ApiUpdateAgentRunArtifactContentRequest {
+	return ApiUpdateAgentRunArtifactContentRequest{
+		ApiService: a,
+		ctx:        ctx,
+		agentRunId: agentRunId,
+		path:       path,
+	}
+}
+
+// Execute executes the request
+//
+//	@return UpdateAgentArtifactContentResponse
+func (a *AgentRunsAPIService) UpdateAgentRunArtifactContentExecute(r ApiUpdateAgentRunArtifactContentRequest) (*UpdateAgentArtifactContentResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpdateAgentArtifactContentResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AgentRunsAPIService.UpdateAgentRunArtifactContent")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/agents/{agentRunId}/artifact-content/{path}"
+	localVarPath = strings.Replace(localVarPath, "{"+"agentRunId"+"}", url.PathEscape(parameterValueToString(r.agentRunId, "agentRunId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"path"+"}", url.PathEscape(parameterValueToString(r.path, "path")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.updateAgentArtifactContentPayload == nil {
+		return localVarReturnValue, nil, reportError("updateAgentArtifactContentPayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	// body params
+	localVarPostBody = r.updateAgentArtifactContentPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

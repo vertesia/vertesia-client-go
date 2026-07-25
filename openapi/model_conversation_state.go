@@ -83,6 +83,8 @@ type ConversationState struct {
 	SkillToolMap map[string][]string `json:"skill_tool_map,omitempty"`
 	// Names of skills whose full instructions are already present in the live conversation history (i.e. were delivered by a prior `learn_<skill>` call). Used to make skill re-activation idempotent: a repeat call returns a short \"already active\" acknowledgement instead of re-dumping the instructions.  Unlike `unlocked_tools`/`skill_tool_map` (which must survive a checkpoint so tools stay unlocked), this list is reset when a checkpoint compacts the conversation, because the summary no longer carries the skill instructions and the next call must re-deliver them.
 	SkillInstructionsDelivered []string `json:"skill_instructions_delivered,omitempty"`
+	// Stable ids of initialization tool calls completed before the first model turn.
+	InitializationCallIds []string `json:"initialization_call_ids,omitempty"`
 	// Denylist of MCP tool-collection ids deactivated for this conversation. `undefined`/empty means all installed/connected MCP collections are active. Updated mid-conversation via the MCP config signal; consumed when tools are re-discovered.
 	DisabledMcpCollections []string `json:"disabled_mcp_collections,omitempty"`
 	// MCP servers that are active (not disabled) and accessible to the user but not yet OAuth-connected. Surfaced to the agent (via discover_tools) so it can offer to connect.
@@ -1106,6 +1108,38 @@ func (o *ConversationState) SetSkillInstructionsDelivered(v []string) {
 	o.SkillInstructionsDelivered = v
 }
 
+// GetInitializationCallIds returns the InitializationCallIds field value if set, zero value otherwise.
+func (o *ConversationState) GetInitializationCallIds() []string {
+	if o == nil || IsNil(o.InitializationCallIds) {
+		var ret []string
+		return ret
+	}
+	return o.InitializationCallIds
+}
+
+// GetInitializationCallIdsOk returns a tuple with the InitializationCallIds field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetInitializationCallIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.InitializationCallIds) {
+		return nil, false
+	}
+	return o.InitializationCallIds, true
+}
+
+// HasInitializationCallIds returns a boolean if a field has been set.
+func (o *ConversationState) HasInitializationCallIds() bool {
+	if o != nil && !IsNil(o.InitializationCallIds) {
+		return true
+	}
+
+	return false
+}
+
+// SetInitializationCallIds gets a reference to the given []string and assigns it to the InitializationCallIds field.
+func (o *ConversationState) SetInitializationCallIds(v []string) {
+	o.InitializationCallIds = v
+}
+
 // GetDisabledMcpCollections returns the DisabledMcpCollections field value if set, zero value otherwise.
 func (o *ConversationState) GetDisabledMcpCollections() []string {
 	if o == nil || IsNil(o.DisabledMcpCollections) {
@@ -1394,6 +1428,9 @@ func (o ConversationState) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SkillInstructionsDelivered) {
 		toSerialize["skill_instructions_delivered"] = o.SkillInstructionsDelivered
 	}
+	if !IsNil(o.InitializationCallIds) {
+		toSerialize["initialization_call_ids"] = o.InitializationCallIds
+	}
 	if !IsNil(o.DisabledMcpCollections) {
 		toSerialize["disabled_mcp_collections"] = o.DisabledMcpCollections
 	}
@@ -1491,6 +1528,7 @@ func (o *ConversationState) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "latest_streaming_id")
 		delete(additionalProperties, "skill_tool_map")
 		delete(additionalProperties, "skill_instructions_delivered")
+		delete(additionalProperties, "initialization_call_ids")
 		delete(additionalProperties, "disabled_mcp_collections")
 		delete(additionalProperties, "pending_mcp_connections")
 		delete(additionalProperties, "active_activity_group_id")

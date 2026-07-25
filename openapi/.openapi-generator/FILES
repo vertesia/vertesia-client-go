@@ -57,6 +57,7 @@ model_ace_update_payload.go
 model_activity_fetch_spec.go
 model_activity_task.go
 model_advance_process_payload.go
+model_agent_artifact_content_response.go
 model_agent_artifact_url_response.go
 model_agent_delivery_match_mode.go
 model_agent_event_delivery_target.go
@@ -245,6 +246,7 @@ model_content_object_type_ref.go
 model_content_object_type_status.go
 model_content_object_user_permissions.go
 model_content_source.go
+model_content_type_editing_policy.go
 model_content_type_extraction_grounding_policy.go
 model_content_type_extraction_grounding_review_policy.go
 model_content_type_intake_policy.go
@@ -499,6 +501,7 @@ model_indexing_status_response.go
 model_indexing_status_response_index.go
 model_indexing_status_response_reindex_progress.go
 model_inherited_property_metadata.go
+model_initial_tool_call.go
 model_intake_page_scope.go
 model_intake_vision_detail.go
 model_interaction.go
@@ -632,7 +635,7 @@ model_pending_activity.go
 model_pending_mcp_connection.go
 model_pending_tool_approval_results.go
 model_permission.go
-model_pick_content_object_type_item_id_name_description_tags_object_schema_table_layout_is_chunkable_strict_mode_status_intake.go
+model_pick_content_object_type_item_id_name_description_tags_object_schema_table_layout_is_chunkable_strict_mode_status_intake_editing.go
 model_plan.go
 model_plan_task.go
 model_post_agent_run_update_payload.go
@@ -842,6 +845,8 @@ model_transition_trigger.go
 model_twelvelabs_pegasus_options.go
 model_type_detection_metadata.go
 model_update_account_payload.go
+model_update_agent_artifact_content_payload.go
+model_update_agent_artifact_content_response.go
 model_update_app_installation_tool_allowlist_payload.go
 model_update_dashboard_payload.go
 model_update_event_ingest_channel_payload.go

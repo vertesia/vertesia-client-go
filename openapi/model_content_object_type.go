@@ -35,10 +35,11 @@ type ContentObjectType struct {
 	// ISO timestamp of when the object was created
 	CreatedAt string `json:"created_at"`
 	// ISO timestamp of when the object was last updated
-	UpdatedAt   string                   `json:"updated_at"`
-	Status      *ContentObjectTypeStatus `json:"status,omitempty"`
-	IsChunkable *bool                    `json:"is_chunkable,omitempty"`
-	Intake      *ContentTypeIntakePolicy `json:"intake,omitempty"`
+	UpdatedAt   string                    `json:"updated_at"`
+	Status      *ContentObjectTypeStatus  `json:"status,omitempty"`
+	IsChunkable *bool                     `json:"is_chunkable,omitempty"`
+	Intake      *ContentTypeIntakePolicy  `json:"intake,omitempty"`
+	Editing     *ContentTypeEditingPolicy `json:"editing,omitempty"`
 	// This is only included in ContentObjectTypeItem if explicitly requested It is always included in ContentObjectType
 	TableLayout []ColumnLayout `json:"table_layout,omitempty"`
 	// this is only included in ContentObjectTypeItem if explicitly requested It is always included in ContentObjectType
@@ -377,6 +378,38 @@ func (o *ContentObjectType) SetIntake(v ContentTypeIntakePolicy) {
 	o.Intake = &v
 }
 
+// GetEditing returns the Editing field value if set, zero value otherwise.
+func (o *ContentObjectType) GetEditing() ContentTypeEditingPolicy {
+	if o == nil || IsNil(o.Editing) {
+		var ret ContentTypeEditingPolicy
+		return ret
+	}
+	return *o.Editing
+}
+
+// GetEditingOk returns a tuple with the Editing field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectType) GetEditingOk() (*ContentTypeEditingPolicy, bool) {
+	if o == nil || IsNil(o.Editing) {
+		return nil, false
+	}
+	return o.Editing, true
+}
+
+// HasEditing returns a boolean if a field has been set.
+func (o *ContentObjectType) HasEditing() bool {
+	if o != nil && !IsNil(o.Editing) {
+		return true
+	}
+
+	return false
+}
+
+// SetEditing gets a reference to the given ContentTypeEditingPolicy and assigns it to the Editing field.
+func (o *ContentObjectType) SetEditing(v ContentTypeEditingPolicy) {
+	o.Editing = &v
+}
+
 // GetTableLayout returns the TableLayout field value if set, zero value otherwise.
 func (o *ContentObjectType) GetTableLayout() []ColumnLayout {
 	if o == nil || IsNil(o.TableLayout) {
@@ -504,6 +537,9 @@ func (o ContentObjectType) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Intake) {
 		toSerialize["intake"] = o.Intake
 	}
+	if !IsNil(o.Editing) {
+		toSerialize["editing"] = o.Editing
+	}
 	if !IsNil(o.TableLayout) {
 		toSerialize["table_layout"] = o.TableLayout
 	}
@@ -572,6 +608,7 @@ func (o *ContentObjectType) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "status")
 		delete(additionalProperties, "is_chunkable")
 		delete(additionalProperties, "intake")
+		delete(additionalProperties, "editing")
 		delete(additionalProperties, "table_layout")
 		delete(additionalProperties, "object_schema")
 		delete(additionalProperties, "strict_mode")

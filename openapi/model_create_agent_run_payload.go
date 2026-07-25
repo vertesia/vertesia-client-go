@@ -32,6 +32,12 @@ type CreateAgentRunPayload struct {
 	ToolApprovalMode *AgentToolApprovalMode `json:"tool_approval_mode,omitempty"`
 	// Tools configured for this run (+/- syntax supported)
 	ToolNames []string `json:"tool_names,omitempty"`
+	// Builtin system skills activated before the first model turn.
+	InitialSkills []string `json:"initial_skills,omitempty"`
+	// Ordered, bounded hydration/read calls executed before the first model turn.
+	InitialToolCalls []InitialToolCall `json:"initial_tool_calls,omitempty"`
+	// Hard denylist of tool names: never exposed to the model, refused at execution time.
+	ExcludedTools []string `json:"excluded_tools,omitempty"`
 	// Scoped collection (if any)
 	CollectionId *string `json:"collection_id,omitempty"`
 	// Denylist of MCP tool-collection ids deactivated for this run. `undefined`/empty means all installed/connected MCP collections are active (back-compat, and new servers stay active by default). Listed collections are excluded even if connected.
@@ -274,6 +280,102 @@ func (o *CreateAgentRunPayload) HasToolNames() bool {
 // SetToolNames gets a reference to the given []string and assigns it to the ToolNames field.
 func (o *CreateAgentRunPayload) SetToolNames(v []string) {
 	o.ToolNames = v
+}
+
+// GetInitialSkills returns the InitialSkills field value if set, zero value otherwise.
+func (o *CreateAgentRunPayload) GetInitialSkills() []string {
+	if o == nil || IsNil(o.InitialSkills) {
+		var ret []string
+		return ret
+	}
+	return o.InitialSkills
+}
+
+// GetInitialSkillsOk returns a tuple with the InitialSkills field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAgentRunPayload) GetInitialSkillsOk() ([]string, bool) {
+	if o == nil || IsNil(o.InitialSkills) {
+		return nil, false
+	}
+	return o.InitialSkills, true
+}
+
+// HasInitialSkills returns a boolean if a field has been set.
+func (o *CreateAgentRunPayload) HasInitialSkills() bool {
+	if o != nil && !IsNil(o.InitialSkills) {
+		return true
+	}
+
+	return false
+}
+
+// SetInitialSkills gets a reference to the given []string and assigns it to the InitialSkills field.
+func (o *CreateAgentRunPayload) SetInitialSkills(v []string) {
+	o.InitialSkills = v
+}
+
+// GetInitialToolCalls returns the InitialToolCalls field value if set, zero value otherwise.
+func (o *CreateAgentRunPayload) GetInitialToolCalls() []InitialToolCall {
+	if o == nil || IsNil(o.InitialToolCalls) {
+		var ret []InitialToolCall
+		return ret
+	}
+	return o.InitialToolCalls
+}
+
+// GetInitialToolCallsOk returns a tuple with the InitialToolCalls field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAgentRunPayload) GetInitialToolCallsOk() ([]InitialToolCall, bool) {
+	if o == nil || IsNil(o.InitialToolCalls) {
+		return nil, false
+	}
+	return o.InitialToolCalls, true
+}
+
+// HasInitialToolCalls returns a boolean if a field has been set.
+func (o *CreateAgentRunPayload) HasInitialToolCalls() bool {
+	if o != nil && !IsNil(o.InitialToolCalls) {
+		return true
+	}
+
+	return false
+}
+
+// SetInitialToolCalls gets a reference to the given []InitialToolCall and assigns it to the InitialToolCalls field.
+func (o *CreateAgentRunPayload) SetInitialToolCalls(v []InitialToolCall) {
+	o.InitialToolCalls = v
+}
+
+// GetExcludedTools returns the ExcludedTools field value if set, zero value otherwise.
+func (o *CreateAgentRunPayload) GetExcludedTools() []string {
+	if o == nil || IsNil(o.ExcludedTools) {
+		var ret []string
+		return ret
+	}
+	return o.ExcludedTools
+}
+
+// GetExcludedToolsOk returns a tuple with the ExcludedTools field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAgentRunPayload) GetExcludedToolsOk() ([]string, bool) {
+	if o == nil || IsNil(o.ExcludedTools) {
+		return nil, false
+	}
+	return o.ExcludedTools, true
+}
+
+// HasExcludedTools returns a boolean if a field has been set.
+func (o *CreateAgentRunPayload) HasExcludedTools() bool {
+	if o != nil && !IsNil(o.ExcludedTools) {
+		return true
+	}
+
+	return false
+}
+
+// SetExcludedTools gets a reference to the given []string and assigns it to the ExcludedTools field.
+func (o *CreateAgentRunPayload) SetExcludedTools(v []string) {
+	o.ExcludedTools = v
 }
 
 // GetCollectionId returns the CollectionId field value if set, zero value otherwise.
@@ -881,6 +983,15 @@ func (o CreateAgentRunPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ToolNames) {
 		toSerialize["tool_names"] = o.ToolNames
 	}
+	if !IsNil(o.InitialSkills) {
+		toSerialize["initial_skills"] = o.InitialSkills
+	}
+	if !IsNil(o.InitialToolCalls) {
+		toSerialize["initial_tool_calls"] = o.InitialToolCalls
+	}
+	if !IsNil(o.ExcludedTools) {
+		toSerialize["excluded_tools"] = o.ExcludedTools
+	}
 	if !IsNil(o.CollectionId) {
 		toSerialize["collection_id"] = o.CollectionId
 	}
@@ -984,6 +1095,9 @@ func (o *CreateAgentRunPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "interactive")
 		delete(additionalProperties, "tool_approval_mode")
 		delete(additionalProperties, "tool_names")
+		delete(additionalProperties, "initial_skills")
+		delete(additionalProperties, "initial_tool_calls")
+		delete(additionalProperties, "excluded_tools")
 		delete(additionalProperties, "collection_id")
 		delete(additionalProperties, "disabled_mcp_collections")
 		delete(additionalProperties, "content_type")

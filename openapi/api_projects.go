@@ -728,7 +728,7 @@ func (r ApiGetProjectAppTypeRequest) XApiVersion(xApiVersion string) ApiGetProje
 	return r
 }
 
-func (r ApiGetProjectAppTypeRequest) Execute() (*PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntake, *http.Response, error) {
+func (r ApiGetProjectAppTypeRequest) Execute() (*PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing, *http.Response, error) {
 	return r.ApiService.GetProjectAppTypeExecute(r)
 }
 
@@ -753,13 +753,13 @@ func (a *ProjectsAPIService) GetProjectAppType(ctx context.Context, projectId st
 
 // Execute executes the request
 //
-//	@return PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntake
-func (a *ProjectsAPIService) GetProjectAppTypeExecute(r ApiGetProjectAppTypeRequest) (*PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntake, *http.Response, error) {
+//	@return PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing
+func (a *ProjectsAPIService) GetProjectAppTypeExecute(r ApiGetProjectAppTypeRequest) (*PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntake
+		localVarReturnValue *PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectsAPIService.GetProjectAppType")
@@ -1712,7 +1712,7 @@ func (r ApiListProjectAppTypesRequest) XApiVersion(xApiVersion string) ApiListPr
 	return r
 }
 
-func (r ApiListProjectAppTypesRequest) Execute() ([]PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntake, *http.Response, error) {
+func (r ApiListProjectAppTypesRequest) Execute() ([]PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing, *http.Response, error) {
 	return r.ApiService.ListProjectAppTypesExecute(r)
 }
 
@@ -1735,13 +1735,13 @@ func (a *ProjectsAPIService) ListProjectAppTypes(ctx context.Context, projectId 
 
 // Execute executes the request
 //
-//	@return []PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntake
-func (a *ProjectsAPIService) ListProjectAppTypesExecute(r ApiListProjectAppTypesRequest) ([]PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntake, *http.Response, error) {
+//	@return []PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing
+func (a *ProjectsAPIService) ListProjectAppTypesExecute(r ApiListProjectAppTypesRequest) ([]PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue []PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntake
+		localVarReturnValue []PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectsAPIService.ListProjectAppTypes")

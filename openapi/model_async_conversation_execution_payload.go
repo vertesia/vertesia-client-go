@@ -44,6 +44,12 @@ type AsyncConversationExecutionPayload struct {
 	Visibility *ConversationVisibility `json:"visibility,omitempty"`
 	// The tools to use, list of tool or function names. You can use + and - to add or remove from default, if no sign, then list replaces default
 	ToolNames []string `json:"tool_names,omitempty"`
+	// Builtin system skills to activate at conversation start. Their related tools are exposed from the first turn and their instructions are injected into the initial context, replacing the learn_<skill> round-trip.
+	InitialSkills []string `json:"initial_skills,omitempty"`
+	// Tool calls executed before the first model turn. Results are injected into the initial context. These run sequentially with the caller's authority before the first model turn. Only a bounded set of read/hydration tools is accepted.
+	InitialToolCalls []InitialToolCall `json:"initial_tool_calls,omitempty"`
+	// Hard denylist of tool names for this conversation. Excluded tools are never exposed to the model and are refused at execution time, even when a skill or tool refresh would otherwise unlock them. Takes precedence over tool_names, initial_skills, and skill-based tool activation.
+	ExcludedTools []string `json:"excluded_tools,omitempty"`
 	// The maximum number of iterations in case of a conversation. If <=0 the default of 20 will be used.
 	MaxIterations *float32 `json:"max_iterations,omitempty"`
 	// Whether the conversation should be interactive or not
@@ -615,6 +621,102 @@ func (o *AsyncConversationExecutionPayload) HasToolNames() bool {
 // SetToolNames gets a reference to the given []string and assigns it to the ToolNames field.
 func (o *AsyncConversationExecutionPayload) SetToolNames(v []string) {
 	o.ToolNames = v
+}
+
+// GetInitialSkills returns the InitialSkills field value if set, zero value otherwise.
+func (o *AsyncConversationExecutionPayload) GetInitialSkills() []string {
+	if o == nil || IsNil(o.InitialSkills) {
+		var ret []string
+		return ret
+	}
+	return o.InitialSkills
+}
+
+// GetInitialSkillsOk returns a tuple with the InitialSkills field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AsyncConversationExecutionPayload) GetInitialSkillsOk() ([]string, bool) {
+	if o == nil || IsNil(o.InitialSkills) {
+		return nil, false
+	}
+	return o.InitialSkills, true
+}
+
+// HasInitialSkills returns a boolean if a field has been set.
+func (o *AsyncConversationExecutionPayload) HasInitialSkills() bool {
+	if o != nil && !IsNil(o.InitialSkills) {
+		return true
+	}
+
+	return false
+}
+
+// SetInitialSkills gets a reference to the given []string and assigns it to the InitialSkills field.
+func (o *AsyncConversationExecutionPayload) SetInitialSkills(v []string) {
+	o.InitialSkills = v
+}
+
+// GetInitialToolCalls returns the InitialToolCalls field value if set, zero value otherwise.
+func (o *AsyncConversationExecutionPayload) GetInitialToolCalls() []InitialToolCall {
+	if o == nil || IsNil(o.InitialToolCalls) {
+		var ret []InitialToolCall
+		return ret
+	}
+	return o.InitialToolCalls
+}
+
+// GetInitialToolCallsOk returns a tuple with the InitialToolCalls field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AsyncConversationExecutionPayload) GetInitialToolCallsOk() ([]InitialToolCall, bool) {
+	if o == nil || IsNil(o.InitialToolCalls) {
+		return nil, false
+	}
+	return o.InitialToolCalls, true
+}
+
+// HasInitialToolCalls returns a boolean if a field has been set.
+func (o *AsyncConversationExecutionPayload) HasInitialToolCalls() bool {
+	if o != nil && !IsNil(o.InitialToolCalls) {
+		return true
+	}
+
+	return false
+}
+
+// SetInitialToolCalls gets a reference to the given []InitialToolCall and assigns it to the InitialToolCalls field.
+func (o *AsyncConversationExecutionPayload) SetInitialToolCalls(v []InitialToolCall) {
+	o.InitialToolCalls = v
+}
+
+// GetExcludedTools returns the ExcludedTools field value if set, zero value otherwise.
+func (o *AsyncConversationExecutionPayload) GetExcludedTools() []string {
+	if o == nil || IsNil(o.ExcludedTools) {
+		var ret []string
+		return ret
+	}
+	return o.ExcludedTools
+}
+
+// GetExcludedToolsOk returns a tuple with the ExcludedTools field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AsyncConversationExecutionPayload) GetExcludedToolsOk() ([]string, bool) {
+	if o == nil || IsNil(o.ExcludedTools) {
+		return nil, false
+	}
+	return o.ExcludedTools, true
+}
+
+// HasExcludedTools returns a boolean if a field has been set.
+func (o *AsyncConversationExecutionPayload) HasExcludedTools() bool {
+	if o != nil && !IsNil(o.ExcludedTools) {
+		return true
+	}
+
+	return false
+}
+
+// SetExcludedTools gets a reference to the given []string and assigns it to the ExcludedTools field.
+func (o *AsyncConversationExecutionPayload) SetExcludedTools(v []string) {
+	o.ExcludedTools = v
 }
 
 // GetMaxIterations returns the MaxIterations field value if set, zero value otherwise.
@@ -1311,6 +1413,15 @@ func (o AsyncConversationExecutionPayload) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.ToolNames) {
 		toSerialize["tool_names"] = o.ToolNames
 	}
+	if !IsNil(o.InitialSkills) {
+		toSerialize["initial_skills"] = o.InitialSkills
+	}
+	if !IsNil(o.InitialToolCalls) {
+		toSerialize["initial_tool_calls"] = o.InitialToolCalls
+	}
+	if !IsNil(o.ExcludedTools) {
+		toSerialize["excluded_tools"] = o.ExcludedTools
+	}
 	if !IsNil(o.MaxIterations) {
 		toSerialize["max_iterations"] = o.MaxIterations
 	}
@@ -1431,6 +1542,9 @@ func (o *AsyncConversationExecutionPayload) UnmarshalJSON(data []byte) (err erro
 		delete(additionalProperties, "tool_approval_mode")
 		delete(additionalProperties, "visibility")
 		delete(additionalProperties, "tool_names")
+		delete(additionalProperties, "initial_skills")
+		delete(additionalProperties, "initial_tool_calls")
+		delete(additionalProperties, "excluded_tools")
 		delete(additionalProperties, "max_iterations")
 		delete(additionalProperties, "interactive")
 		delete(additionalProperties, "user_channels")
