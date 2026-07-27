@@ -23,6 +23,8 @@ type ContentTypeIntakePolicyExtraction struct {
 	Source       *string `json:"source,omitempty"`
 	Instructions *string `json:"instructions,omitempty"`
 	Interaction  *string `json:"interaction,omitempty"`
+	// Model execution config for the standard property-extraction interaction (sys:ExtractInformation). Lets extraction run on a different model/environment than the visual page conversion. When unset, extraction uses the run's model config or the project default model. (Grounded extraction is configured separately via grounding.config.)
+	Config *InteractionExecutionConfiguration `json:"config,omitempty"`
 	// Which pages extraction sees: everything or the locate result.
 	Scope *IntakePageScope `json:"scope,omitempty"`
 	// Static page ranges extraction sees (wins over `scope` when set).
@@ -178,6 +180,38 @@ func (o *ContentTypeIntakePolicyExtraction) HasInteraction() bool {
 // SetInteraction gets a reference to the given string and assigns it to the Interaction field.
 func (o *ContentTypeIntakePolicyExtraction) SetInteraction(v string) {
 	o.Interaction = &v
+}
+
+// GetConfig returns the Config field value if set, zero value otherwise.
+func (o *ContentTypeIntakePolicyExtraction) GetConfig() InteractionExecutionConfiguration {
+	if o == nil || IsNil(o.Config) {
+		var ret InteractionExecutionConfiguration
+		return ret
+	}
+	return *o.Config
+}
+
+// GetConfigOk returns a tuple with the Config field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentTypeIntakePolicyExtraction) GetConfigOk() (*InteractionExecutionConfiguration, bool) {
+	if o == nil || IsNil(o.Config) {
+		return nil, false
+	}
+	return o.Config, true
+}
+
+// HasConfig returns a boolean if a field has been set.
+func (o *ContentTypeIntakePolicyExtraction) HasConfig() bool {
+	if o != nil && !IsNil(o.Config) {
+		return true
+	}
+
+	return false
+}
+
+// SetConfig gets a reference to the given InteractionExecutionConfiguration and assigns it to the Config field.
+func (o *ContentTypeIntakePolicyExtraction) SetConfig(v InteractionExecutionConfiguration) {
+	o.Config = &v
 }
 
 // GetScope returns the Scope field value if set, zero value otherwise.
@@ -393,6 +427,9 @@ func (o ContentTypeIntakePolicyExtraction) ToMap() (map[string]interface{}, erro
 	}
 	if !IsNil(o.Interaction) {
 		toSerialize["interaction"] = o.Interaction
+	}
+	if !IsNil(o.Config) {
+		toSerialize["config"] = o.Config
 	}
 	if !IsNil(o.Scope) {
 		toSerialize["scope"] = o.Scope

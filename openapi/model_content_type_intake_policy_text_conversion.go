@@ -28,6 +28,10 @@ type ContentTypeIntakePolicyTextConversion struct {
 	Scope *IntakePageScope `json:"scope,omitempty"`
 	// Static page ranges to convert (wins over `scope` when set).
 	PageRanges [][]float32 `json:"page_ranges,omitempty"`
+	// DPI at which each page is rendered to the image the LLM converts. Default 150 — the accuracy/cost sweet spot: higher resolutions balloon input tokens (some providers tile the page) for no quality gain, below ~150 dense tables start to misread. Raise only for very fine print.
+	RenderDpi *float32 `json:"render_dpi,omitempty"`
+	// Model execution config for the page-conversion interaction (method 'llm'/'auto' -> sys:ConvertPageToMarkdown, method 'custom' -> the custom interaction). Lets the visual conversion run on a cheaper/faster model (e.g. a flash model) than extraction. When unset, conversion uses the run's model config or the project default model.
+	Config *InteractionExecutionConfiguration `json:"config,omitempty"`
 }
 
 // NewContentTypeIntakePolicyTextConversion instantiates a new ContentTypeIntakePolicyTextConversion object
@@ -271,6 +275,70 @@ func (o *ContentTypeIntakePolicyTextConversion) SetPageRanges(v [][]float32) {
 	o.PageRanges = v
 }
 
+// GetRenderDpi returns the RenderDpi field value if set, zero value otherwise.
+func (o *ContentTypeIntakePolicyTextConversion) GetRenderDpi() float32 {
+	if o == nil || IsNil(o.RenderDpi) {
+		var ret float32
+		return ret
+	}
+	return *o.RenderDpi
+}
+
+// GetRenderDpiOk returns a tuple with the RenderDpi field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentTypeIntakePolicyTextConversion) GetRenderDpiOk() (*float32, bool) {
+	if o == nil || IsNil(o.RenderDpi) {
+		return nil, false
+	}
+	return o.RenderDpi, true
+}
+
+// HasRenderDpi returns a boolean if a field has been set.
+func (o *ContentTypeIntakePolicyTextConversion) HasRenderDpi() bool {
+	if o != nil && !IsNil(o.RenderDpi) {
+		return true
+	}
+
+	return false
+}
+
+// SetRenderDpi gets a reference to the given float32 and assigns it to the RenderDpi field.
+func (o *ContentTypeIntakePolicyTextConversion) SetRenderDpi(v float32) {
+	o.RenderDpi = &v
+}
+
+// GetConfig returns the Config field value if set, zero value otherwise.
+func (o *ContentTypeIntakePolicyTextConversion) GetConfig() InteractionExecutionConfiguration {
+	if o == nil || IsNil(o.Config) {
+		var ret InteractionExecutionConfiguration
+		return ret
+	}
+	return *o.Config
+}
+
+// GetConfigOk returns a tuple with the Config field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentTypeIntakePolicyTextConversion) GetConfigOk() (*InteractionExecutionConfiguration, bool) {
+	if o == nil || IsNil(o.Config) {
+		return nil, false
+	}
+	return o.Config, true
+}
+
+// HasConfig returns a boolean if a field has been set.
+func (o *ContentTypeIntakePolicyTextConversion) HasConfig() bool {
+	if o != nil && !IsNil(o.Config) {
+		return true
+	}
+
+	return false
+}
+
+// SetConfig gets a reference to the given InteractionExecutionConfiguration and assigns it to the Config field.
+func (o *ContentTypeIntakePolicyTextConversion) SetConfig(v InteractionExecutionConfiguration) {
+	o.Config = &v
+}
+
 func (o ContentTypeIntakePolicyTextConversion) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -301,6 +369,12 @@ func (o ContentTypeIntakePolicyTextConversion) ToMap() (map[string]interface{}, 
 	}
 	if !IsNil(o.PageRanges) {
 		toSerialize["page_ranges"] = o.PageRanges
+	}
+	if !IsNil(o.RenderDpi) {
+		toSerialize["render_dpi"] = o.RenderDpi
+	}
+	if !IsNil(o.Config) {
+		toSerialize["config"] = o.Config
 	}
 	return toSerialize, nil
 }
