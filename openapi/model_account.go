@@ -32,11 +32,13 @@ type Account struct {
 	AccountType      AccountType       `json:"account_type"`
 	Billing          AccountBilling    `json:"billing"`
 	// Quota/rate-limit tier. Unset → the deployment default tier (env `QUOTA_BASE_TIER`).
-	QuotaTier            *QuotaTier `json:"quota_tier,omitempty"`
-	CreatedBy            string     `json:"created_by"`
-	UpdatedBy            string     `json:"updated_by"`
-	CreatedAt            string     `json:"created_at"`
-	UpdatedAt            string     `json:"updated_at"`
+	QuotaTier *QuotaTier `json:"quota_tier,omitempty"`
+	// Ops-managed per-account feature flags. Untyped by design so operators can add / remove temporary rollout gates without a schema change. Keys are enumerated in the admin UI from a hardcoded registry (studio-server) — flags not in that registry are ignored. Not modifiable through the public account API; admin API only.
+	FeatureFlags         map[string]interface{} `json:"feature_flags,omitempty"`
+	CreatedBy            string                 `json:"created_by"`
+	UpdatedBy            string                 `json:"updated_by"`
+	CreatedAt            string                 `json:"created_at"`
+	UpdatedAt            string                 `json:"updated_at"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -334,6 +336,38 @@ func (o *Account) SetQuotaTier(v QuotaTier) {
 	o.QuotaTier = &v
 }
 
+// GetFeatureFlags returns the FeatureFlags field value if set, zero value otherwise.
+func (o *Account) GetFeatureFlags() map[string]interface{} {
+	if o == nil || IsNil(o.FeatureFlags) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.FeatureFlags
+}
+
+// GetFeatureFlagsOk returns a tuple with the FeatureFlags field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Account) GetFeatureFlagsOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.FeatureFlags) {
+		return map[string]interface{}{}, false
+	}
+	return o.FeatureFlags, true
+}
+
+// HasFeatureFlags returns a boolean if a field has been set.
+func (o *Account) HasFeatureFlags() bool {
+	if o != nil && !IsNil(o.FeatureFlags) {
+		return true
+	}
+
+	return false
+}
+
+// SetFeatureFlags gets a reference to the given map[string]interface{} and assigns it to the FeatureFlags field.
+func (o *Account) SetFeatureFlags(v map[string]interface{}) {
+	o.FeatureFlags = v
+}
+
 // GetCreatedBy returns the CreatedBy field value
 func (o *Account) GetCreatedBy() string {
 	if o == nil {
@@ -456,6 +490,9 @@ func (o Account) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.QuotaTier) {
 		toSerialize["quota_tier"] = o.QuotaTier
 	}
+	if !IsNil(o.FeatureFlags) {
+		toSerialize["feature_flags"] = o.FeatureFlags
+	}
 	toSerialize["created_by"] = o.CreatedBy
 	toSerialize["updated_by"] = o.UpdatedBy
 	toSerialize["created_at"] = o.CreatedAt
@@ -523,6 +560,7 @@ func (o *Account) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "account_type")
 		delete(additionalProperties, "billing")
 		delete(additionalProperties, "quota_tier")
+		delete(additionalProperties, "feature_flags")
 		delete(additionalProperties, "created_by")
 		delete(additionalProperties, "updated_by")
 		delete(additionalProperties, "created_at")
