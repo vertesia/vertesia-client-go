@@ -186,7 +186,7 @@ func (r ApiDeleteEventSubscriptionRequest) Execute() (*DeleteCountResult, *http.
 /*
 DeleteEventSubscription Delete an event subscription
 
-Deletes an event subscription. Existing materialized deliveries are not cancelled.
+Deletes an event subscription. Queued deliveries are cancelled, since nothing can start them once the subscription is gone; deliveries already running are left to finish and report normally. Both remain visible for the operational retention window.
 
 **Required permissions:** `workflow:admin`
 
