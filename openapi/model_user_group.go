@@ -35,7 +35,9 @@ type UserGroup struct {
 	// BLP clearance level — merged with user clearance using max()
 	Clearance *float32 `json:"clearance,omitempty"`
 	// Compartments — merged with user compartments using array union
-	Compartments         []string `json:"compartments,omitempty"`
+	Compartments []string `json:"compartments,omitempty"`
+	// Projects this group is allowed to be used in. When empty or absent the group is org-wide (usable in any project). When set, the group may only be used to grant permissions in the listed projects.
+	AllowedProjects      []string `json:"allowed_projects,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -400,6 +402,38 @@ func (o *UserGroup) SetCompartments(v []string) {
 	o.Compartments = v
 }
 
+// GetAllowedProjects returns the AllowedProjects field value if set, zero value otherwise.
+func (o *UserGroup) GetAllowedProjects() []string {
+	if o == nil || IsNil(o.AllowedProjects) {
+		var ret []string
+		return ret
+	}
+	return o.AllowedProjects
+}
+
+// GetAllowedProjectsOk returns a tuple with the AllowedProjects field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UserGroup) GetAllowedProjectsOk() ([]string, bool) {
+	if o == nil || IsNil(o.AllowedProjects) {
+		return nil, false
+	}
+	return o.AllowedProjects, true
+}
+
+// HasAllowedProjects returns a boolean if a field has been set.
+func (o *UserGroup) HasAllowedProjects() bool {
+	if o != nil && !IsNil(o.AllowedProjects) {
+		return true
+	}
+
+	return false
+}
+
+// SetAllowedProjects gets a reference to the given []string and assigns it to the AllowedProjects field.
+func (o *UserGroup) SetAllowedProjects(v []string) {
+	o.AllowedProjects = v
+}
+
 func (o UserGroup) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -433,6 +467,9 @@ func (o UserGroup) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Compartments) {
 		toSerialize["compartments"] = o.Compartments
+	}
+	if !IsNil(o.AllowedProjects) {
+		toSerialize["allowed_projects"] = o.AllowedProjects
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -494,6 +531,7 @@ func (o *UserGroup) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "properties")
 		delete(additionalProperties, "clearance")
 		delete(additionalProperties, "compartments")
+		delete(additionalProperties, "allowed_projects")
 		o.AdditionalProperties = additionalProperties
 	}
 

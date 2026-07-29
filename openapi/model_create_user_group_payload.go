@@ -23,6 +23,8 @@ type CreateUserGroupPayload struct {
 	Name        string   `json:"name"`
 	Description *string  `json:"description,omitempty"`
 	Tags        []string `json:"tags,omitempty"`
+	// Restrict the new group to the given projects (empty/absent = org-wide).
+	AllowedProjects []string `json:"allowed_projects,omitempty"`
 }
 
 type _CreateUserGroupPayload CreateUserGroupPayload
@@ -133,6 +135,38 @@ func (o *CreateUserGroupPayload) SetTags(v []string) {
 	o.Tags = v
 }
 
+// GetAllowedProjects returns the AllowedProjects field value if set, zero value otherwise.
+func (o *CreateUserGroupPayload) GetAllowedProjects() []string {
+	if o == nil || IsNil(o.AllowedProjects) {
+		var ret []string
+		return ret
+	}
+	return o.AllowedProjects
+}
+
+// GetAllowedProjectsOk returns a tuple with the AllowedProjects field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateUserGroupPayload) GetAllowedProjectsOk() ([]string, bool) {
+	if o == nil || IsNil(o.AllowedProjects) {
+		return nil, false
+	}
+	return o.AllowedProjects, true
+}
+
+// HasAllowedProjects returns a boolean if a field has been set.
+func (o *CreateUserGroupPayload) HasAllowedProjects() bool {
+	if o != nil && !IsNil(o.AllowedProjects) {
+		return true
+	}
+
+	return false
+}
+
+// SetAllowedProjects gets a reference to the given []string and assigns it to the AllowedProjects field.
+func (o *CreateUserGroupPayload) SetAllowedProjects(v []string) {
+	o.AllowedProjects = v
+}
+
 func (o CreateUserGroupPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -149,6 +183,9 @@ func (o CreateUserGroupPayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
+	}
+	if !IsNil(o.AllowedProjects) {
+		toSerialize["allowed_projects"] = o.AllowedProjects
 	}
 	return toSerialize, nil
 }

@@ -20,12 +20,13 @@ var _ MappedNullable = &UpdateUserGroupPayload{}
 
 // UpdateUserGroupPayload struct for UpdateUserGroupPayload
 type UpdateUserGroupPayload struct {
-	Name         string                 `json:"name"`
-	Description  *string                `json:"description,omitempty"`
-	Tags         []string               `json:"tags,omitempty"`
-	Properties   map[string]interface{} `json:"properties,omitempty"`
-	Clearance    *float32               `json:"clearance,omitempty"`
-	Compartments []string               `json:"compartments,omitempty"`
+	Name            string                 `json:"name"`
+	Description     *string                `json:"description,omitempty"`
+	Tags            []string               `json:"tags,omitempty"`
+	Properties      map[string]interface{} `json:"properties,omitempty"`
+	Clearance       *float32               `json:"clearance,omitempty"`
+	Compartments    []string               `json:"compartments,omitempty"`
+	AllowedProjects []string               `json:"allowed_projects,omitempty"`
 }
 
 type _UpdateUserGroupPayload UpdateUserGroupPayload
@@ -232,6 +233,38 @@ func (o *UpdateUserGroupPayload) SetCompartments(v []string) {
 	o.Compartments = v
 }
 
+// GetAllowedProjects returns the AllowedProjects field value if set, zero value otherwise.
+func (o *UpdateUserGroupPayload) GetAllowedProjects() []string {
+	if o == nil || IsNil(o.AllowedProjects) {
+		var ret []string
+		return ret
+	}
+	return o.AllowedProjects
+}
+
+// GetAllowedProjectsOk returns a tuple with the AllowedProjects field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateUserGroupPayload) GetAllowedProjectsOk() ([]string, bool) {
+	if o == nil || IsNil(o.AllowedProjects) {
+		return nil, false
+	}
+	return o.AllowedProjects, true
+}
+
+// HasAllowedProjects returns a boolean if a field has been set.
+func (o *UpdateUserGroupPayload) HasAllowedProjects() bool {
+	if o != nil && !IsNil(o.AllowedProjects) {
+		return true
+	}
+
+	return false
+}
+
+// SetAllowedProjects gets a reference to the given []string and assigns it to the AllowedProjects field.
+func (o *UpdateUserGroupPayload) SetAllowedProjects(v []string) {
+	o.AllowedProjects = v
+}
+
 func (o UpdateUserGroupPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -257,6 +290,9 @@ func (o UpdateUserGroupPayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Compartments) {
 		toSerialize["compartments"] = o.Compartments
+	}
+	if !IsNil(o.AllowedProjects) {
+		toSerialize["allowed_projects"] = o.AllowedProjects
 	}
 	return toSerialize, nil
 }

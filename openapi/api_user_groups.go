@@ -188,7 +188,7 @@ func (r ApiCreateUserGroupRequest) Execute() (*UserGroup, *http.Response, error)
 /*
 CreateUserGroup Create a user group
 
-Creates a new user group in the current account.
+Creates a new user group in the current account. Pass `allowed_projects` to restrict the group to specific projects (empty/absent = org-wide).
 
 **Required permissions:** `account:admin`
 
@@ -600,7 +600,7 @@ func (r ApiListUserGroupsRequest) Execute() ([]UserGroup, *http.Response, error)
 /*
 ListUserGroups List user groups
 
-Lists user groups in the current account.
+Lists user groups in the current account. Pass `project` to return only groups usable in that project (org-wide groups plus groups restricted to it).
 
 **Required permissions:** `account:read`
 
