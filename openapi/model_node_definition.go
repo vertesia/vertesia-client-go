@@ -20,8 +20,12 @@ var _ MappedNullable = &NodeDefinition{}
 
 // NodeDefinition struct for NodeDefinition
 type NodeDefinition struct {
-	Type              ProcessNodeType               `json:"type"`
-	Tool              *string                       `json:"tool,omitempty"`
+	Type ProcessNodeType `json:"type"`
+	Tool *string         `json:"tool,omitempty"`
+	// Named entry in process resources.scripts for script nodes.
+	Script *string `json:"script,omitempty"`
+	// Script execution timeout in seconds. Defaults to 300 and is capped at 600.
+	Timeout           *float32                      `json:"timeout,omitempty"`
 	Interaction       *string                       `json:"interaction,omitempty"`
 	Process           *string                       `json:"process,omitempty"`
 	ProcessDefinition *ProcessDefinitionBody        `json:"process_definition,omitempty"`
@@ -131,6 +135,70 @@ func (o *NodeDefinition) HasTool() bool {
 // SetTool gets a reference to the given string and assigns it to the Tool field.
 func (o *NodeDefinition) SetTool(v string) {
 	o.Tool = &v
+}
+
+// GetScript returns the Script field value if set, zero value otherwise.
+func (o *NodeDefinition) GetScript() string {
+	if o == nil || IsNil(o.Script) {
+		var ret string
+		return ret
+	}
+	return *o.Script
+}
+
+// GetScriptOk returns a tuple with the Script field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDefinition) GetScriptOk() (*string, bool) {
+	if o == nil || IsNil(o.Script) {
+		return nil, false
+	}
+	return o.Script, true
+}
+
+// HasScript returns a boolean if a field has been set.
+func (o *NodeDefinition) HasScript() bool {
+	if o != nil && !IsNil(o.Script) {
+		return true
+	}
+
+	return false
+}
+
+// SetScript gets a reference to the given string and assigns it to the Script field.
+func (o *NodeDefinition) SetScript(v string) {
+	o.Script = &v
+}
+
+// GetTimeout returns the Timeout field value if set, zero value otherwise.
+func (o *NodeDefinition) GetTimeout() float32 {
+	if o == nil || IsNil(o.Timeout) {
+		var ret float32
+		return ret
+	}
+	return *o.Timeout
+}
+
+// GetTimeoutOk returns a tuple with the Timeout field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDefinition) GetTimeoutOk() (*float32, bool) {
+	if o == nil || IsNil(o.Timeout) {
+		return nil, false
+	}
+	return o.Timeout, true
+}
+
+// HasTimeout returns a boolean if a field has been set.
+func (o *NodeDefinition) HasTimeout() bool {
+	if o != nil && !IsNil(o.Timeout) {
+		return true
+	}
+
+	return false
+}
+
+// SetTimeout gets a reference to the given float32 and assigns it to the Timeout field.
+func (o *NodeDefinition) SetTimeout(v float32) {
+	o.Timeout = &v
 }
 
 // GetInteraction returns the Interaction field value if set, zero value otherwise.
@@ -1106,6 +1174,12 @@ func (o NodeDefinition) ToMap() (map[string]interface{}, error) {
 	toSerialize["type"] = o.Type
 	if !IsNil(o.Tool) {
 		toSerialize["tool"] = o.Tool
+	}
+	if !IsNil(o.Script) {
+		toSerialize["script"] = o.Script
+	}
+	if !IsNil(o.Timeout) {
+		toSerialize["timeout"] = o.Timeout
 	}
 	if !IsNil(o.Interaction) {
 		toSerialize["interaction"] = o.Interaction

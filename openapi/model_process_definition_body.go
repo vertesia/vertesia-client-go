@@ -25,6 +25,7 @@ type ProcessDefinitionBody struct {
 	Description   *string                        `json:"description,omitempty"`
 	Initial       string                         `json:"initial"`
 	Model         *string                        `json:"model,omitempty"`
+	Resources     *ProcessResourcesDefinition    `json:"resources,omitempty"`
 	Context       ProcessContextDefinition       `json:"context"`
 	Nodes         map[string]NodeDefinition      `json:"nodes"`
 	Metadata      map[string]interface{}         `json:"metadata,omitempty"`
@@ -190,6 +191,38 @@ func (o *ProcessDefinitionBody) SetModel(v string) {
 	o.Model = &v
 }
 
+// GetResources returns the Resources field value if set, zero value otherwise.
+func (o *ProcessDefinitionBody) GetResources() ProcessResourcesDefinition {
+	if o == nil || IsNil(o.Resources) {
+		var ret ProcessResourcesDefinition
+		return ret
+	}
+	return *o.Resources
+}
+
+// GetResourcesOk returns a tuple with the Resources field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessDefinitionBody) GetResourcesOk() (*ProcessResourcesDefinition, bool) {
+	if o == nil || IsNil(o.Resources) {
+		return nil, false
+	}
+	return o.Resources, true
+}
+
+// HasResources returns a boolean if a field has been set.
+func (o *ProcessDefinitionBody) HasResources() bool {
+	if o != nil && !IsNil(o.Resources) {
+		return true
+	}
+
+	return false
+}
+
+// SetResources gets a reference to the given ProcessResourcesDefinition and assigns it to the Resources field.
+func (o *ProcessDefinitionBody) SetResources(v ProcessResourcesDefinition) {
+	o.Resources = &v
+}
+
 // GetContext returns the Context field value
 func (o *ProcessDefinitionBody) GetContext() ProcessContextDefinition {
 	if o == nil {
@@ -288,6 +321,9 @@ func (o ProcessDefinitionBody) ToMap() (map[string]interface{}, error) {
 	toSerialize["initial"] = o.Initial
 	if !IsNil(o.Model) {
 		toSerialize["model"] = o.Model
+	}
+	if !IsNil(o.Resources) {
+		toSerialize["resources"] = o.Resources
 	}
 	toSerialize["context"] = o.Context
 	toSerialize["nodes"] = o.Nodes

@@ -23,6 +23,7 @@ const (
 	PROCESSNODETYPE_TOOL                     ProcessNodeType = "tool"
 	PROCESSNODETYPE_INTERACTION              ProcessNodeType = "interaction"
 	PROCESSNODETYPE_AGENT                    ProcessNodeType = "agent"
+	PROCESSNODETYPE_SCRIPT                   ProcessNodeType = "script"
 	PROCESSNODETYPE_PROCESS                  ProcessNodeType = "process"
 	PROCESSNODETYPE_HUMAN_TASK               ProcessNodeType = "human_task"
 	PROCESSNODETYPE_FOREACH                  ProcessNodeType = "foreach"
@@ -37,6 +38,7 @@ var AllowedProcessNodeTypeEnumValues = []ProcessNodeType{
 	"tool",
 	"interaction",
 	"agent",
+	"script",
 	"process",
 	"human_task",
 	"foreach",

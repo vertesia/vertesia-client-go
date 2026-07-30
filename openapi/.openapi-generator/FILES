@@ -702,9 +702,13 @@ model_process_history_response_node_history_ref.go
 model_process_node_returns_definition.go
 model_process_node_run_type.go
 model_process_node_type.go
+model_process_resources_definition.go
 model_process_run_config.go
 model_process_run_config_process_workstream_monitor.go
 model_process_run_type.go
+model_process_script_inline_source.go
+model_process_script_language.go
+model_process_script_resource.go
 model_process_state.go
 model_programmatic_run_response.go
 model_project.go

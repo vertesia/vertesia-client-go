@@ -33,6 +33,8 @@ type NodeHistoryEntry struct {
 	ChildRunId         *string                `json:"child_run_id,omitempty"`
 	ChildWorkflowId    *string                `json:"child_workflow_id,omitempty"`
 	ChildWorkflowRunId *string                `json:"child_workflow_run_id,omitempty"`
+	Artifacts          []string               `json:"artifacts,omitempty"`
+	LogRef             *string                `json:"log_ref,omitempty"`
 }
 
 type _NodeHistoryEntry NodeHistoryEntry
@@ -417,6 +419,70 @@ func (o *NodeHistoryEntry) SetChildWorkflowRunId(v string) {
 	o.ChildWorkflowRunId = &v
 }
 
+// GetArtifacts returns the Artifacts field value if set, zero value otherwise.
+func (o *NodeHistoryEntry) GetArtifacts() []string {
+	if o == nil || IsNil(o.Artifacts) {
+		var ret []string
+		return ret
+	}
+	return o.Artifacts
+}
+
+// GetArtifactsOk returns a tuple with the Artifacts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeHistoryEntry) GetArtifactsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Artifacts) {
+		return nil, false
+	}
+	return o.Artifacts, true
+}
+
+// HasArtifacts returns a boolean if a field has been set.
+func (o *NodeHistoryEntry) HasArtifacts() bool {
+	if o != nil && !IsNil(o.Artifacts) {
+		return true
+	}
+
+	return false
+}
+
+// SetArtifacts gets a reference to the given []string and assigns it to the Artifacts field.
+func (o *NodeHistoryEntry) SetArtifacts(v []string) {
+	o.Artifacts = v
+}
+
+// GetLogRef returns the LogRef field value if set, zero value otherwise.
+func (o *NodeHistoryEntry) GetLogRef() string {
+	if o == nil || IsNil(o.LogRef) {
+		var ret string
+		return ret
+	}
+	return *o.LogRef
+}
+
+// GetLogRefOk returns a tuple with the LogRef field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeHistoryEntry) GetLogRefOk() (*string, bool) {
+	if o == nil || IsNil(o.LogRef) {
+		return nil, false
+	}
+	return o.LogRef, true
+}
+
+// HasLogRef returns a boolean if a field has been set.
+func (o *NodeHistoryEntry) HasLogRef() bool {
+	if o != nil && !IsNil(o.LogRef) {
+		return true
+	}
+
+	return false
+}
+
+// SetLogRef gets a reference to the given string and assigns it to the LogRef field.
+func (o *NodeHistoryEntry) SetLogRef(v string) {
+	o.LogRef = &v
+}
+
 func (o NodeHistoryEntry) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -456,6 +522,12 @@ func (o NodeHistoryEntry) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ChildWorkflowRunId) {
 		toSerialize["child_workflow_run_id"] = o.ChildWorkflowRunId
+	}
+	if !IsNil(o.Artifacts) {
+		toSerialize["artifacts"] = o.Artifacts
+	}
+	if !IsNil(o.LogRef) {
+		toSerialize["log_ref"] = o.LogRef
 	}
 	return toSerialize, nil
 }
