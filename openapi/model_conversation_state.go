@@ -18,7 +18,7 @@ import (
 // checks if the ConversationState type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ConversationState{}
 
-// ConversationState Conversation state passed between workflow activities. Contains all context needed to continue a multi-turn agent conversation.
+// ConversationState Conversation state passed between workflow activities: the activity-safe, per-turn dynamic subset of a multi-turn agent conversation. Rides every conversation activity payload, so it deliberately excludes anything large or fetchable — the conversation history and tool definitions live in artifact storage (referenced via `tool_reference` / the conversation storage id), and catalog/activation data lives in the workflow-memory  {@link  ConversationCatalogState }  (persisted as catalog.json).
 type ConversationState struct {
 	// A reference to the run that started the conversation
 	Run ExecutionRunDocRef `json:"run"`
@@ -62,12 +62,8 @@ type ConversationState struct {
 	ActiveToolNames []string `json:"active_tool_names,omitempty"`
 	// Active tools that should not be evicted by bounded active-tool pruning.
 	PinnedToolNames []string `json:"pinned_tool_names,omitempty"`
-	// Activation and usage metadata for tools seen during the conversation. Used to keep the active tool set bounded without losing recovery context.
-	ToolActivationMetadata map[string]ToolActivationMetadata `json:"tool_activation_metadata,omitempty"`
 	// Skills that have been used in this conversation (for auto-syncing scripts and package installation)
 	UsedSkills []UsedSkill `json:"used_skills,omitempty"`
-	// All available skills from registered tool collections (for upfront hydration in sandbox)
-	AvailableSkills []AvailableSkill `json:"available_skills,omitempty"`
 	// Whether to stream LLM responses to Redis (cached from project config)
 	StreamingEnabled *bool `json:"streaming_enabled,omitempty"`
 	// Active communication channels with their current state. Channels can be updated as conversation progresses (e.g., email threading info).
@@ -81,9 +77,7 @@ type ConversationState struct {
 	LatestActivityId *string `json:"latest_activity_id,omitempty"`
 	// Stable streaming ID from the latest LLM call. Unlike Temporal activity IDs, this is scoped to the concrete workflow run that produced the stream, so it remains safe across continue-as-new.
 	LatestStreamingId *string `json:"latest_streaming_id,omitempty"`
-	// Mapping of skill names to their related tools. When a skill is called, its related tools are added to unlocked_tools.
-	SkillToolMap map[string][]string `json:"skill_tool_map,omitempty"`
-	// Names of skills whose full instructions are already present in the live conversation history (i.e. were delivered by a prior `learn_<skill>` call). Used to make skill re-activation idempotent: a repeat call returns a short \"already active\" acknowledgement instead of re-dumping the instructions.  Unlike `unlocked_tools`/`skill_tool_map` (which must survive a checkpoint so tools stay unlocked), this list is reset when a checkpoint compacts the conversation, because the summary no longer carries the skill instructions and the next call must re-deliver them.
+	// Names of skills whose full instructions are already present in the live conversation history (i.e. were delivered by a prior `learn_<skill>` call). Used to make skill re-activation idempotent: a repeat call returns a short \"already active\" acknowledgement instead of re-dumping the instructions.  Unlike `unlocked_tools` (which must survive a checkpoint so tools stay unlocked), this list is reset when a checkpoint compacts the conversation, because the summary no longer carries the skill instructions and the next call must re-deliver them.
 	SkillInstructionsDelivered []string `json:"skill_instructions_delivered,omitempty"`
 	// Stable ids of initialization tool calls completed before the first model turn.
 	InitializationCallIds []string `json:"initialization_call_ids,omitempty"`
@@ -760,38 +754,6 @@ func (o *ConversationState) SetPinnedToolNames(v []string) {
 	o.PinnedToolNames = v
 }
 
-// GetToolActivationMetadata returns the ToolActivationMetadata field value if set, zero value otherwise.
-func (o *ConversationState) GetToolActivationMetadata() map[string]ToolActivationMetadata {
-	if o == nil || IsNil(o.ToolActivationMetadata) {
-		var ret map[string]ToolActivationMetadata
-		return ret
-	}
-	return o.ToolActivationMetadata
-}
-
-// GetToolActivationMetadataOk returns a tuple with the ToolActivationMetadata field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ConversationState) GetToolActivationMetadataOk() (map[string]ToolActivationMetadata, bool) {
-	if o == nil || IsNil(o.ToolActivationMetadata) {
-		return map[string]ToolActivationMetadata{}, false
-	}
-	return o.ToolActivationMetadata, true
-}
-
-// HasToolActivationMetadata returns a boolean if a field has been set.
-func (o *ConversationState) HasToolActivationMetadata() bool {
-	if o != nil && !IsNil(o.ToolActivationMetadata) {
-		return true
-	}
-
-	return false
-}
-
-// SetToolActivationMetadata gets a reference to the given map[string]ToolActivationMetadata and assigns it to the ToolActivationMetadata field.
-func (o *ConversationState) SetToolActivationMetadata(v map[string]ToolActivationMetadata) {
-	o.ToolActivationMetadata = v
-}
-
 // GetUsedSkills returns the UsedSkills field value if set, zero value otherwise.
 func (o *ConversationState) GetUsedSkills() []UsedSkill {
 	if o == nil || IsNil(o.UsedSkills) {
@@ -822,38 +784,6 @@ func (o *ConversationState) HasUsedSkills() bool {
 // SetUsedSkills gets a reference to the given []UsedSkill and assigns it to the UsedSkills field.
 func (o *ConversationState) SetUsedSkills(v []UsedSkill) {
 	o.UsedSkills = v
-}
-
-// GetAvailableSkills returns the AvailableSkills field value if set, zero value otherwise.
-func (o *ConversationState) GetAvailableSkills() []AvailableSkill {
-	if o == nil || IsNil(o.AvailableSkills) {
-		var ret []AvailableSkill
-		return ret
-	}
-	return o.AvailableSkills
-}
-
-// GetAvailableSkillsOk returns a tuple with the AvailableSkills field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ConversationState) GetAvailableSkillsOk() ([]AvailableSkill, bool) {
-	if o == nil || IsNil(o.AvailableSkills) {
-		return nil, false
-	}
-	return o.AvailableSkills, true
-}
-
-// HasAvailableSkills returns a boolean if a field has been set.
-func (o *ConversationState) HasAvailableSkills() bool {
-	if o != nil && !IsNil(o.AvailableSkills) {
-		return true
-	}
-
-	return false
-}
-
-// SetAvailableSkills gets a reference to the given []AvailableSkill and assigns it to the AvailableSkills field.
-func (o *ConversationState) SetAvailableSkills(v []AvailableSkill) {
-	o.AvailableSkills = v
 }
 
 // GetStreamingEnabled returns the StreamingEnabled field value if set, zero value otherwise.
@@ -1078,38 +1008,6 @@ func (o *ConversationState) HasLatestStreamingId() bool {
 // SetLatestStreamingId gets a reference to the given string and assigns it to the LatestStreamingId field.
 func (o *ConversationState) SetLatestStreamingId(v string) {
 	o.LatestStreamingId = &v
-}
-
-// GetSkillToolMap returns the SkillToolMap field value if set, zero value otherwise.
-func (o *ConversationState) GetSkillToolMap() map[string][]string {
-	if o == nil || IsNil(o.SkillToolMap) {
-		var ret map[string][]string
-		return ret
-	}
-	return o.SkillToolMap
-}
-
-// GetSkillToolMapOk returns a tuple with the SkillToolMap field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ConversationState) GetSkillToolMapOk() (map[string][]string, bool) {
-	if o == nil || IsNil(o.SkillToolMap) {
-		return map[string][]string{}, false
-	}
-	return o.SkillToolMap, true
-}
-
-// HasSkillToolMap returns a boolean if a field has been set.
-func (o *ConversationState) HasSkillToolMap() bool {
-	if o != nil && !IsNil(o.SkillToolMap) {
-		return true
-	}
-
-	return false
-}
-
-// SetSkillToolMap gets a reference to the given map[string][]string and assigns it to the SkillToolMap field.
-func (o *ConversationState) SetSkillToolMap(v map[string][]string) {
-	o.SkillToolMap = v
 }
 
 // GetSkillInstructionsDelivered returns the SkillInstructionsDelivered field value if set, zero value otherwise.
@@ -1463,14 +1361,8 @@ func (o ConversationState) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PinnedToolNames) {
 		toSerialize["pinned_tool_names"] = o.PinnedToolNames
 	}
-	if !IsNil(o.ToolActivationMetadata) {
-		toSerialize["tool_activation_metadata"] = o.ToolActivationMetadata
-	}
 	if !IsNil(o.UsedSkills) {
 		toSerialize["used_skills"] = o.UsedSkills
-	}
-	if !IsNil(o.AvailableSkills) {
-		toSerialize["available_skills"] = o.AvailableSkills
 	}
 	if !IsNil(o.StreamingEnabled) {
 		toSerialize["streaming_enabled"] = o.StreamingEnabled
@@ -1492,9 +1384,6 @@ func (o ConversationState) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.LatestStreamingId) {
 		toSerialize["latest_streaming_id"] = o.LatestStreamingId
-	}
-	if !IsNil(o.SkillToolMap) {
-		toSerialize["skill_tool_map"] = o.SkillToolMap
 	}
 	if !IsNil(o.SkillInstructionsDelivered) {
 		toSerialize["skill_instructions_delivered"] = o.SkillInstructionsDelivered
@@ -1591,9 +1480,7 @@ func (o *ConversationState) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "tool_reference")
 		delete(additionalProperties, "active_tool_names")
 		delete(additionalProperties, "pinned_tool_names")
-		delete(additionalProperties, "tool_activation_metadata")
 		delete(additionalProperties, "used_skills")
-		delete(additionalProperties, "available_skills")
 		delete(additionalProperties, "streaming_enabled")
 		delete(additionalProperties, "user_channels")
 		delete(additionalProperties, "resolvedInteraction")
@@ -1601,7 +1488,6 @@ func (o *ConversationState) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "unlocked_tools")
 		delete(additionalProperties, "latest_activity_id")
 		delete(additionalProperties, "latest_streaming_id")
-		delete(additionalProperties, "skill_tool_map")
 		delete(additionalProperties, "skill_instructions_delivered")
 		delete(additionalProperties, "initialization_call_ids")
 		delete(additionalProperties, "disabled_mcp_collections")

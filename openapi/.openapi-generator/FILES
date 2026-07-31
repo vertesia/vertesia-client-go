@@ -179,7 +179,6 @@ model_audit_trail_event.go
 model_audit_trail_response.go
 model_auth_token_response.go
 model_autonomous_run_response.go
-model_available_skill.go
 model_aws_configuration.go
 model_batch_query_payload.go
 model_batch_query_payload_queries_inner.go
@@ -881,7 +880,6 @@ model_text_section.go
 model_thinking_level.go
 model_time_resolution.go
 model_timer_task.go
-model_tool_activation_metadata.go
 model_tool_approval_grant.go
 model_tool_collection_auth_type.go
 model_tool_collection_object.go
