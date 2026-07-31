@@ -20,11 +20,15 @@ var _ MappedNullable = &RateLimitRequestPayload{}
 
 // RateLimitRequestPayload struct for RateLimitRequestPayload
 type RateLimitRequestPayload struct {
-	Interaction   string            `json:"interaction"`
-	EnvironmentId *string           `json:"environment_id,omitempty"`
-	ModelId       *string           `json:"model_id,omitempty"`
-	WorkflowRunId *string           `json:"workflow_run_id,omitempty"`
-	Modalities    *PromptModalities `json:"modalities,omitempty"`
+	Interaction   string  `json:"interaction"`
+	EnvironmentId *string `json:"environment_id,omitempty"`
+	ModelId       *string `json:"model_id,omitempty"`
+	// Deprecated: Use rate_limit_id for admission/completion correlation.
+	// Deprecated
+	WorkflowRunId *string `json:"workflow_run_id,omitempty"`
+	// Stable per-execution admission identifier. Preferred over the legacy workflow_run_id.
+	RateLimitId *string           `json:"rate_limit_id,omitempty"`
+	Modalities  *PromptModalities `json:"modalities,omitempty"`
 }
 
 type _RateLimitRequestPayload RateLimitRequestPayload
@@ -136,6 +140,7 @@ func (o *RateLimitRequestPayload) SetModelId(v string) {
 }
 
 // GetWorkflowRunId returns the WorkflowRunId field value if set, zero value otherwise.
+// Deprecated
 func (o *RateLimitRequestPayload) GetWorkflowRunId() string {
 	if o == nil || IsNil(o.WorkflowRunId) {
 		var ret string
@@ -146,6 +151,7 @@ func (o *RateLimitRequestPayload) GetWorkflowRunId() string {
 
 // GetWorkflowRunIdOk returns a tuple with the WorkflowRunId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// Deprecated
 func (o *RateLimitRequestPayload) GetWorkflowRunIdOk() (*string, bool) {
 	if o == nil || IsNil(o.WorkflowRunId) {
 		return nil, false
@@ -163,8 +169,41 @@ func (o *RateLimitRequestPayload) HasWorkflowRunId() bool {
 }
 
 // SetWorkflowRunId gets a reference to the given string and assigns it to the WorkflowRunId field.
+// Deprecated
 func (o *RateLimitRequestPayload) SetWorkflowRunId(v string) {
 	o.WorkflowRunId = &v
+}
+
+// GetRateLimitId returns the RateLimitId field value if set, zero value otherwise.
+func (o *RateLimitRequestPayload) GetRateLimitId() string {
+	if o == nil || IsNil(o.RateLimitId) {
+		var ret string
+		return ret
+	}
+	return *o.RateLimitId
+}
+
+// GetRateLimitIdOk returns a tuple with the RateLimitId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RateLimitRequestPayload) GetRateLimitIdOk() (*string, bool) {
+	if o == nil || IsNil(o.RateLimitId) {
+		return nil, false
+	}
+	return o.RateLimitId, true
+}
+
+// HasRateLimitId returns a boolean if a field has been set.
+func (o *RateLimitRequestPayload) HasRateLimitId() bool {
+	if o != nil && !IsNil(o.RateLimitId) {
+		return true
+	}
+
+	return false
+}
+
+// SetRateLimitId gets a reference to the given string and assigns it to the RateLimitId field.
+func (o *RateLimitRequestPayload) SetRateLimitId(v string) {
+	o.RateLimitId = &v
 }
 
 // GetModalities returns the Modalities field value if set, zero value otherwise.
@@ -218,6 +257,9 @@ func (o RateLimitRequestPayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.WorkflowRunId) {
 		toSerialize["workflow_run_id"] = o.WorkflowRunId
+	}
+	if !IsNil(o.RateLimitId) {
+		toSerialize["rate_limit_id"] = o.RateLimitId
 	}
 	if !IsNil(o.Modalities) {
 		toSerialize["modalities"] = o.Modalities

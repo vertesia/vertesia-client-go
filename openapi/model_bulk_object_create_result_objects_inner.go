@@ -20,8 +20,9 @@ var _ MappedNullable = &BulkObjectCreateResultObjectsInner{}
 
 // BulkObjectCreateResultObjectsInner struct for BulkObjectCreateResultObjectsInner
 type BulkObjectCreateResultObjectsInner struct {
-	Id         string  `json:"id"`
-	ExternalId *string `json:"external_id,omitempty"`
+	Id         string   `json:"id"`
+	Index      *float32 `json:"index,omitempty"`
+	ExternalId *string  `json:"external_id,omitempty"`
 }
 
 type _BulkObjectCreateResultObjectsInner BulkObjectCreateResultObjectsInner
@@ -68,6 +69,38 @@ func (o *BulkObjectCreateResultObjectsInner) SetId(v string) {
 	o.Id = v
 }
 
+// GetIndex returns the Index field value if set, zero value otherwise.
+func (o *BulkObjectCreateResultObjectsInner) GetIndex() float32 {
+	if o == nil || IsNil(o.Index) {
+		var ret float32
+		return ret
+	}
+	return *o.Index
+}
+
+// GetIndexOk returns a tuple with the Index field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BulkObjectCreateResultObjectsInner) GetIndexOk() (*float32, bool) {
+	if o == nil || IsNil(o.Index) {
+		return nil, false
+	}
+	return o.Index, true
+}
+
+// HasIndex returns a boolean if a field has been set.
+func (o *BulkObjectCreateResultObjectsInner) HasIndex() bool {
+	if o != nil && !IsNil(o.Index) {
+		return true
+	}
+
+	return false
+}
+
+// SetIndex gets a reference to the given float32 and assigns it to the Index field.
+func (o *BulkObjectCreateResultObjectsInner) SetIndex(v float32) {
+	o.Index = &v
+}
+
 // GetExternalId returns the ExternalId field value if set, zero value otherwise.
 func (o *BulkObjectCreateResultObjectsInner) GetExternalId() string {
 	if o == nil || IsNil(o.ExternalId) {
@@ -111,6 +144,9 @@ func (o BulkObjectCreateResultObjectsInner) MarshalJSON() ([]byte, error) {
 func (o BulkObjectCreateResultObjectsInner) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
+	if !IsNil(o.Index) {
+		toSerialize["index"] = o.Index
+	}
 	if !IsNil(o.ExternalId) {
 		toSerialize["external_id"] = o.ExternalId
 	}

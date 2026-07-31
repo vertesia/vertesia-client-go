@@ -35,6 +35,13 @@ type ApiKey struct {
 	CreatedAt        time.Time   `json:"created_at"`
 	UpdatedAt        time.Time   `json:"updated_at"`
 	ExpiresAt        *time.Time  `json:"expires_at,omitempty"`
+	// Custom properties for dynamic permission matching (PrincipalSet / $principal. conditions)
+	Properties map[string]interface{} `json:"properties,omitempty"`
+	// BLP clearance level — determines max document sensitivity the key can access
+	Clearance *float32 `json:"clearance,omitempty"`
+	// Compartments the key belongs to — restricts access to documents in matching compartments
+	Compartments         []string `json:"compartments,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ApiKey ApiKey
@@ -427,6 +434,102 @@ func (o *ApiKey) SetExpiresAt(v time.Time) {
 	o.ExpiresAt = &v
 }
 
+// GetProperties returns the Properties field value if set, zero value otherwise.
+func (o *ApiKey) GetProperties() map[string]interface{} {
+	if o == nil || IsNil(o.Properties) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.Properties
+}
+
+// GetPropertiesOk returns a tuple with the Properties field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApiKey) GetPropertiesOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.Properties) {
+		return map[string]interface{}{}, false
+	}
+	return o.Properties, true
+}
+
+// HasProperties returns a boolean if a field has been set.
+func (o *ApiKey) HasProperties() bool {
+	if o != nil && !IsNil(o.Properties) {
+		return true
+	}
+
+	return false
+}
+
+// SetProperties gets a reference to the given map[string]interface{} and assigns it to the Properties field.
+func (o *ApiKey) SetProperties(v map[string]interface{}) {
+	o.Properties = v
+}
+
+// GetClearance returns the Clearance field value if set, zero value otherwise.
+func (o *ApiKey) GetClearance() float32 {
+	if o == nil || IsNil(o.Clearance) {
+		var ret float32
+		return ret
+	}
+	return *o.Clearance
+}
+
+// GetClearanceOk returns a tuple with the Clearance field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApiKey) GetClearanceOk() (*float32, bool) {
+	if o == nil || IsNil(o.Clearance) {
+		return nil, false
+	}
+	return o.Clearance, true
+}
+
+// HasClearance returns a boolean if a field has been set.
+func (o *ApiKey) HasClearance() bool {
+	if o != nil && !IsNil(o.Clearance) {
+		return true
+	}
+
+	return false
+}
+
+// SetClearance gets a reference to the given float32 and assigns it to the Clearance field.
+func (o *ApiKey) SetClearance(v float32) {
+	o.Clearance = &v
+}
+
+// GetCompartments returns the Compartments field value if set, zero value otherwise.
+func (o *ApiKey) GetCompartments() []string {
+	if o == nil || IsNil(o.Compartments) {
+		var ret []string
+		return ret
+	}
+	return o.Compartments
+}
+
+// GetCompartmentsOk returns a tuple with the Compartments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApiKey) GetCompartmentsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Compartments) {
+		return nil, false
+	}
+	return o.Compartments, true
+}
+
+// HasCompartments returns a boolean if a field has been set.
+func (o *ApiKey) HasCompartments() bool {
+	if o != nil && !IsNil(o.Compartments) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompartments gets a reference to the given []string and assigns it to the Compartments field.
+func (o *ApiKey) SetCompartments(v []string) {
+	o.Compartments = v
+}
+
 func (o ApiKey) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -457,6 +560,20 @@ func (o ApiKey) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ExpiresAt) {
 		toSerialize["expires_at"] = o.ExpiresAt
 	}
+	if !IsNil(o.Properties) {
+		toSerialize["properties"] = o.Properties
+	}
+	if !IsNil(o.Clearance) {
+		toSerialize["clearance"] = o.Clearance
+	}
+	if !IsNil(o.Compartments) {
+		toSerialize["compartments"] = o.Compartments
+	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -501,6 +618,29 @@ func (o *ApiKey) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = ApiKey(varApiKey)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "role")
+		delete(additionalProperties, "maskedValue")
+		delete(additionalProperties, "can_retrieve_value")
+		delete(additionalProperties, "account")
+		delete(additionalProperties, "project")
+		delete(additionalProperties, "enabled")
+		delete(additionalProperties, "created_by")
+		delete(additionalProperties, "updated_by")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "expires_at")
+		delete(additionalProperties, "properties")
+		delete(additionalProperties, "clearance")
+		delete(additionalProperties, "compartments")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

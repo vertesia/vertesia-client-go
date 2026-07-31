@@ -24,6 +24,8 @@ type InteractionExecutionError struct {
 	Message   string      `json:"message"`
 	Data      interface{} `json:"data,omitempty"`
 	Retryable *bool       `json:"retryable,omitempty"`
+	// Provider-supplied retry delay preserved across synchronous and async workflow execution.
+	RetryAfterMs *float32 `json:"retry_after_ms,omitempty"`
 }
 
 type _InteractionExecutionError InteractionExecutionError
@@ -160,6 +162,38 @@ func (o *InteractionExecutionError) SetRetryable(v bool) {
 	o.Retryable = &v
 }
 
+// GetRetryAfterMs returns the RetryAfterMs field value if set, zero value otherwise.
+func (o *InteractionExecutionError) GetRetryAfterMs() float32 {
+	if o == nil || IsNil(o.RetryAfterMs) {
+		var ret float32
+		return ret
+	}
+	return *o.RetryAfterMs
+}
+
+// GetRetryAfterMsOk returns a tuple with the RetryAfterMs field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InteractionExecutionError) GetRetryAfterMsOk() (*float32, bool) {
+	if o == nil || IsNil(o.RetryAfterMs) {
+		return nil, false
+	}
+	return o.RetryAfterMs, true
+}
+
+// HasRetryAfterMs returns a boolean if a field has been set.
+func (o *InteractionExecutionError) HasRetryAfterMs() bool {
+	if o != nil && !IsNil(o.RetryAfterMs) {
+		return true
+	}
+
+	return false
+}
+
+// SetRetryAfterMs gets a reference to the given float32 and assigns it to the RetryAfterMs field.
+func (o *InteractionExecutionError) SetRetryAfterMs(v float32) {
+	o.RetryAfterMs = &v
+}
+
 func (o InteractionExecutionError) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -177,6 +211,9 @@ func (o InteractionExecutionError) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Retryable) {
 		toSerialize["retryable"] = o.Retryable
+	}
+	if !IsNil(o.RetryAfterMs) {
+		toSerialize["retry_after_ms"] = o.RetryAfterMs
 	}
 	return toSerialize, nil
 }
