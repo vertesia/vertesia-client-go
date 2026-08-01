@@ -59,11 +59,13 @@ model_activity_task.go
 model_advance_process_payload.go
 model_agent_artifact_content_response.go
 model_agent_artifact_url_response.go
+model_agent_checkpoint_configuration.go
 model_agent_delivery_match_mode.go
 model_agent_event_delivery_target.go
 model_agent_message_details.go
 model_agent_message_details_files_inner.go
 model_agent_message_type.go
+model_agent_project_configuration.go
 model_agent_resource_action.go
 model_agent_resource_reference.go
 model_agent_resource_type.go

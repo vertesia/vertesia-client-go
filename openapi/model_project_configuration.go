@@ -29,6 +29,8 @@ type ProjectConfiguration struct {
 	StorageBucket         *string                        `json:"storage_bucket,omitempty"`
 	// Enable real-time streaming of agent LLM responses to clients. When enabled, LLM responses are streamed chunk-by-chunk via Redis pub/sub. Defaults to true if not specified.
 	AgentStreamingEnabled *bool `json:"agent_streaming_enabled,omitempty"`
+	// Agent runtime configuration for this project.
+	Agent *AgentProjectConfiguration `json:"agent,omitempty"`
 	// Indexing configuration for this project. Controls whether indexing and querying are enabled at the project level.
 	Indexing *ProjectIndexingConfiguration `json:"indexing,omitempty"`
 	// Standard content intake behavior.
@@ -310,6 +312,38 @@ func (o *ProjectConfiguration) SetAgentStreamingEnabled(v bool) {
 	o.AgentStreamingEnabled = &v
 }
 
+// GetAgent returns the Agent field value if set, zero value otherwise.
+func (o *ProjectConfiguration) GetAgent() AgentProjectConfiguration {
+	if o == nil || IsNil(o.Agent) {
+		var ret AgentProjectConfiguration
+		return ret
+	}
+	return *o.Agent
+}
+
+// GetAgentOk returns a tuple with the Agent field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProjectConfiguration) GetAgentOk() (*AgentProjectConfiguration, bool) {
+	if o == nil || IsNil(o.Agent) {
+		return nil, false
+	}
+	return o.Agent, true
+}
+
+// HasAgent returns a boolean if a field has been set.
+func (o *ProjectConfiguration) HasAgent() bool {
+	if o != nil && !IsNil(o.Agent) {
+		return true
+	}
+
+	return false
+}
+
+// SetAgent gets a reference to the given AgentProjectConfiguration and assigns it to the Agent field.
+func (o *ProjectConfiguration) SetAgent(v AgentProjectConfiguration) {
+	o.Agent = &v
+}
+
 // GetIndexing returns the Indexing field value if set, zero value otherwise.
 func (o *ProjectConfiguration) GetIndexing() ProjectIndexingConfiguration {
 	if o == nil || IsNil(o.Indexing) {
@@ -502,6 +536,9 @@ func (o ProjectConfiguration) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.AgentStreamingEnabled) {
 		toSerialize["agent_streaming_enabled"] = o.AgentStreamingEnabled
 	}
+	if !IsNil(o.Agent) {
+		toSerialize["agent"] = o.Agent
+	}
 	if !IsNil(o.Indexing) {
 		toSerialize["indexing"] = o.Indexing
 	}
@@ -568,6 +605,7 @@ func (o *ProjectConfiguration) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "datacenter")
 		delete(additionalProperties, "storage_bucket")
 		delete(additionalProperties, "agent_streaming_enabled")
+		delete(additionalProperties, "agent")
 		delete(additionalProperties, "indexing")
 		delete(additionalProperties, "intake")
 		delete(additionalProperties, "main_language")

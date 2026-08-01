@@ -37,6 +37,8 @@ type AgentRunnerOptions struct {
 	CollectionId *string `json:"collection_id,omitempty"`
 	// Optional user-facing template for rendering run input as the first conversation entry. Supports {{field_name}}, {{nested.field}}, {{items.0.name}}, and {{json}} placeholders resolved from the run data.
 	RequestTemplate *string `json:"request_template,omitempty"`
+	// Per-agent context checkpoint configuration. Field-wise it overrides the project's `configuration.agent.checkpoint`; a per-run `checkpoint_tokens` override still wins over both.
+	Checkpoint *AgentCheckpointConfiguration `json:"checkpoint,omitempty"`
 }
 
 // NewAgentRunnerOptions instantiates a new AgentRunnerOptions object
@@ -344,6 +346,38 @@ func (o *AgentRunnerOptions) SetRequestTemplate(v string) {
 	o.RequestTemplate = &v
 }
 
+// GetCheckpoint returns the Checkpoint field value if set, zero value otherwise.
+func (o *AgentRunnerOptions) GetCheckpoint() AgentCheckpointConfiguration {
+	if o == nil || IsNil(o.Checkpoint) {
+		var ret AgentCheckpointConfiguration
+		return ret
+	}
+	return *o.Checkpoint
+}
+
+// GetCheckpointOk returns a tuple with the Checkpoint field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRunnerOptions) GetCheckpointOk() (*AgentCheckpointConfiguration, bool) {
+	if o == nil || IsNil(o.Checkpoint) {
+		return nil, false
+	}
+	return o.Checkpoint, true
+}
+
+// HasCheckpoint returns a boolean if a field has been set.
+func (o *AgentRunnerOptions) HasCheckpoint() bool {
+	if o != nil && !IsNil(o.Checkpoint) {
+		return true
+	}
+
+	return false
+}
+
+// SetCheckpoint gets a reference to the given AgentCheckpointConfiguration and assigns it to the Checkpoint field.
+func (o *AgentRunnerOptions) SetCheckpoint(v AgentCheckpointConfiguration) {
+	o.Checkpoint = &v
+}
+
 func (o AgentRunnerOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -380,6 +414,9 @@ func (o AgentRunnerOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.RequestTemplate) {
 		toSerialize["request_template"] = o.RequestTemplate
+	}
+	if !IsNil(o.Checkpoint) {
+		toSerialize["checkpoint"] = o.Checkpoint
 	}
 	return toSerialize, nil
 }

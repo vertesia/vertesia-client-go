@@ -66,6 +66,10 @@ type ConversationState struct {
 	UsedSkills []UsedSkill `json:"used_skills,omitempty"`
 	// Whether to stream LLM responses to Redis (cached from project config)
 	StreamingEnabled *bool `json:"streaming_enabled,omitempty"`
+	// Project-configured checkpoint threshold as a fraction of the model's context window (cached from project.configuration.agent_checkpoint_threshold at conversation start).
+	CheckpointThreshold *float32 `json:"checkpoint_threshold,omitempty"`
+	// Project-configured checkpoint hard cap in tokens (cached from project.configuration.agent_checkpoint_tokens at conversation start). The workflow resolves the effective threshold from these, the per-run checkpoint_tokens override, and the model-based default.
+	CheckpointTokens *float32 `json:"checkpoint_tokens,omitempty"`
 	// Active communication channels with their current state. Channels can be updated as conversation progresses (e.g., email threading info).
 	UserChannels []UserChannel `json:"user_channels,omitempty"`
 	// The resolved interaction execution info. Contains interaction ID, name, version, and environment details.
@@ -818,6 +822,70 @@ func (o *ConversationState) SetStreamingEnabled(v bool) {
 	o.StreamingEnabled = &v
 }
 
+// GetCheckpointThreshold returns the CheckpointThreshold field value if set, zero value otherwise.
+func (o *ConversationState) GetCheckpointThreshold() float32 {
+	if o == nil || IsNil(o.CheckpointThreshold) {
+		var ret float32
+		return ret
+	}
+	return *o.CheckpointThreshold
+}
+
+// GetCheckpointThresholdOk returns a tuple with the CheckpointThreshold field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetCheckpointThresholdOk() (*float32, bool) {
+	if o == nil || IsNil(o.CheckpointThreshold) {
+		return nil, false
+	}
+	return o.CheckpointThreshold, true
+}
+
+// HasCheckpointThreshold returns a boolean if a field has been set.
+func (o *ConversationState) HasCheckpointThreshold() bool {
+	if o != nil && !IsNil(o.CheckpointThreshold) {
+		return true
+	}
+
+	return false
+}
+
+// SetCheckpointThreshold gets a reference to the given float32 and assigns it to the CheckpointThreshold field.
+func (o *ConversationState) SetCheckpointThreshold(v float32) {
+	o.CheckpointThreshold = &v
+}
+
+// GetCheckpointTokens returns the CheckpointTokens field value if set, zero value otherwise.
+func (o *ConversationState) GetCheckpointTokens() float32 {
+	if o == nil || IsNil(o.CheckpointTokens) {
+		var ret float32
+		return ret
+	}
+	return *o.CheckpointTokens
+}
+
+// GetCheckpointTokensOk returns a tuple with the CheckpointTokens field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetCheckpointTokensOk() (*float32, bool) {
+	if o == nil || IsNil(o.CheckpointTokens) {
+		return nil, false
+	}
+	return o.CheckpointTokens, true
+}
+
+// HasCheckpointTokens returns a boolean if a field has been set.
+func (o *ConversationState) HasCheckpointTokens() bool {
+	if o != nil && !IsNil(o.CheckpointTokens) {
+		return true
+	}
+
+	return false
+}
+
+// SetCheckpointTokens gets a reference to the given float32 and assigns it to the CheckpointTokens field.
+func (o *ConversationState) SetCheckpointTokens(v float32) {
+	o.CheckpointTokens = &v
+}
+
 // GetUserChannels returns the UserChannels field value if set, zero value otherwise.
 func (o *ConversationState) GetUserChannels() []UserChannel {
 	if o == nil || IsNil(o.UserChannels) {
@@ -1367,6 +1435,12 @@ func (o ConversationState) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.StreamingEnabled) {
 		toSerialize["streaming_enabled"] = o.StreamingEnabled
 	}
+	if !IsNil(o.CheckpointThreshold) {
+		toSerialize["checkpoint_threshold"] = o.CheckpointThreshold
+	}
+	if !IsNil(o.CheckpointTokens) {
+		toSerialize["checkpoint_tokens"] = o.CheckpointTokens
+	}
 	if !IsNil(o.UserChannels) {
 		toSerialize["user_channels"] = o.UserChannels
 	}
@@ -1482,6 +1556,8 @@ func (o *ConversationState) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "pinned_tool_names")
 		delete(additionalProperties, "used_skills")
 		delete(additionalProperties, "streaming_enabled")
+		delete(additionalProperties, "checkpoint_threshold")
+		delete(additionalProperties, "checkpoint_tokens")
 		delete(additionalProperties, "user_channels")
 		delete(additionalProperties, "resolvedInteraction")
 		delete(additionalProperties, "end_conversation")

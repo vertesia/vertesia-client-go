@@ -64,8 +64,10 @@ type AsyncConversationExecutionPayload struct {
 	CollectionId *string `json:"collection_id,omitempty"`
 	// Denylist of MCP tool-collection ids deactivated for this conversation. `undefined`/empty means all installed/connected MCP collections are active (back-compat, and new servers stay active by default). Listed collections are excluded even if connected. Can be updated mid-conversation via the MCP config signal.
 	DisabledMcpCollections []string `json:"disabled_mcp_collections,omitempty"`
-	// The token threshold in thousands (K) for creating checkpoints. If total tokens exceed this value, a checkpoint will be created. If not specified, the default is computed from the selected model context window (75%).
+	// The token threshold in thousands (K) for creating checkpoints. If total tokens exceed this value, a checkpoint will be created. When set it wins over every other checkpoint setting, including the structured `checkpoint` override below. If not specified, the default is computed from the selected model context window (80%, capped at 500k).
 	CheckpointTokens *float32 `json:"checkpoint_tokens,omitempty"`
+	// Structured per-run checkpoint override. Field-wise it takes precedence over the interaction's `agent_runner_options.checkpoint` and the project's `configuration.agent.checkpoint`. The legacy absolute `checkpoint_tokens` above still wins over everything when set.
+	Checkpoint *AgentCheckpointConfiguration `json:"checkpoint,omitempty"`
 	// Configuration for stripping large data (images, text) from conversation history to prevent JSON serialization issues and reduce storage bloat.
 	StripOptions *ConversationStripOptions `json:"strip_options,omitempty"`
 	// In child execution workflow, this is the curent task_id
@@ -975,6 +977,38 @@ func (o *AsyncConversationExecutionPayload) SetCheckpointTokens(v float32) {
 	o.CheckpointTokens = &v
 }
 
+// GetCheckpoint returns the Checkpoint field value if set, zero value otherwise.
+func (o *AsyncConversationExecutionPayload) GetCheckpoint() AgentCheckpointConfiguration {
+	if o == nil || IsNil(o.Checkpoint) {
+		var ret AgentCheckpointConfiguration
+		return ret
+	}
+	return *o.Checkpoint
+}
+
+// GetCheckpointOk returns a tuple with the Checkpoint field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AsyncConversationExecutionPayload) GetCheckpointOk() (*AgentCheckpointConfiguration, bool) {
+	if o == nil || IsNil(o.Checkpoint) {
+		return nil, false
+	}
+	return o.Checkpoint, true
+}
+
+// HasCheckpoint returns a boolean if a field has been set.
+func (o *AsyncConversationExecutionPayload) HasCheckpoint() bool {
+	if o != nil && !IsNil(o.Checkpoint) {
+		return true
+	}
+
+	return false
+}
+
+// SetCheckpoint gets a reference to the given AgentCheckpointConfiguration and assigns it to the Checkpoint field.
+func (o *AsyncConversationExecutionPayload) SetCheckpoint(v AgentCheckpointConfiguration) {
+	o.Checkpoint = &v
+}
+
 // GetStripOptions returns the StripOptions field value if set, zero value otherwise.
 func (o *AsyncConversationExecutionPayload) GetStripOptions() ConversationStripOptions {
 	if o == nil || IsNil(o.StripOptions) {
@@ -1446,6 +1480,9 @@ func (o AsyncConversationExecutionPayload) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.CheckpointTokens) {
 		toSerialize["checkpoint_tokens"] = o.CheckpointTokens
 	}
+	if !IsNil(o.Checkpoint) {
+		toSerialize["checkpoint"] = o.Checkpoint
+	}
 	if !IsNil(o.StripOptions) {
 		toSerialize["strip_options"] = o.StripOptions
 	}
@@ -1553,6 +1590,7 @@ func (o *AsyncConversationExecutionPayload) UnmarshalJSON(data []byte) (err erro
 		delete(additionalProperties, "collection_id")
 		delete(additionalProperties, "disabled_mcp_collections")
 		delete(additionalProperties, "checkpoint_tokens")
+		delete(additionalProperties, "checkpoint")
 		delete(additionalProperties, "strip_options")
 		delete(additionalProperties, "task_id")
 		delete(additionalProperties, "launch_id")

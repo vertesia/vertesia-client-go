@@ -65,8 +65,10 @@ type CreateAgentRunPayload struct {
 	SearchScope *AgentSearchScope `json:"search_scope,omitempty"`
 	// User communication channels (email, interactive)
 	UserChannels []UserChannel `json:"user_channels,omitempty"`
-	// Token budget for checkpointing
+	// Token budget for checkpointing, in thousands (K). Wins over every other checkpoint setting.
 	CheckpointTokens *float32 `json:"checkpoint_tokens,omitempty"`
+	// Structured checkpoint override for this run. Field-wise it takes precedence over the interaction's `agent_runner_options.checkpoint` and the project's `configuration.agent.checkpoint`; the legacy `checkpoint_tokens` above still wins over everything when set.
+	Checkpoint *AgentCheckpointConfiguration `json:"checkpoint,omitempty"`
 	// Maximum conversation iterations (default: 20)
 	MaxIterations *float32 `json:"max_iterations,omitempty"`
 	// Webhook URLs to notify on completion
@@ -829,6 +831,38 @@ func (o *CreateAgentRunPayload) SetCheckpointTokens(v float32) {
 	o.CheckpointTokens = &v
 }
 
+// GetCheckpoint returns the Checkpoint field value if set, zero value otherwise.
+func (o *CreateAgentRunPayload) GetCheckpoint() AgentCheckpointConfiguration {
+	if o == nil || IsNil(o.Checkpoint) {
+		var ret AgentCheckpointConfiguration
+		return ret
+	}
+	return *o.Checkpoint
+}
+
+// GetCheckpointOk returns a tuple with the Checkpoint field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAgentRunPayload) GetCheckpointOk() (*AgentCheckpointConfiguration, bool) {
+	if o == nil || IsNil(o.Checkpoint) {
+		return nil, false
+	}
+	return o.Checkpoint, true
+}
+
+// HasCheckpoint returns a boolean if a field has been set.
+func (o *CreateAgentRunPayload) HasCheckpoint() bool {
+	if o != nil && !IsNil(o.Checkpoint) {
+		return true
+	}
+
+	return false
+}
+
+// SetCheckpoint gets a reference to the given AgentCheckpointConfiguration and assigns it to the Checkpoint field.
+func (o *CreateAgentRunPayload) SetCheckpoint(v AgentCheckpointConfiguration) {
+	o.Checkpoint = &v
+}
+
 // GetMaxIterations returns the MaxIterations field value if set, zero value otherwise.
 func (o *CreateAgentRunPayload) GetMaxIterations() float32 {
 	if o == nil || IsNil(o.MaxIterations) {
@@ -1034,6 +1068,9 @@ func (o CreateAgentRunPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CheckpointTokens) {
 		toSerialize["checkpoint_tokens"] = o.CheckpointTokens
 	}
+	if !IsNil(o.Checkpoint) {
+		toSerialize["checkpoint"] = o.Checkpoint
+	}
 	if !IsNil(o.MaxIterations) {
 		toSerialize["max_iterations"] = o.MaxIterations
 	}
@@ -1112,6 +1149,7 @@ func (o *CreateAgentRunPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "search_scope")
 		delete(additionalProperties, "user_channels")
 		delete(additionalProperties, "checkpoint_tokens")
+		delete(additionalProperties, "checkpoint")
 		delete(additionalProperties, "max_iterations")
 		delete(additionalProperties, "notify_endpoints")
 		delete(additionalProperties, "debug_mode")
