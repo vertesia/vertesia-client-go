@@ -593,7 +593,7 @@ func (r ApiUpdateEventIngestChannelRequest) Execute() (*EventIngestChannelMutati
 /*
 UpdateEventIngestChannel Update an event ingest channel
 
-Updates a channel. Set rotate_token to true to rotate the ingest token: the new token is returned once in the response.
+Updates a channel. Set rotate_token to true to rotate the ingest token: the new token is returned once in the response. Create or rotate the signing secret separately from rotating the ingest token.
 
 **Required permissions:** `workflow:admin`
 
