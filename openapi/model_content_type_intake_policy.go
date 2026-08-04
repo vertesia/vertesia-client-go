@@ -28,7 +28,7 @@ type ContentTypeIntakePolicy struct {
 	// Handlebars template used to materialize extracted properties into object text.
 	RenderingTemplate *string `json:"rendering_template,omitempty"`
 	// Per-type embedding switches. Unspecified values inherit the project policy.
-	Embeddings *PartialRecordSupportedEmbeddingTypesBoolean `json:"embeddings,omitempty"`
+	Embeddings *EmbeddingTypeEnabledMap `json:"embeddings,omitempty"`
 	// Whether intake should generate a table of contents for matching documents.
 	GenerateToc *bool `json:"generate_toc,omitempty"`
 	// Preferred first view for objects of this type.
@@ -248,9 +248,9 @@ func (o *ContentTypeIntakePolicy) SetRenderingTemplate(v string) {
 }
 
 // GetEmbeddings returns the Embeddings field value if set, zero value otherwise.
-func (o *ContentTypeIntakePolicy) GetEmbeddings() PartialRecordSupportedEmbeddingTypesBoolean {
+func (o *ContentTypeIntakePolicy) GetEmbeddings() EmbeddingTypeEnabledMap {
 	if o == nil || IsNil(o.Embeddings) {
-		var ret PartialRecordSupportedEmbeddingTypesBoolean
+		var ret EmbeddingTypeEnabledMap
 		return ret
 	}
 	return *o.Embeddings
@@ -258,7 +258,7 @@ func (o *ContentTypeIntakePolicy) GetEmbeddings() PartialRecordSupportedEmbeddin
 
 // GetEmbeddingsOk returns a tuple with the Embeddings field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ContentTypeIntakePolicy) GetEmbeddingsOk() (*PartialRecordSupportedEmbeddingTypesBoolean, bool) {
+func (o *ContentTypeIntakePolicy) GetEmbeddingsOk() (*EmbeddingTypeEnabledMap, bool) {
 	if o == nil || IsNil(o.Embeddings) {
 		return nil, false
 	}
@@ -274,8 +274,8 @@ func (o *ContentTypeIntakePolicy) HasEmbeddings() bool {
 	return false
 }
 
-// SetEmbeddings gets a reference to the given PartialRecordSupportedEmbeddingTypesBoolean and assigns it to the Embeddings field.
-func (o *ContentTypeIntakePolicy) SetEmbeddings(v PartialRecordSupportedEmbeddingTypesBoolean) {
+// SetEmbeddings gets a reference to the given EmbeddingTypeEnabledMap and assigns it to the Embeddings field.
+func (o *ContentTypeIntakePolicy) SetEmbeddings(v EmbeddingTypeEnabledMap) {
 	o.Embeddings = &v
 }
 

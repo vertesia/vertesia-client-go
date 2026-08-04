@@ -22,7 +22,7 @@ var _ MappedNullable = &ViewExecutionResult{}
 type ViewExecutionResult struct {
 	View     string  `json:"view"`
 	Revision float32 `json:"revision"`
-	// The runtime-safe rendering definition resolved by Zeno for this execution.
+	// The runtime-safe rendering definition resolved by the platform for this execution.
 	Definition ViewExecutionDefinition         `json:"definition"`
 	Display    *string                         `json:"display,omitempty"`
 	Sort       *string                         `json:"sort,omitempty"`

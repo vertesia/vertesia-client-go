@@ -20,18 +20,18 @@ var _ MappedNullable = &DSLWorkflowSpecWithActivities{}
 
 // DSLWorkflowSpecWithActivities struct for DSLWorkflowSpecWithActivities
 type DSLWorkflowSpecWithActivities struct {
-	Name        string            `json:"name"`
-	Description *string           `json:"description,omitempty"`
-	Tags        []string          `json:"tags,omitempty"`
-	Steps       []DSLWorkflowStep `json:"steps,omitempty"`
+	Name        string                 `json:"name"`
+	Description *string                `json:"description,omitempty"`
+	Tags        []string               `json:"tags,omitempty"`
+	Vars        map[string]interface{} `json:"vars"`
+	Options     *DSLActivityOptions    `json:"options,omitempty"`
+	Result      *string                `json:"result,omitempty"`
+	DebugMode   *bool                  `json:"debug_mode,omitempty"`
+	Steps       []DSLWorkflowStep      `json:"steps,omitempty"`
 	// Deprecated: use steps instead
 	// Deprecated
-	Activities []DSLActivitySpec      `json:"activities"`
-	Vars       map[string]interface{} `json:"vars"`
-	Options    *DSLActivityOptions    `json:"options,omitempty"`
-	Result     *string                `json:"result,omitempty"`
-	DebugMode  *bool                  `json:"debug_mode,omitempty"`
-	SpecFormat string                 `json:"spec_format"`
+	Activities []DSLActivitySpec `json:"activities"`
+	SpecFormat string            `json:"spec_format"`
 }
 
 type _DSLWorkflowSpecWithActivities DSLWorkflowSpecWithActivities
@@ -40,11 +40,11 @@ type _DSLWorkflowSpecWithActivities DSLWorkflowSpecWithActivities
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDSLWorkflowSpecWithActivities(name string, activities []DSLActivitySpec, vars map[string]interface{}, specFormat string) *DSLWorkflowSpecWithActivities {
+func NewDSLWorkflowSpecWithActivities(name string, vars map[string]interface{}, activities []DSLActivitySpec, specFormat string) *DSLWorkflowSpecWithActivities {
 	this := DSLWorkflowSpecWithActivities{}
 	this.Name = name
-	this.Activities = activities
 	this.Vars = vars
+	this.Activities = activities
 	this.SpecFormat = specFormat
 	return &this
 }
@@ -143,65 +143,6 @@ func (o *DSLWorkflowSpecWithActivities) HasTags() bool {
 // SetTags gets a reference to the given []string and assigns it to the Tags field.
 func (o *DSLWorkflowSpecWithActivities) SetTags(v []string) {
 	o.Tags = v
-}
-
-// GetSteps returns the Steps field value if set, zero value otherwise.
-func (o *DSLWorkflowSpecWithActivities) GetSteps() []DSLWorkflowStep {
-	if o == nil || IsNil(o.Steps) {
-		var ret []DSLWorkflowStep
-		return ret
-	}
-	return o.Steps
-}
-
-// GetStepsOk returns a tuple with the Steps field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *DSLWorkflowSpecWithActivities) GetStepsOk() ([]DSLWorkflowStep, bool) {
-	if o == nil || IsNil(o.Steps) {
-		return nil, false
-	}
-	return o.Steps, true
-}
-
-// HasSteps returns a boolean if a field has been set.
-func (o *DSLWorkflowSpecWithActivities) HasSteps() bool {
-	if o != nil && !IsNil(o.Steps) {
-		return true
-	}
-
-	return false
-}
-
-// SetSteps gets a reference to the given []DSLWorkflowStep and assigns it to the Steps field.
-func (o *DSLWorkflowSpecWithActivities) SetSteps(v []DSLWorkflowStep) {
-	o.Steps = v
-}
-
-// GetActivities returns the Activities field value
-// Deprecated
-func (o *DSLWorkflowSpecWithActivities) GetActivities() []DSLActivitySpec {
-	if o == nil {
-		var ret []DSLActivitySpec
-		return ret
-	}
-
-	return o.Activities
-}
-
-// GetActivitiesOk returns a tuple with the Activities field value
-// and a boolean to check if the value has been set.
-// Deprecated
-func (o *DSLWorkflowSpecWithActivities) GetActivitiesOk() ([]DSLActivitySpec, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.Activities, true
-}
-
-// SetActivities sets field value
-// Deprecated
-func (o *DSLWorkflowSpecWithActivities) SetActivities(v []DSLActivitySpec) {
-	o.Activities = v
 }
 
 // GetVars returns the Vars field value
@@ -324,6 +265,65 @@ func (o *DSLWorkflowSpecWithActivities) SetDebugMode(v bool) {
 	o.DebugMode = &v
 }
 
+// GetSteps returns the Steps field value if set, zero value otherwise.
+func (o *DSLWorkflowSpecWithActivities) GetSteps() []DSLWorkflowStep {
+	if o == nil || IsNil(o.Steps) {
+		var ret []DSLWorkflowStep
+		return ret
+	}
+	return o.Steps
+}
+
+// GetStepsOk returns a tuple with the Steps field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DSLWorkflowSpecWithActivities) GetStepsOk() ([]DSLWorkflowStep, bool) {
+	if o == nil || IsNil(o.Steps) {
+		return nil, false
+	}
+	return o.Steps, true
+}
+
+// HasSteps returns a boolean if a field has been set.
+func (o *DSLWorkflowSpecWithActivities) HasSteps() bool {
+	if o != nil && !IsNil(o.Steps) {
+		return true
+	}
+
+	return false
+}
+
+// SetSteps gets a reference to the given []DSLWorkflowStep and assigns it to the Steps field.
+func (o *DSLWorkflowSpecWithActivities) SetSteps(v []DSLWorkflowStep) {
+	o.Steps = v
+}
+
+// GetActivities returns the Activities field value
+// Deprecated
+func (o *DSLWorkflowSpecWithActivities) GetActivities() []DSLActivitySpec {
+	if o == nil {
+		var ret []DSLActivitySpec
+		return ret
+	}
+
+	return o.Activities
+}
+
+// GetActivitiesOk returns a tuple with the Activities field value
+// and a boolean to check if the value has been set.
+// Deprecated
+func (o *DSLWorkflowSpecWithActivities) GetActivitiesOk() ([]DSLActivitySpec, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Activities, true
+}
+
+// SetActivities sets field value
+// Deprecated
+func (o *DSLWorkflowSpecWithActivities) SetActivities(v []DSLActivitySpec) {
+	o.Activities = v
+}
+
 // GetSpecFormat returns the SpecFormat field value
 func (o *DSLWorkflowSpecWithActivities) GetSpecFormat() string {
 	if o == nil {
@@ -365,10 +365,6 @@ func (o DSLWorkflowSpecWithActivities) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
-	if !IsNil(o.Steps) {
-		toSerialize["steps"] = o.Steps
-	}
-	toSerialize["activities"] = o.Activities
 	toSerialize["vars"] = o.Vars
 	if !IsNil(o.Options) {
 		toSerialize["options"] = o.Options
@@ -379,6 +375,10 @@ func (o DSLWorkflowSpecWithActivities) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DebugMode) {
 		toSerialize["debug_mode"] = o.DebugMode
 	}
+	if !IsNil(o.Steps) {
+		toSerialize["steps"] = o.Steps
+	}
+	toSerialize["activities"] = o.Activities
 	toSerialize["spec_format"] = o.SpecFormat
 	return toSerialize, nil
 }
@@ -389,8 +389,8 @@ func (o *DSLWorkflowSpecWithActivities) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"name",
-		"activities",
 		"vars",
+		"activities",
 		"spec_format",
 	}
 

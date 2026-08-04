@@ -26,14 +26,11 @@ type UpdateOAuthProviderPayload struct {
 	TokenEndpoint         *string `json:"token_endpoint,omitempty"`
 	ClientId              *string `json:"client_id,omitempty"`
 	// Optional client secret for confidential clients. Will be encrypted at rest and never returned in API responses.
-	ClientSecret         *string  `json:"client_secret,omitempty"`
-	DefaultScopes        []string `json:"default_scopes,omitempty"`
-	UsePkce              *bool    `json:"use_pkce,omitempty"`
-	RevocationEndpoint   *string  `json:"revocation_endpoint,omitempty"`
-	AdditionalProperties map[string]interface{}
+	ClientSecret       *string  `json:"client_secret,omitempty"`
+	DefaultScopes      []string `json:"default_scopes,omitempty"`
+	UsePkce            *bool    `json:"use_pkce,omitempty"`
+	RevocationEndpoint *string  `json:"revocation_endpoint,omitempty"`
 }
-
-type _UpdateOAuthProviderPayload UpdateOAuthProviderPayload
 
 // NewUpdateOAuthProviderPayload instantiates a new UpdateOAuthProviderPayload object
 // This constructor will assign default values to properties that have it defined,
@@ -412,42 +409,7 @@ func (o UpdateOAuthProviderPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RevocationEndpoint) {
 		toSerialize["revocation_endpoint"] = o.RevocationEndpoint
 	}
-
-	for key, value := range o.AdditionalProperties {
-		toSerialize[key] = value
-	}
-
 	return toSerialize, nil
-}
-
-func (o *UpdateOAuthProviderPayload) UnmarshalJSON(data []byte) (err error) {
-	varUpdateOAuthProviderPayload := _UpdateOAuthProviderPayload{}
-
-	err = json.Unmarshal(data, &varUpdateOAuthProviderPayload)
-
-	if err != nil {
-		return err
-	}
-
-	*o = UpdateOAuthProviderPayload(varUpdateOAuthProviderPayload)
-
-	additionalProperties := make(map[string]interface{})
-
-	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "name")
-		delete(additionalProperties, "display_name")
-		delete(additionalProperties, "grant_type")
-		delete(additionalProperties, "authorization_endpoint")
-		delete(additionalProperties, "token_endpoint")
-		delete(additionalProperties, "client_id")
-		delete(additionalProperties, "client_secret")
-		delete(additionalProperties, "default_scopes")
-		delete(additionalProperties, "use_pkce")
-		delete(additionalProperties, "revocation_endpoint")
-		o.AdditionalProperties = additionalProperties
-	}
-
-	return err
 }
 
 type NullableUpdateOAuthProviderPayload struct {

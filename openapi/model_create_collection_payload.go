@@ -20,8 +20,6 @@ var _ MappedNullable = &CreateCollectionPayload{}
 
 // CreateCollectionPayload struct for CreateCollectionPayload
 type CreateCollectionPayload struct {
-	Name             string                 `json:"name"`
-	Dynamic          bool                   `json:"dynamic"`
 	Description      *string                `json:"description,omitempty"`
 	SkipHeadSync     *bool                  `json:"skip_head_sync,omitempty"`
 	Tags             []string               `json:"tags,omitempty"`
@@ -37,6 +35,8 @@ type CreateCollectionPayload struct {
 	Sensitivity *float32 `json:"sensitivity,omitempty"`
 	// Compartments for member documents
 	Compartments []string `json:"compartments,omitempty"`
+	Name         string   `json:"name"`
+	Dynamic      bool     `json:"dynamic"`
 }
 
 type _CreateCollectionPayload CreateCollectionPayload
@@ -58,54 +58,6 @@ func NewCreateCollectionPayload(name string, dynamic bool) *CreateCollectionPayl
 func NewCreateCollectionPayloadWithDefaults() *CreateCollectionPayload {
 	this := CreateCollectionPayload{}
 	return &this
-}
-
-// GetName returns the Name field value
-func (o *CreateCollectionPayload) GetName() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Name
-}
-
-// GetNameOk returns a tuple with the Name field value
-// and a boolean to check if the value has been set.
-func (o *CreateCollectionPayload) GetNameOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Name, true
-}
-
-// SetName sets field value
-func (o *CreateCollectionPayload) SetName(v string) {
-	o.Name = v
-}
-
-// GetDynamic returns the Dynamic field value
-func (o *CreateCollectionPayload) GetDynamic() bool {
-	if o == nil {
-		var ret bool
-		return ret
-	}
-
-	return o.Dynamic
-}
-
-// GetDynamicOk returns a tuple with the Dynamic field value
-// and a boolean to check if the value has been set.
-func (o *CreateCollectionPayload) GetDynamicOk() (*bool, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Dynamic, true
-}
-
-// SetDynamic sets field value
-func (o *CreateCollectionPayload) SetDynamic(v bool) {
-	o.Dynamic = v
 }
 
 // GetDescription returns the Description field value if set, zero value otherwise.
@@ -547,6 +499,54 @@ func (o *CreateCollectionPayload) SetCompartments(v []string) {
 	o.Compartments = v
 }
 
+// GetName returns the Name field value
+func (o *CreateCollectionPayload) GetName() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value
+// and a boolean to check if the value has been set.
+func (o *CreateCollectionPayload) GetNameOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Name, true
+}
+
+// SetName sets field value
+func (o *CreateCollectionPayload) SetName(v string) {
+	o.Name = v
+}
+
+// GetDynamic returns the Dynamic field value
+func (o *CreateCollectionPayload) GetDynamic() bool {
+	if o == nil {
+		var ret bool
+		return ret
+	}
+
+	return o.Dynamic
+}
+
+// GetDynamicOk returns a tuple with the Dynamic field value
+// and a boolean to check if the value has been set.
+func (o *CreateCollectionPayload) GetDynamicOk() (*bool, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Dynamic, true
+}
+
+// SetDynamic sets field value
+func (o *CreateCollectionPayload) SetDynamic(v bool) {
+	o.Dynamic = v
+}
+
 func (o CreateCollectionPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -557,8 +557,6 @@ func (o CreateCollectionPayload) MarshalJSON() ([]byte, error) {
 
 func (o CreateCollectionPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["name"] = o.Name
-	toSerialize["dynamic"] = o.Dynamic
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
@@ -598,6 +596,8 @@ func (o CreateCollectionPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Compartments) {
 		toSerialize["compartments"] = o.Compartments
 	}
+	toSerialize["name"] = o.Name
+	toSerialize["dynamic"] = o.Dynamic
 	return toSerialize, nil
 }
 

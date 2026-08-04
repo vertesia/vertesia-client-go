@@ -24,7 +24,7 @@ type ContentTypeIntakePolicyExtractionVerification struct {
 	Environment *string  `json:"environment,omitempty"`
 	Materiality *string  `json:"materiality,omitempty"`
 	Threshold   *float32 `json:"threshold,omitempty"`
-	MaxRetries  *float32 `json:"max_retries,omitempty"`
+	MaxRetries  *int32   `json:"max_retries,omitempty"`
 	OnFail      *string  `json:"on_fail,omitempty"`
 }
 
@@ -206,9 +206,9 @@ func (o *ContentTypeIntakePolicyExtractionVerification) SetThreshold(v float32) 
 }
 
 // GetMaxRetries returns the MaxRetries field value if set, zero value otherwise.
-func (o *ContentTypeIntakePolicyExtractionVerification) GetMaxRetries() float32 {
+func (o *ContentTypeIntakePolicyExtractionVerification) GetMaxRetries() int32 {
 	if o == nil || IsNil(o.MaxRetries) {
-		var ret float32
+		var ret int32
 		return ret
 	}
 	return *o.MaxRetries
@@ -216,7 +216,7 @@ func (o *ContentTypeIntakePolicyExtractionVerification) GetMaxRetries() float32 
 
 // GetMaxRetriesOk returns a tuple with the MaxRetries field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ContentTypeIntakePolicyExtractionVerification) GetMaxRetriesOk() (*float32, bool) {
+func (o *ContentTypeIntakePolicyExtractionVerification) GetMaxRetriesOk() (*int32, bool) {
 	if o == nil || IsNil(o.MaxRetries) {
 		return nil, false
 	}
@@ -232,8 +232,8 @@ func (o *ContentTypeIntakePolicyExtractionVerification) HasMaxRetries() bool {
 	return false
 }
 
-// SetMaxRetries gets a reference to the given float32 and assigns it to the MaxRetries field.
-func (o *ContentTypeIntakePolicyExtractionVerification) SetMaxRetries(v float32) {
+// SetMaxRetries gets a reference to the given int32 and assigns it to the MaxRetries field.
+func (o *ContentTypeIntakePolicyExtractionVerification) SetMaxRetries(v int32) {
 	o.MaxRetries = &v
 }
 

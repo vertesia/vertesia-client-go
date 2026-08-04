@@ -33,10 +33,7 @@ type CreateWorkflowRulePayload struct {
 	EventSubscriptionMigrationStatus *string `json:"event_subscription_migration_status,omitempty"`
 	// Migration failure or unsupported-match reason, when applicable.
 	EventSubscriptionMigrationError *string                `json:"event_subscription_migration_error,omitempty"`
-	Endpoint                        string                 `json:"endpoint"`
 	InputType                       *WorkflowRuleInputType `json:"input_type,omitempty"`
-	// Human-readable name or title
-	Name string `json:"name"`
 	// Optional detailed description of the object
 	Description *string `json:"description,omitempty"`
 	// Optional array of categorization tags
@@ -44,7 +41,10 @@ type CreateWorkflowRulePayload struct {
 	// Identifier of the user who last modified the object
 	UpdatedBy *string `json:"updated_by,omitempty"`
 	// Identifier of the user who created the object
-	CreatedBy            *string `json:"created_by,omitempty"`
+	CreatedBy *string `json:"created_by,omitempty"`
+	Endpoint  string  `json:"endpoint"`
+	// Human-readable name or title
+	Name                 string `json:"name"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -297,30 +297,6 @@ func (o *CreateWorkflowRulePayload) SetEventSubscriptionMigrationError(v string)
 	o.EventSubscriptionMigrationError = &v
 }
 
-// GetEndpoint returns the Endpoint field value
-func (o *CreateWorkflowRulePayload) GetEndpoint() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Endpoint
-}
-
-// GetEndpointOk returns a tuple with the Endpoint field value
-// and a boolean to check if the value has been set.
-func (o *CreateWorkflowRulePayload) GetEndpointOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Endpoint, true
-}
-
-// SetEndpoint sets field value
-func (o *CreateWorkflowRulePayload) SetEndpoint(v string) {
-	o.Endpoint = v
-}
-
 // GetInputType returns the InputType field value if set, zero value otherwise.
 func (o *CreateWorkflowRulePayload) GetInputType() WorkflowRuleInputType {
 	if o == nil || IsNil(o.InputType) {
@@ -351,30 +327,6 @@ func (o *CreateWorkflowRulePayload) HasInputType() bool {
 // SetInputType gets a reference to the given WorkflowRuleInputType and assigns it to the InputType field.
 func (o *CreateWorkflowRulePayload) SetInputType(v WorkflowRuleInputType) {
 	o.InputType = &v
-}
-
-// GetName returns the Name field value
-func (o *CreateWorkflowRulePayload) GetName() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Name
-}
-
-// GetNameOk returns a tuple with the Name field value
-// and a boolean to check if the value has been set.
-func (o *CreateWorkflowRulePayload) GetNameOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Name, true
-}
-
-// SetName sets field value
-func (o *CreateWorkflowRulePayload) SetName(v string) {
-	o.Name = v
 }
 
 // GetDescription returns the Description field value if set, zero value otherwise.
@@ -505,6 +457,54 @@ func (o *CreateWorkflowRulePayload) SetCreatedBy(v string) {
 	o.CreatedBy = &v
 }
 
+// GetEndpoint returns the Endpoint field value
+func (o *CreateWorkflowRulePayload) GetEndpoint() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Endpoint
+}
+
+// GetEndpointOk returns a tuple with the Endpoint field value
+// and a boolean to check if the value has been set.
+func (o *CreateWorkflowRulePayload) GetEndpointOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Endpoint, true
+}
+
+// SetEndpoint sets field value
+func (o *CreateWorkflowRulePayload) SetEndpoint(v string) {
+	o.Endpoint = v
+}
+
+// GetName returns the Name field value
+func (o *CreateWorkflowRulePayload) GetName() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Name
+}
+
+// GetNameOk returns a tuple with the Name field value
+// and a boolean to check if the value has been set.
+func (o *CreateWorkflowRulePayload) GetNameOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Name, true
+}
+
+// SetName sets field value
+func (o *CreateWorkflowRulePayload) SetName(v string) {
+	o.Name = v
+}
+
 func (o CreateWorkflowRulePayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -536,11 +536,9 @@ func (o CreateWorkflowRulePayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.EventSubscriptionMigrationError) {
 		toSerialize["event_subscription_migration_error"] = o.EventSubscriptionMigrationError
 	}
-	toSerialize["endpoint"] = o.Endpoint
 	if !IsNil(o.InputType) {
 		toSerialize["input_type"] = o.InputType
 	}
-	toSerialize["name"] = o.Name
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
@@ -553,6 +551,8 @@ func (o CreateWorkflowRulePayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CreatedBy) {
 		toSerialize["created_by"] = o.CreatedBy
 	}
+	toSerialize["endpoint"] = o.Endpoint
+	toSerialize["name"] = o.Name
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -604,13 +604,13 @@ func (o *CreateWorkflowRulePayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "task_queue")
 		delete(additionalProperties, "event_subscription_migration_status")
 		delete(additionalProperties, "event_subscription_migration_error")
-		delete(additionalProperties, "endpoint")
 		delete(additionalProperties, "input_type")
-		delete(additionalProperties, "name")
 		delete(additionalProperties, "description")
 		delete(additionalProperties, "tags")
 		delete(additionalProperties, "updated_by")
 		delete(additionalProperties, "created_by")
+		delete(additionalProperties, "endpoint")
+		delete(additionalProperties, "name")
 		o.AdditionalProperties = additionalProperties
 	}
 

@@ -13,6 +13,7 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the Account type satisfies the MappedNullable interface at compile time
@@ -37,8 +38,8 @@ type Account struct {
 	FeatureFlags         map[string]interface{} `json:"feature_flags,omitempty"`
 	CreatedBy            string                 `json:"created_by"`
 	UpdatedBy            string                 `json:"updated_by"`
-	CreatedAt            string                 `json:"created_at"`
-	UpdatedAt            string                 `json:"updated_at"`
+	CreatedAt            time.Time              `json:"created_at"`
+	UpdatedAt            time.Time              `json:"updated_at"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -48,7 +49,7 @@ type _Account Account
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAccount(id string, name string, emailDomains []string, onboarding AccountOnboarding, datacenter string, accountType AccountType, billing AccountBilling, createdBy string, updatedBy string, createdAt string, updatedAt string) *Account {
+func NewAccount(id string, name string, emailDomains []string, onboarding AccountOnboarding, datacenter string, accountType AccountType, billing AccountBilling, createdBy string, updatedBy string, createdAt time.Time, updatedAt time.Time) *Account {
 	this := Account{}
 	this.Id = id
 	this.Name = name
@@ -417,9 +418,9 @@ func (o *Account) SetUpdatedBy(v string) {
 }
 
 // GetCreatedAt returns the CreatedAt field value
-func (o *Account) GetCreatedAt() string {
+func (o *Account) GetCreatedAt() time.Time {
 	if o == nil {
-		var ret string
+		var ret time.Time
 		return ret
 	}
 
@@ -428,7 +429,7 @@ func (o *Account) GetCreatedAt() string {
 
 // GetCreatedAtOk returns a tuple with the CreatedAt field value
 // and a boolean to check if the value has been set.
-func (o *Account) GetCreatedAtOk() (*string, bool) {
+func (o *Account) GetCreatedAtOk() (*time.Time, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -436,14 +437,14 @@ func (o *Account) GetCreatedAtOk() (*string, bool) {
 }
 
 // SetCreatedAt sets field value
-func (o *Account) SetCreatedAt(v string) {
+func (o *Account) SetCreatedAt(v time.Time) {
 	o.CreatedAt = v
 }
 
 // GetUpdatedAt returns the UpdatedAt field value
-func (o *Account) GetUpdatedAt() string {
+func (o *Account) GetUpdatedAt() time.Time {
 	if o == nil {
-		var ret string
+		var ret time.Time
 		return ret
 	}
 
@@ -452,7 +453,7 @@ func (o *Account) GetUpdatedAt() string {
 
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value
 // and a boolean to check if the value has been set.
-func (o *Account) GetUpdatedAtOk() (*string, bool) {
+func (o *Account) GetUpdatedAtOk() (*time.Time, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -460,7 +461,7 @@ func (o *Account) GetUpdatedAtOk() (*string, bool) {
 }
 
 // SetUpdatedAt sets field value
-func (o *Account) SetUpdatedAt(v string) {
+func (o *Account) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = v
 }
 

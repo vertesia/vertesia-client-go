@@ -19,16 +19,13 @@ var _ MappedNullable = &PostAgentRunUpdatePayload{}
 
 // PostAgentRunUpdatePayload Payload for posting an update into an agent's workflow stream.
 type PostAgentRunUpdatePayload struct {
-	Timestamp            *float32             `json:"timestamp,omitempty"`
-	WorkflowRunId        *string              `json:"workflow_run_id,omitempty"`
-	Type                 *AgentMessageType    `json:"type,omitempty"`
-	Message              *string              `json:"message,omitempty"`
-	Details              *AgentMessageDetails `json:"details,omitempty"`
-	WorkstreamId         *string              `json:"workstream_id,omitempty"`
-	AdditionalProperties map[string]interface{}
+	Timestamp     *float32             `json:"timestamp,omitempty"`
+	WorkflowRunId *string              `json:"workflow_run_id,omitempty"`
+	Type          *AgentMessageType    `json:"type,omitempty"`
+	Message       *string              `json:"message,omitempty"`
+	Details       *AgentMessageDetails `json:"details,omitempty"`
+	WorkstreamId  *string              `json:"workstream_id,omitempty"`
 }
-
-type _PostAgentRunUpdatePayload PostAgentRunUpdatePayload
 
 // NewPostAgentRunUpdatePayload instantiates a new PostAgentRunUpdatePayload object
 // This constructor will assign default values to properties that have it defined,
@@ -267,38 +264,7 @@ func (o PostAgentRunUpdatePayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.WorkstreamId) {
 		toSerialize["workstream_id"] = o.WorkstreamId
 	}
-
-	for key, value := range o.AdditionalProperties {
-		toSerialize[key] = value
-	}
-
 	return toSerialize, nil
-}
-
-func (o *PostAgentRunUpdatePayload) UnmarshalJSON(data []byte) (err error) {
-	varPostAgentRunUpdatePayload := _PostAgentRunUpdatePayload{}
-
-	err = json.Unmarshal(data, &varPostAgentRunUpdatePayload)
-
-	if err != nil {
-		return err
-	}
-
-	*o = PostAgentRunUpdatePayload(varPostAgentRunUpdatePayload)
-
-	additionalProperties := make(map[string]interface{})
-
-	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "timestamp")
-		delete(additionalProperties, "workflow_run_id")
-		delete(additionalProperties, "type")
-		delete(additionalProperties, "message")
-		delete(additionalProperties, "details")
-		delete(additionalProperties, "workstream_id")
-		o.AdditionalProperties = additionalProperties
-	}
-
-	return err
 }
 
 type NullablePostAgentRunUpdatePayload struct {

@@ -23,14 +23,14 @@ import (
 type APIKeysAPIService service
 
 type ApiCreateApiKeyRequest struct {
-	ctx                         context.Context
-	ApiService                  *APIKeysAPIService
-	createOrUpdateApiKeyPayload *CreateOrUpdateApiKeyPayload
-	xApiVersion                 *string
+	ctx                 context.Context
+	ApiService          *APIKeysAPIService
+	createApiKeyPayload *CreateApiKeyPayload
+	xApiVersion         *string
 }
 
-func (r ApiCreateApiKeyRequest) CreateOrUpdateApiKeyPayload(createOrUpdateApiKeyPayload CreateOrUpdateApiKeyPayload) ApiCreateApiKeyRequest {
-	r.createOrUpdateApiKeyPayload = &createOrUpdateApiKeyPayload
+func (r ApiCreateApiKeyRequest) CreateApiKeyPayload(createApiKeyPayload CreateApiKeyPayload) ApiCreateApiKeyRequest {
+	r.createApiKeyPayload = &createApiKeyPayload
 	return r
 }
 
@@ -82,8 +82,8 @@ func (a *APIKeysAPIService) CreateApiKeyExecute(r ApiCreateApiKeyRequest) (*ApiK
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.createOrUpdateApiKeyPayload == nil {
-		return localVarReturnValue, nil, reportError("createOrUpdateApiKeyPayload is required and must be specified")
+	if r.createApiKeyPayload == nil {
+		return localVarReturnValue, nil, reportError("createApiKeyPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -107,7 +107,7 @@ func (a *APIKeysAPIService) CreateApiKeyExecute(r ApiCreateApiKeyRequest) (*ApiK
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.createOrUpdateApiKeyPayload
+	localVarPostBody = r.createApiKeyPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -729,15 +729,15 @@ func (a *APIKeysAPIService) ListApiKeysExecute(r ApiListApiKeysRequest) ([]ApiKe
 }
 
 type ApiUpdateApiKeyRequest struct {
-	ctx                         context.Context
-	ApiService                  *APIKeysAPIService
-	keyId                       string
-	createOrUpdateApiKeyPayload *CreateOrUpdateApiKeyPayload
-	xApiVersion                 *string
+	ctx                 context.Context
+	ApiService          *APIKeysAPIService
+	keyId               string
+	updateApiKeyPayload *UpdateApiKeyPayload
+	xApiVersion         *string
 }
 
-func (r ApiUpdateApiKeyRequest) CreateOrUpdateApiKeyPayload(createOrUpdateApiKeyPayload CreateOrUpdateApiKeyPayload) ApiUpdateApiKeyRequest {
-	r.createOrUpdateApiKeyPayload = &createOrUpdateApiKeyPayload
+func (r ApiUpdateApiKeyRequest) UpdateApiKeyPayload(updateApiKeyPayload UpdateApiKeyPayload) ApiUpdateApiKeyRequest {
+	r.updateApiKeyPayload = &updateApiKeyPayload
 	return r
 }
 
@@ -754,7 +754,7 @@ func (r ApiUpdateApiKeyRequest) Execute() (*ApiKey, *http.Response, error) {
 /*
 UpdateApiKey Update an API key
 
-Updates API key metadata such as name, role, project, and enabled state.
+Updates API key metadata: name, role, and enabled state.
 
 **Required permissions:** `api_key:update`
 
@@ -792,8 +792,8 @@ func (a *APIKeysAPIService) UpdateApiKeyExecute(r ApiUpdateApiKeyRequest) (*ApiK
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.createOrUpdateApiKeyPayload == nil {
-		return localVarReturnValue, nil, reportError("createOrUpdateApiKeyPayload is required and must be specified")
+	if r.updateApiKeyPayload == nil {
+		return localVarReturnValue, nil, reportError("updateApiKeyPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -817,7 +817,7 @@ func (a *APIKeysAPIService) UpdateApiKeyExecute(r ApiUpdateApiKeyRequest) (*ApiK
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.createOrUpdateApiKeyPayload
+	localVarPostBody = r.updateApiKeyPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

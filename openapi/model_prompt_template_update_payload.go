@@ -20,6 +20,10 @@ var _ MappedNullable = &PromptTemplateUpdatePayload{}
 
 // PromptTemplateUpdatePayload struct for PromptTemplateUpdatePayload
 type PromptTemplateUpdatePayload struct {
+	Role            *PromptRole            `json:"role,omitempty"`
+	Content         *string                `json:"content,omitempty"`
+	ContentType     *TemplateType          `json:"content_type,omitempty"`
+	InputSchema     *JSONSchema            `json:"inputSchema,omitempty"`
 	Name            *string                `json:"name,omitempty"`
 	Status          *PromptStatus          `json:"status,omitempty"`
 	Version         *float32               `json:"version,omitempty"`
@@ -29,10 +33,6 @@ type PromptTemplateUpdatePayload struct {
 	Script          *string                `json:"script,omitempty"`
 	Tags            []string               `json:"tags,omitempty"`
 	LastPublishedAt *time.Time             `json:"last_published_at,omitempty"`
-	Role            *PromptRole            `json:"role,omitempty"`
-	Content         *string                `json:"content,omitempty"`
-	ContentType     *TemplateType          `json:"content_type,omitempty"`
-	InputSchema     *JSONSchema            `json:"inputSchema,omitempty"`
 }
 
 // NewPromptTemplateUpdatePayload instantiates a new PromptTemplateUpdatePayload object
@@ -50,6 +50,134 @@ func NewPromptTemplateUpdatePayload() *PromptTemplateUpdatePayload {
 func NewPromptTemplateUpdatePayloadWithDefaults() *PromptTemplateUpdatePayload {
 	this := PromptTemplateUpdatePayload{}
 	return &this
+}
+
+// GetRole returns the Role field value if set, zero value otherwise.
+func (o *PromptTemplateUpdatePayload) GetRole() PromptRole {
+	if o == nil || IsNil(o.Role) {
+		var ret PromptRole
+		return ret
+	}
+	return *o.Role
+}
+
+// GetRoleOk returns a tuple with the Role field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PromptTemplateUpdatePayload) GetRoleOk() (*PromptRole, bool) {
+	if o == nil || IsNil(o.Role) {
+		return nil, false
+	}
+	return o.Role, true
+}
+
+// HasRole returns a boolean if a field has been set.
+func (o *PromptTemplateUpdatePayload) HasRole() bool {
+	if o != nil && !IsNil(o.Role) {
+		return true
+	}
+
+	return false
+}
+
+// SetRole gets a reference to the given PromptRole and assigns it to the Role field.
+func (o *PromptTemplateUpdatePayload) SetRole(v PromptRole) {
+	o.Role = &v
+}
+
+// GetContent returns the Content field value if set, zero value otherwise.
+func (o *PromptTemplateUpdatePayload) GetContent() string {
+	if o == nil || IsNil(o.Content) {
+		var ret string
+		return ret
+	}
+	return *o.Content
+}
+
+// GetContentOk returns a tuple with the Content field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PromptTemplateUpdatePayload) GetContentOk() (*string, bool) {
+	if o == nil || IsNil(o.Content) {
+		return nil, false
+	}
+	return o.Content, true
+}
+
+// HasContent returns a boolean if a field has been set.
+func (o *PromptTemplateUpdatePayload) HasContent() bool {
+	if o != nil && !IsNil(o.Content) {
+		return true
+	}
+
+	return false
+}
+
+// SetContent gets a reference to the given string and assigns it to the Content field.
+func (o *PromptTemplateUpdatePayload) SetContent(v string) {
+	o.Content = &v
+}
+
+// GetContentType returns the ContentType field value if set, zero value otherwise.
+func (o *PromptTemplateUpdatePayload) GetContentType() TemplateType {
+	if o == nil || IsNil(o.ContentType) {
+		var ret TemplateType
+		return ret
+	}
+	return *o.ContentType
+}
+
+// GetContentTypeOk returns a tuple with the ContentType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PromptTemplateUpdatePayload) GetContentTypeOk() (*TemplateType, bool) {
+	if o == nil || IsNil(o.ContentType) {
+		return nil, false
+	}
+	return o.ContentType, true
+}
+
+// HasContentType returns a boolean if a field has been set.
+func (o *PromptTemplateUpdatePayload) HasContentType() bool {
+	if o != nil && !IsNil(o.ContentType) {
+		return true
+	}
+
+	return false
+}
+
+// SetContentType gets a reference to the given TemplateType and assigns it to the ContentType field.
+func (o *PromptTemplateUpdatePayload) SetContentType(v TemplateType) {
+	o.ContentType = &v
+}
+
+// GetInputSchema returns the InputSchema field value if set, zero value otherwise.
+func (o *PromptTemplateUpdatePayload) GetInputSchema() JSONSchema {
+	if o == nil || IsNil(o.InputSchema) {
+		var ret JSONSchema
+		return ret
+	}
+	return *o.InputSchema
+}
+
+// GetInputSchemaOk returns a tuple with the InputSchema field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PromptTemplateUpdatePayload) GetInputSchemaOk() (*JSONSchema, bool) {
+	if o == nil || IsNil(o.InputSchema) {
+		return nil, false
+	}
+	return o.InputSchema, true
+}
+
+// HasInputSchema returns a boolean if a field has been set.
+func (o *PromptTemplateUpdatePayload) HasInputSchema() bool {
+	if o != nil && !IsNil(o.InputSchema) {
+		return true
+	}
+
+	return false
+}
+
+// SetInputSchema gets a reference to the given JSONSchema and assigns it to the InputSchema field.
+func (o *PromptTemplateUpdatePayload) SetInputSchema(v JSONSchema) {
+	o.InputSchema = &v
 }
 
 // GetName returns the Name field value if set, zero value otherwise.
@@ -340,134 +468,6 @@ func (o *PromptTemplateUpdatePayload) SetLastPublishedAt(v time.Time) {
 	o.LastPublishedAt = &v
 }
 
-// GetRole returns the Role field value if set, zero value otherwise.
-func (o *PromptTemplateUpdatePayload) GetRole() PromptRole {
-	if o == nil || IsNil(o.Role) {
-		var ret PromptRole
-		return ret
-	}
-	return *o.Role
-}
-
-// GetRoleOk returns a tuple with the Role field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *PromptTemplateUpdatePayload) GetRoleOk() (*PromptRole, bool) {
-	if o == nil || IsNil(o.Role) {
-		return nil, false
-	}
-	return o.Role, true
-}
-
-// HasRole returns a boolean if a field has been set.
-func (o *PromptTemplateUpdatePayload) HasRole() bool {
-	if o != nil && !IsNil(o.Role) {
-		return true
-	}
-
-	return false
-}
-
-// SetRole gets a reference to the given PromptRole and assigns it to the Role field.
-func (o *PromptTemplateUpdatePayload) SetRole(v PromptRole) {
-	o.Role = &v
-}
-
-// GetContent returns the Content field value if set, zero value otherwise.
-func (o *PromptTemplateUpdatePayload) GetContent() string {
-	if o == nil || IsNil(o.Content) {
-		var ret string
-		return ret
-	}
-	return *o.Content
-}
-
-// GetContentOk returns a tuple with the Content field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *PromptTemplateUpdatePayload) GetContentOk() (*string, bool) {
-	if o == nil || IsNil(o.Content) {
-		return nil, false
-	}
-	return o.Content, true
-}
-
-// HasContent returns a boolean if a field has been set.
-func (o *PromptTemplateUpdatePayload) HasContent() bool {
-	if o != nil && !IsNil(o.Content) {
-		return true
-	}
-
-	return false
-}
-
-// SetContent gets a reference to the given string and assigns it to the Content field.
-func (o *PromptTemplateUpdatePayload) SetContent(v string) {
-	o.Content = &v
-}
-
-// GetContentType returns the ContentType field value if set, zero value otherwise.
-func (o *PromptTemplateUpdatePayload) GetContentType() TemplateType {
-	if o == nil || IsNil(o.ContentType) {
-		var ret TemplateType
-		return ret
-	}
-	return *o.ContentType
-}
-
-// GetContentTypeOk returns a tuple with the ContentType field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *PromptTemplateUpdatePayload) GetContentTypeOk() (*TemplateType, bool) {
-	if o == nil || IsNil(o.ContentType) {
-		return nil, false
-	}
-	return o.ContentType, true
-}
-
-// HasContentType returns a boolean if a field has been set.
-func (o *PromptTemplateUpdatePayload) HasContentType() bool {
-	if o != nil && !IsNil(o.ContentType) {
-		return true
-	}
-
-	return false
-}
-
-// SetContentType gets a reference to the given TemplateType and assigns it to the ContentType field.
-func (o *PromptTemplateUpdatePayload) SetContentType(v TemplateType) {
-	o.ContentType = &v
-}
-
-// GetInputSchema returns the InputSchema field value if set, zero value otherwise.
-func (o *PromptTemplateUpdatePayload) GetInputSchema() JSONSchema {
-	if o == nil || IsNil(o.InputSchema) {
-		var ret JSONSchema
-		return ret
-	}
-	return *o.InputSchema
-}
-
-// GetInputSchemaOk returns a tuple with the InputSchema field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *PromptTemplateUpdatePayload) GetInputSchemaOk() (*JSONSchema, bool) {
-	if o == nil || IsNil(o.InputSchema) {
-		return nil, false
-	}
-	return o.InputSchema, true
-}
-
-// HasInputSchema returns a boolean if a field has been set.
-func (o *PromptTemplateUpdatePayload) HasInputSchema() bool {
-	if o != nil && !IsNil(o.InputSchema) {
-		return true
-	}
-
-	return false
-}
-
-// SetInputSchema gets a reference to the given JSONSchema and assigns it to the InputSchema field.
-func (o *PromptTemplateUpdatePayload) SetInputSchema(v JSONSchema) {
-	o.InputSchema = &v
-}
-
 func (o PromptTemplateUpdatePayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -478,6 +478,18 @@ func (o PromptTemplateUpdatePayload) MarshalJSON() ([]byte, error) {
 
 func (o PromptTemplateUpdatePayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Role) {
+		toSerialize["role"] = o.Role
+	}
+	if !IsNil(o.Content) {
+		toSerialize["content"] = o.Content
+	}
+	if !IsNil(o.ContentType) {
+		toSerialize["content_type"] = o.ContentType
+	}
+	if !IsNil(o.InputSchema) {
+		toSerialize["inputSchema"] = o.InputSchema
+	}
 	if !IsNil(o.Name) {
 		toSerialize["name"] = o.Name
 	}
@@ -504,18 +516,6 @@ func (o PromptTemplateUpdatePayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.LastPublishedAt) {
 		toSerialize["last_published_at"] = o.LastPublishedAt
-	}
-	if !IsNil(o.Role) {
-		toSerialize["role"] = o.Role
-	}
-	if !IsNil(o.Content) {
-		toSerialize["content"] = o.Content
-	}
-	if !IsNil(o.ContentType) {
-		toSerialize["content_type"] = o.ContentType
-	}
-	if !IsNil(o.InputSchema) {
-		toSerialize["inputSchema"] = o.InputSchema
 	}
 	return toSerialize, nil
 }

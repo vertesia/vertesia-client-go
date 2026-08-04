@@ -28,9 +28,9 @@ type ContentTypeIntakePolicyExtraction struct {
 	// Which pages extraction sees: everything or the locate result.
 	Scope *IntakePageScope `json:"scope,omitempty"`
 	// Static page ranges extraction sees (wins over `scope` when set).
-	PageRanges [][]float32 `json:"page_ranges,omitempty"`
+	PageRanges [][]int32 `json:"page_ranges,omitempty"`
 	// Cap on pages sent to extraction. Default 20.
-	MaxPages     *float32                                       `json:"max_pages,omitempty"`
+	MaxPages     *int32                                         `json:"max_pages,omitempty"`
 	Vision       *ContentTypeIntakePolicyExtractionVision       `json:"vision,omitempty"`
 	Verification *ContentTypeIntakePolicyExtractionVerification `json:"verification,omitempty"`
 	// Controls PDF block-level citation grounding with annotated proof output.
@@ -247,9 +247,9 @@ func (o *ContentTypeIntakePolicyExtraction) SetScope(v IntakePageScope) {
 }
 
 // GetPageRanges returns the PageRanges field value if set, zero value otherwise.
-func (o *ContentTypeIntakePolicyExtraction) GetPageRanges() [][]float32 {
+func (o *ContentTypeIntakePolicyExtraction) GetPageRanges() [][]int32 {
 	if o == nil || IsNil(o.PageRanges) {
-		var ret [][]float32
+		var ret [][]int32
 		return ret
 	}
 	return o.PageRanges
@@ -257,7 +257,7 @@ func (o *ContentTypeIntakePolicyExtraction) GetPageRanges() [][]float32 {
 
 // GetPageRangesOk returns a tuple with the PageRanges field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ContentTypeIntakePolicyExtraction) GetPageRangesOk() ([][]float32, bool) {
+func (o *ContentTypeIntakePolicyExtraction) GetPageRangesOk() ([][]int32, bool) {
 	if o == nil || IsNil(o.PageRanges) {
 		return nil, false
 	}
@@ -273,15 +273,15 @@ func (o *ContentTypeIntakePolicyExtraction) HasPageRanges() bool {
 	return false
 }
 
-// SetPageRanges gets a reference to the given [][]float32 and assigns it to the PageRanges field.
-func (o *ContentTypeIntakePolicyExtraction) SetPageRanges(v [][]float32) {
+// SetPageRanges gets a reference to the given [][]int32 and assigns it to the PageRanges field.
+func (o *ContentTypeIntakePolicyExtraction) SetPageRanges(v [][]int32) {
 	o.PageRanges = v
 }
 
 // GetMaxPages returns the MaxPages field value if set, zero value otherwise.
-func (o *ContentTypeIntakePolicyExtraction) GetMaxPages() float32 {
+func (o *ContentTypeIntakePolicyExtraction) GetMaxPages() int32 {
 	if o == nil || IsNil(o.MaxPages) {
-		var ret float32
+		var ret int32
 		return ret
 	}
 	return *o.MaxPages
@@ -289,7 +289,7 @@ func (o *ContentTypeIntakePolicyExtraction) GetMaxPages() float32 {
 
 // GetMaxPagesOk returns a tuple with the MaxPages field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ContentTypeIntakePolicyExtraction) GetMaxPagesOk() (*float32, bool) {
+func (o *ContentTypeIntakePolicyExtraction) GetMaxPagesOk() (*int32, bool) {
 	if o == nil || IsNil(o.MaxPages) {
 		return nil, false
 	}
@@ -305,8 +305,8 @@ func (o *ContentTypeIntakePolicyExtraction) HasMaxPages() bool {
 	return false
 }
 
-// SetMaxPages gets a reference to the given float32 and assigns it to the MaxPages field.
-func (o *ContentTypeIntakePolicyExtraction) SetMaxPages(v float32) {
+// SetMaxPages gets a reference to the given int32 and assigns it to the MaxPages field.
+func (o *ContentTypeIntakePolicyExtraction) SetMaxPages(v int32) {
 	o.MaxPages = &v
 }
 

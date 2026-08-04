@@ -19,13 +19,13 @@ var _ MappedNullable = &InteractionExecutionPayload{}
 
 // InteractionExecutionPayload struct for InteractionExecutionPayload
 type InteractionExecutionPayload struct {
-	Data         interface{}                                  `json:"data,omitempty"`
-	Config       *InteractionExecutionConfiguration           `json:"config,omitempty"`
-	ResultSchema NullableInteractionUpdatePayloadResultSchema `json:"result_schema,omitempty"`
-	Stream       *bool                                        `json:"stream,omitempty"`
-	DoValidate   *bool                                        `json:"do_validate,omitempty"`
-	Tags         []string                                     `json:"tags,omitempty"`
-	Conversation interface{}                                  `json:"conversation,omitempty"`
+	Data         interface{}                                           `json:"data,omitempty"`
+	Config       *InteractionExecutionConfiguration                    `json:"config,omitempty"`
+	ResultSchema NullableAsyncConversationExecutionPayloadResultSchema `json:"result_schema,omitempty"`
+	Stream       *bool                                                 `json:"stream,omitempty"`
+	DoValidate   *bool                                                 `json:"do_validate,omitempty"`
+	Tags         []string                                              `json:"tags,omitempty"`
+	Conversation interface{}                                           `json:"conversation,omitempty"`
 	// The tools to be used in the execution
 	ToolDefinitions []ToolDefinition `json:"tool_definitions,omitempty"`
 	// The workflow related to this Interaction Run.
@@ -119,9 +119,9 @@ func (o *InteractionExecutionPayload) SetConfig(v InteractionExecutionConfigurat
 }
 
 // GetResultSchema returns the ResultSchema field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *InteractionExecutionPayload) GetResultSchema() InteractionUpdatePayloadResultSchema {
+func (o *InteractionExecutionPayload) GetResultSchema() AsyncConversationExecutionPayloadResultSchema {
 	if o == nil || IsNil(o.ResultSchema.Get()) {
-		var ret InteractionUpdatePayloadResultSchema
+		var ret AsyncConversationExecutionPayloadResultSchema
 		return ret
 	}
 	return *o.ResultSchema.Get()
@@ -130,7 +130,7 @@ func (o *InteractionExecutionPayload) GetResultSchema() InteractionUpdatePayload
 // GetResultSchemaOk returns a tuple with the ResultSchema field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *InteractionExecutionPayload) GetResultSchemaOk() (*InteractionUpdatePayloadResultSchema, bool) {
+func (o *InteractionExecutionPayload) GetResultSchemaOk() (*AsyncConversationExecutionPayloadResultSchema, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -146,8 +146,8 @@ func (o *InteractionExecutionPayload) HasResultSchema() bool {
 	return false
 }
 
-// SetResultSchema gets a reference to the given NullableInteractionUpdatePayloadResultSchema and assigns it to the ResultSchema field.
-func (o *InteractionExecutionPayload) SetResultSchema(v InteractionUpdatePayloadResultSchema) {
+// SetResultSchema gets a reference to the given NullableAsyncConversationExecutionPayloadResultSchema and assigns it to the ResultSchema field.
+func (o *InteractionExecutionPayload) SetResultSchema(v AsyncConversationExecutionPayloadResultSchema) {
 	o.ResultSchema.Set(&v)
 }
 

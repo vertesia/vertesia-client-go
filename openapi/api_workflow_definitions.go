@@ -23,14 +23,14 @@ import (
 type WorkflowDefinitionsAPIService service
 
 type ApiCreateWorkflowDefinitionRequest struct {
-	ctx                   context.Context
-	ApiService            *WorkflowDefinitionsAPIService
-	dSLWorkflowDefinition *DSLWorkflowDefinition
-	xApiVersion           *string
+	ctx                       context.Context
+	ApiService                *WorkflowDefinitionsAPIService
+	workflowDefinitionPayload *WorkflowDefinitionPayload
+	xApiVersion               *string
 }
 
-func (r ApiCreateWorkflowDefinitionRequest) DSLWorkflowDefinition(dSLWorkflowDefinition DSLWorkflowDefinition) ApiCreateWorkflowDefinitionRequest {
-	r.dSLWorkflowDefinition = &dSLWorkflowDefinition
+func (r ApiCreateWorkflowDefinitionRequest) WorkflowDefinitionPayload(workflowDefinitionPayload WorkflowDefinitionPayload) ApiCreateWorkflowDefinitionRequest {
+	r.workflowDefinitionPayload = &workflowDefinitionPayload
 	return r
 }
 
@@ -82,8 +82,8 @@ func (a *WorkflowDefinitionsAPIService) CreateWorkflowDefinitionExecute(r ApiCre
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.dSLWorkflowDefinition == nil {
-		return localVarReturnValue, nil, reportError("dSLWorkflowDefinition is required and must be specified")
+	if r.workflowDefinitionPayload == nil {
+		return localVarReturnValue, nil, reportError("workflowDefinitionPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -107,7 +107,7 @@ func (a *WorkflowDefinitionsAPIService) CreateWorkflowDefinitionExecute(r ApiCre
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.dSLWorkflowDefinition
+	localVarPostBody = r.workflowDefinitionPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -574,15 +574,15 @@ func (a *WorkflowDefinitionsAPIService) ListWorkflowDefinitionsExecute(r ApiList
 }
 
 type ApiUpdateWorkflowDefinitionRequest struct {
-	ctx                   context.Context
-	ApiService            *WorkflowDefinitionsAPIService
-	workflowId            string
-	dSLWorkflowDefinition *DSLWorkflowDefinition
-	xApiVersion           *string
+	ctx                       context.Context
+	ApiService                *WorkflowDefinitionsAPIService
+	workflowId                string
+	workflowDefinitionPayload *WorkflowDefinitionPayload
+	xApiVersion               *string
 }
 
-func (r ApiUpdateWorkflowDefinitionRequest) DSLWorkflowDefinition(dSLWorkflowDefinition DSLWorkflowDefinition) ApiUpdateWorkflowDefinitionRequest {
-	r.dSLWorkflowDefinition = &dSLWorkflowDefinition
+func (r ApiUpdateWorkflowDefinitionRequest) WorkflowDefinitionPayload(workflowDefinitionPayload WorkflowDefinitionPayload) ApiUpdateWorkflowDefinitionRequest {
+	r.workflowDefinitionPayload = &workflowDefinitionPayload
 	return r
 }
 
@@ -637,8 +637,8 @@ func (a *WorkflowDefinitionsAPIService) UpdateWorkflowDefinitionExecute(r ApiUpd
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.dSLWorkflowDefinition == nil {
-		return localVarReturnValue, nil, reportError("dSLWorkflowDefinition is required and must be specified")
+	if r.workflowDefinitionPayload == nil {
+		return localVarReturnValue, nil, reportError("workflowDefinitionPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -662,7 +662,7 @@ func (a *WorkflowDefinitionsAPIService) UpdateWorkflowDefinitionExecute(r ApiUpd
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.dSLWorkflowDefinition
+	localVarPostBody = r.workflowDefinitionPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

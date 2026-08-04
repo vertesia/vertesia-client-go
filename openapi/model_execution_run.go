@@ -21,14 +21,13 @@ var _ MappedNullable = &ExecutionRun{}
 
 // ExecutionRun struct for ExecutionRun
 type ExecutionRun struct {
-	Id         string                                `json:"id"`
-	Parent     *InteractionExecutionResultParent     `json:"parent,omitempty"`
-	Evaluation *InteractionExecutionResultEvaluation `json:"evaluation,omitempty"`
-	Result     []CompletionResult                    `json:"result"`
-	Parameters interface{}                           `json:"parameters"`
-	Tags       []string                              `json:"tags,omitempty"`
-	// Interaction reference. Stored interactions may be populated as full Interaction documents; in-code interactions are represented as refs whose `id` is the namespaced interaction id.
-	Interaction *InteractionRef `json:"interaction,omitempty"`
+	Id          string                   `json:"id"`
+	Parent      *ExecutionRunParent      `json:"parent,omitempty"`
+	Evaluation  *ExecutionRunEvaluation  `json:"evaluation,omitempty"`
+	Result      []CompletionResult       `json:"result"`
+	Parameters  interface{}              `json:"parameters"`
+	Tags        []string                 `json:"tags,omitempty"`
+	Interaction *ExecutionRunInteraction `json:"interaction,omitempty"`
 	// Environment reference - populated with full object in API responses
 	Environment   ExecutionEnvironmentRef           `json:"environment"`
 	ModelId       *string                           `json:"modelId,omitempty"`
@@ -115,9 +114,9 @@ func (o *ExecutionRun) SetId(v string) {
 }
 
 // GetParent returns the Parent field value if set, zero value otherwise.
-func (o *ExecutionRun) GetParent() InteractionExecutionResultParent {
+func (o *ExecutionRun) GetParent() ExecutionRunParent {
 	if o == nil || IsNil(o.Parent) {
-		var ret InteractionExecutionResultParent
+		var ret ExecutionRunParent
 		return ret
 	}
 	return *o.Parent
@@ -125,7 +124,7 @@ func (o *ExecutionRun) GetParent() InteractionExecutionResultParent {
 
 // GetParentOk returns a tuple with the Parent field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExecutionRun) GetParentOk() (*InteractionExecutionResultParent, bool) {
+func (o *ExecutionRun) GetParentOk() (*ExecutionRunParent, bool) {
 	if o == nil || IsNil(o.Parent) {
 		return nil, false
 	}
@@ -141,15 +140,15 @@ func (o *ExecutionRun) HasParent() bool {
 	return false
 }
 
-// SetParent gets a reference to the given InteractionExecutionResultParent and assigns it to the Parent field.
-func (o *ExecutionRun) SetParent(v InteractionExecutionResultParent) {
+// SetParent gets a reference to the given ExecutionRunParent and assigns it to the Parent field.
+func (o *ExecutionRun) SetParent(v ExecutionRunParent) {
 	o.Parent = &v
 }
 
 // GetEvaluation returns the Evaluation field value if set, zero value otherwise.
-func (o *ExecutionRun) GetEvaluation() InteractionExecutionResultEvaluation {
+func (o *ExecutionRun) GetEvaluation() ExecutionRunEvaluation {
 	if o == nil || IsNil(o.Evaluation) {
-		var ret InteractionExecutionResultEvaluation
+		var ret ExecutionRunEvaluation
 		return ret
 	}
 	return *o.Evaluation
@@ -157,7 +156,7 @@ func (o *ExecutionRun) GetEvaluation() InteractionExecutionResultEvaluation {
 
 // GetEvaluationOk returns a tuple with the Evaluation field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExecutionRun) GetEvaluationOk() (*InteractionExecutionResultEvaluation, bool) {
+func (o *ExecutionRun) GetEvaluationOk() (*ExecutionRunEvaluation, bool) {
 	if o == nil || IsNil(o.Evaluation) {
 		return nil, false
 	}
@@ -173,8 +172,8 @@ func (o *ExecutionRun) HasEvaluation() bool {
 	return false
 }
 
-// SetEvaluation gets a reference to the given InteractionExecutionResultEvaluation and assigns it to the Evaluation field.
-func (o *ExecutionRun) SetEvaluation(v InteractionExecutionResultEvaluation) {
+// SetEvaluation gets a reference to the given ExecutionRunEvaluation and assigns it to the Evaluation field.
+func (o *ExecutionRun) SetEvaluation(v ExecutionRunEvaluation) {
 	o.Evaluation = &v
 }
 
@@ -261,9 +260,9 @@ func (o *ExecutionRun) SetTags(v []string) {
 }
 
 // GetInteraction returns the Interaction field value if set, zero value otherwise.
-func (o *ExecutionRun) GetInteraction() InteractionRef {
+func (o *ExecutionRun) GetInteraction() ExecutionRunInteraction {
 	if o == nil || IsNil(o.Interaction) {
-		var ret InteractionRef
+		var ret ExecutionRunInteraction
 		return ret
 	}
 	return *o.Interaction
@@ -271,7 +270,7 @@ func (o *ExecutionRun) GetInteraction() InteractionRef {
 
 // GetInteractionOk returns a tuple with the Interaction field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ExecutionRun) GetInteractionOk() (*InteractionRef, bool) {
+func (o *ExecutionRun) GetInteractionOk() (*ExecutionRunInteraction, bool) {
 	if o == nil || IsNil(o.Interaction) {
 		return nil, false
 	}
@@ -287,8 +286,8 @@ func (o *ExecutionRun) HasInteraction() bool {
 	return false
 }
 
-// SetInteraction gets a reference to the given InteractionRef and assigns it to the Interaction field.
-func (o *ExecutionRun) SetInteraction(v InteractionRef) {
+// SetInteraction gets a reference to the given ExecutionRunInteraction and assigns it to the Interaction field.
+func (o *ExecutionRun) SetInteraction(v ExecutionRunInteraction) {
 	o.Interaction = &v
 }
 

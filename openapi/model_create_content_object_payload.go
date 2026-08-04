@@ -19,13 +19,13 @@ var _ MappedNullable = &CreateContentObjectPayload{}
 
 // CreateContentObjectPayload When creating from an uploaded file the content should be an URL to the uploaded file
 type CreateContentObjectPayload struct {
-	Text       *string                                        `json:"text,omitempty"`
-	TextEtag   *string                                        `json:"text_etag,omitempty"`
-	Embeddings *PartialRecordSupportedEmbeddingTypesEmbedding `json:"embeddings,omitempty"`
-	Parts      []string                                       `json:"parts,omitempty"`
-	PartsEtag  *string                                        `json:"parts_etag,omitempty"`
-	Transcript *Transcript                                    `json:"transcript,omitempty"`
-	Security   map[string][]string                            `json:"security,omitempty"`
+	Text       *string              `json:"text,omitempty"`
+	TextEtag   *string              `json:"text_etag,omitempty"`
+	Embeddings *ContentEmbeddingMap `json:"embeddings,omitempty"`
+	Parts      []string             `json:"parts,omitempty"`
+	PartsEtag  *string              `json:"parts_etag,omitempty"`
+	Transcript *Transcript          `json:"transcript,omitempty"`
+	Security   map[string][]string  `json:"security,omitempty"`
 	// BLP sensitivity level — set directly or inherited from collections (max across collections).
 	Sensitivity *float32 `json:"sensitivity,omitempty"`
 	// Compartments — set directly or inherited from collections (union across collections).
@@ -156,9 +156,9 @@ func (o *CreateContentObjectPayload) SetTextEtag(v string) {
 }
 
 // GetEmbeddings returns the Embeddings field value if set, zero value otherwise.
-func (o *CreateContentObjectPayload) GetEmbeddings() PartialRecordSupportedEmbeddingTypesEmbedding {
+func (o *CreateContentObjectPayload) GetEmbeddings() ContentEmbeddingMap {
 	if o == nil || IsNil(o.Embeddings) {
-		var ret PartialRecordSupportedEmbeddingTypesEmbedding
+		var ret ContentEmbeddingMap
 		return ret
 	}
 	return *o.Embeddings
@@ -166,7 +166,7 @@ func (o *CreateContentObjectPayload) GetEmbeddings() PartialRecordSupportedEmbed
 
 // GetEmbeddingsOk returns a tuple with the Embeddings field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CreateContentObjectPayload) GetEmbeddingsOk() (*PartialRecordSupportedEmbeddingTypesEmbedding, bool) {
+func (o *CreateContentObjectPayload) GetEmbeddingsOk() (*ContentEmbeddingMap, bool) {
 	if o == nil || IsNil(o.Embeddings) {
 		return nil, false
 	}
@@ -182,8 +182,8 @@ func (o *CreateContentObjectPayload) HasEmbeddings() bool {
 	return false
 }
 
-// SetEmbeddings gets a reference to the given PartialRecordSupportedEmbeddingTypesEmbedding and assigns it to the Embeddings field.
-func (o *CreateContentObjectPayload) SetEmbeddings(v PartialRecordSupportedEmbeddingTypesEmbedding) {
+// SetEmbeddings gets a reference to the given ContentEmbeddingMap and assigns it to the Embeddings field.
+func (o *CreateContentObjectPayload) SetEmbeddings(v ContentEmbeddingMap) {
 	o.Embeddings = &v
 }
 

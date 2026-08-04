@@ -20,11 +20,12 @@ var _ MappedNullable = &ProcessState{}
 
 // ProcessState struct for ProcessState
 type ProcessState struct {
-	Context        map[string]interface{} `json:"context"`
-	CurrentNode    string                 `json:"current_node"`
-	NodeHistory    []NodeHistoryEntry     `json:"node_history"`
-	NodeHistoryRef *ProcessHistoryRef     `json:"node_history_ref,omitempty"`
-	Sequence       float32                `json:"sequence"`
+	Context              map[string]interface{} `json:"context"`
+	CurrentNode          string                 `json:"current_node"`
+	NodeHistory          []NodeHistoryEntry     `json:"node_history"`
+	NodeHistoryRef       *ProcessHistoryRef     `json:"node_history_ref,omitempty"`
+	Sequence             float32                `json:"sequence"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ProcessState ProcessState
@@ -195,6 +196,11 @@ func (o ProcessState) ToMap() (map[string]interface{}, error) {
 		toSerialize["node_history_ref"] = o.NodeHistoryRef
 	}
 	toSerialize["sequence"] = o.Sequence
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -232,6 +238,17 @@ func (o *ProcessState) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = ProcessState(varProcessState)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "context")
+		delete(additionalProperties, "current_node")
+		delete(additionalProperties, "node_history")
+		delete(additionalProperties, "node_history_ref")
+		delete(additionalProperties, "sequence")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

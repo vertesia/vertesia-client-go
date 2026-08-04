@@ -851,7 +851,7 @@ func (r ApiListAccountInvitesRequest) XApiVersion(xApiVersion string) ApiListAcc
 	return r
 }
 
-func (r ApiListAccountInvitesRequest) Execute() (*TransientTokenUserInviteTokenDataArray, *http.Response, error) {
+func (r ApiListAccountInvitesRequest) Execute() ([]TransientTokenUserInviteTokenData, *http.Response, error) {
 	return r.ApiService.ListAccountInvitesExecute(r)
 }
 
@@ -874,13 +874,13 @@ func (a *AccountsAPIService) ListAccountInvites(ctx context.Context) ApiListAcco
 
 // Execute executes the request
 //
-//	@return TransientTokenUserInviteTokenDataArray
-func (a *AccountsAPIService) ListAccountInvitesExecute(r ApiListAccountInvitesRequest) (*TransientTokenUserInviteTokenDataArray, *http.Response, error) {
+//	@return []TransientTokenUserInviteTokenData
+func (a *AccountsAPIService) ListAccountInvitesExecute(r ApiListAccountInvitesRequest) ([]TransientTokenUserInviteTokenData, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *TransientTokenUserInviteTokenDataArray
+		localVarReturnValue []TransientTokenUserInviteTokenData
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.ListAccountInvites")
@@ -1250,7 +1250,7 @@ func (r ApiListProjectInvitesRequest) XApiVersion(xApiVersion string) ApiListPro
 	return r
 }
 
-func (r ApiListProjectInvitesRequest) Execute() (*TransientTokenUserInviteTokenDataArray, *http.Response, error) {
+func (r ApiListProjectInvitesRequest) Execute() ([]TransientTokenUserInviteTokenData, *http.Response, error) {
 	return r.ApiService.ListProjectInvitesExecute(r)
 }
 
@@ -1273,13 +1273,13 @@ func (a *AccountsAPIService) ListProjectInvites(ctx context.Context) ApiListProj
 
 // Execute executes the request
 //
-//	@return TransientTokenUserInviteTokenDataArray
-func (a *AccountsAPIService) ListProjectInvitesExecute(r ApiListProjectInvitesRequest) (*TransientTokenUserInviteTokenDataArray, *http.Response, error) {
+//	@return []TransientTokenUserInviteTokenData
+func (a *AccountsAPIService) ListProjectInvitesExecute(r ApiListProjectInvitesRequest) ([]TransientTokenUserInviteTokenData, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *TransientTokenUserInviteTokenDataArray
+		localVarReturnValue []TransientTokenUserInviteTokenData
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.ListProjectInvites")
@@ -1383,7 +1383,7 @@ func (r ApiListUserInvitesRequest) XApiVersion(xApiVersion string) ApiListUserIn
 	return r
 }
 
-func (r ApiListUserInvitesRequest) Execute() (*TransientTokenUserInviteTokenDataArray, *http.Response, error) {
+func (r ApiListUserInvitesRequest) Execute() ([]TransientTokenUserInviteTokenData, *http.Response, error) {
 	return r.ApiService.ListUserInvitesExecute(r)
 }
 
@@ -1406,13 +1406,13 @@ func (a *AccountsAPIService) ListUserInvites(ctx context.Context) ApiListUserInv
 
 // Execute executes the request
 //
-//	@return TransientTokenUserInviteTokenDataArray
-func (a *AccountsAPIService) ListUserInvitesExecute(r ApiListUserInvitesRequest) (*TransientTokenUserInviteTokenDataArray, *http.Response, error) {
+//	@return []TransientTokenUserInviteTokenData
+func (a *AccountsAPIService) ListUserInvitesExecute(r ApiListUserInvitesRequest) ([]TransientTokenUserInviteTokenData, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *TransientTokenUserInviteTokenDataArray
+		localVarReturnValue []TransientTokenUserInviteTokenData
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AccountsAPIService.ListUserInvites")

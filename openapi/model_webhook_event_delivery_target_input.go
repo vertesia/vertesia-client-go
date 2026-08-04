@@ -21,16 +21,20 @@ var _ MappedNullable = &WebhookEventDeliveryTargetInput{}
 // WebhookEventDeliveryTargetInput struct for WebhookEventDeliveryTargetInput
 type WebhookEventDeliveryTargetInput struct {
 	// Request rotation of the stored signing secret on update.
-	RotateSigningSecret *bool                  `json:"rotate_signing_secret,omitempty"`
-	Type                string                 `json:"type"`
-	Url                 string                 `json:"url"`
-	SigningMode         *WebhookSigningMode    `json:"signing_mode,omitempty"`
-	PayloadMode         *WebhookPayloadMode    `json:"payload_mode,omitempty"`
-	Headers             map[string]string      `json:"headers,omitempty"`
-	EncryptedHeaders    *bool                  `json:"encrypted_headers,omitempty"`
-	TimeoutMs           *float32               `json:"timeout_ms,omitempty"`
-	ResultPath          *string                `json:"result_path,omitempty"`
-	CustomData          map[string]interface{} `json:"custom_data,omitempty"`
+	RotateSigningSecret *bool  `json:"rotate_signing_secret,omitempty"`
+	Type                string `json:"type"`
+	Url                 string `json:"url"`
+	// Server-managed: ignored on write, echoed back from a read.
+	HasSecret *bool `json:"has_secret,omitempty"`
+	// Server-managed: ignored on write, echoed back from a read.
+	SecretLabel      *string                `json:"secret_label,omitempty"`
+	SigningMode      *WebhookSigningMode    `json:"signing_mode,omitempty"`
+	PayloadMode      *WebhookPayloadMode    `json:"payload_mode,omitempty"`
+	Headers          map[string]string      `json:"headers,omitempty"`
+	EncryptedHeaders *bool                  `json:"encrypted_headers,omitempty"`
+	TimeoutMs        *float32               `json:"timeout_ms,omitempty"`
+	ResultPath       *string                `json:"result_path,omitempty"`
+	CustomData       map[string]interface{} `json:"custom_data,omitempty"`
 }
 
 type _WebhookEventDeliveryTargetInput WebhookEventDeliveryTargetInput
@@ -132,6 +136,70 @@ func (o *WebhookEventDeliveryTargetInput) GetUrlOk() (*string, bool) {
 // SetUrl sets field value
 func (o *WebhookEventDeliveryTargetInput) SetUrl(v string) {
 	o.Url = v
+}
+
+// GetHasSecret returns the HasSecret field value if set, zero value otherwise.
+func (o *WebhookEventDeliveryTargetInput) GetHasSecret() bool {
+	if o == nil || IsNil(o.HasSecret) {
+		var ret bool
+		return ret
+	}
+	return *o.HasSecret
+}
+
+// GetHasSecretOk returns a tuple with the HasSecret field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *WebhookEventDeliveryTargetInput) GetHasSecretOk() (*bool, bool) {
+	if o == nil || IsNil(o.HasSecret) {
+		return nil, false
+	}
+	return o.HasSecret, true
+}
+
+// HasHasSecret returns a boolean if a field has been set.
+func (o *WebhookEventDeliveryTargetInput) HasHasSecret() bool {
+	if o != nil && !IsNil(o.HasSecret) {
+		return true
+	}
+
+	return false
+}
+
+// SetHasSecret gets a reference to the given bool and assigns it to the HasSecret field.
+func (o *WebhookEventDeliveryTargetInput) SetHasSecret(v bool) {
+	o.HasSecret = &v
+}
+
+// GetSecretLabel returns the SecretLabel field value if set, zero value otherwise.
+func (o *WebhookEventDeliveryTargetInput) GetSecretLabel() string {
+	if o == nil || IsNil(o.SecretLabel) {
+		var ret string
+		return ret
+	}
+	return *o.SecretLabel
+}
+
+// GetSecretLabelOk returns a tuple with the SecretLabel field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *WebhookEventDeliveryTargetInput) GetSecretLabelOk() (*string, bool) {
+	if o == nil || IsNil(o.SecretLabel) {
+		return nil, false
+	}
+	return o.SecretLabel, true
+}
+
+// HasSecretLabel returns a boolean if a field has been set.
+func (o *WebhookEventDeliveryTargetInput) HasSecretLabel() bool {
+	if o != nil && !IsNil(o.SecretLabel) {
+		return true
+	}
+
+	return false
+}
+
+// SetSecretLabel gets a reference to the given string and assigns it to the SecretLabel field.
+func (o *WebhookEventDeliveryTargetInput) SetSecretLabel(v string) {
+	o.SecretLabel = &v
 }
 
 // GetSigningMode returns the SigningMode field value if set, zero value otherwise.
@@ -373,6 +441,12 @@ func (o WebhookEventDeliveryTargetInput) ToMap() (map[string]interface{}, error)
 	}
 	toSerialize["type"] = o.Type
 	toSerialize["url"] = o.Url
+	if !IsNil(o.HasSecret) {
+		toSerialize["has_secret"] = o.HasSecret
+	}
+	if !IsNil(o.SecretLabel) {
+		toSerialize["secret_label"] = o.SecretLabel
+	}
 	if !IsNil(o.SigningMode) {
 		toSerialize["signing_mode"] = o.SigningMode
 	}

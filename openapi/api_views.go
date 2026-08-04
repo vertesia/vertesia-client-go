@@ -596,11 +596,13 @@ type ApiListViewsRequest struct {
 	xApiVersion *string
 }
 
+// Page size. Clamped to 1..100; anything unparseable falls back to 50.
 func (r ApiListViewsRequest) Limit(limit float32) ApiListViewsRequest {
 	r.limit = &limit
 	return r
 }
 
+// Number of Views to skip. Negative values are clamped to 0.
 func (r ApiListViewsRequest) Offset(offset float32) ApiListViewsRequest {
 	r.offset = &offset
 	return r

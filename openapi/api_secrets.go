@@ -202,7 +202,7 @@ func (r ApiDeleteSecretRequest) XApiVersion(xApiVersion string) ApiDeleteSecretR
 	return r
 }
 
-func (r ApiDeleteSecretRequest) Execute() (*OkBoolean, *http.Response, error) {
+func (r ApiDeleteSecretRequest) Execute() (*DeleteSecretResponse, *http.Response, error) {
 	return r.ApiService.DeleteSecretExecute(r)
 }
 
@@ -227,13 +227,13 @@ func (a *SecretsAPIService) DeleteSecret(ctx context.Context, secretId string) A
 
 // Execute executes the request
 //
-//	@return OkBoolean
-func (a *SecretsAPIService) DeleteSecretExecute(r ApiDeleteSecretRequest) (*OkBoolean, *http.Response, error) {
+//	@return DeleteSecretResponse
+func (a *SecretsAPIService) DeleteSecretExecute(r ApiDeleteSecretRequest) (*DeleteSecretResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodDelete
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *OkBoolean
+		localVarReturnValue *DeleteSecretResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SecretsAPIService.DeleteSecret")

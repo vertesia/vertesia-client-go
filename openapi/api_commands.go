@@ -1262,7 +1262,7 @@ func (r ApiListZenoMigrationsRequest) XApiVersion(xApiVersion string) ApiListZen
 	return r
 }
 
-func (r ApiListZenoMigrationsRequest) Execute() (interface{}, *http.Response, error) {
+func (r ApiListZenoMigrationsRequest) Execute() (*MigrationListResponse, *http.Response, error) {
 	return r.ApiService.ListZenoMigrationsExecute(r)
 }
 
@@ -1283,13 +1283,13 @@ func (a *CommandsAPIService) ListZenoMigrations(ctx context.Context) ApiListZeno
 
 // Execute executes the request
 //
-//	@return interface{}
-func (a *CommandsAPIService) ListZenoMigrationsExecute(r ApiListZenoMigrationsRequest) (interface{}, *http.Response, error) {
+//	@return MigrationListResponse
+func (a *CommandsAPIService) ListZenoMigrationsExecute(r ApiListZenoMigrationsRequest) (*MigrationListResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue interface{}
+		localVarReturnValue *MigrationListResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CommandsAPIService.ListZenoMigrations")
@@ -1521,18 +1521,18 @@ func (a *CommandsAPIService) RecalculateProjectEmbeddingsExecute(r ApiRecalculat
 type ApiReindexAgentRunsRequest struct {
 	ctx                     context.Context
 	ApiService              *CommandsAPIService
-	reindexAgentRunsPayload *ReindexAgentRunsPayload
 	xApiVersion             *string
-}
-
-func (r ApiReindexAgentRunsRequest) ReindexAgentRunsPayload(reindexAgentRunsPayload ReindexAgentRunsPayload) ApiReindexAgentRunsRequest {
-	r.reindexAgentRunsPayload = &reindexAgentRunsPayload
-	return r
+	reindexAgentRunsPayload *ReindexAgentRunsPayload
 }
 
 // Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
 func (r ApiReindexAgentRunsRequest) XApiVersion(xApiVersion string) ApiReindexAgentRunsRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiReindexAgentRunsRequest) ReindexAgentRunsPayload(reindexAgentRunsPayload ReindexAgentRunsPayload) ApiReindexAgentRunsRequest {
+	r.reindexAgentRunsPayload = &reindexAgentRunsPayload
 	return r
 }
 
@@ -1578,9 +1578,6 @@ func (a *CommandsAPIService) ReindexAgentRunsExecute(r ApiReindexAgentRunsReques
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.reindexAgentRunsPayload == nil {
-		return localVarReturnValue, nil, reportError("reindexAgentRunsPayload is required and must be specified")
-	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1688,7 +1685,7 @@ func (r ApiRunZenoMigrationRequest) Execute() (*RunMigrationResponse, *http.Resp
 /*
 RunZenoMigration Run a content migration
 
-Executes a named synchronous migration. This endpoint requires an authenticated admin API key.
+Executes a named synchronous migration. This endpoint requires an authenticated admin API key. `params` is passed through to the migration and its shape is the migration's own.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param name
@@ -1944,18 +1941,18 @@ func (a *CommandsAPIService) StartIndexDriftAnalysisExecute(r ApiStartIndexDrift
 type ApiStartProjectReindexRequest struct {
 	ctx                        context.Context
 	ApiService                 *CommandsAPIService
-	startProjectReindexPayload *StartProjectReindexPayload
 	xApiVersion                *string
-}
-
-func (r ApiStartProjectReindexRequest) StartProjectReindexPayload(startProjectReindexPayload StartProjectReindexPayload) ApiStartProjectReindexRequest {
-	r.startProjectReindexPayload = &startProjectReindexPayload
-	return r
+	startProjectReindexPayload *StartProjectReindexPayload
 }
 
 // Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
 func (r ApiStartProjectReindexRequest) XApiVersion(xApiVersion string) ApiStartProjectReindexRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiStartProjectReindexRequest) StartProjectReindexPayload(startProjectReindexPayload StartProjectReindexPayload) ApiStartProjectReindexRequest {
+	r.startProjectReindexPayload = &startProjectReindexPayload
 	return r
 }
 
@@ -2001,9 +1998,6 @@ func (a *CommandsAPIService) StartProjectReindexExecute(r ApiStartProjectReindex
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.startProjectReindexPayload == nil {
-		return localVarReturnValue, nil, reportError("startProjectReindexPayload is required and must be specified")
-	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}

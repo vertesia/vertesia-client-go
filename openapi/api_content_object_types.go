@@ -619,7 +619,7 @@ func (r ApiListApplicationContentObjectTypesRequest) XApiVersion(xApiVersion str
 	return r
 }
 
-func (r ApiListApplicationContentObjectTypesRequest) Execute() ([]ContentObjectTypeItem, *http.Response, error) {
+func (r ApiListApplicationContentObjectTypesRequest) Execute() ([]ContentObjectTypeCatalogEntry, *http.Response, error) {
 	return r.ApiService.ListApplicationContentObjectTypesExecute(r)
 }
 
@@ -642,13 +642,13 @@ func (a *ContentObjectTypesAPIService) ListApplicationContentObjectTypes(ctx con
 
 // Execute executes the request
 //
-//	@return []ContentObjectTypeItem
-func (a *ContentObjectTypesAPIService) ListApplicationContentObjectTypesExecute(r ApiListApplicationContentObjectTypesRequest) ([]ContentObjectTypeItem, *http.Response, error) {
+//	@return []ContentObjectTypeCatalogEntry
+func (a *ContentObjectTypesAPIService) ListApplicationContentObjectTypesExecute(r ApiListApplicationContentObjectTypesRequest) ([]ContentObjectTypeCatalogEntry, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue []ContentObjectTypeItem
+		localVarReturnValue []ContentObjectTypeCatalogEntry
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ContentObjectTypesAPIService.ListApplicationContentObjectTypes")
@@ -797,7 +797,7 @@ func (r ApiListContentObjectTypeCatalogRequest) XApiVersion(xApiVersion string) 
 	return r
 }
 
-func (r ApiListContentObjectTypeCatalogRequest) Execute() ([]ContentObjectTypeItem, *http.Response, error) {
+func (r ApiListContentObjectTypeCatalogRequest) Execute() ([]ContentObjectTypeCatalogEntry, *http.Response, error) {
 	return r.ApiService.ListContentObjectTypeCatalogExecute(r)
 }
 
@@ -820,13 +820,13 @@ func (a *ContentObjectTypesAPIService) ListContentObjectTypeCatalog(ctx context.
 
 // Execute executes the request
 //
-//	@return []ContentObjectTypeItem
-func (a *ContentObjectTypesAPIService) ListContentObjectTypeCatalogExecute(r ApiListContentObjectTypeCatalogRequest) ([]ContentObjectTypeItem, *http.Response, error) {
+//	@return []ContentObjectTypeCatalogEntry
+func (a *ContentObjectTypesAPIService) ListContentObjectTypeCatalogExecute(r ApiListContentObjectTypeCatalogRequest) ([]ContentObjectTypeCatalogEntry, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue []ContentObjectTypeItem
+		localVarReturnValue []ContentObjectTypeCatalogEntry
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ContentObjectTypesAPIService.ListContentObjectTypeCatalog")
@@ -1340,7 +1340,7 @@ func (r ApiListSystemContentObjectTypesRequest) XApiVersion(xApiVersion string) 
 	return r
 }
 
-func (r ApiListSystemContentObjectTypesRequest) Execute() ([]ContentObjectTypeItem, *http.Response, error) {
+func (r ApiListSystemContentObjectTypesRequest) Execute() ([]ContentObjectTypeCatalogEntry, *http.Response, error) {
 	return r.ApiService.ListSystemContentObjectTypesExecute(r)
 }
 
@@ -1363,13 +1363,13 @@ func (a *ContentObjectTypesAPIService) ListSystemContentObjectTypes(ctx context.
 
 // Execute executes the request
 //
-//	@return []ContentObjectTypeItem
-func (a *ContentObjectTypesAPIService) ListSystemContentObjectTypesExecute(r ApiListSystemContentObjectTypesRequest) ([]ContentObjectTypeItem, *http.Response, error) {
+//	@return []ContentObjectTypeCatalogEntry
+func (a *ContentObjectTypesAPIService) ListSystemContentObjectTypesExecute(r ApiListSystemContentObjectTypesRequest) ([]ContentObjectTypeCatalogEntry, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue []ContentObjectTypeItem
+		localVarReturnValue []ContentObjectTypeCatalogEntry
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ContentObjectTypesAPIService.ListSystemContentObjectTypes")
@@ -1617,12 +1617,12 @@ type ApiUpdateContentObjectTypeRequest struct {
 	ctx                            context.Context
 	ApiService                     *ContentObjectTypesAPIService
 	typeId                         string
-	createContentObjectTypePayload *CreateContentObjectTypePayload
+	updateContentObjectTypePayload *UpdateContentObjectTypePayload
 	xApiVersion                    *string
 }
 
-func (r ApiUpdateContentObjectTypeRequest) CreateContentObjectTypePayload(createContentObjectTypePayload CreateContentObjectTypePayload) ApiUpdateContentObjectTypeRequest {
-	r.createContentObjectTypePayload = &createContentObjectTypePayload
+func (r ApiUpdateContentObjectTypeRequest) UpdateContentObjectTypePayload(updateContentObjectTypePayload UpdateContentObjectTypePayload) ApiUpdateContentObjectTypeRequest {
+	r.updateContentObjectTypePayload = &updateContentObjectTypePayload
 	return r
 }
 
@@ -1677,8 +1677,8 @@ func (a *ContentObjectTypesAPIService) UpdateContentObjectTypeExecute(r ApiUpdat
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.createContentObjectTypePayload == nil {
-		return localVarReturnValue, nil, reportError("createContentObjectTypePayload is required and must be specified")
+	if r.updateContentObjectTypePayload == nil {
+		return localVarReturnValue, nil, reportError("updateContentObjectTypePayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -1702,7 +1702,7 @@ func (a *ContentObjectTypesAPIService) UpdateContentObjectTypeExecute(r ApiUpdat
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.createContentObjectTypePayload
+	localVarPostBody = r.updateContentObjectTypePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

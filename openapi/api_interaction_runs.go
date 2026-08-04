@@ -41,7 +41,7 @@ func (r ApiCreateRunRequest) XApiVersion(xApiVersion string) ApiCreateRunRequest
 	return r
 }
 
-func (r ApiCreateRunRequest) Execute() (*ExecutionRunRef, *http.Response, error) {
+func (r ApiCreateRunRequest) Execute() (*InteractionExecutionResult, *http.Response, error) {
 	return r.ApiService.CreateRunExecute(r)
 }
 
@@ -64,13 +64,13 @@ func (a *InteractionRunsAPIService) CreateRun(ctx context.Context) ApiCreateRunR
 
 // Execute executes the request
 //
-//	@return ExecutionRunRef
-func (a *InteractionRunsAPIService) CreateRunExecute(r ApiCreateRunRequest) (*ExecutionRunRef, *http.Response, error) {
+//	@return InteractionExecutionResult
+func (a *InteractionRunsAPIService) CreateRunExecute(r ApiCreateRunRequest) (*InteractionExecutionResult, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *ExecutionRunRef
+		localVarReturnValue *InteractionExecutionResult
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionRunsAPIService.CreateRun")
@@ -442,141 +442,85 @@ func (a *InteractionRunsAPIService) GetRunExecute(r ApiGetRunRequest) (*Executio
 }
 
 type ApiListRunsRequest struct {
-	ctx              context.Context
-	ApiService       *InteractionRunsAPIService
-	name             *string
-	status           *string
-	limit            *float32
-	offset           *float32
-	interaction      *string
-	environment      *string
-	model            *string
-	tags             *[]string
-	excludeTags      *[]string
-	query            *string
-	defaultQueryPath *string
-	parent           *[]string
-	isRoot           *bool
-	object           *string
-	start            *string
-	end              *string
-	finishReason     *string
-	createdBy        *string
-	workflowRunIds   *[]string
-	workflowIds      *[]string
-	runIds           *[]string
-	isAgent          *bool
-	xApiVersion      *string
+	ctx            context.Context
+	ApiService     *InteractionRunsAPIService
+	limit          *int32
+	offset         *int32
+	interaction    *[]string
+	model          *[]string
+	environment    *[]string
+	status         *[]string
+	tag            *[]string
+	parent         *[]string
+	isRoot         *bool
+	workflowRunIds *[]string
+	workflowIds    *[]string
+	xApiVersion    *string
 }
 
-func (r ApiListRunsRequest) Name(name string) ApiListRunsRequest {
-	r.name = &name
-	return r
-}
-
-func (r ApiListRunsRequest) Status(status string) ApiListRunsRequest {
-	r.status = &status
-	return r
-}
-
-func (r ApiListRunsRequest) Limit(limit float32) ApiListRunsRequest {
+// Maximum number of runs to return.
+func (r ApiListRunsRequest) Limit(limit int32) ApiListRunsRequest {
 	r.limit = &limit
 	return r
 }
 
-func (r ApiListRunsRequest) Offset(offset float32) ApiListRunsRequest {
+// Number of runs to skip.
+func (r ApiListRunsRequest) Offset(offset int32) ApiListRunsRequest {
 	r.offset = &offset
 	return r
 }
 
-func (r ApiListRunsRequest) Interaction(interaction string) ApiListRunsRequest {
+// Interaction ids, or in-code interaction names, to filter by.
+func (r ApiListRunsRequest) Interaction(interaction []string) ApiListRunsRequest {
 	r.interaction = &interaction
 	return r
 }
 
-func (r ApiListRunsRequest) Environment(environment string) ApiListRunsRequest {
-	r.environment = &environment
-	return r
-}
-
-func (r ApiListRunsRequest) Model(model string) ApiListRunsRequest {
+// Model ids to filter by.
+func (r ApiListRunsRequest) Model(model []string) ApiListRunsRequest {
 	r.model = &model
 	return r
 }
 
-func (r ApiListRunsRequest) Tags(tags []string) ApiListRunsRequest {
-	r.tags = &tags
+// Environment ids to filter by.
+func (r ApiListRunsRequest) Environment(environment []string) ApiListRunsRequest {
+	r.environment = &environment
 	return r
 }
 
-// Tags to exclude. Runs carrying any of these tags are filtered out of the results, counts, and facet buckets. Combined with &#x60;tags&#x60; (which requires all of the listed tags) as an additional &#x60;$nin&#x60; constraint on the same field.
-func (r ApiListRunsRequest) ExcludeTags(excludeTags []string) ApiListRunsRequest {
-	r.excludeTags = &excludeTags
+// Run statuses to filter by.
+func (r ApiListRunsRequest) Status(status []string) ApiListRunsRequest {
+	r.status = &status
 	return r
 }
 
-func (r ApiListRunsRequest) Query(query string) ApiListRunsRequest {
-	r.query = &query
+// Run tags to filter by.
+func (r ApiListRunsRequest) Tag(tag []string) ApiListRunsRequest {
+	r.tag = &tag
 	return r
 }
 
-func (r ApiListRunsRequest) DefaultQueryPath(defaultQueryPath string) ApiListRunsRequest {
-	r.defaultQueryPath = &defaultQueryPath
-	return r
-}
-
+// Parent run ids to filter by. Mutually exclusive with &#x60;is_root&#x3D;true&#x60;.
 func (r ApiListRunsRequest) Parent(parent []string) ApiListRunsRequest {
 	r.parent = &parent
 	return r
 }
 
+// Return only runs that have no parent. Mutually exclusive with &#x60;parent&#x60;.
 func (r ApiListRunsRequest) IsRoot(isRoot bool) ApiListRunsRequest {
 	r.isRoot = &isRoot
 	return r
 }
 
-func (r ApiListRunsRequest) Object(object string) ApiListRunsRequest {
-	r.object = &object
-	return r
-}
-
-func (r ApiListRunsRequest) Start(start string) ApiListRunsRequest {
-	r.start = &start
-	return r
-}
-
-func (r ApiListRunsRequest) End(end string) ApiListRunsRequest {
-	r.end = &end
-	return r
-}
-
-func (r ApiListRunsRequest) FinishReason(finishReason string) ApiListRunsRequest {
-	r.finishReason = &finishReason
-	return r
-}
-
-func (r ApiListRunsRequest) CreatedBy(createdBy string) ApiListRunsRequest {
-	r.createdBy = &createdBy
-	return r
-}
-
+// Temporal workflow run ids.
 func (r ApiListRunsRequest) WorkflowRunIds(workflowRunIds []string) ApiListRunsRequest {
 	r.workflowRunIds = &workflowRunIds
 	return r
 }
 
+// Temporal workflow ids.
 func (r ApiListRunsRequest) WorkflowIds(workflowIds []string) ApiListRunsRequest {
 	r.workflowIds = &workflowIds
-	return r
-}
-
-func (r ApiListRunsRequest) RunIds(runIds []string) ApiListRunsRequest {
-	r.runIds = &runIds
-	return r
-}
-
-func (r ApiListRunsRequest) IsAgent(isAgent bool) ApiListRunsRequest {
-	r.isAgent = &isAgent
 	return r
 }
 
@@ -593,7 +537,7 @@ func (r ApiListRunsRequest) Execute() ([]ExecutionRunRef, *http.Response, error)
 /*
 ListRuns List runs
 
-Lists execution runs in the current project, sorted by most recently updated first. Supports pagination and query-string filters such as interaction, status, model, environment, tag, parent, finish reason, creator, and date range.
+Lists execution runs in the current project, sorted by most recently updated first. Supports pagination and query-string filters such as interaction, status, model, environment, tag, parent, and workflow.
 
 **Required permissions:** `run:read`
 
@@ -629,12 +573,6 @@ func (a *InteractionRunsAPIService) ListRunsExecute(r ApiListRunsRequest) ([]Exe
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
-	if r.name != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
-	}
-	if r.status != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "status", r.status, "form", "")
-	}
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "form", "")
 	}
@@ -642,41 +580,59 @@ func (a *InteractionRunsAPIService) ListRunsExecute(r ApiListRunsRequest) ([]Exe
 		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "form", "")
 	}
 	if r.interaction != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "interaction", r.interaction, "form", "")
-	}
-	if r.environment != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "environment", r.environment, "form", "")
+		t := *r.interaction
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "interaction", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "interaction", t, "form", "multi")
+		}
 	}
 	if r.model != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "model", r.model, "form", "")
-	}
-	if r.tags != nil {
-		t := *r.tags
+		t := *r.model
 		if reflect.TypeOf(t).Kind() == reflect.Slice {
 			s := reflect.ValueOf(t)
 			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "tags", s.Index(i).Interface(), "form", "multi")
+				parameterAddToHeaderOrQuery(localVarQueryParams, "model", s.Index(i).Interface(), "form", "multi")
 			}
 		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "tags", t, "form", "multi")
+			parameterAddToHeaderOrQuery(localVarQueryParams, "model", t, "form", "multi")
 		}
 	}
-	if r.excludeTags != nil {
-		t := *r.excludeTags
+	if r.environment != nil {
+		t := *r.environment
 		if reflect.TypeOf(t).Kind() == reflect.Slice {
 			s := reflect.ValueOf(t)
 			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "exclude_tags", s.Index(i).Interface(), "form", "multi")
+				parameterAddToHeaderOrQuery(localVarQueryParams, "environment", s.Index(i).Interface(), "form", "multi")
 			}
 		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "exclude_tags", t, "form", "multi")
+			parameterAddToHeaderOrQuery(localVarQueryParams, "environment", t, "form", "multi")
 		}
 	}
-	if r.query != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "query", r.query, "form", "")
+	if r.status != nil {
+		t := *r.status
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "status", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "status", t, "form", "multi")
+		}
 	}
-	if r.defaultQueryPath != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "default_query_path", r.defaultQueryPath, "form", "")
+	if r.tag != nil {
+		t := *r.tag
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "tag", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "tag", t, "form", "multi")
+		}
 	}
 	if r.parent != nil {
 		t := *r.parent
@@ -691,21 +647,6 @@ func (a *InteractionRunsAPIService) ListRunsExecute(r ApiListRunsRequest) ([]Exe
 	}
 	if r.isRoot != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "is_root", r.isRoot, "form", "")
-	}
-	if r.object != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "object", r.object, "form", "")
-	}
-	if r.start != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "start", r.start, "form", "")
-	}
-	if r.end != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "end", r.end, "form", "")
-	}
-	if r.finishReason != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "finish_reason", r.finishReason, "form", "")
-	}
-	if r.createdBy != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "created_by", r.createdBy, "form", "")
 	}
 	if r.workflowRunIds != nil {
 		t := *r.workflowRunIds
@@ -728,20 +669,6 @@ func (a *InteractionRunsAPIService) ListRunsExecute(r ApiListRunsRequest) ([]Exe
 		} else {
 			parameterAddToHeaderOrQuery(localVarQueryParams, "workflow_ids", t, "form", "multi")
 		}
-	}
-	if r.runIds != nil {
-		t := *r.runIds
-		if reflect.TypeOf(t).Kind() == reflect.Slice {
-			s := reflect.ValueOf(t)
-			for i := 0; i < s.Len(); i++ {
-				parameterAddToHeaderOrQuery(localVarQueryParams, "run_ids", s.Index(i).Interface(), "form", "multi")
-			}
-		} else {
-			parameterAddToHeaderOrQuery(localVarQueryParams, "run_ids", t, "form", "multi")
-		}
-	}
-	if r.isAgent != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "is_agent", r.isAgent, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1103,15 +1030,15 @@ func (a *InteractionRunsAPIService) StreamRunExecute(r ApiStreamRunRequest) (str
 }
 
 type ApiUpdateRunRequest struct {
-	ctx                    context.Context
-	ApiService             *InteractionRunsAPIService
-	runId                  string
-	partialExecutionRunRef *PartialExecutionRunRef
-	xApiVersion            *string
+	ctx                       context.Context
+	ApiService                *InteractionRunsAPIService
+	runId                     string
+	updateExecutionRunPayload *UpdateExecutionRunPayload
+	xApiVersion               *string
 }
 
-func (r ApiUpdateRunRequest) PartialExecutionRunRef(partialExecutionRunRef PartialExecutionRunRef) ApiUpdateRunRequest {
-	r.partialExecutionRunRef = &partialExecutionRunRef
+func (r ApiUpdateRunRequest) UpdateExecutionRunPayload(updateExecutionRunPayload UpdateExecutionRunPayload) ApiUpdateRunRequest {
+	r.updateExecutionRunPayload = &updateExecutionRunPayload
 	return r
 }
 
@@ -1166,8 +1093,8 @@ func (a *InteractionRunsAPIService) UpdateRunExecute(r ApiUpdateRunRequest) (*Ex
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.partialExecutionRunRef == nil {
-		return localVarReturnValue, nil, reportError("partialExecutionRunRef is required and must be specified")
+	if r.updateExecutionRunPayload == nil {
+		return localVarReturnValue, nil, reportError("updateExecutionRunPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -1191,7 +1118,7 @@ func (a *InteractionRunsAPIService) UpdateRunExecute(r ApiUpdateRunRequest) (*Ex
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.partialExecutionRunRef
+	localVarPostBody = r.updateExecutionRunPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

@@ -19,7 +19,8 @@ var _ MappedNullable = &RunMigrationPayload{}
 
 // RunMigrationPayload struct for RunMigrationPayload
 type RunMigrationPayload struct {
-	Force *bool `json:"force,omitempty"`
+	Force  *bool                  `json:"force,omitempty"`
+	Params map[string]interface{} `json:"params,omitempty"`
 }
 
 // NewRunMigrationPayload instantiates a new RunMigrationPayload object
@@ -71,6 +72,38 @@ func (o *RunMigrationPayload) SetForce(v bool) {
 	o.Force = &v
 }
 
+// GetParams returns the Params field value if set, zero value otherwise.
+func (o *RunMigrationPayload) GetParams() map[string]interface{} {
+	if o == nil || IsNil(o.Params) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.Params
+}
+
+// GetParamsOk returns a tuple with the Params field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RunMigrationPayload) GetParamsOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.Params) {
+		return map[string]interface{}{}, false
+	}
+	return o.Params, true
+}
+
+// HasParams returns a boolean if a field has been set.
+func (o *RunMigrationPayload) HasParams() bool {
+	if o != nil && !IsNil(o.Params) {
+		return true
+	}
+
+	return false
+}
+
+// SetParams gets a reference to the given map[string]interface{} and assigns it to the Params field.
+func (o *RunMigrationPayload) SetParams(v map[string]interface{}) {
+	o.Params = v
+}
+
 func (o RunMigrationPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -83,6 +116,9 @@ func (o RunMigrationPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Force) {
 		toSerialize["force"] = o.Force
+	}
+	if !IsNil(o.Params) {
+		toSerialize["params"] = o.Params
 	}
 	return toSerialize, nil
 }

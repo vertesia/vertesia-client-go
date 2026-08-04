@@ -1106,11 +1106,10 @@ func (a *EnvironmentsAPIService) ListEnvironmentModelsExecute(r ApiListEnvironme
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.text == nil {
-		return localVarReturnValue, nil, reportError("text is required and must be specified")
-	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "text", r.text, "form", "")
+	if r.text != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "text", r.text, "form", "")
+	}
 	if r.type_ != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "type", r.type_, "form", "")
 	}

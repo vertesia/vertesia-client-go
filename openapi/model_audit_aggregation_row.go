@@ -20,8 +20,8 @@ var _ MappedNullable = &AuditAggregationRow{}
 
 // AuditAggregationRow struct for AuditAggregationRow
 type AuditAggregationRow struct {
-	Dimensions PartialRecordAuditAggregationDimensionStringNull `json:"dimensions"`
-	Metrics    map[string]float32                               `json:"metrics"`
+	Dimensions AuditAggregationDimensionMap `json:"dimensions"`
+	Metrics    map[string]float32           `json:"metrics"`
 }
 
 type _AuditAggregationRow AuditAggregationRow
@@ -30,7 +30,7 @@ type _AuditAggregationRow AuditAggregationRow
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAuditAggregationRow(dimensions PartialRecordAuditAggregationDimensionStringNull, metrics map[string]float32) *AuditAggregationRow {
+func NewAuditAggregationRow(dimensions AuditAggregationDimensionMap, metrics map[string]float32) *AuditAggregationRow {
 	this := AuditAggregationRow{}
 	this.Dimensions = dimensions
 	this.Metrics = metrics
@@ -46,9 +46,9 @@ func NewAuditAggregationRowWithDefaults() *AuditAggregationRow {
 }
 
 // GetDimensions returns the Dimensions field value
-func (o *AuditAggregationRow) GetDimensions() PartialRecordAuditAggregationDimensionStringNull {
+func (o *AuditAggregationRow) GetDimensions() AuditAggregationDimensionMap {
 	if o == nil {
-		var ret PartialRecordAuditAggregationDimensionStringNull
+		var ret AuditAggregationDimensionMap
 		return ret
 	}
 
@@ -57,7 +57,7 @@ func (o *AuditAggregationRow) GetDimensions() PartialRecordAuditAggregationDimen
 
 // GetDimensionsOk returns a tuple with the Dimensions field value
 // and a boolean to check if the value has been set.
-func (o *AuditAggregationRow) GetDimensionsOk() (*PartialRecordAuditAggregationDimensionStringNull, bool) {
+func (o *AuditAggregationRow) GetDimensionsOk() (*AuditAggregationDimensionMap, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -65,7 +65,7 @@ func (o *AuditAggregationRow) GetDimensionsOk() (*PartialRecordAuditAggregationD
 }
 
 // SetDimensions sets field value
-func (o *AuditAggregationRow) SetDimensions(v PartialRecordAuditAggregationDimensionStringNull) {
+func (o *AuditAggregationRow) SetDimensions(v AuditAggregationDimensionMap) {
 	o.Dimensions = v
 }
 

@@ -20,9 +20,9 @@ var _ MappedNullable = &AlterTableOperationOneOf3{}
 
 // AlterTableOperationOneOf3 struct for AlterTableOperationOneOf3
 type AlterTableOperationOneOf3 struct {
-	Op      string                    `json:"op"`
-	Column  string                    `json:"column"`
-	Updates PartialOmitDataColumnName `json:"updates"`
+	Op      string           `json:"op"`
+	Column  string           `json:"column"`
+	Updates DataColumnUpdate `json:"updates"`
 }
 
 type _AlterTableOperationOneOf3 AlterTableOperationOneOf3
@@ -31,7 +31,7 @@ type _AlterTableOperationOneOf3 AlterTableOperationOneOf3
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAlterTableOperationOneOf3(op string, column string, updates PartialOmitDataColumnName) *AlterTableOperationOneOf3 {
+func NewAlterTableOperationOneOf3(op string, column string, updates DataColumnUpdate) *AlterTableOperationOneOf3 {
 	this := AlterTableOperationOneOf3{}
 	this.Op = op
 	this.Column = column
@@ -96,9 +96,9 @@ func (o *AlterTableOperationOneOf3) SetColumn(v string) {
 }
 
 // GetUpdates returns the Updates field value
-func (o *AlterTableOperationOneOf3) GetUpdates() PartialOmitDataColumnName {
+func (o *AlterTableOperationOneOf3) GetUpdates() DataColumnUpdate {
 	if o == nil {
-		var ret PartialOmitDataColumnName
+		var ret DataColumnUpdate
 		return ret
 	}
 
@@ -107,7 +107,7 @@ func (o *AlterTableOperationOneOf3) GetUpdates() PartialOmitDataColumnName {
 
 // GetUpdatesOk returns a tuple with the Updates field value
 // and a boolean to check if the value has been set.
-func (o *AlterTableOperationOneOf3) GetUpdatesOk() (*PartialOmitDataColumnName, bool) {
+func (o *AlterTableOperationOneOf3) GetUpdatesOk() (*DataColumnUpdate, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -115,7 +115,7 @@ func (o *AlterTableOperationOneOf3) GetUpdatesOk() (*PartialOmitDataColumnName, 
 }
 
 // SetUpdates sets field value
-func (o *AlterTableOperationOneOf3) SetUpdates(v PartialOmitDataColumnName) {
+func (o *AlterTableOperationOneOf3) SetUpdates(v DataColumnUpdate) {
 	o.Updates = v
 }
 

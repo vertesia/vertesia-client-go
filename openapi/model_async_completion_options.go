@@ -26,17 +26,17 @@ type AsyncCompletionOptions struct {
 	Stream *bool `json:"stream,omitempty"`
 	// Streaming-specific options (required if stream=true)
 	Streaming *StreamingOptions `json:"streaming,omitempty"`
-	// Temporal task token for async activity completion (base64url encoded). When provided, Studio will complete the activity after execution finishes, allowing the worker to release the activity slot immediately.
+	// Temporal task token for async activity completion (base64url encoded). When provided, the platform completes the activity after execution finishes, allowing the worker to release the activity slot immediately.
 	TaskToken *string `json:"task_token,omitempty"`
 	// Activity ID for idempotency metadata when storing conversation. Required when task_token is provided.
 	ActivityId *string `json:"activity_id,omitempty"`
-	// Current conversation state to merge with execution result. Studio will store the conversation and complete the activity with merged state. Required when task_token is provided.
+	// Current conversation state to merge with execution result. The platform stores the conversation and completes the activity with merged state. Required when task_token is provided.
 	CurrentState *ConversationState `json:"current_state,omitempty"`
-	// Interval in milliseconds for sending heartbeats to Temporal during streaming. When provided, Studio will send periodic heartbeats to keep the activity alive. Recommended: 10000 (10 seconds). Activity heartbeat timeout should be ~3x this value.
+	// Interval in milliseconds for sending heartbeats to Temporal during streaming. When provided, the platform sends periodic heartbeats to keep the activity alive. Recommended: 10000 (10 seconds). Activity heartbeat timeout should be ~3x this value.
 	HeartbeatIntervalMs *float32 `json:"heartbeat_interval_ms,omitempty"`
-	// Telemetry context for sending LlmCallEvent after streaming completes. Studio will use this to send token usage telemetry since the activity exits before the response is available in async completion mode.
+	// Telemetry context for sending LlmCallEvent after streaming completes. The platform uses this to send token usage telemetry since the activity exits before the response is available in async completion mode.
 	Telemetry *StreamingTelemetryContext `json:"telemetry,omitempty"`
-	// Storage options for inference result. When provided, Studio will store the result to the specified path after inference completes (before completing the Temporal activity).
+	// Storage options for inference result. When provided, the platform stores the result at the specified path after inference completes (before completing the Temporal activity).
 	ResultStorage *ResultStorageOptions `json:"result_storage,omitempty"`
 	// Controls the value used to complete the Temporal activity. Defaults to `conversation_state` for agent resume/continuation calls. Use `text` for one-shot helper calls, such as checkpoint summaries, that need the model's text result instead of merged conversation state.
 	CompletionMode *AsyncCompletionMode `json:"completion_mode,omitempty"`

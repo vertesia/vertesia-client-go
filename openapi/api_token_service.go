@@ -126,7 +126,7 @@ func (a *TokenServiceAPIService) IssueTokenExecute(r ApiIssueTokenRequest) (*Iss
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 503 {
-			var v ErrorStringMessageString
+			var v IssueTokenUnavailableResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()

@@ -319,14 +319,14 @@ func (a *AgentRunsAPIService) AnswerProcessTaskExecute(r ApiAnswerProcessTaskReq
 }
 
 type ApiCreateAgentRunRequest struct {
-	ctx                   context.Context
-	ApiService            *AgentRunsAPIService
-	createAgentRunPayload *CreateAgentRunPayload
-	xApiVersion           *string
+	ctx              context.Context
+	ApiService       *AgentRunsAPIService
+	createRunPayload *CreateRunPayload
+	xApiVersion      *string
 }
 
-func (r ApiCreateAgentRunRequest) CreateAgentRunPayload(createAgentRunPayload CreateAgentRunPayload) ApiCreateAgentRunRequest {
-	r.createAgentRunPayload = &createAgentRunPayload
+func (r ApiCreateAgentRunRequest) CreateRunPayload(createRunPayload CreateRunPayload) ApiCreateAgentRunRequest {
+	r.createRunPayload = &createRunPayload
 	return r
 }
 
@@ -378,8 +378,8 @@ func (a *AgentRunsAPIService) CreateAgentRunExecute(r ApiCreateAgentRunRequest) 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.createAgentRunPayload == nil {
-		return localVarReturnValue, nil, reportError("createAgentRunPayload is required and must be specified")
+	if r.createRunPayload == nil {
+		return localVarReturnValue, nil, reportError("createRunPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -403,7 +403,7 @@ func (a *AgentRunsAPIService) CreateAgentRunExecute(r ApiCreateAgentRunRequest) 
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.createAgentRunPayload
+	localVarPostBody = r.createRunPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2783,21 +2783,21 @@ func (a *AgentRunsAPIService) QueryAgentRunExecute(r ApiQueryAgentRunRequest) (i
 }
 
 type ApiRestartAgentRunRequest struct {
-	ctx                  context.Context
-	ApiService           *AgentRunsAPIService
-	agentRunId           string
-	ndRestartCountNumber *NdRestartCountNumber
-	xApiVersion          *string
-}
-
-func (r ApiRestartAgentRunRequest) NdRestartCountNumber(ndRestartCountNumber NdRestartCountNumber) ApiRestartAgentRunRequest {
-	r.ndRestartCountNumber = &ndRestartCountNumber
-	return r
+	ctx                    context.Context
+	ApiService             *AgentRunsAPIService
+	agentRunId             string
+	xApiVersion            *string
+	restartAgentRunPayload *RestartAgentRunPayload
 }
 
 // Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
 func (r ApiRestartAgentRunRequest) XApiVersion(xApiVersion string) ApiRestartAgentRunRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiRestartAgentRunRequest) RestartAgentRunPayload(restartAgentRunPayload RestartAgentRunPayload) ApiRestartAgentRunRequest {
+	r.restartAgentRunPayload = &restartAgentRunPayload
 	return r
 }
 
@@ -2846,9 +2846,6 @@ func (a *AgentRunsAPIService) RestartAgentRunExecute(r ApiRestartAgentRunRequest
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.ndRestartCountNumber == nil {
-		return localVarReturnValue, nil, reportError("ndRestartCountNumber is required and must be specified")
-	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -2871,7 +2868,7 @@ func (a *AgentRunsAPIService) RestartAgentRunExecute(r ApiRestartAgentRunRequest
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.ndRestartCountNumber
+	localVarPostBody = r.restartAgentRunPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

@@ -19,13 +19,13 @@ var _ MappedNullable = &UpdateSecretRequest{}
 
 // UpdateSecretRequest struct for UpdateSecretRequest
 type UpdateSecretRequest struct {
-	Kind                *SecretKind                       `json:"kind,omitempty"`
-	Metadata            *PartialWebsiteCredentialMetadata `json:"metadata,omitempty"`
-	Secret              *WebsiteCredentialSecretInput     `json:"secret,omitempty"`
-	ClearUsernameSecret *bool                             `json:"clear_username_secret,omitempty"`
-	ClearPassword       *bool                             `json:"clear_password,omitempty"`
-	ClearTotp           *bool                             `json:"clear_totp,omitempty"`
-	ClearOauth          *bool                             `json:"clear_oauth,omitempty"`
+	Kind                *SecretKind                      `json:"kind,omitempty"`
+	Metadata            *WebsiteCredentialMetadataUpdate `json:"metadata,omitempty"`
+	Secret              *WebsiteCredentialSecretInput    `json:"secret,omitempty"`
+	ClearUsernameSecret *bool                            `json:"clear_username_secret,omitempty"`
+	ClearPassword       *bool                            `json:"clear_password,omitempty"`
+	ClearTotp           *bool                            `json:"clear_totp,omitempty"`
+	ClearOauth          *bool                            `json:"clear_oauth,omitempty"`
 }
 
 // NewUpdateSecretRequest instantiates a new UpdateSecretRequest object
@@ -78,9 +78,9 @@ func (o *UpdateSecretRequest) SetKind(v SecretKind) {
 }
 
 // GetMetadata returns the Metadata field value if set, zero value otherwise.
-func (o *UpdateSecretRequest) GetMetadata() PartialWebsiteCredentialMetadata {
+func (o *UpdateSecretRequest) GetMetadata() WebsiteCredentialMetadataUpdate {
 	if o == nil || IsNil(o.Metadata) {
-		var ret PartialWebsiteCredentialMetadata
+		var ret WebsiteCredentialMetadataUpdate
 		return ret
 	}
 	return *o.Metadata
@@ -88,7 +88,7 @@ func (o *UpdateSecretRequest) GetMetadata() PartialWebsiteCredentialMetadata {
 
 // GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *UpdateSecretRequest) GetMetadataOk() (*PartialWebsiteCredentialMetadata, bool) {
+func (o *UpdateSecretRequest) GetMetadataOk() (*WebsiteCredentialMetadataUpdate, bool) {
 	if o == nil || IsNil(o.Metadata) {
 		return nil, false
 	}
@@ -104,8 +104,8 @@ func (o *UpdateSecretRequest) HasMetadata() bool {
 	return false
 }
 
-// SetMetadata gets a reference to the given PartialWebsiteCredentialMetadata and assigns it to the Metadata field.
-func (o *UpdateSecretRequest) SetMetadata(v PartialWebsiteCredentialMetadata) {
+// SetMetadata gets a reference to the given WebsiteCredentialMetadataUpdate and assigns it to the Metadata field.
+func (o *UpdateSecretRequest) SetMetadata(v WebsiteCredentialMetadataUpdate) {
 	o.Metadata = &v
 }
 

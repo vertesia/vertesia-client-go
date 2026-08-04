@@ -19,13 +19,20 @@ var _ MappedNullable = &PromptSearchQuery{}
 
 // PromptSearchQuery struct for PromptSearchQuery
 type PromptSearchQuery struct {
-	Name              *string  `json:"name,omitempty"`
-	Status            []string `json:"status,omitempty"`
-	Limit             *float32 `json:"limit,omitempty"`
-	Offset            *float32 `json:"offset,omitempty"`
-	Role              *string  `json:"role,omitempty"`
-	Tags              []string `json:"tags,omitempty"`
-	MatchInteractions *bool    `json:"matchInteractions,omitempty"`
+	// Case-insensitive substring match on the prompt name.
+	Name *string `json:"name,omitempty"`
+	// Accepted and ignored. `GET /prompts` and `POST /prompts/facets` list drafts only, and always have.
+	Status []string `json:"status,omitempty"`
+	// Maximum number of prompts to return. Defaults to 100.
+	Limit *float32 `json:"limit,omitempty"`
+	// Number of prompts to skip.
+	Offset *float32 `json:"offset,omitempty"`
+	// Exact match on the prompt role.
+	Role *string `json:"role,omitempty"`
+	// Match prompts carrying any of these tags.
+	Tags []string `json:"tags,omitempty"`
+	// Accepted and ignored. It used to attach the interactions referencing each prompt, in a shape no response component ever declared; nothing consumed it.
+	MatchInteractions *bool `json:"matchInteractions,omitempty"`
 }
 
 // NewPromptSearchQuery instantiates a new PromptSearchQuery object

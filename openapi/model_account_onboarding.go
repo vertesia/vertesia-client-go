@@ -21,8 +21,8 @@ var _ MappedNullable = &AccountOnboarding{}
 
 // AccountOnboarding struct for AccountOnboarding
 type AccountOnboarding struct {
-	Completed   bool      `json:"completed"`
-	CompletedAt time.Time `json:"completed_at"`
+	Completed   bool       `json:"completed"`
+	CompletedAt *time.Time `json:"completed_at,omitempty"`
 }
 
 type _AccountOnboarding AccountOnboarding
@@ -31,10 +31,9 @@ type _AccountOnboarding AccountOnboarding
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAccountOnboarding(completed bool, completedAt time.Time) *AccountOnboarding {
+func NewAccountOnboarding(completed bool) *AccountOnboarding {
 	this := AccountOnboarding{}
 	this.Completed = completed
-	this.CompletedAt = completedAt
 	return &this
 }
 
@@ -70,28 +69,36 @@ func (o *AccountOnboarding) SetCompleted(v bool) {
 	o.Completed = v
 }
 
-// GetCompletedAt returns the CompletedAt field value
+// GetCompletedAt returns the CompletedAt field value if set, zero value otherwise.
 func (o *AccountOnboarding) GetCompletedAt() time.Time {
-	if o == nil {
+	if o == nil || IsNil(o.CompletedAt) {
 		var ret time.Time
 		return ret
 	}
-
-	return o.CompletedAt
+	return *o.CompletedAt
 }
 
-// GetCompletedAtOk returns a tuple with the CompletedAt field value
+// GetCompletedAtOk returns a tuple with the CompletedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AccountOnboarding) GetCompletedAtOk() (*time.Time, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.CompletedAt) {
 		return nil, false
 	}
-	return &o.CompletedAt, true
+	return o.CompletedAt, true
 }
 
-// SetCompletedAt sets field value
+// HasCompletedAt returns a boolean if a field has been set.
+func (o *AccountOnboarding) HasCompletedAt() bool {
+	if o != nil && !IsNil(o.CompletedAt) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompletedAt gets a reference to the given time.Time and assigns it to the CompletedAt field.
 func (o *AccountOnboarding) SetCompletedAt(v time.Time) {
-	o.CompletedAt = v
+	o.CompletedAt = &v
 }
 
 func (o AccountOnboarding) MarshalJSON() ([]byte, error) {
@@ -105,7 +112,9 @@ func (o AccountOnboarding) MarshalJSON() ([]byte, error) {
 func (o AccountOnboarding) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["completed"] = o.Completed
-	toSerialize["completed_at"] = o.CompletedAt
+	if !IsNil(o.CompletedAt) {
+		toSerialize["completed_at"] = o.CompletedAt
+	}
 	return toSerialize, nil
 }
 
@@ -115,7 +124,6 @@ func (o *AccountOnboarding) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"completed",
-		"completed_at",
 	}
 
 	allProperties := make(map[string]interface{})

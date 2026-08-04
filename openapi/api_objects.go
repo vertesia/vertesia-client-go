@@ -3474,18 +3474,18 @@ type ApiStartObjectDocumentGroundedExtractionRequest struct {
 	ctx                       context.Context
 	ApiService                *ObjectsAPIService
 	objectId                  string
-	groundedExtractionRequest *GroundedExtractionRequest
 	xApiVersion               *string
-}
-
-func (r ApiStartObjectDocumentGroundedExtractionRequest) GroundedExtractionRequest(groundedExtractionRequest GroundedExtractionRequest) ApiStartObjectDocumentGroundedExtractionRequest {
-	r.groundedExtractionRequest = &groundedExtractionRequest
-	return r
+	groundedExtractionRequest *GroundedExtractionRequest
 }
 
 // Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
 func (r ApiStartObjectDocumentGroundedExtractionRequest) XApiVersion(xApiVersion string) ApiStartObjectDocumentGroundedExtractionRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiStartObjectDocumentGroundedExtractionRequest) GroundedExtractionRequest(groundedExtractionRequest GroundedExtractionRequest) ApiStartObjectDocumentGroundedExtractionRequest {
+	r.groundedExtractionRequest = &groundedExtractionRequest
 	return r
 }
 
@@ -3534,9 +3534,6 @@ func (a *ObjectsAPIService) StartObjectDocumentGroundedExtractionExecute(r ApiSt
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.groundedExtractionRequest == nil {
-		return localVarReturnValue, nil, reportError("groundedExtractionRequest is required and must be specified")
-	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -3622,18 +3619,18 @@ type ApiStartObjectGroundedExtractionAssistantRequest struct {
 	ctx                       context.Context
 	ApiService                *ObjectsAPIService
 	objectId                  string
-	groundedExtractionRequest *GroundedExtractionRequest
 	xApiVersion               *string
-}
-
-func (r ApiStartObjectGroundedExtractionAssistantRequest) GroundedExtractionRequest(groundedExtractionRequest GroundedExtractionRequest) ApiStartObjectGroundedExtractionAssistantRequest {
-	r.groundedExtractionRequest = &groundedExtractionRequest
-	return r
+	groundedExtractionRequest *GroundedExtractionRequest
 }
 
 // Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
 func (r ApiStartObjectGroundedExtractionAssistantRequest) XApiVersion(xApiVersion string) ApiStartObjectGroundedExtractionAssistantRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiStartObjectGroundedExtractionAssistantRequest) GroundedExtractionRequest(groundedExtractionRequest GroundedExtractionRequest) ApiStartObjectGroundedExtractionAssistantRequest {
+	r.groundedExtractionRequest = &groundedExtractionRequest
 	return r
 }
 
@@ -3682,9 +3679,6 @@ func (a *ObjectsAPIService) StartObjectGroundedExtractionAssistantExecute(r ApiS
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.groundedExtractionRequest == nil {
-		return localVarReturnValue, nil, reportError("groundedExtractionRequest is required and must be specified")
-	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -3767,23 +3761,23 @@ func (a *ObjectsAPIService) StartObjectGroundedExtractionAssistantExecute(r ApiS
 }
 
 type ApiUpdateObjectRequest struct {
-	ctx                               context.Context
-	ApiService                        *ObjectsAPIService
-	objectId                          string
-	partialCreateContentObjectPayload *PartialCreateContentObjectPayload
-	createRevision                    *bool
-	revisionLabel                     *string
-	processingPriority                *string
-	ifMatch                           *string
-	xCreateRevision                   *bool
-	xRevisionLabel                    *string
-	xProcessingPriority               *ContentObjectProcessingPriority
-	xSuppressWorkflows                *bool
-	xApiVersion                       *string
+	ctx                        context.Context
+	ApiService                 *ObjectsAPIService
+	objectId                   string
+	updateContentObjectPayload *UpdateContentObjectPayload
+	createRevision             *bool
+	revisionLabel              *string
+	processingPriority         *string
+	ifMatch                    *string
+	xCreateRevision            *bool
+	xRevisionLabel             *string
+	xProcessingPriority        *ContentObjectProcessingPriority
+	xSuppressWorkflows         *bool
+	xApiVersion                *string
 }
 
-func (r ApiUpdateObjectRequest) PartialCreateContentObjectPayload(partialCreateContentObjectPayload PartialCreateContentObjectPayload) ApiUpdateObjectRequest {
-	r.partialCreateContentObjectPayload = &partialCreateContentObjectPayload
+func (r ApiUpdateObjectRequest) UpdateContentObjectPayload(updateContentObjectPayload UpdateContentObjectPayload) ApiUpdateObjectRequest {
+	r.updateContentObjectPayload = &updateContentObjectPayload
 	return r
 }
 
@@ -3822,6 +3816,7 @@ func (r ApiUpdateObjectRequest) XProcessingPriority(xProcessingPriority ContentO
 	return r
 }
 
+// Deprecated: Events are now always emitted. This suppresses the Temporal-backed delivery targets (workflow, agent, and process) — webhook deliveries still fire.
 func (r ApiUpdateObjectRequest) XSuppressWorkflows(xSuppressWorkflows bool) ApiUpdateObjectRequest {
 	r.xSuppressWorkflows = &xSuppressWorkflows
 	return r
@@ -3878,8 +3873,8 @@ func (a *ObjectsAPIService) UpdateObjectExecute(r ApiUpdateObjectRequest) (*Cont
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.partialCreateContentObjectPayload == nil {
-		return localVarReturnValue, nil, reportError("partialCreateContentObjectPayload is required and must be specified")
+	if r.updateContentObjectPayload == nil {
+		return localVarReturnValue, nil, reportError("updateContentObjectPayload is required and must be specified")
 	}
 
 	if r.createRevision != nil {
@@ -3927,7 +3922,7 @@ func (a *ObjectsAPIService) UpdateObjectExecute(r ApiUpdateObjectRequest) (*Cont
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.partialCreateContentObjectPayload
+	localVarPostBody = r.updateContentObjectPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

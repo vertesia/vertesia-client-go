@@ -226,7 +226,7 @@ func (r ApiListAuditTrailEventsRequest) HasEffectivePrincipal(hasEffectivePrinci
 	return r
 }
 
-// Filter by project ID
+// Filter by project ID. Honoured only for account-scoped principals; a project-scoped principal always reads its own project.
 func (r ApiListAuditTrailEventsRequest) ProjectId(projectId string) ApiListAuditTrailEventsRequest {
 	r.projectId = &projectId
 	return r

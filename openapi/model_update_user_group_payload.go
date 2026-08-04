@@ -20,13 +20,18 @@ var _ MappedNullable = &UpdateUserGroupPayload{}
 
 // UpdateUserGroupPayload struct for UpdateUserGroupPayload
 type UpdateUserGroupPayload struct {
-	Name            string                 `json:"name"`
-	Description     *string                `json:"description,omitempty"`
-	Tags            []string               `json:"tags,omitempty"`
-	Properties      map[string]interface{} `json:"properties,omitempty"`
-	Clearance       *float32               `json:"clearance,omitempty"`
-	Compartments    []string               `json:"compartments,omitempty"`
-	AllowedProjects []string               `json:"allowed_projects,omitempty"`
+	Name        string   `json:"name"`
+	Description *string  `json:"description,omitempty"`
+	Tags        []string `json:"tags,omitempty"`
+	// Custom properties for dynamic permission matching
+	Properties map[string]interface{} `json:"properties,omitempty"`
+	// BLP clearance level — merged with user clearance using max()
+	Clearance *float32 `json:"clearance,omitempty"`
+	// Compartments — merged with user compartments using array union
+	Compartments []string `json:"compartments,omitempty"`
+	// Projects this group is allowed to be used in. When empty or absent the group is org-wide (usable in any project). When set, the group may only be used to grant permissions in the listed projects.
+	AllowedProjects      []string `json:"allowed_projects,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UpdateUserGroupPayload UpdateUserGroupPayload
@@ -294,6 +299,11 @@ func (o UpdateUserGroupPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.AllowedProjects) {
 		toSerialize["allowed_projects"] = o.AllowedProjects
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -328,6 +338,19 @@ func (o *UpdateUserGroupPayload) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = UpdateUserGroupPayload(varUpdateUserGroupPayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "properties")
+		delete(additionalProperties, "clearance")
+		delete(additionalProperties, "compartments")
+		delete(additionalProperties, "allowed_projects")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

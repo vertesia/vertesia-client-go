@@ -452,18 +452,18 @@ type ApiForkPromptRequest struct {
 	ctx                       context.Context
 	ApiService                *PromptTemplatesAPIService
 	ptId                      string
-	promptTemplateForkPayload *PromptTemplateForkPayload
 	xApiVersion               *string
-}
-
-func (r ApiForkPromptRequest) PromptTemplateForkPayload(promptTemplateForkPayload PromptTemplateForkPayload) ApiForkPromptRequest {
-	r.promptTemplateForkPayload = &promptTemplateForkPayload
-	return r
+	promptTemplateForkPayload *PromptTemplateForkPayload
 }
 
 // Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
 func (r ApiForkPromptRequest) XApiVersion(xApiVersion string) ApiForkPromptRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiForkPromptRequest) PromptTemplateForkPayload(promptTemplateForkPayload PromptTemplateForkPayload) ApiForkPromptRequest {
+	r.promptTemplateForkPayload = &promptTemplateForkPayload
 	return r
 }
 
@@ -512,9 +512,6 @@ func (a *PromptTemplatesAPIService) ForkPromptExecute(r ApiForkPromptRequest) (*
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.promptTemplateForkPayload == nil {
-		return localVarReturnValue, nil, reportError("promptTemplateForkPayload is required and must be specified")
-	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1153,36 +1150,43 @@ type ApiListPromptsRequest struct {
 	xApiVersion       *string
 }
 
+// Case-insensitive substring match on the prompt name.
 func (r ApiListPromptsRequest) Name(name string) ApiListPromptsRequest {
 	r.name = &name
 	return r
 }
 
+// Accepted and ignored. &#x60;GET /prompts&#x60; and &#x60;POST /prompts/facets&#x60; list drafts only, and always have.
 func (r ApiListPromptsRequest) Status(status []string) ApiListPromptsRequest {
 	r.status = &status
 	return r
 }
 
+// Maximum number of prompts to return. Defaults to 100.
 func (r ApiListPromptsRequest) Limit(limit float32) ApiListPromptsRequest {
 	r.limit = &limit
 	return r
 }
 
+// Number of prompts to skip.
 func (r ApiListPromptsRequest) Offset(offset float32) ApiListPromptsRequest {
 	r.offset = &offset
 	return r
 }
 
+// Exact match on the prompt role.
 func (r ApiListPromptsRequest) Role(role string) ApiListPromptsRequest {
 	r.role = &role
 	return r
 }
 
+// Match prompts carrying any of these tags.
 func (r ApiListPromptsRequest) Tags(tags []string) ApiListPromptsRequest {
 	r.tags = &tags
 	return r
 }
 
+// Accepted and ignored. It used to attach the interactions referencing each prompt, in a shape no response component ever declared; nothing consumed it.
 func (r ApiListPromptsRequest) MatchInteractions(matchInteractions bool) ApiListPromptsRequest {
 	r.matchInteractions = &matchInteractions
 	return r

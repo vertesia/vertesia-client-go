@@ -25,7 +25,7 @@ type ContentTypeIntakePolicyLocate struct {
 	// Pages per contact sheet: 8 = bigger tiles (headings readable). Default 16.
 	Detail *float32 `json:"detail,omitempty"`
 	// Only run when the page count is at least this. Default 8.
-	MinPages *float32 `json:"min_pages,omitempty"`
+	MinPages *int32 `json:"min_pages,omitempty"`
 }
 
 type _ContentTypeIntakePolicyLocate ContentTypeIntakePolicyLocate
@@ -105,9 +105,9 @@ func (o *ContentTypeIntakePolicyLocate) SetDetail(v float32) {
 }
 
 // GetMinPages returns the MinPages field value if set, zero value otherwise.
-func (o *ContentTypeIntakePolicyLocate) GetMinPages() float32 {
+func (o *ContentTypeIntakePolicyLocate) GetMinPages() int32 {
 	if o == nil || IsNil(o.MinPages) {
-		var ret float32
+		var ret int32
 		return ret
 	}
 	return *o.MinPages
@@ -115,7 +115,7 @@ func (o *ContentTypeIntakePolicyLocate) GetMinPages() float32 {
 
 // GetMinPagesOk returns a tuple with the MinPages field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ContentTypeIntakePolicyLocate) GetMinPagesOk() (*float32, bool) {
+func (o *ContentTypeIntakePolicyLocate) GetMinPagesOk() (*int32, bool) {
 	if o == nil || IsNil(o.MinPages) {
 		return nil, false
 	}
@@ -131,8 +131,8 @@ func (o *ContentTypeIntakePolicyLocate) HasMinPages() bool {
 	return false
 }
 
-// SetMinPages gets a reference to the given float32 and assigns it to the MinPages field.
-func (o *ContentTypeIntakePolicyLocate) SetMinPages(v float32) {
+// SetMinPages gets a reference to the given int32 and assigns it to the MinPages field.
+func (o *ContentTypeIntakePolicyLocate) SetMinPages(v int32) {
 	o.MinPages = &v
 }
 

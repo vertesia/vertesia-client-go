@@ -21,13 +21,13 @@ var _ MappedNullable = &AsyncConversationExecutionPayload{}
 // AsyncConversationExecutionPayload struct for AsyncConversationExecutionPayload
 type AsyncConversationExecutionPayload struct {
 	// The interaction name and suffixed by an optional tag or version separated from the name using a @ character If no version/tag part is specified then the latest version is used. Example: ReviewContract, ReviewContract@draft, ReviewContract@1, ReviewContract@some-tag
-	Interaction  string                                       `json:"interaction"`
-	Data         interface{}                                  `json:"data,omitempty"`
-	Config       *InteractionExecutionConfiguration           `json:"config,omitempty"`
-	ResultSchema NullableInteractionUpdatePayloadResultSchema `json:"result_schema,omitempty"`
-	DoValidate   *bool                                        `json:"do_validate,omitempty"`
-	Tags         []string                                     `json:"tags,omitempty"`
-	Conversation interface{}                                  `json:"conversation,omitempty"`
+	Interaction  string                                                `json:"interaction"`
+	Data         interface{}                                           `json:"data,omitempty"`
+	Config       *InteractionExecutionConfiguration                    `json:"config,omitempty"`
+	ResultSchema NullableAsyncConversationExecutionPayloadResultSchema `json:"result_schema,omitempty"`
+	DoValidate   *bool                                                 `json:"do_validate,omitempty"`
+	Tags         []string                                              `json:"tags,omitempty"`
+	Conversation interface{}                                           `json:"conversation,omitempty"`
 	// The workflow related to this Interaction Run.
 	Workflow *ExecutionRunWorkflow `json:"workflow,omitempty"`
 	// Only used by ad-hoc interactions which defines the prompt in the execution payload itself These are temporary interactions using \"tmp:\" suffix.
@@ -206,9 +206,9 @@ func (o *AsyncConversationExecutionPayload) SetConfig(v InteractionExecutionConf
 }
 
 // GetResultSchema returns the ResultSchema field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *AsyncConversationExecutionPayload) GetResultSchema() InteractionUpdatePayloadResultSchema {
+func (o *AsyncConversationExecutionPayload) GetResultSchema() AsyncConversationExecutionPayloadResultSchema {
 	if o == nil || IsNil(o.ResultSchema.Get()) {
-		var ret InteractionUpdatePayloadResultSchema
+		var ret AsyncConversationExecutionPayloadResultSchema
 		return ret
 	}
 	return *o.ResultSchema.Get()
@@ -217,7 +217,7 @@ func (o *AsyncConversationExecutionPayload) GetResultSchema() InteractionUpdateP
 // GetResultSchemaOk returns a tuple with the ResultSchema field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *AsyncConversationExecutionPayload) GetResultSchemaOk() (*InteractionUpdatePayloadResultSchema, bool) {
+func (o *AsyncConversationExecutionPayload) GetResultSchemaOk() (*AsyncConversationExecutionPayloadResultSchema, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -233,8 +233,8 @@ func (o *AsyncConversationExecutionPayload) HasResultSchema() bool {
 	return false
 }
 
-// SetResultSchema gets a reference to the given NullableInteractionUpdatePayloadResultSchema and assigns it to the ResultSchema field.
-func (o *AsyncConversationExecutionPayload) SetResultSchema(v InteractionUpdatePayloadResultSchema) {
+// SetResultSchema gets a reference to the given NullableAsyncConversationExecutionPayloadResultSchema and assigns it to the ResultSchema field.
+func (o *AsyncConversationExecutionPayload) SetResultSchema(v AsyncConversationExecutionPayloadResultSchema) {
 	o.ResultSchema.Set(&v)
 }
 

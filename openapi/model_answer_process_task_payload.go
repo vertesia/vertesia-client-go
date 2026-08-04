@@ -21,6 +21,9 @@ var _ MappedNullable = &AnswerProcessTaskPayload{}
 // AnswerProcessTaskPayload struct for AnswerProcessTaskPayload
 type AnswerProcessTaskPayload struct {
 	TaskId string `json:"task_id"`
+	// Answers to the task's declared fields, keyed by field name.
+	Result               map[string]interface{} `json:"result"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _AnswerProcessTaskPayload AnswerProcessTaskPayload
@@ -29,9 +32,10 @@ type _AnswerProcessTaskPayload AnswerProcessTaskPayload
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAnswerProcessTaskPayload(taskId string) *AnswerProcessTaskPayload {
+func NewAnswerProcessTaskPayload(taskId string, result map[string]interface{}) *AnswerProcessTaskPayload {
 	this := AnswerProcessTaskPayload{}
 	this.TaskId = taskId
+	this.Result = result
 	return &this
 }
 
@@ -67,6 +71,30 @@ func (o *AnswerProcessTaskPayload) SetTaskId(v string) {
 	o.TaskId = v
 }
 
+// GetResult returns the Result field value
+func (o *AnswerProcessTaskPayload) GetResult() map[string]interface{} {
+	if o == nil {
+		var ret map[string]interface{}
+		return ret
+	}
+
+	return o.Result
+}
+
+// GetResultOk returns a tuple with the Result field value
+// and a boolean to check if the value has been set.
+func (o *AnswerProcessTaskPayload) GetResultOk() (map[string]interface{}, bool) {
+	if o == nil {
+		return map[string]interface{}{}, false
+	}
+	return o.Result, true
+}
+
+// SetResult sets field value
+func (o *AnswerProcessTaskPayload) SetResult(v map[string]interface{}) {
+	o.Result = v
+}
+
 func (o AnswerProcessTaskPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -78,6 +106,12 @@ func (o AnswerProcessTaskPayload) MarshalJSON() ([]byte, error) {
 func (o AnswerProcessTaskPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["task_id"] = o.TaskId
+	toSerialize["result"] = o.Result
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -87,6 +121,7 @@ func (o *AnswerProcessTaskPayload) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"task_id",
+		"result",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -112,6 +147,14 @@ func (o *AnswerProcessTaskPayload) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = AnswerProcessTaskPayload(varAnswerProcessTaskPayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "task_id")
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

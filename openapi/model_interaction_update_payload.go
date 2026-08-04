@@ -40,8 +40,8 @@ type InteractionUpdatePayload struct {
 	Restriction        *RunDataStorageLevel     `json:"restriction,omitempty"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.
 	// Deprecated
-	OutputModality *Modalities                                  `json:"output_modality,omitempty"`
-	ResultSchema   NullableInteractionUpdatePayloadResultSchema `json:"result_schema,omitempty"`
+	OutputModality *Modalities                                           `json:"output_modality,omitempty"`
+	ResultSchema   NullableAsyncConversationExecutionPayloadResultSchema `json:"result_schema,omitempty"`
 }
 
 // NewInteractionUpdatePayload instantiates a new InteractionUpdatePayload object
@@ -673,9 +673,9 @@ func (o *InteractionUpdatePayload) SetOutputModality(v Modalities) {
 }
 
 // GetResultSchema returns the ResultSchema field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *InteractionUpdatePayload) GetResultSchema() InteractionUpdatePayloadResultSchema {
+func (o *InteractionUpdatePayload) GetResultSchema() AsyncConversationExecutionPayloadResultSchema {
 	if o == nil || IsNil(o.ResultSchema.Get()) {
-		var ret InteractionUpdatePayloadResultSchema
+		var ret AsyncConversationExecutionPayloadResultSchema
 		return ret
 	}
 	return *o.ResultSchema.Get()
@@ -684,7 +684,7 @@ func (o *InteractionUpdatePayload) GetResultSchema() InteractionUpdatePayloadRes
 // GetResultSchemaOk returns a tuple with the ResultSchema field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *InteractionUpdatePayload) GetResultSchemaOk() (*InteractionUpdatePayloadResultSchema, bool) {
+func (o *InteractionUpdatePayload) GetResultSchemaOk() (*AsyncConversationExecutionPayloadResultSchema, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -700,8 +700,8 @@ func (o *InteractionUpdatePayload) HasResultSchema() bool {
 	return false
 }
 
-// SetResultSchema gets a reference to the given NullableInteractionUpdatePayloadResultSchema and assigns it to the ResultSchema field.
-func (o *InteractionUpdatePayload) SetResultSchema(v InteractionUpdatePayloadResultSchema) {
+// SetResultSchema gets a reference to the given NullableAsyncConversationExecutionPayloadResultSchema and assigns it to the ResultSchema field.
+func (o *InteractionUpdatePayload) SetResultSchema(v AsyncConversationExecutionPayloadResultSchema) {
 	o.ResultSchema.Set(&v)
 }
 

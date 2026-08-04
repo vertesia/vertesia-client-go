@@ -19,11 +19,11 @@ var _ MappedNullable = &VectorSearchQuery{}
 
 // VectorSearchQuery struct for VectorSearchQuery
 type VectorSearchQuery struct {
-	ObjectId *string                                      `json:"objectId,omitempty"`
-	Values   []float32                                    `json:"values,omitempty"`
-	Text     *string                                      `json:"text,omitempty"`
-	Image    *string                                      `json:"image,omitempty"`
-	Config   *PartialRecordSupportedEmbeddingTypesBoolean `json:"config,omitempty"`
+	ObjectId *string                  `json:"objectId,omitempty"`
+	Values   []float32                `json:"values,omitempty"`
+	Text     *string                  `json:"text,omitempty"`
+	Image    *string                  `json:"image,omitempty"`
+	Config   *EmbeddingTypeEnabledMap `json:"config,omitempty"`
 }
 
 // NewVectorSearchQuery instantiates a new VectorSearchQuery object
@@ -172,9 +172,9 @@ func (o *VectorSearchQuery) SetImage(v string) {
 }
 
 // GetConfig returns the Config field value if set, zero value otherwise.
-func (o *VectorSearchQuery) GetConfig() PartialRecordSupportedEmbeddingTypesBoolean {
+func (o *VectorSearchQuery) GetConfig() EmbeddingTypeEnabledMap {
 	if o == nil || IsNil(o.Config) {
-		var ret PartialRecordSupportedEmbeddingTypesBoolean
+		var ret EmbeddingTypeEnabledMap
 		return ret
 	}
 	return *o.Config
@@ -182,7 +182,7 @@ func (o *VectorSearchQuery) GetConfig() PartialRecordSupportedEmbeddingTypesBool
 
 // GetConfigOk returns a tuple with the Config field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *VectorSearchQuery) GetConfigOk() (*PartialRecordSupportedEmbeddingTypesBoolean, bool) {
+func (o *VectorSearchQuery) GetConfigOk() (*EmbeddingTypeEnabledMap, bool) {
 	if o == nil || IsNil(o.Config) {
 		return nil, false
 	}
@@ -198,8 +198,8 @@ func (o *VectorSearchQuery) HasConfig() bool {
 	return false
 }
 
-// SetConfig gets a reference to the given PartialRecordSupportedEmbeddingTypesBoolean and assigns it to the Config field.
-func (o *VectorSearchQuery) SetConfig(v PartialRecordSupportedEmbeddingTypesBoolean) {
+// SetConfig gets a reference to the given EmbeddingTypeEnabledMap and assigns it to the Config field.
+func (o *VectorSearchQuery) SetConfig(v EmbeddingTypeEnabledMap) {
 	o.Config = &v
 }
 

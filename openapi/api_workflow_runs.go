@@ -1602,7 +1602,7 @@ func (a *WorkflowRunsAPIService) StreamWorkflowRunUpdatesExecute(r ApiStreamWork
 	}
 
 	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
+	localVarHTTPHeaderAccepts := []string{"text/event-stream", "application/json"}
 
 	// set Accept header
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)

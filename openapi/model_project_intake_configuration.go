@@ -26,7 +26,7 @@ type ProjectIntakeConfiguration struct {
 	// Project-level intake policy defaults. Same shape as the per-content-type policy; a type's `intake` block wins field-by-field over these defaults, which in turn win over the legacy flat fields below. `identification` is type-specific and ignored here.
 	DefaultPolicy *ContentTypeIntakePolicy `json:"default_policy,omitempty"`
 	// Project overrides for the platform vision detail profiles used by intake visual extraction (`low`/`standard`/`high`). Partial: omitted profiles or fields inherit the platform defaults. Types reference detail NAMES only; the profile settings live here.
-	VisionProfiles *PartialRecordIntakeVisionDetailPartialIntakeVisionProfileSettings `json:"vision_profiles,omitempty"`
+	VisionProfiles *IntakeVisionProfileSettingsMap `json:"vision_profiles,omitempty"`
 	// Generate table-of-content sections during standard document intake. Defaults to false.
 	GenerateToc *bool `json:"generate_toc,omitempty"`
 	// Skip table-of-content generation when the document text exceeds this many characters. Avoids sending very large documents through the TOC interactions. Unset means no limit.
@@ -153,9 +153,9 @@ func (o *ProjectIntakeConfiguration) SetDefaultPolicy(v ContentTypeIntakePolicy)
 }
 
 // GetVisionProfiles returns the VisionProfiles field value if set, zero value otherwise.
-func (o *ProjectIntakeConfiguration) GetVisionProfiles() PartialRecordIntakeVisionDetailPartialIntakeVisionProfileSettings {
+func (o *ProjectIntakeConfiguration) GetVisionProfiles() IntakeVisionProfileSettingsMap {
 	if o == nil || IsNil(o.VisionProfiles) {
-		var ret PartialRecordIntakeVisionDetailPartialIntakeVisionProfileSettings
+		var ret IntakeVisionProfileSettingsMap
 		return ret
 	}
 	return *o.VisionProfiles
@@ -163,7 +163,7 @@ func (o *ProjectIntakeConfiguration) GetVisionProfiles() PartialRecordIntakeVisi
 
 // GetVisionProfilesOk returns a tuple with the VisionProfiles field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ProjectIntakeConfiguration) GetVisionProfilesOk() (*PartialRecordIntakeVisionDetailPartialIntakeVisionProfileSettings, bool) {
+func (o *ProjectIntakeConfiguration) GetVisionProfilesOk() (*IntakeVisionProfileSettingsMap, bool) {
 	if o == nil || IsNil(o.VisionProfiles) {
 		return nil, false
 	}
@@ -179,8 +179,8 @@ func (o *ProjectIntakeConfiguration) HasVisionProfiles() bool {
 	return false
 }
 
-// SetVisionProfiles gets a reference to the given PartialRecordIntakeVisionDetailPartialIntakeVisionProfileSettings and assigns it to the VisionProfiles field.
-func (o *ProjectIntakeConfiguration) SetVisionProfiles(v PartialRecordIntakeVisionDetailPartialIntakeVisionProfileSettings) {
+// SetVisionProfiles gets a reference to the given IntakeVisionProfileSettingsMap and assigns it to the VisionProfiles field.
+func (o *ProjectIntakeConfiguration) SetVisionProfiles(v IntakeVisionProfileSettingsMap) {
 	o.VisionProfiles = &v
 }
 

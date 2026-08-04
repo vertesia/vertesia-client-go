@@ -577,12 +577,12 @@ type ApiUpdateWorkflowRuleRequest struct {
 	ctx                       context.Context
 	ApiService                *WorkflowRulesAPIService
 	ruleId                    string
-	createWorkflowRulePayload *CreateWorkflowRulePayload
+	updateWorkflowRulePayload *UpdateWorkflowRulePayload
 	xApiVersion               *string
 }
 
-func (r ApiUpdateWorkflowRuleRequest) CreateWorkflowRulePayload(createWorkflowRulePayload CreateWorkflowRulePayload) ApiUpdateWorkflowRuleRequest {
-	r.createWorkflowRulePayload = &createWorkflowRulePayload
+func (r ApiUpdateWorkflowRuleRequest) UpdateWorkflowRulePayload(updateWorkflowRulePayload UpdateWorkflowRulePayload) ApiUpdateWorkflowRuleRequest {
+	r.updateWorkflowRulePayload = &updateWorkflowRulePayload
 	return r
 }
 
@@ -637,8 +637,8 @@ func (a *WorkflowRulesAPIService) UpdateWorkflowRuleExecute(r ApiUpdateWorkflowR
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.createWorkflowRulePayload == nil {
-		return localVarReturnValue, nil, reportError("createWorkflowRulePayload is required and must be specified")
+	if r.updateWorkflowRulePayload == nil {
+		return localVarReturnValue, nil, reportError("updateWorkflowRulePayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -662,7 +662,7 @@ func (a *WorkflowRulesAPIService) UpdateWorkflowRuleExecute(r ApiUpdateWorkflowR
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.createWorkflowRulePayload
+	localVarPostBody = r.updateWorkflowRulePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

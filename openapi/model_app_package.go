@@ -28,7 +28,7 @@ type AppPackage struct {
 	// A list of interactions exposed by the app
 	Interactions []CatalogInteractionRef `json:"interactions,omitempty"`
 	// A list of types.
-	Types []PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing `json:"types,omitempty"`
+	Types []InCodeTypeDefinition `json:"types,omitempty"`
 	// A list of process definitions exposed by the app.
 	Processes []InCodeProcessDefinition `json:"processes,omitempty"`
 	// View Experiences exposed by the app as in-code definitions.
@@ -191,9 +191,9 @@ func (o *AppPackage) SetInteractions(v []CatalogInteractionRef) {
 }
 
 // GetTypes returns the Types field value if set, zero value otherwise.
-func (o *AppPackage) GetTypes() []PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing {
+func (o *AppPackage) GetTypes() []InCodeTypeDefinition {
 	if o == nil || IsNil(o.Types) {
-		var ret []PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing
+		var ret []InCodeTypeDefinition
 		return ret
 	}
 	return o.Types
@@ -201,7 +201,7 @@ func (o *AppPackage) GetTypes() []PickContentObjectTypeItemIdNameDescriptionTags
 
 // GetTypesOk returns a tuple with the Types field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppPackage) GetTypesOk() ([]PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing, bool) {
+func (o *AppPackage) GetTypesOk() ([]InCodeTypeDefinition, bool) {
 	if o == nil || IsNil(o.Types) {
 		return nil, false
 	}
@@ -217,8 +217,8 @@ func (o *AppPackage) HasTypes() bool {
 	return false
 }
 
-// SetTypes gets a reference to the given []PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing and assigns it to the Types field.
-func (o *AppPackage) SetTypes(v []PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing) {
+// SetTypes gets a reference to the given []InCodeTypeDefinition and assigns it to the Types field.
+func (o *AppPackage) SetTypes(v []InCodeTypeDefinition) {
 	o.Types = v
 }
 

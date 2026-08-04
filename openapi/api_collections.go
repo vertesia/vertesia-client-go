@@ -1621,12 +1621,12 @@ type ApiUpdateCollectionRequest struct {
 	ctx                     context.Context
 	ApiService              *CollectionsAPIService
 	collectionId            string
-	createCollectionPayload *CreateCollectionPayload
+	updateCollectionPayload *UpdateCollectionPayload
 	xApiVersion             *string
 }
 
-func (r ApiUpdateCollectionRequest) CreateCollectionPayload(createCollectionPayload CreateCollectionPayload) ApiUpdateCollectionRequest {
-	r.createCollectionPayload = &createCollectionPayload
+func (r ApiUpdateCollectionRequest) UpdateCollectionPayload(updateCollectionPayload UpdateCollectionPayload) ApiUpdateCollectionRequest {
+	r.updateCollectionPayload = &updateCollectionPayload
 	return r
 }
 
@@ -1681,8 +1681,8 @@ func (a *CollectionsAPIService) UpdateCollectionExecute(r ApiUpdateCollectionReq
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.createCollectionPayload == nil {
-		return localVarReturnValue, nil, reportError("createCollectionPayload is required and must be specified")
+	if r.updateCollectionPayload == nil {
+		return localVarReturnValue, nil, reportError("updateCollectionPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -1706,7 +1706,7 @@ func (a *CollectionsAPIService) UpdateCollectionExecute(r ApiUpdateCollectionReq
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.createCollectionPayload
+	localVarPostBody = r.updateCollectionPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

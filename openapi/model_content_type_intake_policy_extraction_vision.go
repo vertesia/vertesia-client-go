@@ -22,11 +22,11 @@ type ContentTypeIntakePolicyExtractionVision struct {
 	DefaultDetail  *IntakeVisionDetail  `json:"default_detail,omitempty"`
 	AllowedDetails []IntakeVisionDetail `json:"allowed_details,omitempty"`
 	// PRIMARY budget: estimated image tokens per extraction call. Default 16000.
-	MaxImageTokens *float32 `json:"max_image_tokens,omitempty"`
+	MaxImageTokens *int32 `json:"max_image_tokens,omitempty"`
 	// Transport guard in megabytes. Default 16.
 	MaxPayloadMb *float32 `json:"max_payload_mb,omitempty"`
 	// Cap on page images per extraction call. Default 8.
-	MaxPagesPerCall *float32 `json:"max_pages_per_call,omitempty"`
+	MaxPagesPerCall *int32 `json:"max_pages_per_call,omitempty"`
 }
 
 // NewContentTypeIntakePolicyExtractionVision instantiates a new ContentTypeIntakePolicyExtractionVision object
@@ -111,9 +111,9 @@ func (o *ContentTypeIntakePolicyExtractionVision) SetAllowedDetails(v []IntakeVi
 }
 
 // GetMaxImageTokens returns the MaxImageTokens field value if set, zero value otherwise.
-func (o *ContentTypeIntakePolicyExtractionVision) GetMaxImageTokens() float32 {
+func (o *ContentTypeIntakePolicyExtractionVision) GetMaxImageTokens() int32 {
 	if o == nil || IsNil(o.MaxImageTokens) {
-		var ret float32
+		var ret int32
 		return ret
 	}
 	return *o.MaxImageTokens
@@ -121,7 +121,7 @@ func (o *ContentTypeIntakePolicyExtractionVision) GetMaxImageTokens() float32 {
 
 // GetMaxImageTokensOk returns a tuple with the MaxImageTokens field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ContentTypeIntakePolicyExtractionVision) GetMaxImageTokensOk() (*float32, bool) {
+func (o *ContentTypeIntakePolicyExtractionVision) GetMaxImageTokensOk() (*int32, bool) {
 	if o == nil || IsNil(o.MaxImageTokens) {
 		return nil, false
 	}
@@ -137,8 +137,8 @@ func (o *ContentTypeIntakePolicyExtractionVision) HasMaxImageTokens() bool {
 	return false
 }
 
-// SetMaxImageTokens gets a reference to the given float32 and assigns it to the MaxImageTokens field.
-func (o *ContentTypeIntakePolicyExtractionVision) SetMaxImageTokens(v float32) {
+// SetMaxImageTokens gets a reference to the given int32 and assigns it to the MaxImageTokens field.
+func (o *ContentTypeIntakePolicyExtractionVision) SetMaxImageTokens(v int32) {
 	o.MaxImageTokens = &v
 }
 
@@ -175,9 +175,9 @@ func (o *ContentTypeIntakePolicyExtractionVision) SetMaxPayloadMb(v float32) {
 }
 
 // GetMaxPagesPerCall returns the MaxPagesPerCall field value if set, zero value otherwise.
-func (o *ContentTypeIntakePolicyExtractionVision) GetMaxPagesPerCall() float32 {
+func (o *ContentTypeIntakePolicyExtractionVision) GetMaxPagesPerCall() int32 {
 	if o == nil || IsNil(o.MaxPagesPerCall) {
-		var ret float32
+		var ret int32
 		return ret
 	}
 	return *o.MaxPagesPerCall
@@ -185,7 +185,7 @@ func (o *ContentTypeIntakePolicyExtractionVision) GetMaxPagesPerCall() float32 {
 
 // GetMaxPagesPerCallOk returns a tuple with the MaxPagesPerCall field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ContentTypeIntakePolicyExtractionVision) GetMaxPagesPerCallOk() (*float32, bool) {
+func (o *ContentTypeIntakePolicyExtractionVision) GetMaxPagesPerCallOk() (*int32, bool) {
 	if o == nil || IsNil(o.MaxPagesPerCall) {
 		return nil, false
 	}
@@ -201,8 +201,8 @@ func (o *ContentTypeIntakePolicyExtractionVision) HasMaxPagesPerCall() bool {
 	return false
 }
 
-// SetMaxPagesPerCall gets a reference to the given float32 and assigns it to the MaxPagesPerCall field.
-func (o *ContentTypeIntakePolicyExtractionVision) SetMaxPagesPerCall(v float32) {
+// SetMaxPagesPerCall gets a reference to the given int32 and assigns it to the MaxPagesPerCall field.
+func (o *ContentTypeIntakePolicyExtractionVision) SetMaxPagesPerCall(v int32) {
 	o.MaxPagesPerCall = &v
 }
 

@@ -20,10 +20,8 @@ var _ MappedNullable = &StatelessExecutionOptions{}
 
 // StatelessExecutionOptions struct for StatelessExecutionOptions
 type StatelessExecutionOptions struct {
-	Model string `json:"model"`
-	// A custom formatter to use for format the final model prompt from the input prompt segments. If no one is specified the driver will choose a formatter compatible with the target model
-	Format       *PromptFormatter `json:"format,omitempty"`
-	ResultSchema *JSONSchema      `json:"result_schema,omitempty"`
+	Model        string      `json:"model"`
+	ResultSchema *JSONSchema `json:"result_schema,omitempty"`
 	// Provider-specific opt-in to put the result schema after the cached prompt prefix instead of including it in native structured-output configuration. The returned JSON is still validated against result_schema by Llumiverse.
 	PromptCacheSchemaSuffix *bool `json:"prompt_cache_schema_suffix,omitempty"`
 	// If set to true the original response from the target LLM will be included in the response under the original_response field. This is useful for debugging and for some advanced use cases. It is ignored on streaming requests
@@ -80,38 +78,6 @@ func (o *StatelessExecutionOptions) GetModelOk() (*string, bool) {
 // SetModel sets field value
 func (o *StatelessExecutionOptions) SetModel(v string) {
 	o.Model = v
-}
-
-// GetFormat returns the Format field value if set, zero value otherwise.
-func (o *StatelessExecutionOptions) GetFormat() PromptFormatter {
-	if o == nil || IsNil(o.Format) {
-		var ret PromptFormatter
-		return ret
-	}
-	return *o.Format
-}
-
-// GetFormatOk returns a tuple with the Format field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *StatelessExecutionOptions) GetFormatOk() (*PromptFormatter, bool) {
-	if o == nil || IsNil(o.Format) {
-		return nil, false
-	}
-	return o.Format, true
-}
-
-// HasFormat returns a boolean if a field has been set.
-func (o *StatelessExecutionOptions) HasFormat() bool {
-	if o != nil && !IsNil(o.Format) {
-		return true
-	}
-
-	return false
-}
-
-// SetFormat gets a reference to the given PromptFormatter and assigns it to the Format field.
-func (o *StatelessExecutionOptions) SetFormat(v PromptFormatter) {
-	o.Format = &v
 }
 
 // GetResultSchema returns the ResultSchema field value if set, zero value otherwise.
@@ -352,9 +318,6 @@ func (o StatelessExecutionOptions) MarshalJSON() ([]byte, error) {
 func (o StatelessExecutionOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["model"] = o.Model
-	if !IsNil(o.Format) {
-		toSerialize["format"] = o.Format
-	}
 	if !IsNil(o.ResultSchema) {
 		toSerialize["result_schema"] = o.ResultSchema
 	}

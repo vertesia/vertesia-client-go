@@ -26,6 +26,8 @@ type WorkflowEventDeliveryTargetInput struct {
 	TaskQueue     *string                `json:"task_queue,omitempty"`
 	Vars          map[string]interface{} `json:"vars,omitempty"`
 	InputType     *WorkflowRuleInputType `json:"input_type,omitempty"`
+	// Server-managed: ignored on write, echoed back from a read.
+	MigratedRuleName *string `json:"migrated_rule_name,omitempty"`
 }
 
 type _WorkflowEventDeliveryTargetInput WorkflowEventDeliveryTargetInput
@@ -225,6 +227,38 @@ func (o *WorkflowEventDeliveryTargetInput) SetInputType(v WorkflowRuleInputType)
 	o.InputType = &v
 }
 
+// GetMigratedRuleName returns the MigratedRuleName field value if set, zero value otherwise.
+func (o *WorkflowEventDeliveryTargetInput) GetMigratedRuleName() string {
+	if o == nil || IsNil(o.MigratedRuleName) {
+		var ret string
+		return ret
+	}
+	return *o.MigratedRuleName
+}
+
+// GetMigratedRuleNameOk returns a tuple with the MigratedRuleName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *WorkflowEventDeliveryTargetInput) GetMigratedRuleNameOk() (*string, bool) {
+	if o == nil || IsNil(o.MigratedRuleName) {
+		return nil, false
+	}
+	return o.MigratedRuleName, true
+}
+
+// HasMigratedRuleName returns a boolean if a field has been set.
+func (o *WorkflowEventDeliveryTargetInput) HasMigratedRuleName() bool {
+	if o != nil && !IsNil(o.MigratedRuleName) {
+		return true
+	}
+
+	return false
+}
+
+// SetMigratedRuleName gets a reference to the given string and assigns it to the MigratedRuleName field.
+func (o *WorkflowEventDeliveryTargetInput) SetMigratedRuleName(v string) {
+	o.MigratedRuleName = &v
+}
+
 func (o WorkflowEventDeliveryTargetInput) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -248,6 +282,9 @@ func (o WorkflowEventDeliveryTargetInput) ToMap() (map[string]interface{}, error
 	}
 	if !IsNil(o.InputType) {
 		toSerialize["input_type"] = o.InputType
+	}
+	if !IsNil(o.MigratedRuleName) {
+		toSerialize["migrated_rule_name"] = o.MigratedRuleName
 	}
 	return toSerialize, nil
 }

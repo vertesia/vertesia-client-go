@@ -1068,7 +1068,7 @@ func (r ApiExportInteractionsRequest) XApiVersion(xApiVersion string) ApiExportI
 	return r
 }
 
-func (r ApiExportInteractionsRequest) Execute() ([]Interaction, *http.Response, error) {
+func (r ApiExportInteractionsRequest) Execute() ([]InteractionRefWithSchema, *http.Response, error) {
 	return r.ApiService.ExportInteractionsExecute(r)
 }
 
@@ -1091,13 +1091,13 @@ func (a *InteractionsAPIService) ExportInteractions(ctx context.Context) ApiExpo
 
 // Execute executes the request
 //
-//	@return []Interaction
-func (a *InteractionsAPIService) ExportInteractionsExecute(r ApiExportInteractionsRequest) ([]Interaction, *http.Response, error) {
+//	@return []InteractionRefWithSchema
+func (a *InteractionsAPIService) ExportInteractionsExecute(r ApiExportInteractionsRequest) ([]InteractionRefWithSchema, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue []Interaction
+		localVarReturnValue []InteractionRefWithSchema
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.ExportInteractions")
@@ -2364,7 +2364,7 @@ func (r ApiListInteractionForksRequest) XApiVersion(xApiVersion string) ApiListI
 	return r
 }
 
-func (r ApiListInteractionForksRequest) Execute() ([]Interaction, *http.Response, error) {
+func (r ApiListInteractionForksRequest) Execute() ([]InteractionRef, *http.Response, error) {
 	return r.ApiService.ListInteractionForksExecute(r)
 }
 
@@ -2389,13 +2389,13 @@ func (a *InteractionsAPIService) ListInteractionForks(ctx context.Context, inter
 
 // Execute executes the request
 //
-//	@return []Interaction
-func (a *InteractionsAPIService) ListInteractionForksExecute(r ApiListInteractionForksRequest) ([]Interaction, *http.Response, error) {
+//	@return []InteractionRef
+func (a *InteractionsAPIService) ListInteractionForksExecute(r ApiListInteractionForksRequest) ([]InteractionRef, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue []Interaction
+		localVarReturnValue []InteractionRef
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.ListInteractionForks")
@@ -2500,7 +2500,7 @@ func (r ApiListInteractionNamesRequest) XApiVersion(xApiVersion string) ApiListI
 	return r
 }
 
-func (r ApiListInteractionNamesRequest) Execute() ([]Interaction, *http.Response, error) {
+func (r ApiListInteractionNamesRequest) Execute() ([]InteractionName, *http.Response, error) {
 	return r.ApiService.ListInteractionNamesExecute(r)
 }
 
@@ -2523,13 +2523,13 @@ func (a *InteractionsAPIService) ListInteractionNames(ctx context.Context) ApiLi
 
 // Execute executes the request
 //
-//	@return []Interaction
-func (a *InteractionsAPIService) ListInteractionNamesExecute(r ApiListInteractionNamesRequest) ([]Interaction, *http.Response, error) {
+//	@return []InteractionName
+func (a *InteractionsAPIService) ListInteractionNamesExecute(r ApiListInteractionNamesRequest) ([]InteractionName, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue []Interaction
+		localVarReturnValue []InteractionName
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.ListInteractionNames")
@@ -2909,7 +2909,7 @@ func (r ApiListInteractionVersionsRequest) XApiVersion(xApiVersion string) ApiLi
 	return r
 }
 
-func (r ApiListInteractionVersionsRequest) Execute() ([]Interaction, *http.Response, error) {
+func (r ApiListInteractionVersionsRequest) Execute() ([]InteractionRef, *http.Response, error) {
 	return r.ApiService.ListInteractionVersionsExecute(r)
 }
 
@@ -2934,13 +2934,13 @@ func (a *InteractionsAPIService) ListInteractionVersions(ctx context.Context, in
 
 // Execute executes the request
 //
-//	@return []Interaction
-func (a *InteractionsAPIService) ListInteractionVersionsExecute(r ApiListInteractionVersionsRequest) ([]Interaction, *http.Response, error) {
+//	@return []InteractionRef
+func (a *InteractionsAPIService) ListInteractionVersionsExecute(r ApiListInteractionVersionsRequest) ([]InteractionRef, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue []Interaction
+		localVarReturnValue []InteractionRef
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.ListInteractionVersions")
@@ -3046,7 +3046,7 @@ func (r ApiListInteractionVersionsByNameRequest) XApiVersion(xApiVersion string)
 	return r
 }
 
-func (r ApiListInteractionVersionsByNameRequest) Execute() ([]Interaction, *http.Response, error) {
+func (r ApiListInteractionVersionsByNameRequest) Execute() ([]InteractionRef, *http.Response, error) {
 	return r.ApiService.ListInteractionVersionsByNameExecute(r)
 }
 
@@ -3071,13 +3071,13 @@ func (a *InteractionsAPIService) ListInteractionVersionsByName(ctx context.Conte
 
 // Execute executes the request
 //
-//	@return []Interaction
-func (a *InteractionsAPIService) ListInteractionVersionsByNameExecute(r ApiListInteractionVersionsByNameRequest) ([]Interaction, *http.Response, error) {
+//	@return []InteractionRef
+func (a *InteractionsAPIService) ListInteractionVersionsByNameExecute(r ApiListInteractionVersionsByNameRequest) ([]InteractionRef, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue []Interaction
+		localVarReturnValue []InteractionRef
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.ListInteractionVersionsByName")

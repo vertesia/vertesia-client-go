@@ -20,7 +20,7 @@ var _ MappedNullable = &InCodeViewDefinition{}
 
 // InCodeViewDefinition A View definition contributed by application code through the app package endpoint.
 type InCodeViewDefinition struct {
-	// App-local id. Studio normalizes it to app:<app-name>:<id>.
+	// App-local id. The platform normalizes it to app:<app-name>:<id>.
 	Id string `json:"id"`
 	// App-local name used for lookup and diagnostics.
 	Name        string                      `json:"name"`

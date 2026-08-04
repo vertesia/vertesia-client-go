@@ -728,7 +728,7 @@ func (r ApiGetProjectAppTypeRequest) XApiVersion(xApiVersion string) ApiGetProje
 	return r
 }
 
-func (r ApiGetProjectAppTypeRequest) Execute() (*PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing, *http.Response, error) {
+func (r ApiGetProjectAppTypeRequest) Execute() (*InCodeTypeDefinition, *http.Response, error) {
 	return r.ApiService.GetProjectAppTypeExecute(r)
 }
 
@@ -753,13 +753,13 @@ func (a *ProjectsAPIService) GetProjectAppType(ctx context.Context, projectId st
 
 // Execute executes the request
 //
-//	@return PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing
-func (a *ProjectsAPIService) GetProjectAppTypeExecute(r ApiGetProjectAppTypeRequest) (*PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing, *http.Response, error) {
+//	@return InCodeTypeDefinition
+func (a *ProjectsAPIService) GetProjectAppTypeExecute(r ApiGetProjectAppTypeRequest) (*InCodeTypeDefinition, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing
+		localVarReturnValue *InCodeTypeDefinition
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectsAPIService.GetProjectAppType")
@@ -1712,7 +1712,7 @@ func (r ApiListProjectAppTypesRequest) XApiVersion(xApiVersion string) ApiListPr
 	return r
 }
 
-func (r ApiListProjectAppTypesRequest) Execute() ([]PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing, *http.Response, error) {
+func (r ApiListProjectAppTypesRequest) Execute() ([]InCodeTypeDefinition, *http.Response, error) {
 	return r.ApiService.ListProjectAppTypesExecute(r)
 }
 
@@ -1735,13 +1735,13 @@ func (a *ProjectsAPIService) ListProjectAppTypes(ctx context.Context, projectId 
 
 // Execute executes the request
 //
-//	@return []PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing
-func (a *ProjectsAPIService) ListProjectAppTypesExecute(r ApiListProjectAppTypesRequest) ([]PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing, *http.Response, error) {
+//	@return []InCodeTypeDefinition
+func (a *ProjectsAPIService) ListProjectAppTypesExecute(r ApiListProjectAppTypesRequest) ([]InCodeTypeDefinition, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue []PickContentObjectTypeItemIdNameDescriptionTagsObjectSchemaTableLayoutIsChunkableStrictModeStatusIntakeEditing
+		localVarReturnValue []InCodeTypeDefinition
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectsAPIService.ListProjectAppTypes")
@@ -2527,15 +2527,15 @@ func (a *ProjectsAPIService) ListProjectsExecute(r ApiListProjectsRequest) ([]Pr
 }
 
 type ApiUpdateProjectRequest struct {
-	ctx            context.Context
-	ApiService     *ProjectsAPIService
-	projectId      string
-	partialProject *PartialProject
-	xApiVersion    *string
+	ctx                  context.Context
+	ApiService           *ProjectsAPIService
+	projectId            string
+	updateProjectPayload *UpdateProjectPayload
+	xApiVersion          *string
 }
 
-func (r ApiUpdateProjectRequest) PartialProject(partialProject PartialProject) ApiUpdateProjectRequest {
-	r.partialProject = &partialProject
+func (r ApiUpdateProjectRequest) UpdateProjectPayload(updateProjectPayload UpdateProjectPayload) ApiUpdateProjectRequest {
+	r.updateProjectPayload = &updateProjectPayload
 	return r
 }
 
@@ -2590,8 +2590,8 @@ func (a *ProjectsAPIService) UpdateProjectExecute(r ApiUpdateProjectRequest) (*P
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.partialProject == nil {
-		return localVarReturnValue, nil, reportError("partialProject is required and must be specified")
+	if r.updateProjectPayload == nil {
+		return localVarReturnValue, nil, reportError("updateProjectPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -2615,7 +2615,7 @@ func (a *ProjectsAPIService) UpdateProjectExecute(r ApiUpdateProjectRequest) (*P
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.partialProject
+	localVarPostBody = r.updateProjectPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2675,15 +2675,15 @@ func (a *ProjectsAPIService) UpdateProjectExecute(r ApiUpdateProjectRequest) (*P
 }
 
 type ApiUpdateProjectCompositeAppRequest struct {
-	ctx         context.Context
-	ApiService  *ProjectsAPIService
-	projectId   string
-	body        *PartialOmitCompositeAppConfigIdProject
-	xApiVersion *string
+	ctx                       context.Context
+	ApiService                *ProjectsAPIService
+	projectId                 string
+	compositeAppConfigPayload *CompositeAppConfigPayload
+	xApiVersion               *string
 }
 
-func (r ApiUpdateProjectCompositeAppRequest) Body(body PartialOmitCompositeAppConfigIdProject) ApiUpdateProjectCompositeAppRequest {
-	r.body = &body
+func (r ApiUpdateProjectCompositeAppRequest) CompositeAppConfigPayload(compositeAppConfigPayload CompositeAppConfigPayload) ApiUpdateProjectCompositeAppRequest {
+	r.compositeAppConfigPayload = &compositeAppConfigPayload
 	return r
 }
 
@@ -2738,8 +2738,8 @@ func (a *ProjectsAPIService) UpdateProjectCompositeAppExecute(r ApiUpdateProject
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.body == nil {
-		return localVarReturnValue, nil, reportError("body is required and must be specified")
+	if r.compositeAppConfigPayload == nil {
+		return localVarReturnValue, nil, reportError("compositeAppConfigPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -2763,7 +2763,7 @@ func (a *ProjectsAPIService) UpdateProjectCompositeAppExecute(r ApiUpdateProject
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.body
+	localVarPostBody = r.compositeAppConfigPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2823,15 +2823,15 @@ func (a *ProjectsAPIService) UpdateProjectCompositeAppExecute(r ApiUpdateProject
 }
 
 type ApiUpdateProjectConfigurationRequest struct {
-	ctx                         context.Context
-	ApiService                  *ProjectsAPIService
-	projectId                   string
-	partialProjectConfiguration *PartialProjectConfiguration
-	xApiVersion                 *string
+	ctx                               context.Context
+	ApiService                        *ProjectsAPIService
+	projectId                         string
+	updateProjectConfigurationPayload *UpdateProjectConfigurationPayload
+	xApiVersion                       *string
 }
 
-func (r ApiUpdateProjectConfigurationRequest) PartialProjectConfiguration(partialProjectConfiguration PartialProjectConfiguration) ApiUpdateProjectConfigurationRequest {
-	r.partialProjectConfiguration = &partialProjectConfiguration
+func (r ApiUpdateProjectConfigurationRequest) UpdateProjectConfigurationPayload(updateProjectConfigurationPayload UpdateProjectConfigurationPayload) ApiUpdateProjectConfigurationRequest {
+	r.updateProjectConfigurationPayload = &updateProjectConfigurationPayload
 	return r
 }
 
@@ -2886,8 +2886,8 @@ func (a *ProjectsAPIService) UpdateProjectConfigurationExecute(r ApiUpdateProjec
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.partialProjectConfiguration == nil {
-		return localVarReturnValue, nil, reportError("partialProjectConfiguration is required and must be specified")
+	if r.updateProjectConfigurationPayload == nil {
+		return localVarReturnValue, nil, reportError("updateProjectConfigurationPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -2911,7 +2911,7 @@ func (a *ProjectsAPIService) UpdateProjectConfigurationExecute(r ApiUpdateProjec
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.partialProjectConfiguration
+	localVarPostBody = r.updateProjectConfigurationPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

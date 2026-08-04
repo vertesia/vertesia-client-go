@@ -20,7 +20,7 @@ var _ MappedNullable = &WorkflowRun{}
 
 // WorkflowRun struct for WorkflowRun
 type WorkflowRun struct {
-	Status *WorkflowRunWithDetailsStatus `json:"status,omitempty"`
+	Status *WorkflowRunStatus `json:"status,omitempty"`
 	// The Temporal Workflow Type of this Workflow Run.
 	Type              *string        `json:"type,omitempty"`
 	StartedAt         NullableString `json:"started_at"`
@@ -71,9 +71,9 @@ func NewWorkflowRunWithDefaults() *WorkflowRun {
 }
 
 // GetStatus returns the Status field value if set, zero value otherwise.
-func (o *WorkflowRun) GetStatus() WorkflowRunWithDetailsStatus {
+func (o *WorkflowRun) GetStatus() WorkflowRunStatus {
 	if o == nil || IsNil(o.Status) {
-		var ret WorkflowRunWithDetailsStatus
+		var ret WorkflowRunStatus
 		return ret
 	}
 	return *o.Status
@@ -81,7 +81,7 @@ func (o *WorkflowRun) GetStatus() WorkflowRunWithDetailsStatus {
 
 // GetStatusOk returns a tuple with the Status field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *WorkflowRun) GetStatusOk() (*WorkflowRunWithDetailsStatus, bool) {
+func (o *WorkflowRun) GetStatusOk() (*WorkflowRunStatus, bool) {
 	if o == nil || IsNil(o.Status) {
 		return nil, false
 	}
@@ -97,8 +97,8 @@ func (o *WorkflowRun) HasStatus() bool {
 	return false
 }
 
-// SetStatus gets a reference to the given WorkflowRunWithDetailsStatus and assigns it to the Status field.
-func (o *WorkflowRun) SetStatus(v WorkflowRunWithDetailsStatus) {
+// SetStatus gets a reference to the given WorkflowRunStatus and assigns it to the Status field.
+func (o *WorkflowRun) SetStatus(v WorkflowRunStatus) {
 	o.Status = &v
 }
 

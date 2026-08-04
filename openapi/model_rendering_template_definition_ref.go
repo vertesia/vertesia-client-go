@@ -20,22 +20,22 @@ var _ MappedNullable = &RenderingTemplateDefinitionRef{}
 
 // RenderingTemplateDefinitionRef struct for RenderingTemplateDefinitionRef
 type RenderingTemplateDefinitionRef struct {
-	// Absolute API path to fetch the full template definition
-	Path string `json:"path"`
+	// Absolute paths to asset files
+	Assets []string `json:"assets"`
+	// Short description
+	Description string `json:"description"`
 	// Unique template id: \"collection:name\"
 	Id string `json:"id"`
 	// Unique template name (kebab-case)
 	Name string `json:"name"`
-	// Display title
-	Title *string `json:"title,omitempty"`
-	// Short description
-	Description string `json:"description"`
+	// Absolute API path to fetch the full template definition
+	Path string `json:"path"`
 	// Template type
 	Type string `json:"type"`
+	// Display title
+	Title *string `json:"title,omitempty"`
 	// Tags for categorization
 	Tags []string `json:"tags,omitempty"`
-	// Absolute paths to asset files
-	Assets []string `json:"assets"`
 }
 
 type _RenderingTemplateDefinitionRef RenderingTemplateDefinitionRef
@@ -44,14 +44,14 @@ type _RenderingTemplateDefinitionRef RenderingTemplateDefinitionRef
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewRenderingTemplateDefinitionRef(path string, id string, name string, description string, type_ string, assets []string) *RenderingTemplateDefinitionRef {
+func NewRenderingTemplateDefinitionRef(assets []string, description string, id string, name string, path string, type_ string) *RenderingTemplateDefinitionRef {
 	this := RenderingTemplateDefinitionRef{}
-	this.Path = path
+	this.Assets = assets
+	this.Description = description
 	this.Id = id
 	this.Name = name
-	this.Description = description
+	this.Path = path
 	this.Type = type_
-	this.Assets = assets
 	return &this
 }
 
@@ -63,28 +63,52 @@ func NewRenderingTemplateDefinitionRefWithDefaults() *RenderingTemplateDefinitio
 	return &this
 }
 
-// GetPath returns the Path field value
-func (o *RenderingTemplateDefinitionRef) GetPath() string {
+// GetAssets returns the Assets field value
+func (o *RenderingTemplateDefinitionRef) GetAssets() []string {
+	if o == nil {
+		var ret []string
+		return ret
+	}
+
+	return o.Assets
+}
+
+// GetAssetsOk returns a tuple with the Assets field value
+// and a boolean to check if the value has been set.
+func (o *RenderingTemplateDefinitionRef) GetAssetsOk() ([]string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Assets, true
+}
+
+// SetAssets sets field value
+func (o *RenderingTemplateDefinitionRef) SetAssets(v []string) {
+	o.Assets = v
+}
+
+// GetDescription returns the Description field value
+func (o *RenderingTemplateDefinitionRef) GetDescription() string {
 	if o == nil {
 		var ret string
 		return ret
 	}
 
-	return o.Path
+	return o.Description
 }
 
-// GetPathOk returns a tuple with the Path field value
+// GetDescriptionOk returns a tuple with the Description field value
 // and a boolean to check if the value has been set.
-func (o *RenderingTemplateDefinitionRef) GetPathOk() (*string, bool) {
+func (o *RenderingTemplateDefinitionRef) GetDescriptionOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.Path, true
+	return &o.Description, true
 }
 
-// SetPath sets field value
-func (o *RenderingTemplateDefinitionRef) SetPath(v string) {
-	o.Path = v
+// SetDescription sets field value
+func (o *RenderingTemplateDefinitionRef) SetDescription(v string) {
+	o.Description = v
 }
 
 // GetId returns the Id field value
@@ -135,6 +159,54 @@ func (o *RenderingTemplateDefinitionRef) SetName(v string) {
 	o.Name = v
 }
 
+// GetPath returns the Path field value
+func (o *RenderingTemplateDefinitionRef) GetPath() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Path
+}
+
+// GetPathOk returns a tuple with the Path field value
+// and a boolean to check if the value has been set.
+func (o *RenderingTemplateDefinitionRef) GetPathOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Path, true
+}
+
+// SetPath sets field value
+func (o *RenderingTemplateDefinitionRef) SetPath(v string) {
+	o.Path = v
+}
+
+// GetType returns the Type field value
+func (o *RenderingTemplateDefinitionRef) GetType() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value
+// and a boolean to check if the value has been set.
+func (o *RenderingTemplateDefinitionRef) GetTypeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Type, true
+}
+
+// SetType sets field value
+func (o *RenderingTemplateDefinitionRef) SetType(v string) {
+	o.Type = v
+}
+
 // GetTitle returns the Title field value if set, zero value otherwise.
 func (o *RenderingTemplateDefinitionRef) GetTitle() string {
 	if o == nil || IsNil(o.Title) {
@@ -165,54 +237,6 @@ func (o *RenderingTemplateDefinitionRef) HasTitle() bool {
 // SetTitle gets a reference to the given string and assigns it to the Title field.
 func (o *RenderingTemplateDefinitionRef) SetTitle(v string) {
 	o.Title = &v
-}
-
-// GetDescription returns the Description field value
-func (o *RenderingTemplateDefinitionRef) GetDescription() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Description
-}
-
-// GetDescriptionOk returns a tuple with the Description field value
-// and a boolean to check if the value has been set.
-func (o *RenderingTemplateDefinitionRef) GetDescriptionOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Description, true
-}
-
-// SetDescription sets field value
-func (o *RenderingTemplateDefinitionRef) SetDescription(v string) {
-	o.Description = v
-}
-
-// GetType returns the Type field value
-func (o *RenderingTemplateDefinitionRef) GetType() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Type
-}
-
-// GetTypeOk returns a tuple with the Type field value
-// and a boolean to check if the value has been set.
-func (o *RenderingTemplateDefinitionRef) GetTypeOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Type, true
-}
-
-// SetType sets field value
-func (o *RenderingTemplateDefinitionRef) SetType(v string) {
-	o.Type = v
 }
 
 // GetTags returns the Tags field value if set, zero value otherwise.
@@ -247,30 +271,6 @@ func (o *RenderingTemplateDefinitionRef) SetTags(v []string) {
 	o.Tags = v
 }
 
-// GetAssets returns the Assets field value
-func (o *RenderingTemplateDefinitionRef) GetAssets() []string {
-	if o == nil {
-		var ret []string
-		return ret
-	}
-
-	return o.Assets
-}
-
-// GetAssetsOk returns a tuple with the Assets field value
-// and a boolean to check if the value has been set.
-func (o *RenderingTemplateDefinitionRef) GetAssetsOk() ([]string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.Assets, true
-}
-
-// SetAssets sets field value
-func (o *RenderingTemplateDefinitionRef) SetAssets(v []string) {
-	o.Assets = v
-}
-
 func (o RenderingTemplateDefinitionRef) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -281,18 +281,18 @@ func (o RenderingTemplateDefinitionRef) MarshalJSON() ([]byte, error) {
 
 func (o RenderingTemplateDefinitionRef) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["path"] = o.Path
+	toSerialize["assets"] = o.Assets
+	toSerialize["description"] = o.Description
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
+	toSerialize["path"] = o.Path
+	toSerialize["type"] = o.Type
 	if !IsNil(o.Title) {
 		toSerialize["title"] = o.Title
 	}
-	toSerialize["description"] = o.Description
-	toSerialize["type"] = o.Type
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
-	toSerialize["assets"] = o.Assets
 	return toSerialize, nil
 }
 
@@ -301,12 +301,12 @@ func (o *RenderingTemplateDefinitionRef) UnmarshalJSON(data []byte) (err error) 
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"path",
+		"assets",
+		"description",
 		"id",
 		"name",
-		"description",
+		"path",
 		"type",
-		"assets",
 	}
 
 	allProperties := make(map[string]interface{})

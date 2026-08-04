@@ -16,6 +16,8 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
+	"reflect"
 	"strings"
 )
 
@@ -1139,11 +1141,12 @@ type ApiGetAppInstallationPackageRequest struct {
 	ctx         context.Context
 	ApiService  *AppsAPIService
 	installId   string
-	scope       *string
+	scope       *[]string
 	xApiVersion *string
 }
 
-func (r ApiGetAppInstallationPackageRequest) Scope(scope string) ApiGetAppInstallationPackageRequest {
+// Which capabilities to include in the returned package. Defaults to &#x60;all&#x60;. Comma-joined (&#x60;?scope&#x3D;ui,tools&#x60;) or repeated.
+func (r ApiGetAppInstallationPackageRequest) Scope(scope []string) ApiGetAppInstallationPackageRequest {
 	r.scope = &scope
 	return r
 }
@@ -1201,7 +1204,15 @@ func (a *AppsAPIService) GetAppInstallationPackageExecute(r ApiGetAppInstallatio
 	localVarFormParams := url.Values{}
 
 	if r.scope != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "form", "")
+		t := *r.scope
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "scope", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "scope", t, "form", "multi")
+		}
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1285,7 +1296,14 @@ type ApiGetAppPackageRequest struct {
 	ctx         context.Context
 	ApiService  *AppsAPIService
 	id          string
+	scope       *[]string
 	xApiVersion *string
+}
+
+// Which capabilities to include in the returned package. Defaults to &#x60;all&#x60;. Comma-joined (&#x60;?scope&#x3D;ui,tools&#x60;) or repeated.
+func (r ApiGetAppPackageRequest) Scope(scope []string) ApiGetAppPackageRequest {
+	r.scope = &scope
+	return r
 }
 
 // Optional Vertesia API version header. Use &#x60;20260319&#x60; for the current stable API shape.
@@ -1340,6 +1358,17 @@ func (a *AppsAPIService) GetAppPackageExecute(r ApiGetAppPackageRequest) (*AppPa
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.scope != nil {
+		t := *r.scope
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "scope", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "scope", t, "form", "multi")
+		}
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -1568,7 +1597,7 @@ func (r ApiGetAppRepoFileRequest) XApiVersion(xApiVersion string) ApiGetAppRepoF
 	return r
 }
 
-func (r ApiGetAppRepoFileRequest) Execute() (string, *http.Response, error) {
+func (r ApiGetAppRepoFileRequest) Execute() (*os.File, *http.Response, error) {
 	return r.ApiService.GetAppRepoFileExecute(r)
 }
 
@@ -1593,13 +1622,13 @@ func (a *AppsAPIService) GetAppRepoFile(ctx context.Context, id string) ApiGetAp
 
 // Execute executes the request
 //
-//	@return string
-func (a *AppsAPIService) GetAppRepoFileExecute(r ApiGetAppRepoFileRequest) (string, *http.Response, error) {
+//	@return *os.File
+func (a *AppsAPIService) GetAppRepoFileExecute(r ApiGetAppRepoFileRequest) (*os.File, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue string
+		localVarReturnValue *os.File
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AppsAPIService.GetAppRepoFile")
@@ -2936,11 +2965,13 @@ type ApiListAppInstallationProjectsRequest struct {
 	xApiVersion *string
 }
 
+// App manifest name. One of &#x60;name&#x60; or &#x60;id&#x60; is required.
 func (r ApiListAppInstallationProjectsRequest) Name(name string) ApiListAppInstallationProjectsRequest {
 	r.name = &name
 	return r
 }
 
+// App manifest id. One of &#x60;name&#x60; or &#x60;id&#x60; is required.
 func (r ApiListAppInstallationProjectsRequest) Id(id string) ApiListAppInstallationProjectsRequest {
 	r.id = &id
 	return r
@@ -3353,11 +3384,13 @@ type ApiListAppInstallationsRequest struct {
 	xApiVersion *string
 }
 
+// Which contributions the listing is for. Defaults to &#x60;all&#x60;.
 func (r ApiListAppInstallationsRequest) Kind(kind string) ApiListAppInstallationsRequest {
 	r.kind = &kind
 	return r
 }
 
+// Restrict to installations whose manifest declares this surface.
 func (r ApiListAppInstallationsRequest) AvailableIn(availableIn string) ApiListAppInstallationsRequest {
 	r.availableIn = &availableIn
 	return r
@@ -3771,7 +3804,7 @@ func (r ApiPromoteAppVersionRequest) XApiVersion(xApiVersion string) ApiPromoteA
 	return r
 }
 
-func (r ApiPromoteAppVersionRequest) Execute() (*VersionAppVersionRecordAppAppManifest, *http.Response, error) {
+func (r ApiPromoteAppVersionRequest) Execute() (*PromoteAppVersionResponse, *http.Response, error) {
 	return r.ApiService.PromoteAppVersionExecute(r)
 }
 
@@ -3794,13 +3827,13 @@ func (a *AppsAPIService) PromoteAppVersion(ctx context.Context, id string) ApiPr
 
 // Execute executes the request
 //
-//	@return VersionAppVersionRecordAppAppManifest
-func (a *AppsAPIService) PromoteAppVersionExecute(r ApiPromoteAppVersionRequest) (*VersionAppVersionRecordAppAppManifest, *http.Response, error) {
+//	@return PromoteAppVersionResponse
+func (a *AppsAPIService) PromoteAppVersionExecute(r ApiPromoteAppVersionRequest) (*PromoteAppVersionResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *VersionAppVersionRecordAppAppManifest
+		localVarReturnValue *PromoteAppVersionResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AppsAPIService.PromoteAppVersion")

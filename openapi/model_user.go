@@ -13,6 +13,7 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // checks if the User type satisfies the MappedNullable interface at compile time
@@ -39,7 +40,11 @@ type User struct {
 	// Compartments the user belongs to — restricts access to documents in matching compartments
 	Compartments []string `json:"compartments,omitempty"`
 	// Free-form user metadata - restricted to internal use
-	Annotations          []string `json:"annotations,omitempty"`
+	Annotations []string `json:"annotations,omitempty"`
+	// ISO 8601 creation timestamp.
+	CreatedAt time.Time `json:"created_at"`
+	// ISO 8601 timestamp of the last update.
+	UpdatedAt            time.Time `json:"updated_at"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -49,11 +54,13 @@ type _User User
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUser(id string, email string, name string) *User {
+func NewUser(id string, email string, name string, createdAt time.Time, updatedAt time.Time) *User {
 	this := User{}
 	this.Id = id
 	this.Email = email
 	this.Name = name
+	this.CreatedAt = createdAt
+	this.UpdatedAt = updatedAt
 	return &this
 }
 
@@ -553,6 +560,54 @@ func (o *User) SetAnnotations(v []string) {
 	o.Annotations = v
 }
 
+// GetCreatedAt returns the CreatedAt field value
+func (o *User) GetCreatedAt() time.Time {
+	if o == nil {
+		var ret time.Time
+		return ret
+	}
+
+	return o.CreatedAt
+}
+
+// GetCreatedAtOk returns a tuple with the CreatedAt field value
+// and a boolean to check if the value has been set.
+func (o *User) GetCreatedAtOk() (*time.Time, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.CreatedAt, true
+}
+
+// SetCreatedAt sets field value
+func (o *User) SetCreatedAt(v time.Time) {
+	o.CreatedAt = v
+}
+
+// GetUpdatedAt returns the UpdatedAt field value
+func (o *User) GetUpdatedAt() time.Time {
+	if o == nil {
+		var ret time.Time
+		return ret
+	}
+
+	return o.UpdatedAt
+}
+
+// GetUpdatedAtOk returns a tuple with the UpdatedAt field value
+// and a boolean to check if the value has been set.
+func (o *User) GetUpdatedAtOk() (*time.Time, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.UpdatedAt, true
+}
+
+// SetUpdatedAt sets field value
+func (o *User) SetUpdatedAt(v time.Time) {
+	o.UpdatedAt = v
+}
+
 func (o User) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -605,6 +660,8 @@ func (o User) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Annotations) {
 		toSerialize["annotations"] = o.Annotations
 	}
+	toSerialize["created_at"] = o.CreatedAt
+	toSerialize["updated_at"] = o.UpdatedAt
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -621,6 +678,8 @@ func (o *User) UnmarshalJSON(data []byte) (err error) {
 		"id",
 		"email",
 		"name",
+		"created_at",
+		"updated_at",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -666,6 +725,8 @@ func (o *User) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "clearance")
 		delete(additionalProperties, "compartments")
 		delete(additionalProperties, "annotations")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
 		o.AdditionalProperties = additionalProperties
 	}
 

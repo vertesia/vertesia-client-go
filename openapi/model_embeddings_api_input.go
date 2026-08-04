@@ -16,7 +16,7 @@ import (
 	"gopkg.in/validator.v2"
 )
 
-// EmbeddingsApiInput - Wire-format inputs accepted by the studio-server embeddings endpoint. Mirror of
+// EmbeddingsApiInput - Wire-format inputs accepted by the studio-server embeddings endpoint. Mirror of @llumiverse/common's EmbeddingInput, but binary modalities carry a JSON-friendly source (URL or base64) instead of a DataSource. The server wraps each source in a Base64DataSource or URLDataSource before passing the request to the llumiverse driver.
 type EmbeddingsApiInput struct {
 	EmbeddingsApiAudioInput *EmbeddingsApiAudioInput
 	EmbeddingsApiImageInput *EmbeddingsApiImageInput

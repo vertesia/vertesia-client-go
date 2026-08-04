@@ -24,7 +24,7 @@ type ContentTypeExtractionGroundingPolicy struct {
 	// Grounded extraction interaction. Defaults to the system grounded extractor.
 	Interaction *string `json:"interaction,omitempty"`
 	// Maximum pages to process.
-	MaxPages *float32 `json:"max_pages,omitempty"`
+	MaxPages *int32 `json:"max_pages,omitempty"`
 	// Run OCR on every page even when a text layer exists.
 	ForceOcr *bool `json:"force_ocr,omitempty"`
 	// Attach instrumented page images to the grounded extraction prompt.
@@ -36,7 +36,7 @@ type ContentTypeExtractionGroundingPolicy struct {
 	// Drop block bounding boxes from the extraction prompt. Only sound with use_vision (layout comes from the image).
 	OmitBlockBoxes *bool `json:"omit_block_boxes,omitempty"`
 	// Maximum pages per grounded extraction call before windowing.
-	WindowPages *float32 `json:"window_pages,omitempty"`
+	WindowPages *int32 `json:"window_pages,omitempty"`
 	// Update object properties with grounded extraction data. Default true.
 	UpdateProperties *bool `json:"update_properties,omitempty"`
 	// Model execution configuration for the main grounded extraction interaction.
@@ -135,9 +135,9 @@ func (o *ContentTypeExtractionGroundingPolicy) SetInteraction(v string) {
 }
 
 // GetMaxPages returns the MaxPages field value if set, zero value otherwise.
-func (o *ContentTypeExtractionGroundingPolicy) GetMaxPages() float32 {
+func (o *ContentTypeExtractionGroundingPolicy) GetMaxPages() int32 {
 	if o == nil || IsNil(o.MaxPages) {
-		var ret float32
+		var ret int32
 		return ret
 	}
 	return *o.MaxPages
@@ -145,7 +145,7 @@ func (o *ContentTypeExtractionGroundingPolicy) GetMaxPages() float32 {
 
 // GetMaxPagesOk returns a tuple with the MaxPages field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ContentTypeExtractionGroundingPolicy) GetMaxPagesOk() (*float32, bool) {
+func (o *ContentTypeExtractionGroundingPolicy) GetMaxPagesOk() (*int32, bool) {
 	if o == nil || IsNil(o.MaxPages) {
 		return nil, false
 	}
@@ -161,8 +161,8 @@ func (o *ContentTypeExtractionGroundingPolicy) HasMaxPages() bool {
 	return false
 }
 
-// SetMaxPages gets a reference to the given float32 and assigns it to the MaxPages field.
-func (o *ContentTypeExtractionGroundingPolicy) SetMaxPages(v float32) {
+// SetMaxPages gets a reference to the given int32 and assigns it to the MaxPages field.
+func (o *ContentTypeExtractionGroundingPolicy) SetMaxPages(v int32) {
 	o.MaxPages = &v
 }
 
@@ -327,9 +327,9 @@ func (o *ContentTypeExtractionGroundingPolicy) SetOmitBlockBoxes(v bool) {
 }
 
 // GetWindowPages returns the WindowPages field value if set, zero value otherwise.
-func (o *ContentTypeExtractionGroundingPolicy) GetWindowPages() float32 {
+func (o *ContentTypeExtractionGroundingPolicy) GetWindowPages() int32 {
 	if o == nil || IsNil(o.WindowPages) {
-		var ret float32
+		var ret int32
 		return ret
 	}
 	return *o.WindowPages
@@ -337,7 +337,7 @@ func (o *ContentTypeExtractionGroundingPolicy) GetWindowPages() float32 {
 
 // GetWindowPagesOk returns a tuple with the WindowPages field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ContentTypeExtractionGroundingPolicy) GetWindowPagesOk() (*float32, bool) {
+func (o *ContentTypeExtractionGroundingPolicy) GetWindowPagesOk() (*int32, bool) {
 	if o == nil || IsNil(o.WindowPages) {
 		return nil, false
 	}
@@ -353,8 +353,8 @@ func (o *ContentTypeExtractionGroundingPolicy) HasWindowPages() bool {
 	return false
 }
 
-// SetWindowPages gets a reference to the given float32 and assigns it to the WindowPages field.
-func (o *ContentTypeExtractionGroundingPolicy) SetWindowPages(v float32) {
+// SetWindowPages gets a reference to the given int32 and assigns it to the WindowPages field.
+func (o *ContentTypeExtractionGroundingPolicy) SetWindowPages(v int32) {
 	o.WindowPages = &v
 }
 

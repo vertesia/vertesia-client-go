@@ -39,8 +39,8 @@ type ProjectConfiguration struct {
 	MainLanguage *string `json:"main_language,omitempty"`
 	// Project defaults and caps for browser_use agent workstreams.
 	BrowserUse *BrowserUseProjectConfiguration `json:"browser_use,omitempty"`
-	// Object ID of a content object containing a custom LaTeX template (.latex file) to use as the branded PDF template. When set, \"Export as Branded PDF\" uses this template instead of the built-in Vertesia default template.
-	PdfTemplateObjectId  *string `json:"pdf_template_object_id,omitempty"`
+	// Object ID of a content object containing a custom LaTeX template (.latex file) to use as the branded PDF template. When set, \"Export as Branded PDF\" uses this template instead of the built-in Vertesia default template. `null` clears it.
+	PdfTemplateObjectId  NullableString `json:"pdf_template_object_id,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -472,36 +472,47 @@ func (o *ProjectConfiguration) SetBrowserUse(v BrowserUseProjectConfiguration) {
 	o.BrowserUse = &v
 }
 
-// GetPdfTemplateObjectId returns the PdfTemplateObjectId field value if set, zero value otherwise.
+// GetPdfTemplateObjectId returns the PdfTemplateObjectId field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ProjectConfiguration) GetPdfTemplateObjectId() string {
-	if o == nil || IsNil(o.PdfTemplateObjectId) {
+	if o == nil || IsNil(o.PdfTemplateObjectId.Get()) {
 		var ret string
 		return ret
 	}
-	return *o.PdfTemplateObjectId
+	return *o.PdfTemplateObjectId.Get()
 }
 
 // GetPdfTemplateObjectIdOk returns a tuple with the PdfTemplateObjectId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ProjectConfiguration) GetPdfTemplateObjectIdOk() (*string, bool) {
-	if o == nil || IsNil(o.PdfTemplateObjectId) {
+	if o == nil {
 		return nil, false
 	}
-	return o.PdfTemplateObjectId, true
+	return o.PdfTemplateObjectId.Get(), o.PdfTemplateObjectId.IsSet()
 }
 
 // HasPdfTemplateObjectId returns a boolean if a field has been set.
 func (o *ProjectConfiguration) HasPdfTemplateObjectId() bool {
-	if o != nil && !IsNil(o.PdfTemplateObjectId) {
+	if o != nil && o.PdfTemplateObjectId.IsSet() {
 		return true
 	}
 
 	return false
 }
 
-// SetPdfTemplateObjectId gets a reference to the given string and assigns it to the PdfTemplateObjectId field.
+// SetPdfTemplateObjectId gets a reference to the given NullableString and assigns it to the PdfTemplateObjectId field.
 func (o *ProjectConfiguration) SetPdfTemplateObjectId(v string) {
-	o.PdfTemplateObjectId = &v
+	o.PdfTemplateObjectId.Set(&v)
+}
+
+// SetPdfTemplateObjectIdNil sets the value for PdfTemplateObjectId to be an explicit nil
+func (o *ProjectConfiguration) SetPdfTemplateObjectIdNil() {
+	o.PdfTemplateObjectId.Set(nil)
+}
+
+// UnsetPdfTemplateObjectId ensures that no value is present for PdfTemplateObjectId, not even an explicit nil
+func (o *ProjectConfiguration) UnsetPdfTemplateObjectId() {
+	o.PdfTemplateObjectId.Unset()
 }
 
 func (o ProjectConfiguration) MarshalJSON() ([]byte, error) {
@@ -551,8 +562,8 @@ func (o ProjectConfiguration) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.BrowserUse) {
 		toSerialize["browser_use"] = o.BrowserUse
 	}
-	if !IsNil(o.PdfTemplateObjectId) {
-		toSerialize["pdf_template_object_id"] = o.PdfTemplateObjectId
+	if o.PdfTemplateObjectId.IsSet() {
+		toSerialize["pdf_template_object_id"] = o.PdfTemplateObjectId.Get()
 	}
 
 	for key, value := range o.AdditionalProperties {

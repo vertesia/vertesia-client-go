@@ -27,9 +27,9 @@ type ContentTypeIntakePolicyTextConversion struct {
 	// Which pages to convert: everything or the locate result. Default all.
 	Scope *IntakePageScope `json:"scope,omitempty"`
 	// Static page ranges to convert (wins over `scope` when set).
-	PageRanges [][]float32 `json:"page_ranges,omitempty"`
+	PageRanges [][]int32 `json:"page_ranges,omitempty"`
 	// DPI at which each page is rendered to the image the LLM converts. Default 150 — the accuracy/cost sweet spot: higher resolutions balloon input tokens (some providers tile the page) for no quality gain, below ~150 dense tables start to misread. Raise only for very fine print.
-	RenderDpi *float32 `json:"render_dpi,omitempty"`
+	RenderDpi *int32 `json:"render_dpi,omitempty"`
 	// Model execution config for the page-conversion interaction (method 'llm'/'auto' -> sys:ConvertPageToMarkdown, method 'custom' -> the custom interaction). Lets the visual conversion run on a cheaper/faster model (e.g. a flash model) than extraction. When unset, conversion uses the run's model config or the project default model.
 	Config *InteractionExecutionConfiguration `json:"config,omitempty"`
 }
@@ -244,9 +244,9 @@ func (o *ContentTypeIntakePolicyTextConversion) SetScope(v IntakePageScope) {
 }
 
 // GetPageRanges returns the PageRanges field value if set, zero value otherwise.
-func (o *ContentTypeIntakePolicyTextConversion) GetPageRanges() [][]float32 {
+func (o *ContentTypeIntakePolicyTextConversion) GetPageRanges() [][]int32 {
 	if o == nil || IsNil(o.PageRanges) {
-		var ret [][]float32
+		var ret [][]int32
 		return ret
 	}
 	return o.PageRanges
@@ -254,7 +254,7 @@ func (o *ContentTypeIntakePolicyTextConversion) GetPageRanges() [][]float32 {
 
 // GetPageRangesOk returns a tuple with the PageRanges field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ContentTypeIntakePolicyTextConversion) GetPageRangesOk() ([][]float32, bool) {
+func (o *ContentTypeIntakePolicyTextConversion) GetPageRangesOk() ([][]int32, bool) {
 	if o == nil || IsNil(o.PageRanges) {
 		return nil, false
 	}
@@ -270,15 +270,15 @@ func (o *ContentTypeIntakePolicyTextConversion) HasPageRanges() bool {
 	return false
 }
 
-// SetPageRanges gets a reference to the given [][]float32 and assigns it to the PageRanges field.
-func (o *ContentTypeIntakePolicyTextConversion) SetPageRanges(v [][]float32) {
+// SetPageRanges gets a reference to the given [][]int32 and assigns it to the PageRanges field.
+func (o *ContentTypeIntakePolicyTextConversion) SetPageRanges(v [][]int32) {
 	o.PageRanges = v
 }
 
 // GetRenderDpi returns the RenderDpi field value if set, zero value otherwise.
-func (o *ContentTypeIntakePolicyTextConversion) GetRenderDpi() float32 {
+func (o *ContentTypeIntakePolicyTextConversion) GetRenderDpi() int32 {
 	if o == nil || IsNil(o.RenderDpi) {
-		var ret float32
+		var ret int32
 		return ret
 	}
 	return *o.RenderDpi
@@ -286,7 +286,7 @@ func (o *ContentTypeIntakePolicyTextConversion) GetRenderDpi() float32 {
 
 // GetRenderDpiOk returns a tuple with the RenderDpi field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ContentTypeIntakePolicyTextConversion) GetRenderDpiOk() (*float32, bool) {
+func (o *ContentTypeIntakePolicyTextConversion) GetRenderDpiOk() (*int32, bool) {
 	if o == nil || IsNil(o.RenderDpi) {
 		return nil, false
 	}
@@ -302,8 +302,8 @@ func (o *ContentTypeIntakePolicyTextConversion) HasRenderDpi() bool {
 	return false
 }
 
-// SetRenderDpi gets a reference to the given float32 and assigns it to the RenderDpi field.
-func (o *ContentTypeIntakePolicyTextConversion) SetRenderDpi(v float32) {
+// SetRenderDpi gets a reference to the given int32 and assigns it to the RenderDpi field.
+func (o *ContentTypeIntakePolicyTextConversion) SetRenderDpi(v int32) {
 	o.RenderDpi = &v
 }
 

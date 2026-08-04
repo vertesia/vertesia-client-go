@@ -580,11 +580,17 @@ func (a *ProcessesAPIService) ListProcessDefinitionVersionsExecute(r ApiListProc
 type ApiListProcessDefinitionsRequest struct {
 	ctx         context.Context
 	ApiService  *ProcessesAPIService
+	status      *string
 	process     *string
 	limit       *float32
 	offset      *float32
 	allVersions *bool
 	xApiVersion *string
+}
+
+func (r ApiListProcessDefinitionsRequest) Status(status string) ApiListProcessDefinitionsRequest {
+	r.status = &status
+	return r
 }
 
 func (r ApiListProcessDefinitionsRequest) Process(process string) ApiListProcessDefinitionsRequest {
@@ -656,6 +662,9 @@ func (a *ProcessesAPIService) ListProcessDefinitionsExecute(r ApiListProcessDefi
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.status != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "status", r.status, "form", "")
+	}
 	if r.process != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "process", r.process, "form", "")
 	}

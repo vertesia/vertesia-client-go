@@ -37,9 +37,9 @@ type ApiKeyReadResponse struct {
 	ExpiresAt        *time.Time  `json:"expires_at,omitempty"`
 	// Custom properties for dynamic permission matching (PrincipalSet / $principal. conditions)
 	Properties map[string]interface{} `json:"properties,omitempty"`
-	// BLP clearance level — determines max document sensitivity the key can access
+	// BLP clearance level — the maximum document sensitivity the key can access
 	Clearance *float32 `json:"clearance,omitempty"`
-	// Compartments the key belongs to — restricts access to documents in matching compartments
+	// Compartments the key belongs to — restricts access to matching documents
 	Compartments         []string `json:"compartments,omitempty"`
 	Value                *string  `json:"value,omitempty"`
 	AdditionalProperties map[string]interface{}

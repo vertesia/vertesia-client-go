@@ -13,209 +13,122 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
+	"gopkg.in/validator.v2"
 )
 
-// checks if the StripeBillingStatusResponse type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &StripeBillingStatusResponse{}
-
-// StripeBillingStatusResponse struct for StripeBillingStatusResponse
+// StripeBillingStatusResponse - struct for StripeBillingStatusResponse
 type StripeBillingStatusResponse struct {
-	Status        string                `json:"status"`
-	BillingMethod NullableBillingMethod `json:"billing_method"`
-	PortalUrl     *string               `json:"portal_url,omitempty"`
-	Reason        *string               `json:"reason,omitempty"`
+	StripeBillingDisabled *StripeBillingDisabled
+	StripeBillingEnabled  *StripeBillingEnabled
 }
 
-type _StripeBillingStatusResponse StripeBillingStatusResponse
-
-// NewStripeBillingStatusResponse instantiates a new StripeBillingStatusResponse object
-// This constructor will assign default values to properties that have it defined,
-// and makes sure properties required by API are set, but the set of arguments
-// will change when the set of required properties is changed
-func NewStripeBillingStatusResponse(status string, billingMethod NullableBillingMethod) *StripeBillingStatusResponse {
-	this := StripeBillingStatusResponse{}
-	this.Status = status
-	this.BillingMethod = billingMethod
-	return &this
-}
-
-// NewStripeBillingStatusResponseWithDefaults instantiates a new StripeBillingStatusResponse object
-// This constructor will only assign default values to properties that have it defined,
-// but it doesn't guarantee that properties required by API are set
-func NewStripeBillingStatusResponseWithDefaults() *StripeBillingStatusResponse {
-	this := StripeBillingStatusResponse{}
-	return &this
-}
-
-// GetStatus returns the Status field value
-func (o *StripeBillingStatusResponse) GetStatus() string {
-	if o == nil {
-		var ret string
-		return ret
+// StripeBillingDisabledAsStripeBillingStatusResponse is a convenience function that returns StripeBillingDisabled wrapped in StripeBillingStatusResponse
+func StripeBillingDisabledAsStripeBillingStatusResponse(v *StripeBillingDisabled) StripeBillingStatusResponse {
+	return StripeBillingStatusResponse{
+		StripeBillingDisabled: v,
 	}
-
-	return o.Status
 }
 
-// GetStatusOk returns a tuple with the Status field value
-// and a boolean to check if the value has been set.
-func (o *StripeBillingStatusResponse) GetStatusOk() (*string, bool) {
-	if o == nil {
-		return nil, false
+// StripeBillingEnabledAsStripeBillingStatusResponse is a convenience function that returns StripeBillingEnabled wrapped in StripeBillingStatusResponse
+func StripeBillingEnabledAsStripeBillingStatusResponse(v *StripeBillingEnabled) StripeBillingStatusResponse {
+	return StripeBillingStatusResponse{
+		StripeBillingEnabled: v,
 	}
-	return &o.Status, true
 }
 
-// SetStatus sets field value
-func (o *StripeBillingStatusResponse) SetStatus(v string) {
-	o.Status = v
-}
-
-// GetBillingMethod returns the BillingMethod field value
-// If the value is explicit nil, the zero value for BillingMethod will be returned
-func (o *StripeBillingStatusResponse) GetBillingMethod() BillingMethod {
-	if o == nil || o.BillingMethod.Get() == nil {
-		var ret BillingMethod
-		return ret
-	}
-
-	return *o.BillingMethod.Get()
-}
-
-// GetBillingMethodOk returns a tuple with the BillingMethod field value
-// and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *StripeBillingStatusResponse) GetBillingMethodOk() (*BillingMethod, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return o.BillingMethod.Get(), o.BillingMethod.IsSet()
-}
-
-// SetBillingMethod sets field value
-func (o *StripeBillingStatusResponse) SetBillingMethod(v BillingMethod) {
-	o.BillingMethod.Set(&v)
-}
-
-// GetPortalUrl returns the PortalUrl field value if set, zero value otherwise.
-func (o *StripeBillingStatusResponse) GetPortalUrl() string {
-	if o == nil || IsNil(o.PortalUrl) {
-		var ret string
-		return ret
-	}
-	return *o.PortalUrl
-}
-
-// GetPortalUrlOk returns a tuple with the PortalUrl field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *StripeBillingStatusResponse) GetPortalUrlOk() (*string, bool) {
-	if o == nil || IsNil(o.PortalUrl) {
-		return nil, false
-	}
-	return o.PortalUrl, true
-}
-
-// HasPortalUrl returns a boolean if a field has been set.
-func (o *StripeBillingStatusResponse) HasPortalUrl() bool {
-	if o != nil && !IsNil(o.PortalUrl) {
-		return true
-	}
-
-	return false
-}
-
-// SetPortalUrl gets a reference to the given string and assigns it to the PortalUrl field.
-func (o *StripeBillingStatusResponse) SetPortalUrl(v string) {
-	o.PortalUrl = &v
-}
-
-// GetReason returns the Reason field value if set, zero value otherwise.
-func (o *StripeBillingStatusResponse) GetReason() string {
-	if o == nil || IsNil(o.Reason) {
-		var ret string
-		return ret
-	}
-	return *o.Reason
-}
-
-// GetReasonOk returns a tuple with the Reason field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *StripeBillingStatusResponse) GetReasonOk() (*string, bool) {
-	if o == nil || IsNil(o.Reason) {
-		return nil, false
-	}
-	return o.Reason, true
-}
-
-// HasReason returns a boolean if a field has been set.
-func (o *StripeBillingStatusResponse) HasReason() bool {
-	if o != nil && !IsNil(o.Reason) {
-		return true
-	}
-
-	return false
-}
-
-// SetReason gets a reference to the given string and assigns it to the Reason field.
-func (o *StripeBillingStatusResponse) SetReason(v string) {
-	o.Reason = &v
-}
-
-func (o StripeBillingStatusResponse) MarshalJSON() ([]byte, error) {
-	toSerialize, err := o.ToMap()
-	if err != nil {
-		return []byte{}, err
-	}
-	return json.Marshal(toSerialize)
-}
-
-func (o StripeBillingStatusResponse) ToMap() (map[string]interface{}, error) {
-	toSerialize := map[string]interface{}{}
-	toSerialize["status"] = o.Status
-	toSerialize["billing_method"] = o.BillingMethod.Get()
-	if !IsNil(o.PortalUrl) {
-		toSerialize["portal_url"] = o.PortalUrl
-	}
-	if !IsNil(o.Reason) {
-		toSerialize["reason"] = o.Reason
-	}
-	return toSerialize, nil
-}
-
-func (o *StripeBillingStatusResponse) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"status",
-		"billing_method",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
+// Unmarshal JSON data into one of the pointers in the struct
+func (dst *StripeBillingStatusResponse) UnmarshalJSON(data []byte) error {
+	var err error
+	match := 0
+	// try to unmarshal data into StripeBillingDisabled
+	err = newStrictDecoder(data).Decode(&dst.StripeBillingDisabled)
+	if err == nil {
+		jsonStripeBillingDisabled, _ := json.Marshal(dst.StripeBillingDisabled)
+		if string(jsonStripeBillingDisabled) == "{}" { // empty struct
+			dst.StripeBillingDisabled = nil
+		} else {
+			if err = validator.Validate(dst.StripeBillingDisabled); err != nil {
+				dst.StripeBillingDisabled = nil
+			} else {
+				match++
+			}
 		}
+	} else {
+		dst.StripeBillingDisabled = nil
 	}
 
-	varStripeBillingStatusResponse := _StripeBillingStatusResponse{}
-
-	err = json.Unmarshal(data, &varStripeBillingStatusResponse)
-
-	if err != nil {
-		return err
+	// try to unmarshal data into StripeBillingEnabled
+	err = newStrictDecoder(data).Decode(&dst.StripeBillingEnabled)
+	if err == nil {
+		jsonStripeBillingEnabled, _ := json.Marshal(dst.StripeBillingEnabled)
+		if string(jsonStripeBillingEnabled) == "{}" { // empty struct
+			dst.StripeBillingEnabled = nil
+		} else {
+			if err = validator.Validate(dst.StripeBillingEnabled); err != nil {
+				dst.StripeBillingEnabled = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.StripeBillingEnabled = nil
 	}
 
-	*o = StripeBillingStatusResponse(varStripeBillingStatusResponse)
+	if match > 1 { // more than 1 match
+		// reset to nil
+		dst.StripeBillingDisabled = nil
+		dst.StripeBillingEnabled = nil
 
-	return err
+		return fmt.Errorf("data matches more than one schema in oneOf(StripeBillingStatusResponse)")
+	} else if match == 1 {
+		return nil // exactly one match
+	} else { // no match
+		return fmt.Errorf("data failed to match schemas in oneOf(StripeBillingStatusResponse)")
+	}
+}
+
+// Marshal data from the first non-nil pointers in the struct to JSON
+func (src StripeBillingStatusResponse) MarshalJSON() ([]byte, error) {
+	if src.StripeBillingDisabled != nil {
+		return json.Marshal(&src.StripeBillingDisabled)
+	}
+
+	if src.StripeBillingEnabled != nil {
+		return json.Marshal(&src.StripeBillingEnabled)
+	}
+
+	return nil, nil // no data in oneOf schemas
+}
+
+// Get the actual instance
+func (obj *StripeBillingStatusResponse) GetActualInstance() interface{} {
+	if obj == nil {
+		return nil
+	}
+	if obj.StripeBillingDisabled != nil {
+		return obj.StripeBillingDisabled
+	}
+
+	if obj.StripeBillingEnabled != nil {
+		return obj.StripeBillingEnabled
+	}
+
+	// all schemas are nil
+	return nil
+}
+
+// Get the actual instance value
+func (obj StripeBillingStatusResponse) GetActualInstanceValue() interface{} {
+	if obj.StripeBillingDisabled != nil {
+		return *obj.StripeBillingDisabled
+	}
+
+	if obj.StripeBillingEnabled != nil {
+		return *obj.StripeBillingEnabled
+	}
+
+	// all schemas are nil
+	return nil
 }
 
 type NullableStripeBillingStatusResponse struct {
