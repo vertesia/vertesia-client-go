@@ -21,7 +21,9 @@ var _ MappedNullable = &AsyncConversationExecutionPayload{}
 // AsyncConversationExecutionPayload struct for AsyncConversationExecutionPayload
 type AsyncConversationExecutionPayload struct {
 	// The interaction name and suffixed by an optional tag or version separated from the name using a @ character If no version/tag part is specified then the latest version is used. Example: ReviewContract, ReviewContract@draft, ReviewContract@1, ReviewContract@some-tag
-	Interaction  string                                                `json:"interaction"`
+	Interaction string `json:"interaction"`
+	// Immutable app-version target inherited by this conversation execution. The workflow applies it to app-owned resource resolution; callers normally set the x-vertesia-app-version header instead of populating this field directly.
+	AppVersion   *string                                               `json:"app_version,omitempty"`
 	Data         interface{}                                           `json:"data,omitempty"`
 	Config       *InteractionExecutionConfiguration                    `json:"config,omitempty"`
 	ResultSchema NullableAsyncConversationExecutionPayloadResultSchema `json:"result_schema,omitempty"`
@@ -138,6 +140,38 @@ func (o *AsyncConversationExecutionPayload) GetInteractionOk() (*string, bool) {
 // SetInteraction sets field value
 func (o *AsyncConversationExecutionPayload) SetInteraction(v string) {
 	o.Interaction = v
+}
+
+// GetAppVersion returns the AppVersion field value if set, zero value otherwise.
+func (o *AsyncConversationExecutionPayload) GetAppVersion() string {
+	if o == nil || IsNil(o.AppVersion) {
+		var ret string
+		return ret
+	}
+	return *o.AppVersion
+}
+
+// GetAppVersionOk returns a tuple with the AppVersion field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AsyncConversationExecutionPayload) GetAppVersionOk() (*string, bool) {
+	if o == nil || IsNil(o.AppVersion) {
+		return nil, false
+	}
+	return o.AppVersion, true
+}
+
+// HasAppVersion returns a boolean if a field has been set.
+func (o *AsyncConversationExecutionPayload) HasAppVersion() bool {
+	if o != nil && !IsNil(o.AppVersion) {
+		return true
+	}
+
+	return false
+}
+
+// SetAppVersion gets a reference to the given string and assigns it to the AppVersion field.
+func (o *AsyncConversationExecutionPayload) SetAppVersion(v string) {
+	o.AppVersion = &v
 }
 
 // GetData returns the Data field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -1404,6 +1438,9 @@ func (o AsyncConversationExecutionPayload) MarshalJSON() ([]byte, error) {
 func (o AsyncConversationExecutionPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["interaction"] = o.Interaction
+	if !IsNil(o.AppVersion) {
+		toSerialize["app_version"] = o.AppVersion
+	}
 	if o.Data != nil {
 		toSerialize["data"] = o.Data
 	}
@@ -1564,6 +1601,7 @@ func (o *AsyncConversationExecutionPayload) UnmarshalJSON(data []byte) (err erro
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "interaction")
+		delete(additionalProperties, "app_version")
 		delete(additionalProperties, "data")
 		delete(additionalProperties, "config")
 		delete(additionalProperties, "result_schema")
