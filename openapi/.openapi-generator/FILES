@@ -110,6 +110,7 @@ model_app_build_progress_status.go
 model_app_build_trigger.go
 model_app_capabilities.go
 model_app_dashboard_definition.go
+model_app_delete_summary.go
 model_app_development_task.go
 model_app_development_task_details.go
 model_app_development_task_list.go
@@ -603,6 +604,9 @@ model_load_balancing_env_config.go
 model_load_balancing_env_entry_config.go
 model_magic_pdf_configuration.go
 model_markdown_rendition_format.go
+model_mcp_api_key_config.go
+model_mcp_api_key_credential.go
+model_mcp_api_key_status.go
 model_mcp_o_auth_connect_response.go
 model_mcp_o_auth_disconnect_response.go
 model_mcp_o_auth_token_request.go
@@ -809,6 +813,7 @@ model_serper_configuration.go
 model_serper_configuration_input.go
 model_service_account_token_request.go
 model_set_file_metadata_payload.go
+model_set_mcp_api_key_request.go
 model_set_object_embeddings_response.go
 model_signal_agent_response.go
 model_signal_event_properties.go
