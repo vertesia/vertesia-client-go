@@ -22,6 +22,150 @@ import (
 // EventsAPIService EventsAPI service
 type EventsAPIService service
 
+type ApiCancelEventDeliveryIntentsRequest struct {
+	ctx                               context.Context
+	ApiService                        *EventsAPIService
+	cancelEventDeliveryIntentsPayload *CancelEventDeliveryIntentsPayload
+	xApiVersion                       *string
+}
+
+func (r ApiCancelEventDeliveryIntentsRequest) CancelEventDeliveryIntentsPayload(cancelEventDeliveryIntentsPayload CancelEventDeliveryIntentsPayload) ApiCancelEventDeliveryIntentsRequest {
+	r.cancelEventDeliveryIntentsPayload = &cancelEventDeliveryIntentsPayload
+	return r
+}
+
+// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCancelEventDeliveryIntentsRequest) XApiVersion(xApiVersion string) ApiCancelEventDeliveryIntentsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiCancelEventDeliveryIntentsRequest) Execute() (*CancelEventDeliveryIntentsResponse, *http.Response, error) {
+	return r.ApiService.CancelEventDeliveryIntentsExecute(r)
+}
+
+/*
+CancelEventDeliveryIntents Cancel queued event delivery intents
+
+Cancels matching pending and retrying delivery intents for the current project and deployment environment through a server-side watermark. Active deliveries and later events are not changed.
+
+**Required permissions:** `workflow:run`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCancelEventDeliveryIntentsRequest
+*/
+func (a *EventsAPIService) CancelEventDeliveryIntents(ctx context.Context) ApiCancelEventDeliveryIntentsRequest {
+	return ApiCancelEventDeliveryIntentsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CancelEventDeliveryIntentsResponse
+func (a *EventsAPIService) CancelEventDeliveryIntentsExecute(r ApiCancelEventDeliveryIntentsRequest) (*CancelEventDeliveryIntentsResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CancelEventDeliveryIntentsResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventsAPIService.CancelEventDeliveryIntents")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/events/deliveries/cancel"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.cancelEventDeliveryIntentsPayload == nil {
+		return localVarReturnValue, nil, reportError("cancelEventDeliveryIntentsPayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	// body params
+	localVarPostBody = r.cancelEventDeliveryIntentsPayload
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiGetEventDeliveryQueueSummaryRequest struct {
 	ctx                              context.Context
 	ApiService                       *EventsAPIService

@@ -219,6 +219,8 @@ model_bulk_upload_urls_payload.go
 model_bulk_upload_urls_payload_files_inner.go
 model_bulk_upload_urls_response.go
 model_cache_policy.go
+model_cancel_event_delivery_intents_payload.go
+model_cancel_event_delivery_intents_response.go
 model_catalog_interaction_ref.go
 model_child_workflow_task.go
 model_collection.go
