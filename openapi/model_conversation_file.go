@@ -44,6 +44,8 @@ type ConversationFile struct {
 	StartedAt float32 `json:"started_at"`
 	// Timestamp when processing completed
 	CompletedAt *float32 `json:"completed_at,omitempty"`
+	// Timestamp when this file was delivered to the agent as part of a user message. Once set, the file is no longer re-attached to later messages — it remains accessible to tools via its artifact_path/md_path.
+	ConsumedAt *float32 `json:"consumed_at,omitempty"`
 }
 
 type _ConversationFile ConversationFile
@@ -407,6 +409,38 @@ func (o *ConversationFile) SetCompletedAt(v float32) {
 	o.CompletedAt = &v
 }
 
+// GetConsumedAt returns the ConsumedAt field value if set, zero value otherwise.
+func (o *ConversationFile) GetConsumedAt() float32 {
+	if o == nil || IsNil(o.ConsumedAt) {
+		var ret float32
+		return ret
+	}
+	return *o.ConsumedAt
+}
+
+// GetConsumedAtOk returns a tuple with the ConsumedAt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationFile) GetConsumedAtOk() (*float32, bool) {
+	if o == nil || IsNil(o.ConsumedAt) {
+		return nil, false
+	}
+	return o.ConsumedAt, true
+}
+
+// HasConsumedAt returns a boolean if a field has been set.
+func (o *ConversationFile) HasConsumedAt() bool {
+	if o != nil && !IsNil(o.ConsumedAt) {
+		return true
+	}
+
+	return false
+}
+
+// SetConsumedAt gets a reference to the given float32 and assigns it to the ConsumedAt field.
+func (o *ConversationFile) SetConsumedAt(v float32) {
+	o.ConsumedAt = &v
+}
+
 func (o ConversationFile) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -440,6 +474,9 @@ func (o ConversationFile) ToMap() (map[string]interface{}, error) {
 	toSerialize["started_at"] = o.StartedAt
 	if !IsNil(o.CompletedAt) {
 		toSerialize["completed_at"] = o.CompletedAt
+	}
+	if !IsNil(o.ConsumedAt) {
+		toSerialize["consumed_at"] = o.ConsumedAt
 	}
 	return toSerialize, nil
 }
