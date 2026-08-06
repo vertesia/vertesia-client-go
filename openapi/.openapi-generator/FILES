@@ -585,6 +585,7 @@ model_invite_acceptance_response.go
 model_invite_decline_response.go
 model_invite_user_request_payload.go
 model_invite_user_response_payload.go
+model_issue_token_forbidden_response.go
 model_issue_token_request.go
 model_issue_token_response.go
 model_issue_token_unavailable_response.go
