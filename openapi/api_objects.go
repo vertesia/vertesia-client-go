@@ -1637,7 +1637,7 @@ func (r ApiGetObjectRequest) XApiVersion(xApiVersion string) ApiGetObjectRequest
 	return r
 }
 
-func (r ApiGetObjectRequest) Execute() (*ContentObjectApiResponse, *http.Response, error) {
+func (r ApiGetObjectRequest) Execute() (*ProjectedContentObjectApiResponse, *http.Response, error) {
 	return r.ApiService.GetObjectExecute(r)
 }
 
@@ -1662,13 +1662,13 @@ func (a *ObjectsAPIService) GetObject(ctx context.Context, objectId string) ApiG
 
 // Execute executes the request
 //
-//	@return ContentObjectApiResponse
-func (a *ObjectsAPIService) GetObjectExecute(r ApiGetObjectRequest) (*ContentObjectApiResponse, *http.Response, error) {
+//	@return ProjectedContentObjectApiResponse
+func (a *ObjectsAPIService) GetObjectExecute(r ApiGetObjectRequest) (*ProjectedContentObjectApiResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *ContentObjectApiResponse
+		localVarReturnValue *ProjectedContentObjectApiResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ObjectsAPIService.GetObject")

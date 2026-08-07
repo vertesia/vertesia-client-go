@@ -729,6 +729,7 @@ model_project_search_property_type.go
 model_project_search_tier.go
 model_project_token_request.go
 model_project_tool_info.go
+model_projected_content_object_api_response.go
 model_promote_app_version_response.go
 model_promote_dashboard_version_payload.go
 model_prompt_improvement_response.go

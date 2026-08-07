@@ -22,6 +22,7 @@ var _ MappedNullable = &ProcessHistoryResponse{}
 type ProcessHistoryResponse struct {
 	RunId                string                                `json:"run_id"`
 	CurrentNode          string                                `json:"current_node"`
+	NodeHistory          []NodeHistoryEntry                    `json:"node_history"`
 	NodeHistoryRef       *ProcessHistoryResponseNodeHistoryRef `json:"node_history_ref,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
@@ -32,10 +33,11 @@ type _ProcessHistoryResponse ProcessHistoryResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewProcessHistoryResponse(runId string, currentNode string) *ProcessHistoryResponse {
+func NewProcessHistoryResponse(runId string, currentNode string, nodeHistory []NodeHistoryEntry) *ProcessHistoryResponse {
 	this := ProcessHistoryResponse{}
 	this.RunId = runId
 	this.CurrentNode = currentNode
+	this.NodeHistory = nodeHistory
 	return &this
 }
 
@@ -95,6 +97,30 @@ func (o *ProcessHistoryResponse) SetCurrentNode(v string) {
 	o.CurrentNode = v
 }
 
+// GetNodeHistory returns the NodeHistory field value
+func (o *ProcessHistoryResponse) GetNodeHistory() []NodeHistoryEntry {
+	if o == nil {
+		var ret []NodeHistoryEntry
+		return ret
+	}
+
+	return o.NodeHistory
+}
+
+// GetNodeHistoryOk returns a tuple with the NodeHistory field value
+// and a boolean to check if the value has been set.
+func (o *ProcessHistoryResponse) GetNodeHistoryOk() ([]NodeHistoryEntry, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.NodeHistory, true
+}
+
+// SetNodeHistory sets field value
+func (o *ProcessHistoryResponse) SetNodeHistory(v []NodeHistoryEntry) {
+	o.NodeHistory = v
+}
+
 // GetNodeHistoryRef returns the NodeHistoryRef field value if set, zero value otherwise.
 func (o *ProcessHistoryResponse) GetNodeHistoryRef() ProcessHistoryResponseNodeHistoryRef {
 	if o == nil || IsNil(o.NodeHistoryRef) {
@@ -139,6 +165,7 @@ func (o ProcessHistoryResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["run_id"] = o.RunId
 	toSerialize["current_node"] = o.CurrentNode
+	toSerialize["node_history"] = o.NodeHistory
 	if !IsNil(o.NodeHistoryRef) {
 		toSerialize["node_history_ref"] = o.NodeHistoryRef
 	}
@@ -157,6 +184,7 @@ func (o *ProcessHistoryResponse) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"run_id",
 		"current_node",
+		"node_history",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -188,6 +216,7 @@ func (o *ProcessHistoryResponse) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "run_id")
 		delete(additionalProperties, "current_node")
+		delete(additionalProperties, "node_history")
 		delete(additionalProperties, "node_history_ref")
 		o.AdditionalProperties = additionalProperties
 	}

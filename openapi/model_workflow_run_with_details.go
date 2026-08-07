@@ -50,6 +50,7 @@ type WorkflowRunWithDetails struct {
 	History           *WorkflowHistory       `json:"history,omitempty"`
 	Memo              map[string]interface{} `json:"memo,omitempty"`
 	PendingActivities []PendingActivity      `json:"pendingActivities,omitempty"`
+	Children          []WorkflowRun          `json:"children,omitempty"`
 }
 
 type _WorkflowRunWithDetails WorkflowRunWithDetails
@@ -802,6 +803,38 @@ func (o *WorkflowRunWithDetails) SetPendingActivities(v []PendingActivity) {
 	o.PendingActivities = v
 }
 
+// GetChildren returns the Children field value if set, zero value otherwise.
+func (o *WorkflowRunWithDetails) GetChildren() []WorkflowRun {
+	if o == nil || IsNil(o.Children) {
+		var ret []WorkflowRun
+		return ret
+	}
+	return o.Children
+}
+
+// GetChildrenOk returns a tuple with the Children field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *WorkflowRunWithDetails) GetChildrenOk() ([]WorkflowRun, bool) {
+	if o == nil || IsNil(o.Children) {
+		return nil, false
+	}
+	return o.Children, true
+}
+
+// HasChildren returns a boolean if a field has been set.
+func (o *WorkflowRunWithDetails) HasChildren() bool {
+	if o != nil && !IsNil(o.Children) {
+		return true
+	}
+
+	return false
+}
+
+// SetChildren gets a reference to the given []WorkflowRun and assigns it to the Children field.
+func (o *WorkflowRunWithDetails) SetChildren(v []WorkflowRun) {
+	o.Children = v
+}
+
 func (o WorkflowRunWithDetails) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -876,6 +909,9 @@ func (o WorkflowRunWithDetails) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.PendingActivities) {
 		toSerialize["pendingActivities"] = o.PendingActivities
+	}
+	if !IsNil(o.Children) {
+		toSerialize["children"] = o.Children
 	}
 	return toSerialize, nil
 }

@@ -25,6 +25,7 @@ type FileMetadataResponse struct {
 	ContentType        string            `json:"contentType"`
 	ContentDisposition *string           `json:"contentDisposition,omitempty"`
 	Etag               *string           `json:"etag,omitempty"`
+	Generation         *string           `json:"generation,omitempty"`
 	CustomMetadata     map[string]string `json:"customMetadata,omitempty"`
 }
 
@@ -186,6 +187,38 @@ func (o *FileMetadataResponse) SetEtag(v string) {
 	o.Etag = &v
 }
 
+// GetGeneration returns the Generation field value if set, zero value otherwise.
+func (o *FileMetadataResponse) GetGeneration() string {
+	if o == nil || IsNil(o.Generation) {
+		var ret string
+		return ret
+	}
+	return *o.Generation
+}
+
+// GetGenerationOk returns a tuple with the Generation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *FileMetadataResponse) GetGenerationOk() (*string, bool) {
+	if o == nil || IsNil(o.Generation) {
+		return nil, false
+	}
+	return o.Generation, true
+}
+
+// HasGeneration returns a boolean if a field has been set.
+func (o *FileMetadataResponse) HasGeneration() bool {
+	if o != nil && !IsNil(o.Generation) {
+		return true
+	}
+
+	return false
+}
+
+// SetGeneration gets a reference to the given string and assigns it to the Generation field.
+func (o *FileMetadataResponse) SetGeneration(v string) {
+	o.Generation = &v
+}
+
 // GetCustomMetadata returns the CustomMetadata field value if set, zero value otherwise.
 func (o *FileMetadataResponse) GetCustomMetadata() map[string]string {
 	if o == nil || IsNil(o.CustomMetadata) {
@@ -236,6 +269,9 @@ func (o FileMetadataResponse) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Etag) {
 		toSerialize["etag"] = o.Etag
+	}
+	if !IsNil(o.Generation) {
+		toSerialize["generation"] = o.Generation
 	}
 	if !IsNil(o.CustomMetadata) {
 		toSerialize["customMetadata"] = o.CustomMetadata

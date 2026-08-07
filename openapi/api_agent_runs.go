@@ -336,7 +336,7 @@ func (r ApiCreateAgentRunRequest) XApiVersion(xApiVersion string) ApiCreateAgent
 	return r
 }
 
-func (r ApiCreateAgentRunRequest) Execute() (*AgentRun, *http.Response, error) {
+func (r ApiCreateAgentRunRequest) Execute() (*AgentRunResponse, *http.Response, error) {
 	return r.ApiService.CreateAgentRunExecute(r)
 }
 
@@ -359,13 +359,13 @@ func (a *AgentRunsAPIService) CreateAgentRun(ctx context.Context) ApiCreateAgent
 
 // Execute executes the request
 //
-//	@return AgentRun
-func (a *AgentRunsAPIService) CreateAgentRunExecute(r ApiCreateAgentRunRequest) (*AgentRun, *http.Response, error) {
+//	@return AgentRunResponse
+func (a *AgentRunsAPIService) CreateAgentRunExecute(r ApiCreateAgentRunRequest) (*AgentRunResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *AgentRun
+		localVarReturnValue *AgentRunResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AgentRunsAPIService.CreateAgentRun")
@@ -762,7 +762,7 @@ func (r ApiGetAgentRunRequest) XApiVersion(xApiVersion string) ApiGetAgentRunReq
 	return r
 }
 
-func (r ApiGetAgentRunRequest) Execute() (*AgentRun, *http.Response, error) {
+func (r ApiGetAgentRunRequest) Execute() (*AgentRunResponse, *http.Response, error) {
 	return r.ApiService.GetAgentRunExecute(r)
 }
 
@@ -787,13 +787,13 @@ func (a *AgentRunsAPIService) GetAgentRun(ctx context.Context, agentRunId string
 
 // Execute executes the request
 //
-//	@return AgentRun
-func (a *AgentRunsAPIService) GetAgentRunExecute(r ApiGetAgentRunRequest) (*AgentRun, *http.Response, error) {
+//	@return AgentRunResponse
+func (a *AgentRunsAPIService) GetAgentRunExecute(r ApiGetAgentRunRequest) (*AgentRunResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *AgentRun
+		localVarReturnValue *AgentRunResponse
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AgentRunsAPIService.GetAgentRun")

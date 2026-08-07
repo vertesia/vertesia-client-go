@@ -46,7 +46,8 @@ type WorkflowRun struct {
 	// The current activity state of the conversation. - 'working': The agent is actively processing - 'idle': The agent is waiting for user input
 	ActivityState *ConversationActivityState `json:"activity_state,omitempty"`
 	// Whether this conversation is interactive (accepts user input).
-	Interactive *bool `json:"interactive,omitempty"`
+	Interactive *bool                  `json:"interactive,omitempty"`
+	Memo        map[string]interface{} `json:"memo,omitempty"`
 }
 
 type _WorkflowRun WorkflowRun
@@ -702,6 +703,39 @@ func (o *WorkflowRun) SetInteractive(v bool) {
 	o.Interactive = &v
 }
 
+// GetMemo returns the Memo field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *WorkflowRun) GetMemo() map[string]interface{} {
+	if o == nil {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.Memo
+}
+
+// GetMemoOk returns a tuple with the Memo field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *WorkflowRun) GetMemoOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.Memo) {
+		return map[string]interface{}{}, false
+	}
+	return o.Memo, true
+}
+
+// HasMemo returns a boolean if a field has been set.
+func (o *WorkflowRun) HasMemo() bool {
+	if o != nil && !IsNil(o.Memo) {
+		return true
+	}
+
+	return false
+}
+
+// SetMemo gets a reference to the given map[string]interface{} and assigns it to the Memo field.
+func (o *WorkflowRun) SetMemo(v map[string]interface{}) {
+	o.Memo = v
+}
+
 func (o WorkflowRun) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -767,6 +801,9 @@ func (o WorkflowRun) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Interactive) {
 		toSerialize["interactive"] = o.Interactive
+	}
+	if o.Memo != nil {
+		toSerialize["memo"] = o.Memo
 	}
 	return toSerialize, nil
 }

@@ -20,8 +20,9 @@ var _ MappedNullable = &ProcessContextResponse{}
 
 // ProcessContextResponse struct for ProcessContextResponse
 type ProcessContextResponse struct {
-	RunId       string `json:"run_id"`
-	CurrentNode string `json:"current_node"`
+	RunId       string                 `json:"run_id"`
+	CurrentNode string                 `json:"current_node"`
+	Context     map[string]interface{} `json:"context"`
 }
 
 type _ProcessContextResponse ProcessContextResponse
@@ -30,10 +31,11 @@ type _ProcessContextResponse ProcessContextResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewProcessContextResponse(runId string, currentNode string) *ProcessContextResponse {
+func NewProcessContextResponse(runId string, currentNode string, context map[string]interface{}) *ProcessContextResponse {
 	this := ProcessContextResponse{}
 	this.RunId = runId
 	this.CurrentNode = currentNode
+	this.Context = context
 	return &this
 }
 
@@ -93,6 +95,30 @@ func (o *ProcessContextResponse) SetCurrentNode(v string) {
 	o.CurrentNode = v
 }
 
+// GetContext returns the Context field value
+func (o *ProcessContextResponse) GetContext() map[string]interface{} {
+	if o == nil {
+		var ret map[string]interface{}
+		return ret
+	}
+
+	return o.Context
+}
+
+// GetContextOk returns a tuple with the Context field value
+// and a boolean to check if the value has been set.
+func (o *ProcessContextResponse) GetContextOk() (map[string]interface{}, bool) {
+	if o == nil {
+		return map[string]interface{}{}, false
+	}
+	return o.Context, true
+}
+
+// SetContext sets field value
+func (o *ProcessContextResponse) SetContext(v map[string]interface{}) {
+	o.Context = v
+}
+
 func (o ProcessContextResponse) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -105,6 +131,7 @@ func (o ProcessContextResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["run_id"] = o.RunId
 	toSerialize["current_node"] = o.CurrentNode
+	toSerialize["context"] = o.Context
 	return toSerialize, nil
 }
 
@@ -115,6 +142,7 @@ func (o *ProcessContextResponse) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"run_id",
 		"current_node",
+		"context",
 	}
 
 	allProperties := make(map[string]interface{})
