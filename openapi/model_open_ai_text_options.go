@@ -20,14 +20,17 @@ var _ MappedNullable = &OpenAiTextOptions{}
 
 // OpenAiTextOptions struct for OpenAiTextOptions
 type OpenAiTextOptions struct {
-	OptionId         string   `json:"_option_id"`
-	MaxTokens        *float32 `json:"max_tokens,omitempty"`
-	Temperature      *float32 `json:"temperature,omitempty"`
-	TopP             *float32 `json:"top_p,omitempty"`
-	PresencePenalty  *float32 `json:"presence_penalty,omitempty"`
-	FrequencyPenalty *float32 `json:"frequency_penalty,omitempty"`
-	StopSequence     []string `json:"stop_sequence,omitempty"`
-	ImageDetail      *string  `json:"image_detail,omitempty"`
+	OptionId         string           `json:"_option_id"`
+	MaxTokens        *float32         `json:"max_tokens,omitempty"`
+	Effort           *ReasoningEffort `json:"effort,omitempty"`
+	ReasoningEffort  *ReasoningEffort `json:"reasoning_effort,omitempty"`
+	Temperature      *float32         `json:"temperature,omitempty"`
+	TopP             *float32         `json:"top_p,omitempty"`
+	PresencePenalty  *float32         `json:"presence_penalty,omitempty"`
+	FrequencyPenalty *float32         `json:"frequency_penalty,omitempty"`
+	StopSequence     []string         `json:"stop_sequence,omitempty"`
+	ImageDetail      *string          `json:"image_detail,omitempty"`
+	IncludeThoughts  *bool            `json:"include_thoughts,omitempty"`
 }
 
 type _OpenAiTextOptions OpenAiTextOptions
@@ -104,6 +107,70 @@ func (o *OpenAiTextOptions) HasMaxTokens() bool {
 // SetMaxTokens gets a reference to the given float32 and assigns it to the MaxTokens field.
 func (o *OpenAiTextOptions) SetMaxTokens(v float32) {
 	o.MaxTokens = &v
+}
+
+// GetEffort returns the Effort field value if set, zero value otherwise.
+func (o *OpenAiTextOptions) GetEffort() ReasoningEffort {
+	if o == nil || IsNil(o.Effort) {
+		var ret ReasoningEffort
+		return ret
+	}
+	return *o.Effort
+}
+
+// GetEffortOk returns a tuple with the Effort field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiTextOptions) GetEffortOk() (*ReasoningEffort, bool) {
+	if o == nil || IsNil(o.Effort) {
+		return nil, false
+	}
+	return o.Effort, true
+}
+
+// HasEffort returns a boolean if a field has been set.
+func (o *OpenAiTextOptions) HasEffort() bool {
+	if o != nil && !IsNil(o.Effort) {
+		return true
+	}
+
+	return false
+}
+
+// SetEffort gets a reference to the given ReasoningEffort and assigns it to the Effort field.
+func (o *OpenAiTextOptions) SetEffort(v ReasoningEffort) {
+	o.Effort = &v
+}
+
+// GetReasoningEffort returns the ReasoningEffort field value if set, zero value otherwise.
+func (o *OpenAiTextOptions) GetReasoningEffort() ReasoningEffort {
+	if o == nil || IsNil(o.ReasoningEffort) {
+		var ret ReasoningEffort
+		return ret
+	}
+	return *o.ReasoningEffort
+}
+
+// GetReasoningEffortOk returns a tuple with the ReasoningEffort field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiTextOptions) GetReasoningEffortOk() (*ReasoningEffort, bool) {
+	if o == nil || IsNil(o.ReasoningEffort) {
+		return nil, false
+	}
+	return o.ReasoningEffort, true
+}
+
+// HasReasoningEffort returns a boolean if a field has been set.
+func (o *OpenAiTextOptions) HasReasoningEffort() bool {
+	if o != nil && !IsNil(o.ReasoningEffort) {
+		return true
+	}
+
+	return false
+}
+
+// SetReasoningEffort gets a reference to the given ReasoningEffort and assigns it to the ReasoningEffort field.
+func (o *OpenAiTextOptions) SetReasoningEffort(v ReasoningEffort) {
+	o.ReasoningEffort = &v
 }
 
 // GetTemperature returns the Temperature field value if set, zero value otherwise.
@@ -298,6 +365,38 @@ func (o *OpenAiTextOptions) SetImageDetail(v string) {
 	o.ImageDetail = &v
 }
 
+// GetIncludeThoughts returns the IncludeThoughts field value if set, zero value otherwise.
+func (o *OpenAiTextOptions) GetIncludeThoughts() bool {
+	if o == nil || IsNil(o.IncludeThoughts) {
+		var ret bool
+		return ret
+	}
+	return *o.IncludeThoughts
+}
+
+// GetIncludeThoughtsOk returns a tuple with the IncludeThoughts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiTextOptions) GetIncludeThoughtsOk() (*bool, bool) {
+	if o == nil || IsNil(o.IncludeThoughts) {
+		return nil, false
+	}
+	return o.IncludeThoughts, true
+}
+
+// HasIncludeThoughts returns a boolean if a field has been set.
+func (o *OpenAiTextOptions) HasIncludeThoughts() bool {
+	if o != nil && !IsNil(o.IncludeThoughts) {
+		return true
+	}
+
+	return false
+}
+
+// SetIncludeThoughts gets a reference to the given bool and assigns it to the IncludeThoughts field.
+func (o *OpenAiTextOptions) SetIncludeThoughts(v bool) {
+	o.IncludeThoughts = &v
+}
+
 func (o OpenAiTextOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -311,6 +410,12 @@ func (o OpenAiTextOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize["_option_id"] = o.OptionId
 	if !IsNil(o.MaxTokens) {
 		toSerialize["max_tokens"] = o.MaxTokens
+	}
+	if !IsNil(o.Effort) {
+		toSerialize["effort"] = o.Effort
+	}
+	if !IsNil(o.ReasoningEffort) {
+		toSerialize["reasoning_effort"] = o.ReasoningEffort
 	}
 	if !IsNil(o.Temperature) {
 		toSerialize["temperature"] = o.Temperature
@@ -329,6 +434,9 @@ func (o OpenAiTextOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ImageDetail) {
 		toSerialize["image_detail"] = o.ImageDetail
+	}
+	if !IsNil(o.IncludeThoughts) {
+		toSerialize["include_thoughts"] = o.IncludeThoughts
 	}
 	return toSerialize, nil
 }

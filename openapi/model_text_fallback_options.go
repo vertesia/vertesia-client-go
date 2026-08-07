@@ -28,6 +28,7 @@ type TextFallbackOptions struct {
 	PresencePenalty  *float32 `json:"presence_penalty,omitempty"`
 	FrequencyPenalty *float32 `json:"frequency_penalty,omitempty"`
 	StopSequence     []string `json:"stop_sequence,omitempty"`
+	IncludeThoughts  *bool    `json:"include_thoughts,omitempty"`
 }
 
 type _TextFallbackOptions TextFallbackOptions
@@ -298,6 +299,38 @@ func (o *TextFallbackOptions) SetStopSequence(v []string) {
 	o.StopSequence = v
 }
 
+// GetIncludeThoughts returns the IncludeThoughts field value if set, zero value otherwise.
+func (o *TextFallbackOptions) GetIncludeThoughts() bool {
+	if o == nil || IsNil(o.IncludeThoughts) {
+		var ret bool
+		return ret
+	}
+	return *o.IncludeThoughts
+}
+
+// GetIncludeThoughtsOk returns a tuple with the IncludeThoughts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TextFallbackOptions) GetIncludeThoughtsOk() (*bool, bool) {
+	if o == nil || IsNil(o.IncludeThoughts) {
+		return nil, false
+	}
+	return o.IncludeThoughts, true
+}
+
+// HasIncludeThoughts returns a boolean if a field has been set.
+func (o *TextFallbackOptions) HasIncludeThoughts() bool {
+	if o != nil && !IsNil(o.IncludeThoughts) {
+		return true
+	}
+
+	return false
+}
+
+// SetIncludeThoughts gets a reference to the given bool and assigns it to the IncludeThoughts field.
+func (o *TextFallbackOptions) SetIncludeThoughts(v bool) {
+	o.IncludeThoughts = &v
+}
+
 func (o TextFallbackOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -329,6 +362,9 @@ func (o TextFallbackOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.StopSequence) {
 		toSerialize["stop_sequence"] = o.StopSequence
+	}
+	if !IsNil(o.IncludeThoughts) {
+		toSerialize["include_thoughts"] = o.IncludeThoughts
 	}
 	return toSerialize, nil
 }

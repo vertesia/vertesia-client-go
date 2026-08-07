@@ -20,11 +20,12 @@ var _ MappedNullable = &BedrockAI21Options{}
 
 // BedrockAI21Options struct for BedrockAI21Options
 type BedrockAI21Options struct {
-	OptionId     string   `json:"_option_id"`
-	MaxTokens    *float32 `json:"max_tokens,omitempty"`
-	Temperature  *float32 `json:"temperature,omitempty"`
-	TopP         *float32 `json:"top_p,omitempty"`
-	StopSequence []string `json:"stop_sequence,omitempty"`
+	OptionId        string   `json:"_option_id"`
+	MaxTokens       *float32 `json:"max_tokens,omitempty"`
+	Temperature     *float32 `json:"temperature,omitempty"`
+	TopP            *float32 `json:"top_p,omitempty"`
+	StopSequence    []string `json:"stop_sequence,omitempty"`
+	IncludeThoughts *bool    `json:"include_thoughts,omitempty"`
 }
 
 type _BedrockAI21Options BedrockAI21Options
@@ -199,6 +200,38 @@ func (o *BedrockAI21Options) SetStopSequence(v []string) {
 	o.StopSequence = v
 }
 
+// GetIncludeThoughts returns the IncludeThoughts field value if set, zero value otherwise.
+func (o *BedrockAI21Options) GetIncludeThoughts() bool {
+	if o == nil || IsNil(o.IncludeThoughts) {
+		var ret bool
+		return ret
+	}
+	return *o.IncludeThoughts
+}
+
+// GetIncludeThoughtsOk returns a tuple with the IncludeThoughts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BedrockAI21Options) GetIncludeThoughtsOk() (*bool, bool) {
+	if o == nil || IsNil(o.IncludeThoughts) {
+		return nil, false
+	}
+	return o.IncludeThoughts, true
+}
+
+// HasIncludeThoughts returns a boolean if a field has been set.
+func (o *BedrockAI21Options) HasIncludeThoughts() bool {
+	if o != nil && !IsNil(o.IncludeThoughts) {
+		return true
+	}
+
+	return false
+}
+
+// SetIncludeThoughts gets a reference to the given bool and assigns it to the IncludeThoughts field.
+func (o *BedrockAI21Options) SetIncludeThoughts(v bool) {
+	o.IncludeThoughts = &v
+}
+
 func (o BedrockAI21Options) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -221,6 +254,9 @@ func (o BedrockAI21Options) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.StopSequence) {
 		toSerialize["stop_sequence"] = o.StopSequence
+	}
+	if !IsNil(o.IncludeThoughts) {
+		toSerialize["include_thoughts"] = o.IncludeThoughts
 	}
 	return toSerialize, nil
 }

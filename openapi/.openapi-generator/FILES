@@ -872,6 +872,7 @@ model_text_artifact_reference.go
 model_text_fallback_options.go
 model_text_result.go
 model_thinking_level.go
+model_thoughts_result.go
 model_time_resolution.go
 model_timer_task.go
 model_tool_approval_grant.go

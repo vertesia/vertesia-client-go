@@ -28,6 +28,7 @@ type BedrockMantleResponsesOptions struct {
 	ReasoningEffort *string  `json:"reasoning_effort,omitempty"`
 	Verbosity       *string  `json:"verbosity,omitempty"`
 	ImageDetail     *string  `json:"image_detail,omitempty"`
+	IncludeThoughts *bool    `json:"include_thoughts,omitempty"`
 }
 
 type _BedrockMantleResponsesOptions BedrockMantleResponsesOptions
@@ -298,6 +299,38 @@ func (o *BedrockMantleResponsesOptions) SetImageDetail(v string) {
 	o.ImageDetail = &v
 }
 
+// GetIncludeThoughts returns the IncludeThoughts field value if set, zero value otherwise.
+func (o *BedrockMantleResponsesOptions) GetIncludeThoughts() bool {
+	if o == nil || IsNil(o.IncludeThoughts) {
+		var ret bool
+		return ret
+	}
+	return *o.IncludeThoughts
+}
+
+// GetIncludeThoughtsOk returns a tuple with the IncludeThoughts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BedrockMantleResponsesOptions) GetIncludeThoughtsOk() (*bool, bool) {
+	if o == nil || IsNil(o.IncludeThoughts) {
+		return nil, false
+	}
+	return o.IncludeThoughts, true
+}
+
+// HasIncludeThoughts returns a boolean if a field has been set.
+func (o *BedrockMantleResponsesOptions) HasIncludeThoughts() bool {
+	if o != nil && !IsNil(o.IncludeThoughts) {
+		return true
+	}
+
+	return false
+}
+
+// SetIncludeThoughts gets a reference to the given bool and assigns it to the IncludeThoughts field.
+func (o *BedrockMantleResponsesOptions) SetIncludeThoughts(v bool) {
+	o.IncludeThoughts = &v
+}
+
 func (o BedrockMantleResponsesOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -329,6 +362,9 @@ func (o BedrockMantleResponsesOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ImageDetail) {
 		toSerialize["image_detail"] = o.ImageDetail
+	}
+	if !IsNil(o.IncludeThoughts) {
+		toSerialize["include_thoughts"] = o.IncludeThoughts
 	}
 	return toSerialize, nil
 }

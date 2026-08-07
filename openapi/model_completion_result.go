@@ -18,9 +18,10 @@ import (
 
 // CompletionResult - struct for CompletionResult
 type CompletionResult struct {
-	ImageResult *ImageResult
-	JsonResult  *JsonResult
-	TextResult  *TextResult
+	ImageResult    *ImageResult
+	JsonResult     *JsonResult
+	TextResult     *TextResult
+	ThoughtsResult *ThoughtsResult
 }
 
 // ImageResultAsCompletionResult is a convenience function that returns ImageResult wrapped in CompletionResult
@@ -41,6 +42,13 @@ func JsonResultAsCompletionResult(v *JsonResult) CompletionResult {
 func TextResultAsCompletionResult(v *TextResult) CompletionResult {
 	return CompletionResult{
 		TextResult: v,
+	}
+}
+
+// ThoughtsResultAsCompletionResult is a convenience function that returns ThoughtsResult wrapped in CompletionResult
+func ThoughtsResultAsCompletionResult(v *ThoughtsResult) CompletionResult {
+	return CompletionResult{
+		ThoughtsResult: v,
 	}
 }
 
@@ -99,11 +107,29 @@ func (dst *CompletionResult) UnmarshalJSON(data []byte) error {
 		dst.TextResult = nil
 	}
 
+	// try to unmarshal data into ThoughtsResult
+	err = newStrictDecoder(data).Decode(&dst.ThoughtsResult)
+	if err == nil {
+		jsonThoughtsResult, _ := json.Marshal(dst.ThoughtsResult)
+		if string(jsonThoughtsResult) == "{}" { // empty struct
+			dst.ThoughtsResult = nil
+		} else {
+			if err = validator.Validate(dst.ThoughtsResult); err != nil {
+				dst.ThoughtsResult = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.ThoughtsResult = nil
+	}
+
 	if match > 1 { // more than 1 match
 		// reset to nil
 		dst.ImageResult = nil
 		dst.JsonResult = nil
 		dst.TextResult = nil
+		dst.ThoughtsResult = nil
 
 		return fmt.Errorf("data matches more than one schema in oneOf(CompletionResult)")
 	} else if match == 1 {
@@ -127,6 +153,10 @@ func (src CompletionResult) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.TextResult)
 	}
 
+	if src.ThoughtsResult != nil {
+		return json.Marshal(&src.ThoughtsResult)
+	}
+
 	return nil, nil // no data in oneOf schemas
 }
 
@@ -147,6 +177,10 @@ func (obj *CompletionResult) GetActualInstance() interface{} {
 		return obj.TextResult
 	}
 
+	if obj.ThoughtsResult != nil {
+		return obj.ThoughtsResult
+	}
+
 	// all schemas are nil
 	return nil
 }
@@ -163,6 +197,10 @@ func (obj CompletionResult) GetActualInstanceValue() interface{} {
 
 	if obj.TextResult != nil {
 		return *obj.TextResult
+	}
+
+	if obj.ThoughtsResult != nil {
+		return *obj.ThoughtsResult
 	}
 
 	// all schemas are nil

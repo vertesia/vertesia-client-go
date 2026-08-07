@@ -26,6 +26,7 @@ type OpenAiThinkingOptions struct {
 	Effort          *ReasoningEffort `json:"effort,omitempty"`
 	ReasoningEffort *ReasoningEffort `json:"reasoning_effort,omitempty"`
 	ImageDetail     *string          `json:"image_detail,omitempty"`
+	IncludeThoughts *bool            `json:"include_thoughts,omitempty"`
 }
 
 type _OpenAiThinkingOptions OpenAiThinkingOptions
@@ -232,6 +233,38 @@ func (o *OpenAiThinkingOptions) SetImageDetail(v string) {
 	o.ImageDetail = &v
 }
 
+// GetIncludeThoughts returns the IncludeThoughts field value if set, zero value otherwise.
+func (o *OpenAiThinkingOptions) GetIncludeThoughts() bool {
+	if o == nil || IsNil(o.IncludeThoughts) {
+		var ret bool
+		return ret
+	}
+	return *o.IncludeThoughts
+}
+
+// GetIncludeThoughtsOk returns a tuple with the IncludeThoughts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiThinkingOptions) GetIncludeThoughtsOk() (*bool, bool) {
+	if o == nil || IsNil(o.IncludeThoughts) {
+		return nil, false
+	}
+	return o.IncludeThoughts, true
+}
+
+// HasIncludeThoughts returns a boolean if a field has been set.
+func (o *OpenAiThinkingOptions) HasIncludeThoughts() bool {
+	if o != nil && !IsNil(o.IncludeThoughts) {
+		return true
+	}
+
+	return false
+}
+
+// SetIncludeThoughts gets a reference to the given bool and assigns it to the IncludeThoughts field.
+func (o *OpenAiThinkingOptions) SetIncludeThoughts(v bool) {
+	o.IncludeThoughts = &v
+}
+
 func (o OpenAiThinkingOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -257,6 +290,9 @@ func (o OpenAiThinkingOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ImageDetail) {
 		toSerialize["image_detail"] = o.ImageDetail
+	}
+	if !IsNil(o.IncludeThoughts) {
+		toSerialize["include_thoughts"] = o.IncludeThoughts
 	}
 	return toSerialize, nil
 }
