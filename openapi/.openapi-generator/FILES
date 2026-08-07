@@ -114,6 +114,9 @@ model_app_delete_summary.go
 model_app_development_task.go
 model_app_development_task_details.go
 model_app_development_task_list.go
+model_app_event_delivery_target.go
+model_app_event_delivery_target_input.go
+model_app_event_subscription_definition.go
 model_app_git_source_config.go
 model_app_inspection_capability_report.go
 model_app_inspection_issue.go
@@ -130,6 +133,8 @@ model_app_manifest_preview_screenshot.go
 model_app_manifest_source.go
 model_app_manifest_source_git.go
 model_app_package.go
+model_app_package_event_hook.go
+model_app_package_hooks.go
 model_app_package_scope.go
 model_app_repo_branch.go
 model_app_repo_commit.go
