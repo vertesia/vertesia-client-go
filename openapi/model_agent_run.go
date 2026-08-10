@@ -66,6 +66,10 @@ type AgentRun struct {
 	Id string `json:"id"`
 	// Internal discriminator key
 	RunKind string `json:"run_kind"`
+	// Process run this agent belongs to — set when a process agent node recorded this run. Its conversation lives on the parent run under `workstream_id`.
+	ParentRunId *string `json:"parent_run_id,omitempty"`
+	// Workstream this run occupies inside its parent run (the process node id).
+	WorkstreamId *string `json:"workstream_id,omitempty"`
 	// Public-facing runtime mode
 	RunType string `json:"run_type"`
 	// Account ID
@@ -832,6 +836,70 @@ func (o *AgentRun) GetRunKindOk() (*string, bool) {
 // SetRunKind sets field value
 func (o *AgentRun) SetRunKind(v string) {
 	o.RunKind = v
+}
+
+// GetParentRunId returns the ParentRunId field value if set, zero value otherwise.
+func (o *AgentRun) GetParentRunId() string {
+	if o == nil || IsNil(o.ParentRunId) {
+		var ret string
+		return ret
+	}
+	return *o.ParentRunId
+}
+
+// GetParentRunIdOk returns a tuple with the ParentRunId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRun) GetParentRunIdOk() (*string, bool) {
+	if o == nil || IsNil(o.ParentRunId) {
+		return nil, false
+	}
+	return o.ParentRunId, true
+}
+
+// HasParentRunId returns a boolean if a field has been set.
+func (o *AgentRun) HasParentRunId() bool {
+	if o != nil && !IsNil(o.ParentRunId) {
+		return true
+	}
+
+	return false
+}
+
+// SetParentRunId gets a reference to the given string and assigns it to the ParentRunId field.
+func (o *AgentRun) SetParentRunId(v string) {
+	o.ParentRunId = &v
+}
+
+// GetWorkstreamId returns the WorkstreamId field value if set, zero value otherwise.
+func (o *AgentRun) GetWorkstreamId() string {
+	if o == nil || IsNil(o.WorkstreamId) {
+		var ret string
+		return ret
+	}
+	return *o.WorkstreamId
+}
+
+// GetWorkstreamIdOk returns a tuple with the WorkstreamId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRun) GetWorkstreamIdOk() (*string, bool) {
+	if o == nil || IsNil(o.WorkstreamId) {
+		return nil, false
+	}
+	return o.WorkstreamId, true
+}
+
+// HasWorkstreamId returns a boolean if a field has been set.
+func (o *AgentRun) HasWorkstreamId() bool {
+	if o != nil && !IsNil(o.WorkstreamId) {
+		return true
+	}
+
+	return false
+}
+
+// SetWorkstreamId gets a reference to the given string and assigns it to the WorkstreamId field.
+func (o *AgentRun) SetWorkstreamId(v string) {
+	o.WorkstreamId = &v
 }
 
 // GetRunType returns the RunType field value
@@ -1664,6 +1732,12 @@ func (o AgentRun) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["id"] = o.Id
 	toSerialize["run_kind"] = o.RunKind
+	if !IsNil(o.ParentRunId) {
+		toSerialize["parent_run_id"] = o.ParentRunId
+	}
+	if !IsNil(o.WorkstreamId) {
+		toSerialize["workstream_id"] = o.WorkstreamId
+	}
 	toSerialize["run_type"] = o.RunType
 	toSerialize["account"] = o.Account
 	toSerialize["project"] = o.Project
@@ -1800,6 +1874,8 @@ func (o *AgentRun) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "type")
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "run_kind")
+		delete(additionalProperties, "parent_run_id")
+		delete(additionalProperties, "workstream_id")
 		delete(additionalProperties, "run_type")
 		delete(additionalProperties, "account")
 		delete(additionalProperties, "project")
