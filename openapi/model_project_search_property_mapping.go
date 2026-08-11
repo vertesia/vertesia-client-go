@@ -25,7 +25,7 @@ type ProjectSearchPropertyMapping struct {
 	Format *string `json:"format,omitempty"`
 	// Maximum indexed string length. Valid only when type is `keyword`.
 	IgnoreAbove *float32 `json:"ignore_above,omitempty"`
-	// Skip malformed values instead of rejecting the whole document. Valid only for long, double, and date mappings.
+	// Skip malformed values instead of rejecting the whole document. Valid only for long, double, date, and geo_point mappings.
 	IgnoreMalformed *bool `json:"ignore_malformed,omitempty"`
 }
 

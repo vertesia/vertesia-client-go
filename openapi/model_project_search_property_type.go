@@ -26,6 +26,7 @@ const (
 	PROJECTSEARCHPROPERTYTYPE_LONG                     ProjectSearchPropertyType = "long"
 	PROJECTSEARCHPROPERTYTYPE_DOUBLE                   ProjectSearchPropertyType = "double"
 	PROJECTSEARCHPROPERTYTYPE_DATE                     ProjectSearchPropertyType = "date"
+	PROJECTSEARCHPROPERTYTYPE_GEO_POINT                ProjectSearchPropertyType = "geo_point"
 	PROJECTSEARCHPROPERTYTYPE_UNKNOWN_DEFAULT_OPEN_API ProjectSearchPropertyType = "unknown_default_open_api"
 )
 
@@ -37,6 +38,7 @@ var AllowedProjectSearchPropertyTypeEnumValues = []ProjectSearchPropertyType{
 	"long",
 	"double",
 	"date",
+	"geo_point",
 	"unknown_default_open_api",
 }
 
