@@ -23,10 +23,12 @@ type PreviewViewExperienceRequest struct {
 	Query      *string             `json:"query,omitempty"`
 	KeyTerms   map[string][]string `json:"key_terms,omitempty"`
 	Navigation map[string][]string `json:"navigation,omitempty"`
-	Display    *string             `json:"display,omitempty"`
-	Sort       *string             `json:"sort,omitempty"`
-	Offset     *float32            `json:"offset,omitempty"`
-	Limit      *float32            `json:"limit,omitempty"`
+	// Server-side text filters for large navigation sources, keyed by navigation id.
+	NavigationQueries map[string]string `json:"navigation_queries,omitempty"`
+	Display           *string           `json:"display,omitempty"`
+	Sort              *string           `json:"sort,omitempty"`
+	Offset            *float32          `json:"offset,omitempty"`
+	Limit             *float32          `json:"limit,omitempty"`
 	// The unsaved View configuration to validate and execute.
 	Configuration ViewExperienceConfiguration `json:"configuration"`
 }
@@ -145,6 +147,38 @@ func (o *PreviewViewExperienceRequest) HasNavigation() bool {
 // SetNavigation gets a reference to the given map[string][]string and assigns it to the Navigation field.
 func (o *PreviewViewExperienceRequest) SetNavigation(v map[string][]string) {
 	o.Navigation = v
+}
+
+// GetNavigationQueries returns the NavigationQueries field value if set, zero value otherwise.
+func (o *PreviewViewExperienceRequest) GetNavigationQueries() map[string]string {
+	if o == nil || IsNil(o.NavigationQueries) {
+		var ret map[string]string
+		return ret
+	}
+	return o.NavigationQueries
+}
+
+// GetNavigationQueriesOk returns a tuple with the NavigationQueries field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PreviewViewExperienceRequest) GetNavigationQueriesOk() (map[string]string, bool) {
+	if o == nil || IsNil(o.NavigationQueries) {
+		return map[string]string{}, false
+	}
+	return o.NavigationQueries, true
+}
+
+// HasNavigationQueries returns a boolean if a field has been set.
+func (o *PreviewViewExperienceRequest) HasNavigationQueries() bool {
+	if o != nil && !IsNil(o.NavigationQueries) {
+		return true
+	}
+
+	return false
+}
+
+// SetNavigationQueries gets a reference to the given map[string]string and assigns it to the NavigationQueries field.
+func (o *PreviewViewExperienceRequest) SetNavigationQueries(v map[string]string) {
+	o.NavigationQueries = v
 }
 
 // GetDisplay returns the Display field value if set, zero value otherwise.
@@ -317,6 +351,9 @@ func (o PreviewViewExperienceRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Navigation) {
 		toSerialize["navigation"] = o.Navigation
+	}
+	if !IsNil(o.NavigationQueries) {
+		toSerialize["navigation_queries"] = o.NavigationQueries
 	}
 	if !IsNil(o.Display) {
 		toSerialize["display"] = o.Display

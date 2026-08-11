@@ -22,10 +22,13 @@ type AgenticViewSearchConfiguration struct {
 	Interaction *string                            `json:"interaction,omitempty"`
 	Config      *InteractionExecutionConfiguration `json:"config,omitempty"`
 	// View-specific guidance for Elasticsearch query planning.
-	Instructions      *string  `json:"instructions,omitempty"`
-	Mode              *string  `json:"mode,omitempty"`
-	TimeoutMs         *float32 `json:"timeout_ms,omitempty"`
-	MinimumConfidence *float32 `json:"minimum_confidence,omitempty"`
+	Instructions *string `json:"instructions,omitempty"`
+	// Generate only Elasticsearch DSL, or generate DSL plus a safe ephemeral result presentation.
+	Mode              *ViewAgenticSearchMode `json:"mode,omitempty"`
+	TimeoutMs         *float32               `json:"timeout_ms,omitempty"`
+	MinimumConfidence *float32               `json:"minimum_confidence,omitempty"`
+	// Optional second stage that reorders an authorized candidate page using the same model configuration.
+	Rerank *AgenticViewRerankConfiguration `json:"rerank,omitempty"`
 }
 
 // NewAgenticViewSearchConfiguration instantiates a new AgenticViewSearchConfiguration object
@@ -142,9 +145,9 @@ func (o *AgenticViewSearchConfiguration) SetInstructions(v string) {
 }
 
 // GetMode returns the Mode field value if set, zero value otherwise.
-func (o *AgenticViewSearchConfiguration) GetMode() string {
+func (o *AgenticViewSearchConfiguration) GetMode() ViewAgenticSearchMode {
 	if o == nil || IsNil(o.Mode) {
-		var ret string
+		var ret ViewAgenticSearchMode
 		return ret
 	}
 	return *o.Mode
@@ -152,7 +155,7 @@ func (o *AgenticViewSearchConfiguration) GetMode() string {
 
 // GetModeOk returns a tuple with the Mode field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AgenticViewSearchConfiguration) GetModeOk() (*string, bool) {
+func (o *AgenticViewSearchConfiguration) GetModeOk() (*ViewAgenticSearchMode, bool) {
 	if o == nil || IsNil(o.Mode) {
 		return nil, false
 	}
@@ -168,8 +171,8 @@ func (o *AgenticViewSearchConfiguration) HasMode() bool {
 	return false
 }
 
-// SetMode gets a reference to the given string and assigns it to the Mode field.
-func (o *AgenticViewSearchConfiguration) SetMode(v string) {
+// SetMode gets a reference to the given ViewAgenticSearchMode and assigns it to the Mode field.
+func (o *AgenticViewSearchConfiguration) SetMode(v ViewAgenticSearchMode) {
 	o.Mode = &v
 }
 
@@ -237,6 +240,38 @@ func (o *AgenticViewSearchConfiguration) SetMinimumConfidence(v float32) {
 	o.MinimumConfidence = &v
 }
 
+// GetRerank returns the Rerank field value if set, zero value otherwise.
+func (o *AgenticViewSearchConfiguration) GetRerank() AgenticViewRerankConfiguration {
+	if o == nil || IsNil(o.Rerank) {
+		var ret AgenticViewRerankConfiguration
+		return ret
+	}
+	return *o.Rerank
+}
+
+// GetRerankOk returns a tuple with the Rerank field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgenticViewSearchConfiguration) GetRerankOk() (*AgenticViewRerankConfiguration, bool) {
+	if o == nil || IsNil(o.Rerank) {
+		return nil, false
+	}
+	return o.Rerank, true
+}
+
+// HasRerank returns a boolean if a field has been set.
+func (o *AgenticViewSearchConfiguration) HasRerank() bool {
+	if o != nil && !IsNil(o.Rerank) {
+		return true
+	}
+
+	return false
+}
+
+// SetRerank gets a reference to the given AgenticViewRerankConfiguration and assigns it to the Rerank field.
+func (o *AgenticViewSearchConfiguration) SetRerank(v AgenticViewRerankConfiguration) {
+	o.Rerank = &v
+}
+
 func (o AgenticViewSearchConfiguration) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -264,6 +299,9 @@ func (o AgenticViewSearchConfiguration) ToMap() (map[string]interface{}, error) 
 	}
 	if !IsNil(o.MinimumConfidence) {
 		toSerialize["minimum_confidence"] = o.MinimumConfidence
+	}
+	if !IsNil(o.Rerank) {
+		toSerialize["rerank"] = o.Rerank
 	}
 	return toSerialize, nil
 }

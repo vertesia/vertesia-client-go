@@ -20,14 +20,15 @@ var _ MappedNullable = &ViewExecutionSearchResult{}
 
 // ViewExecutionSearchResult struct for ViewExecutionSearchResult
 type ViewExecutionSearchResult struct {
-	Input          *string                 `json:"input,omitempty"`
-	Interpretation *string                 `json:"interpretation,omitempty"`
-	KeyTerms       map[string][]string     `json:"key_terms,omitempty"`
-	Plan           *ViewExecutionQueryPlan `json:"plan,omitempty"`
-	RequestedMode  string                  `json:"requested_mode"`
-	AppliedMode    string                  `json:"applied_mode"`
-	FallbackReason *string                 `json:"fallback_reason,omitempty"`
-	Warnings       []ViewExecutionWarning  `json:"warnings"`
+	Input          *string                    `json:"input,omitempty"`
+	Interpretation *string                    `json:"interpretation,omitempty"`
+	KeyTerms       map[string][]string        `json:"key_terms,omitempty"`
+	Plan           *ViewExecutionQueryPlan    `json:"plan,omitempty"`
+	Rerank         *ViewExecutionRerankResult `json:"rerank,omitempty"`
+	RequestedMode  string                     `json:"requested_mode"`
+	AppliedMode    string                     `json:"applied_mode"`
+	FallbackReason *string                    `json:"fallback_reason,omitempty"`
+	Warnings       []ViewExecutionWarning     `json:"warnings"`
 }
 
 type _ViewExecutionSearchResult ViewExecutionSearchResult
@@ -180,6 +181,38 @@ func (o *ViewExecutionSearchResult) SetPlan(v ViewExecutionQueryPlan) {
 	o.Plan = &v
 }
 
+// GetRerank returns the Rerank field value if set, zero value otherwise.
+func (o *ViewExecutionSearchResult) GetRerank() ViewExecutionRerankResult {
+	if o == nil || IsNil(o.Rerank) {
+		var ret ViewExecutionRerankResult
+		return ret
+	}
+	return *o.Rerank
+}
+
+// GetRerankOk returns a tuple with the Rerank field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ViewExecutionSearchResult) GetRerankOk() (*ViewExecutionRerankResult, bool) {
+	if o == nil || IsNil(o.Rerank) {
+		return nil, false
+	}
+	return o.Rerank, true
+}
+
+// HasRerank returns a boolean if a field has been set.
+func (o *ViewExecutionSearchResult) HasRerank() bool {
+	if o != nil && !IsNil(o.Rerank) {
+		return true
+	}
+
+	return false
+}
+
+// SetRerank gets a reference to the given ViewExecutionRerankResult and assigns it to the Rerank field.
+func (o *ViewExecutionSearchResult) SetRerank(v ViewExecutionRerankResult) {
+	o.Rerank = &v
+}
+
 // GetRequestedMode returns the RequestedMode field value
 func (o *ViewExecutionSearchResult) GetRequestedMode() string {
 	if o == nil {
@@ -305,6 +338,9 @@ func (o ViewExecutionSearchResult) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Plan) {
 		toSerialize["plan"] = o.Plan
+	}
+	if !IsNil(o.Rerank) {
+		toSerialize["rerank"] = o.Rerank
 	}
 	toSerialize["requested_mode"] = o.RequestedMode
 	toSerialize["applied_mode"] = o.AppliedMode

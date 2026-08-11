@@ -329,7 +329,7 @@ func (r ApiExecuteViewRequest) Execute() (*ViewExecutionResult, *http.Response, 
 /*
 ExecuteView Execute a View Experience
 
-Executes a stored or app-contributed View by ID. Configuration, scope, and security filters are resolved server-side. Agentic query planning additionally requires interaction execute permission.
+Executes a stored, built-in system, or app-contributed View by ID. Configuration, scope, and security filters are resolved server-side. Agentic query planning, optional presentation planning, and optional result reranking additionally require interaction execute permission.
 
 **Required permissions:** `content:read`
 
@@ -766,7 +766,7 @@ func (r ApiPreviewViewRequest) Execute() (*ViewExecutionResult, *http.Response, 
 /*
 PreviewView Preview an unsaved View Experience
 
-Validates an inline (unsaved) View configuration and executes it against content without persisting it, returning normalized results, navigation counts, and any agentic query plan. Agentic query planning additionally requires interaction execute permission.
+Validates an inline (unsaved) View configuration and executes it against content without persisting it, returning normalized results, navigation counts, and any agentic query, presentation, and reranking diagnostics. Agentic stages additionally require interaction execute permission.
 
 **Required permissions:** `content:read`
 

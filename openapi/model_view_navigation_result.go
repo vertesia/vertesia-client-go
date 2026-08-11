@@ -23,7 +23,9 @@ type ViewNavigationResult struct {
 	Id       string               `json:"id"`
 	Selected []string             `json:"selected"`
 	Nodes    []ViewNavigationNode `json:"nodes"`
-	// Selected hierarchy path from its root through the current value.
+	// Applied server-side node filter, when the navigation source supports it.
+	Query *string `json:"query,omitempty"`
+	// Selected drill-down path from its root through the current value.
 	Breadcrumbs []ViewNavigationNode `json:"breadcrumbs,omitempty"`
 	Truncated   *bool                `json:"truncated,omitempty"`
 }
@@ -122,6 +124,38 @@ func (o *ViewNavigationResult) SetNodes(v []ViewNavigationNode) {
 	o.Nodes = v
 }
 
+// GetQuery returns the Query field value if set, zero value otherwise.
+func (o *ViewNavigationResult) GetQuery() string {
+	if o == nil || IsNil(o.Query) {
+		var ret string
+		return ret
+	}
+	return *o.Query
+}
+
+// GetQueryOk returns a tuple with the Query field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ViewNavigationResult) GetQueryOk() (*string, bool) {
+	if o == nil || IsNil(o.Query) {
+		return nil, false
+	}
+	return o.Query, true
+}
+
+// HasQuery returns a boolean if a field has been set.
+func (o *ViewNavigationResult) HasQuery() bool {
+	if o != nil && !IsNil(o.Query) {
+		return true
+	}
+
+	return false
+}
+
+// SetQuery gets a reference to the given string and assigns it to the Query field.
+func (o *ViewNavigationResult) SetQuery(v string) {
+	o.Query = &v
+}
+
 // GetBreadcrumbs returns the Breadcrumbs field value if set, zero value otherwise.
 func (o *ViewNavigationResult) GetBreadcrumbs() []ViewNavigationNode {
 	if o == nil || IsNil(o.Breadcrumbs) {
@@ -199,6 +233,9 @@ func (o ViewNavigationResult) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	toSerialize["selected"] = o.Selected
 	toSerialize["nodes"] = o.Nodes
+	if !IsNil(o.Query) {
+		toSerialize["query"] = o.Query
+	}
 	if !IsNil(o.Breadcrumbs) {
 		toSerialize["breadcrumbs"] = o.Breadcrumbs
 	}

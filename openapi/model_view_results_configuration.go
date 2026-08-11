@@ -20,11 +20,14 @@ var _ MappedNullable = &ViewResultsConfiguration{}
 
 // ViewResultsConfiguration struct for ViewResultsConfiguration
 type ViewResultsConfiguration struct {
-	DefaultDisplay     string                     `json:"default_display"`
-	AllowDisplaySwitch *bool                      `json:"allow_display_switch,omitempty"`
-	Displays           []ViewDisplayConfiguration `json:"displays"`
-	DefaultSort        *string                    `json:"default_sort,omitempty"`
-	SortOptions        []ViewSortOption           `json:"sort_options,omitempty"`
+	DefaultDisplay     string                      `json:"default_display"`
+	AllowDisplaySwitch *bool                       `json:"allow_display_switch,omitempty"`
+	Displays           []ViewDisplayConfiguration  `json:"displays"`
+	DefaultSort        *string                     `json:"default_sort,omitempty"`
+	SortOptions        []ViewSortOption            `json:"sort_options,omitempty"`
+	Selection          *ViewSelectionConfiguration `json:"selection,omitempty"`
+	Actions            *ViewActionsConfiguration   `json:"actions,omitempty"`
+	Drop               *ViewDropConfiguration      `json:"drop,omitempty"`
 }
 
 type _ViewResultsConfiguration ViewResultsConfiguration
@@ -192,6 +195,102 @@ func (o *ViewResultsConfiguration) SetSortOptions(v []ViewSortOption) {
 	o.SortOptions = v
 }
 
+// GetSelection returns the Selection field value if set, zero value otherwise.
+func (o *ViewResultsConfiguration) GetSelection() ViewSelectionConfiguration {
+	if o == nil || IsNil(o.Selection) {
+		var ret ViewSelectionConfiguration
+		return ret
+	}
+	return *o.Selection
+}
+
+// GetSelectionOk returns a tuple with the Selection field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ViewResultsConfiguration) GetSelectionOk() (*ViewSelectionConfiguration, bool) {
+	if o == nil || IsNil(o.Selection) {
+		return nil, false
+	}
+	return o.Selection, true
+}
+
+// HasSelection returns a boolean if a field has been set.
+func (o *ViewResultsConfiguration) HasSelection() bool {
+	if o != nil && !IsNil(o.Selection) {
+		return true
+	}
+
+	return false
+}
+
+// SetSelection gets a reference to the given ViewSelectionConfiguration and assigns it to the Selection field.
+func (o *ViewResultsConfiguration) SetSelection(v ViewSelectionConfiguration) {
+	o.Selection = &v
+}
+
+// GetActions returns the Actions field value if set, zero value otherwise.
+func (o *ViewResultsConfiguration) GetActions() ViewActionsConfiguration {
+	if o == nil || IsNil(o.Actions) {
+		var ret ViewActionsConfiguration
+		return ret
+	}
+	return *o.Actions
+}
+
+// GetActionsOk returns a tuple with the Actions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ViewResultsConfiguration) GetActionsOk() (*ViewActionsConfiguration, bool) {
+	if o == nil || IsNil(o.Actions) {
+		return nil, false
+	}
+	return o.Actions, true
+}
+
+// HasActions returns a boolean if a field has been set.
+func (o *ViewResultsConfiguration) HasActions() bool {
+	if o != nil && !IsNil(o.Actions) {
+		return true
+	}
+
+	return false
+}
+
+// SetActions gets a reference to the given ViewActionsConfiguration and assigns it to the Actions field.
+func (o *ViewResultsConfiguration) SetActions(v ViewActionsConfiguration) {
+	o.Actions = &v
+}
+
+// GetDrop returns the Drop field value if set, zero value otherwise.
+func (o *ViewResultsConfiguration) GetDrop() ViewDropConfiguration {
+	if o == nil || IsNil(o.Drop) {
+		var ret ViewDropConfiguration
+		return ret
+	}
+	return *o.Drop
+}
+
+// GetDropOk returns a tuple with the Drop field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ViewResultsConfiguration) GetDropOk() (*ViewDropConfiguration, bool) {
+	if o == nil || IsNil(o.Drop) {
+		return nil, false
+	}
+	return o.Drop, true
+}
+
+// HasDrop returns a boolean if a field has been set.
+func (o *ViewResultsConfiguration) HasDrop() bool {
+	if o != nil && !IsNil(o.Drop) {
+		return true
+	}
+
+	return false
+}
+
+// SetDrop gets a reference to the given ViewDropConfiguration and assigns it to the Drop field.
+func (o *ViewResultsConfiguration) SetDrop(v ViewDropConfiguration) {
+	o.Drop = &v
+}
+
 func (o ViewResultsConfiguration) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -212,6 +311,15 @@ func (o ViewResultsConfiguration) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.SortOptions) {
 		toSerialize["sort_options"] = o.SortOptions
+	}
+	if !IsNil(o.Selection) {
+		toSerialize["selection"] = o.Selection
+	}
+	if !IsNil(o.Actions) {
+		toSerialize["actions"] = o.Actions
+	}
+	if !IsNil(o.Drop) {
+		toSerialize["drop"] = o.Drop
 	}
 	return toSerialize, nil
 }
