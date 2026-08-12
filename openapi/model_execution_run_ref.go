@@ -51,6 +51,8 @@ type ExecutionRunRef struct {
 	// The Vertesia Workflow related to this Interaction Run.  This is only set when the interaction is executed as part of a workflow.
 	Workflow             *ExecutionRunWorkflow `json:"workflow,omitempty"`
 	Interaction          *InteractionRef       `json:"interaction,omitempty"`
+	Result               []CompletionResult    `json:"result,omitempty"`
+	Parameters           interface{}           `json:"parameters,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -825,6 +827,71 @@ func (o *ExecutionRunRef) SetInteraction(v InteractionRef) {
 	o.Interaction = &v
 }
 
+// GetResult returns the Result field value if set, zero value otherwise.
+func (o *ExecutionRunRef) GetResult() []CompletionResult {
+	if o == nil || IsNil(o.Result) {
+		var ret []CompletionResult
+		return ret
+	}
+	return o.Result
+}
+
+// GetResultOk returns a tuple with the Result field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExecutionRunRef) GetResultOk() ([]CompletionResult, bool) {
+	if o == nil || IsNil(o.Result) {
+		return nil, false
+	}
+	return o.Result, true
+}
+
+// HasResult returns a boolean if a field has been set.
+func (o *ExecutionRunRef) HasResult() bool {
+	if o != nil && !IsNil(o.Result) {
+		return true
+	}
+
+	return false
+}
+
+// SetResult gets a reference to the given []CompletionResult and assigns it to the Result field.
+func (o *ExecutionRunRef) SetResult(v []CompletionResult) {
+	o.Result = v
+}
+
+// GetParameters returns the Parameters field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *ExecutionRunRef) GetParameters() interface{} {
+	if o == nil {
+		var ret interface{}
+		return ret
+	}
+	return o.Parameters
+}
+
+// GetParametersOk returns a tuple with the Parameters field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *ExecutionRunRef) GetParametersOk() (*interface{}, bool) {
+	if o == nil || IsNil(o.Parameters) {
+		return nil, false
+	}
+	return &o.Parameters, true
+}
+
+// HasParameters returns a boolean if a field has been set.
+func (o *ExecutionRunRef) HasParameters() bool {
+	if o != nil && !IsNil(o.Parameters) {
+		return true
+	}
+
+	return false
+}
+
+// SetParameters gets a reference to the given interface{} and assigns it to the Parameters field.
+func (o *ExecutionRunRef) SetParameters(v interface{}) {
+	o.Parameters = v
+}
+
 func (o ExecutionRunRef) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -888,6 +955,12 @@ func (o ExecutionRunRef) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Interaction) {
 		toSerialize["interaction"] = o.Interaction
+	}
+	if !IsNil(o.Result) {
+		toSerialize["result"] = o.Result
+	}
+	if o.Parameters != nil {
+		toSerialize["parameters"] = o.Parameters
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -969,6 +1042,8 @@ func (o *ExecutionRunRef) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "updated_by")
 		delete(additionalProperties, "workflow")
 		delete(additionalProperties, "interaction")
+		delete(additionalProperties, "result")
+		delete(additionalProperties, "parameters")
 		o.AdditionalProperties = additionalProperties
 	}
 

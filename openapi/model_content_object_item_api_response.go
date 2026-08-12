@@ -35,21 +35,32 @@ type ContentObjectItemApiResponse struct {
 	// ISO timestamp of when the object was created
 	CreatedAt string `json:"created_at"`
 	// ISO timestamp of when the object was last updated
-	UpdatedAt            string                          `json:"updated_at"`
-	Parent               *string                         `json:"parent,omitempty"`
-	Location             string                          `json:"location"`
-	Status               ContentObjectStatus             `json:"status"`
-	Type                 *ContentObjectTypeRef           `json:"type,omitempty"`
-	Content              *ContentSource                  `json:"content,omitempty"`
-	ExternalId           *string                         `json:"external_id,omitempty"`
-	Properties           map[string]interface{}          `json:"properties"`
-	Metadata             map[string]interface{}          `json:"metadata,omitempty"`
-	Tokens               *ContentObjectApiResponseTokens `json:"tokens,omitempty"`
-	Revision             ContentObjectApiRevision        `json:"revision"`
-	IsDeleted            *bool                           `json:"is_deleted,omitempty"`
-	IsLocked             *bool                           `json:"is_locked,omitempty"`
-	Score                *float32                        `json:"score,omitempty"`
-	UserPermissions      *ContentObjectUserPermissions   `json:"user_permissions,omitempty"`
+	UpdatedAt            string                                          `json:"updated_at"`
+	Parent               *string                                         `json:"parent,omitempty"`
+	Location             string                                          `json:"location"`
+	Status               ContentObjectStatus                             `json:"status"`
+	Type                 *ContentObjectTypeRef                           `json:"type,omitempty"`
+	Content              *ContentSource                                  `json:"content,omitempty"`
+	ExternalId           *string                                         `json:"external_id,omitempty"`
+	Properties           map[string]interface{}                          `json:"properties"`
+	Metadata             map[string]interface{}                          `json:"metadata,omitempty"`
+	Tokens               *ContentObjectApiResponseTokens                 `json:"tokens,omitempty"`
+	Revision             ContentObjectApiRevision                        `json:"revision"`
+	IsDeleted            *bool                                           `json:"is_deleted,omitempty"`
+	IsLocked             *bool                                           `json:"is_locked,omitempty"`
+	Score                *float32                                        `json:"score,omitempty"`
+	UserPermissions      *ContentObjectUserPermissions                   `json:"user_permissions,omitempty"`
+	SearchTypeResult     []ContentObjectApiResponseSearchTypeResultInner `json:"searchTypeResult,omitempty"`
+	Text                 *string                                         `json:"text,omitempty"`
+	TextEtag             *string                                         `json:"text_etag,omitempty"`
+	Embeddings           map[string]Embedding                            `json:"embeddings,omitempty"`
+	Parts                []string                                        `json:"parts,omitempty"`
+	PartsEtag            *string                                         `json:"parts_etag,omitempty"`
+	Transcript           map[string]interface{}                          `json:"transcript,omitempty"`
+	Security             map[string][]string                             `json:"security,omitempty"`
+	Sensitivity          NullableFloat32                                 `json:"sensitivity,omitempty"`
+	Compartments         []string                                        `json:"compartments,omitempty"`
+	InheritedProperties  []InheritedPropertyMetadata                     `json:"inherited_properties,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -706,6 +717,369 @@ func (o *ContentObjectItemApiResponse) SetUserPermissions(v ContentObjectUserPer
 	o.UserPermissions = &v
 }
 
+// GetSearchTypeResult returns the SearchTypeResult field value if set, zero value otherwise.
+func (o *ContentObjectItemApiResponse) GetSearchTypeResult() []ContentObjectApiResponseSearchTypeResultInner {
+	if o == nil || IsNil(o.SearchTypeResult) {
+		var ret []ContentObjectApiResponseSearchTypeResultInner
+		return ret
+	}
+	return o.SearchTypeResult
+}
+
+// GetSearchTypeResultOk returns a tuple with the SearchTypeResult field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectItemApiResponse) GetSearchTypeResultOk() ([]ContentObjectApiResponseSearchTypeResultInner, bool) {
+	if o == nil || IsNil(o.SearchTypeResult) {
+		return nil, false
+	}
+	return o.SearchTypeResult, true
+}
+
+// HasSearchTypeResult returns a boolean if a field has been set.
+func (o *ContentObjectItemApiResponse) HasSearchTypeResult() bool {
+	if o != nil && !IsNil(o.SearchTypeResult) {
+		return true
+	}
+
+	return false
+}
+
+// SetSearchTypeResult gets a reference to the given []ContentObjectApiResponseSearchTypeResultInner and assigns it to the SearchTypeResult field.
+func (o *ContentObjectItemApiResponse) SetSearchTypeResult(v []ContentObjectApiResponseSearchTypeResultInner) {
+	o.SearchTypeResult = v
+}
+
+// GetText returns the Text field value if set, zero value otherwise.
+func (o *ContentObjectItemApiResponse) GetText() string {
+	if o == nil || IsNil(o.Text) {
+		var ret string
+		return ret
+	}
+	return *o.Text
+}
+
+// GetTextOk returns a tuple with the Text field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectItemApiResponse) GetTextOk() (*string, bool) {
+	if o == nil || IsNil(o.Text) {
+		return nil, false
+	}
+	return o.Text, true
+}
+
+// HasText returns a boolean if a field has been set.
+func (o *ContentObjectItemApiResponse) HasText() bool {
+	if o != nil && !IsNil(o.Text) {
+		return true
+	}
+
+	return false
+}
+
+// SetText gets a reference to the given string and assigns it to the Text field.
+func (o *ContentObjectItemApiResponse) SetText(v string) {
+	o.Text = &v
+}
+
+// GetTextEtag returns the TextEtag field value if set, zero value otherwise.
+func (o *ContentObjectItemApiResponse) GetTextEtag() string {
+	if o == nil || IsNil(o.TextEtag) {
+		var ret string
+		return ret
+	}
+	return *o.TextEtag
+}
+
+// GetTextEtagOk returns a tuple with the TextEtag field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectItemApiResponse) GetTextEtagOk() (*string, bool) {
+	if o == nil || IsNil(o.TextEtag) {
+		return nil, false
+	}
+	return o.TextEtag, true
+}
+
+// HasTextEtag returns a boolean if a field has been set.
+func (o *ContentObjectItemApiResponse) HasTextEtag() bool {
+	if o != nil && !IsNil(o.TextEtag) {
+		return true
+	}
+
+	return false
+}
+
+// SetTextEtag gets a reference to the given string and assigns it to the TextEtag field.
+func (o *ContentObjectItemApiResponse) SetTextEtag(v string) {
+	o.TextEtag = &v
+}
+
+// GetEmbeddings returns the Embeddings field value if set, zero value otherwise.
+func (o *ContentObjectItemApiResponse) GetEmbeddings() map[string]Embedding {
+	if o == nil || IsNil(o.Embeddings) {
+		var ret map[string]Embedding
+		return ret
+	}
+	return o.Embeddings
+}
+
+// GetEmbeddingsOk returns a tuple with the Embeddings field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectItemApiResponse) GetEmbeddingsOk() (map[string]Embedding, bool) {
+	if o == nil || IsNil(o.Embeddings) {
+		return map[string]Embedding{}, false
+	}
+	return o.Embeddings, true
+}
+
+// HasEmbeddings returns a boolean if a field has been set.
+func (o *ContentObjectItemApiResponse) HasEmbeddings() bool {
+	if o != nil && !IsNil(o.Embeddings) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmbeddings gets a reference to the given map[string]Embedding and assigns it to the Embeddings field.
+func (o *ContentObjectItemApiResponse) SetEmbeddings(v map[string]Embedding) {
+	o.Embeddings = v
+}
+
+// GetParts returns the Parts field value if set, zero value otherwise.
+func (o *ContentObjectItemApiResponse) GetParts() []string {
+	if o == nil || IsNil(o.Parts) {
+		var ret []string
+		return ret
+	}
+	return o.Parts
+}
+
+// GetPartsOk returns a tuple with the Parts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectItemApiResponse) GetPartsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Parts) {
+		return nil, false
+	}
+	return o.Parts, true
+}
+
+// HasParts returns a boolean if a field has been set.
+func (o *ContentObjectItemApiResponse) HasParts() bool {
+	if o != nil && !IsNil(o.Parts) {
+		return true
+	}
+
+	return false
+}
+
+// SetParts gets a reference to the given []string and assigns it to the Parts field.
+func (o *ContentObjectItemApiResponse) SetParts(v []string) {
+	o.Parts = v
+}
+
+// GetPartsEtag returns the PartsEtag field value if set, zero value otherwise.
+func (o *ContentObjectItemApiResponse) GetPartsEtag() string {
+	if o == nil || IsNil(o.PartsEtag) {
+		var ret string
+		return ret
+	}
+	return *o.PartsEtag
+}
+
+// GetPartsEtagOk returns a tuple with the PartsEtag field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectItemApiResponse) GetPartsEtagOk() (*string, bool) {
+	if o == nil || IsNil(o.PartsEtag) {
+		return nil, false
+	}
+	return o.PartsEtag, true
+}
+
+// HasPartsEtag returns a boolean if a field has been set.
+func (o *ContentObjectItemApiResponse) HasPartsEtag() bool {
+	if o != nil && !IsNil(o.PartsEtag) {
+		return true
+	}
+
+	return false
+}
+
+// SetPartsEtag gets a reference to the given string and assigns it to the PartsEtag field.
+func (o *ContentObjectItemApiResponse) SetPartsEtag(v string) {
+	o.PartsEtag = &v
+}
+
+// GetTranscript returns the Transcript field value if set, zero value otherwise.
+func (o *ContentObjectItemApiResponse) GetTranscript() map[string]interface{} {
+	if o == nil || IsNil(o.Transcript) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.Transcript
+}
+
+// GetTranscriptOk returns a tuple with the Transcript field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectItemApiResponse) GetTranscriptOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.Transcript) {
+		return map[string]interface{}{}, false
+	}
+	return o.Transcript, true
+}
+
+// HasTranscript returns a boolean if a field has been set.
+func (o *ContentObjectItemApiResponse) HasTranscript() bool {
+	if o != nil && !IsNil(o.Transcript) {
+		return true
+	}
+
+	return false
+}
+
+// SetTranscript gets a reference to the given map[string]interface{} and assigns it to the Transcript field.
+func (o *ContentObjectItemApiResponse) SetTranscript(v map[string]interface{}) {
+	o.Transcript = v
+}
+
+// GetSecurity returns the Security field value if set, zero value otherwise.
+func (o *ContentObjectItemApiResponse) GetSecurity() map[string][]string {
+	if o == nil || IsNil(o.Security) {
+		var ret map[string][]string
+		return ret
+	}
+	return o.Security
+}
+
+// GetSecurityOk returns a tuple with the Security field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectItemApiResponse) GetSecurityOk() (map[string][]string, bool) {
+	if o == nil || IsNil(o.Security) {
+		return map[string][]string{}, false
+	}
+	return o.Security, true
+}
+
+// HasSecurity returns a boolean if a field has been set.
+func (o *ContentObjectItemApiResponse) HasSecurity() bool {
+	if o != nil && !IsNil(o.Security) {
+		return true
+	}
+
+	return false
+}
+
+// SetSecurity gets a reference to the given map[string][]string and assigns it to the Security field.
+func (o *ContentObjectItemApiResponse) SetSecurity(v map[string][]string) {
+	o.Security = v
+}
+
+// GetSensitivity returns the Sensitivity field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *ContentObjectItemApiResponse) GetSensitivity() float32 {
+	if o == nil || IsNil(o.Sensitivity.Get()) {
+		var ret float32
+		return ret
+	}
+	return *o.Sensitivity.Get()
+}
+
+// GetSensitivityOk returns a tuple with the Sensitivity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *ContentObjectItemApiResponse) GetSensitivityOk() (*float32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Sensitivity.Get(), o.Sensitivity.IsSet()
+}
+
+// HasSensitivity returns a boolean if a field has been set.
+func (o *ContentObjectItemApiResponse) HasSensitivity() bool {
+	if o != nil && o.Sensitivity.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSensitivity gets a reference to the given NullableFloat32 and assigns it to the Sensitivity field.
+func (o *ContentObjectItemApiResponse) SetSensitivity(v float32) {
+	o.Sensitivity.Set(&v)
+}
+
+// SetSensitivityNil sets the value for Sensitivity to be an explicit nil
+func (o *ContentObjectItemApiResponse) SetSensitivityNil() {
+	o.Sensitivity.Set(nil)
+}
+
+// UnsetSensitivity ensures that no value is present for Sensitivity, not even an explicit nil
+func (o *ContentObjectItemApiResponse) UnsetSensitivity() {
+	o.Sensitivity.Unset()
+}
+
+// GetCompartments returns the Compartments field value if set, zero value otherwise.
+func (o *ContentObjectItemApiResponse) GetCompartments() []string {
+	if o == nil || IsNil(o.Compartments) {
+		var ret []string
+		return ret
+	}
+	return o.Compartments
+}
+
+// GetCompartmentsOk returns a tuple with the Compartments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectItemApiResponse) GetCompartmentsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Compartments) {
+		return nil, false
+	}
+	return o.Compartments, true
+}
+
+// HasCompartments returns a boolean if a field has been set.
+func (o *ContentObjectItemApiResponse) HasCompartments() bool {
+	if o != nil && !IsNil(o.Compartments) {
+		return true
+	}
+
+	return false
+}
+
+// SetCompartments gets a reference to the given []string and assigns it to the Compartments field.
+func (o *ContentObjectItemApiResponse) SetCompartments(v []string) {
+	o.Compartments = v
+}
+
+// GetInheritedProperties returns the InheritedProperties field value if set, zero value otherwise.
+func (o *ContentObjectItemApiResponse) GetInheritedProperties() []InheritedPropertyMetadata {
+	if o == nil || IsNil(o.InheritedProperties) {
+		var ret []InheritedPropertyMetadata
+		return ret
+	}
+	return o.InheritedProperties
+}
+
+// GetInheritedPropertiesOk returns a tuple with the InheritedProperties field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectItemApiResponse) GetInheritedPropertiesOk() ([]InheritedPropertyMetadata, bool) {
+	if o == nil || IsNil(o.InheritedProperties) {
+		return nil, false
+	}
+	return o.InheritedProperties, true
+}
+
+// HasInheritedProperties returns a boolean if a field has been set.
+func (o *ContentObjectItemApiResponse) HasInheritedProperties() bool {
+	if o != nil && !IsNil(o.InheritedProperties) {
+		return true
+	}
+
+	return false
+}
+
+// SetInheritedProperties gets a reference to the given []InheritedPropertyMetadata and assigns it to the InheritedProperties field.
+func (o *ContentObjectItemApiResponse) SetInheritedProperties(v []InheritedPropertyMetadata) {
+	o.InheritedProperties = v
+}
+
 func (o ContentObjectItemApiResponse) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -761,6 +1135,39 @@ func (o ContentObjectItemApiResponse) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.UserPermissions) {
 		toSerialize["user_permissions"] = o.UserPermissions
+	}
+	if !IsNil(o.SearchTypeResult) {
+		toSerialize["searchTypeResult"] = o.SearchTypeResult
+	}
+	if !IsNil(o.Text) {
+		toSerialize["text"] = o.Text
+	}
+	if !IsNil(o.TextEtag) {
+		toSerialize["text_etag"] = o.TextEtag
+	}
+	if !IsNil(o.Embeddings) {
+		toSerialize["embeddings"] = o.Embeddings
+	}
+	if !IsNil(o.Parts) {
+		toSerialize["parts"] = o.Parts
+	}
+	if !IsNil(o.PartsEtag) {
+		toSerialize["parts_etag"] = o.PartsEtag
+	}
+	if !IsNil(o.Transcript) {
+		toSerialize["transcript"] = o.Transcript
+	}
+	if !IsNil(o.Security) {
+		toSerialize["security"] = o.Security
+	}
+	if o.Sensitivity.IsSet() {
+		toSerialize["sensitivity"] = o.Sensitivity.Get()
+	}
+	if !IsNil(o.Compartments) {
+		toSerialize["compartments"] = o.Compartments
+	}
+	if !IsNil(o.InheritedProperties) {
+		toSerialize["inherited_properties"] = o.InheritedProperties
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -836,6 +1243,17 @@ func (o *ContentObjectItemApiResponse) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "is_locked")
 		delete(additionalProperties, "score")
 		delete(additionalProperties, "user_permissions")
+		delete(additionalProperties, "searchTypeResult")
+		delete(additionalProperties, "text")
+		delete(additionalProperties, "text_etag")
+		delete(additionalProperties, "embeddings")
+		delete(additionalProperties, "parts")
+		delete(additionalProperties, "parts_etag")
+		delete(additionalProperties, "transcript")
+		delete(additionalProperties, "security")
+		delete(additionalProperties, "sensitivity")
+		delete(additionalProperties, "compartments")
+		delete(additionalProperties, "inherited_properties")
 		o.AdditionalProperties = additionalProperties
 	}
 

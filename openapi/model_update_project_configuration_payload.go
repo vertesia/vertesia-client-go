@@ -19,6 +19,8 @@ var _ MappedNullable = &UpdateProjectConfigurationPayload{}
 
 // UpdateProjectConfigurationPayload struct for UpdateProjectConfigurationPayload
 type UpdateProjectConfigurationPayload struct {
+	DefaultEnvironment    *string                         `json:"default_environment,omitempty"`
+	DefaultModel          *string                         `json:"default_model,omitempty"`
 	HumanContext          *string                         `json:"human_context,omitempty"`
 	Defaults              *ProjectModelDefaults           `json:"defaults,omitempty"`
 	DefaultVisibility     *ResourceVisibility             `json:"default_visibility,omitempty"`
@@ -60,6 +62,70 @@ func NewUpdateProjectConfigurationPayload() *UpdateProjectConfigurationPayload {
 func NewUpdateProjectConfigurationPayloadWithDefaults() *UpdateProjectConfigurationPayload {
 	this := UpdateProjectConfigurationPayload{}
 	return &this
+}
+
+// GetDefaultEnvironment returns the DefaultEnvironment field value if set, zero value otherwise.
+func (o *UpdateProjectConfigurationPayload) GetDefaultEnvironment() string {
+	if o == nil || IsNil(o.DefaultEnvironment) {
+		var ret string
+		return ret
+	}
+	return *o.DefaultEnvironment
+}
+
+// GetDefaultEnvironmentOk returns a tuple with the DefaultEnvironment field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateProjectConfigurationPayload) GetDefaultEnvironmentOk() (*string, bool) {
+	if o == nil || IsNil(o.DefaultEnvironment) {
+		return nil, false
+	}
+	return o.DefaultEnvironment, true
+}
+
+// HasDefaultEnvironment returns a boolean if a field has been set.
+func (o *UpdateProjectConfigurationPayload) HasDefaultEnvironment() bool {
+	if o != nil && !IsNil(o.DefaultEnvironment) {
+		return true
+	}
+
+	return false
+}
+
+// SetDefaultEnvironment gets a reference to the given string and assigns it to the DefaultEnvironment field.
+func (o *UpdateProjectConfigurationPayload) SetDefaultEnvironment(v string) {
+	o.DefaultEnvironment = &v
+}
+
+// GetDefaultModel returns the DefaultModel field value if set, zero value otherwise.
+func (o *UpdateProjectConfigurationPayload) GetDefaultModel() string {
+	if o == nil || IsNil(o.DefaultModel) {
+		var ret string
+		return ret
+	}
+	return *o.DefaultModel
+}
+
+// GetDefaultModelOk returns a tuple with the DefaultModel field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateProjectConfigurationPayload) GetDefaultModelOk() (*string, bool) {
+	if o == nil || IsNil(o.DefaultModel) {
+		return nil, false
+	}
+	return o.DefaultModel, true
+}
+
+// HasDefaultModel returns a boolean if a field has been set.
+func (o *UpdateProjectConfigurationPayload) HasDefaultModel() bool {
+	if o != nil && !IsNil(o.DefaultModel) {
+		return true
+	}
+
+	return false
+}
+
+// SetDefaultModel gets a reference to the given string and assigns it to the DefaultModel field.
+func (o *UpdateProjectConfigurationPayload) SetDefaultModel(v string) {
+	o.DefaultModel = &v
 }
 
 // GetHumanContext returns the HumanContext field value if set, zero value otherwise.
@@ -531,6 +597,12 @@ func (o UpdateProjectConfigurationPayload) MarshalJSON() ([]byte, error) {
 
 func (o UpdateProjectConfigurationPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.DefaultEnvironment) {
+		toSerialize["default_environment"] = o.DefaultEnvironment
+	}
+	if !IsNil(o.DefaultModel) {
+		toSerialize["default_model"] = o.DefaultModel
+	}
 	if !IsNil(o.HumanContext) {
 		toSerialize["human_context"] = o.HumanContext
 	}
@@ -595,6 +667,8 @@ func (o *UpdateProjectConfigurationPayload) UnmarshalJSON(data []byte) (err erro
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "default_environment")
+		delete(additionalProperties, "default_model")
 		delete(additionalProperties, "human_context")
 		delete(additionalProperties, "defaults")
 		delete(additionalProperties, "default_visibility")

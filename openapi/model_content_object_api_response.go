@@ -35,30 +35,31 @@ type ContentObjectApiResponse struct {
 	// ISO timestamp of when the object was created
 	CreatedAt string `json:"created_at"`
 	// ISO timestamp of when the object was last updated
-	UpdatedAt       string                          `json:"updated_at"`
-	Parent          *string                         `json:"parent,omitempty"`
-	Location        string                          `json:"location"`
-	Status          ContentObjectStatus             `json:"status"`
-	Type            *ContentObjectTypeRef           `json:"type,omitempty"`
-	Content         *ContentSource                  `json:"content,omitempty"`
-	ExternalId      *string                         `json:"external_id,omitempty"`
-	Properties      map[string]interface{}          `json:"properties"`
-	Metadata        map[string]interface{}          `json:"metadata,omitempty"`
-	Tokens          *ContentObjectApiResponseTokens `json:"tokens,omitempty"`
-	Revision        ContentObjectApiRevision        `json:"revision"`
-	IsDeleted       *bool                           `json:"is_deleted,omitempty"`
-	IsLocked        *bool                           `json:"is_locked,omitempty"`
-	Score           *float32                        `json:"score,omitempty"`
-	UserPermissions *ContentObjectUserPermissions   `json:"user_permissions,omitempty"`
-	Text            *string                         `json:"text,omitempty"`
-	TextEtag        *string                         `json:"text_etag,omitempty"`
-	Embeddings      map[string]Embedding            `json:"embeddings,omitempty"`
-	Parts           []string                        `json:"parts,omitempty"`
-	PartsEtag       *string                         `json:"parts_etag,omitempty"`
-	Transcript      map[string]interface{}          `json:"transcript,omitempty"`
-	Security        map[string][]string             `json:"security,omitempty"`
+	UpdatedAt        string                                          `json:"updated_at"`
+	Parent           *string                                         `json:"parent,omitempty"`
+	Location         string                                          `json:"location"`
+	Status           ContentObjectStatus                             `json:"status"`
+	Type             *ContentObjectTypeRef                           `json:"type,omitempty"`
+	Content          *ContentSource                                  `json:"content,omitempty"`
+	ExternalId       *string                                         `json:"external_id,omitempty"`
+	Properties       map[string]interface{}                          `json:"properties"`
+	Metadata         map[string]interface{}                          `json:"metadata,omitempty"`
+	Tokens           *ContentObjectApiResponseTokens                 `json:"tokens,omitempty"`
+	Revision         ContentObjectApiRevision                        `json:"revision"`
+	IsDeleted        *bool                                           `json:"is_deleted,omitempty"`
+	IsLocked         *bool                                           `json:"is_locked,omitempty"`
+	Score            *float32                                        `json:"score,omitempty"`
+	UserPermissions  *ContentObjectUserPermissions                   `json:"user_permissions,omitempty"`
+	SearchTypeResult []ContentObjectApiResponseSearchTypeResultInner `json:"searchTypeResult,omitempty"`
+	Text             *string                                         `json:"text,omitempty"`
+	TextEtag         *string                                         `json:"text_etag,omitempty"`
+	Embeddings       map[string]Embedding                            `json:"embeddings,omitempty"`
+	Parts            []string                                        `json:"parts,omitempty"`
+	PartsEtag        *string                                         `json:"parts_etag,omitempty"`
+	Transcript       map[string]interface{}                          `json:"transcript,omitempty"`
+	Security         map[string][]string                             `json:"security,omitempty"`
 	// BLP sensitivity level — set directly or inherited from collections (max across collections).
-	Sensitivity *float32 `json:"sensitivity,omitempty"`
+	Sensitivity NullableFloat32 `json:"sensitivity,omitempty"`
 	// Compartments — set directly or inherited from collections (union across collections).
 	Compartments         []string                    `json:"compartments,omitempty"`
 	InheritedProperties  []InheritedPropertyMetadata `json:"inherited_properties,omitempty"`
@@ -718,6 +719,38 @@ func (o *ContentObjectApiResponse) SetUserPermissions(v ContentObjectUserPermiss
 	o.UserPermissions = &v
 }
 
+// GetSearchTypeResult returns the SearchTypeResult field value if set, zero value otherwise.
+func (o *ContentObjectApiResponse) GetSearchTypeResult() []ContentObjectApiResponseSearchTypeResultInner {
+	if o == nil || IsNil(o.SearchTypeResult) {
+		var ret []ContentObjectApiResponseSearchTypeResultInner
+		return ret
+	}
+	return o.SearchTypeResult
+}
+
+// GetSearchTypeResultOk returns a tuple with the SearchTypeResult field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectApiResponse) GetSearchTypeResultOk() ([]ContentObjectApiResponseSearchTypeResultInner, bool) {
+	if o == nil || IsNil(o.SearchTypeResult) {
+		return nil, false
+	}
+	return o.SearchTypeResult, true
+}
+
+// HasSearchTypeResult returns a boolean if a field has been set.
+func (o *ContentObjectApiResponse) HasSearchTypeResult() bool {
+	if o != nil && !IsNil(o.SearchTypeResult) {
+		return true
+	}
+
+	return false
+}
+
+// SetSearchTypeResult gets a reference to the given []ContentObjectApiResponseSearchTypeResultInner and assigns it to the SearchTypeResult field.
+func (o *ContentObjectApiResponse) SetSearchTypeResult(v []ContentObjectApiResponseSearchTypeResultInner) {
+	o.SearchTypeResult = v
+}
+
 // GetText returns the Text field value if set, zero value otherwise.
 func (o *ContentObjectApiResponse) GetText() string {
 	if o == nil || IsNil(o.Text) {
@@ -942,36 +975,47 @@ func (o *ContentObjectApiResponse) SetSecurity(v map[string][]string) {
 	o.Security = v
 }
 
-// GetSensitivity returns the Sensitivity field value if set, zero value otherwise.
+// GetSensitivity returns the Sensitivity field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ContentObjectApiResponse) GetSensitivity() float32 {
-	if o == nil || IsNil(o.Sensitivity) {
+	if o == nil || IsNil(o.Sensitivity.Get()) {
 		var ret float32
 		return ret
 	}
-	return *o.Sensitivity
+	return *o.Sensitivity.Get()
 }
 
 // GetSensitivityOk returns a tuple with the Sensitivity field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ContentObjectApiResponse) GetSensitivityOk() (*float32, bool) {
-	if o == nil || IsNil(o.Sensitivity) {
+	if o == nil {
 		return nil, false
 	}
-	return o.Sensitivity, true
+	return o.Sensitivity.Get(), o.Sensitivity.IsSet()
 }
 
 // HasSensitivity returns a boolean if a field has been set.
 func (o *ContentObjectApiResponse) HasSensitivity() bool {
-	if o != nil && !IsNil(o.Sensitivity) {
+	if o != nil && o.Sensitivity.IsSet() {
 		return true
 	}
 
 	return false
 }
 
-// SetSensitivity gets a reference to the given float32 and assigns it to the Sensitivity field.
+// SetSensitivity gets a reference to the given NullableFloat32 and assigns it to the Sensitivity field.
 func (o *ContentObjectApiResponse) SetSensitivity(v float32) {
-	o.Sensitivity = &v
+	o.Sensitivity.Set(&v)
+}
+
+// SetSensitivityNil sets the value for Sensitivity to be an explicit nil
+func (o *ContentObjectApiResponse) SetSensitivityNil() {
+	o.Sensitivity.Set(nil)
+}
+
+// UnsetSensitivity ensures that no value is present for Sensitivity, not even an explicit nil
+func (o *ContentObjectApiResponse) UnsetSensitivity() {
+	o.Sensitivity.Unset()
 }
 
 // GetCompartments returns the Compartments field value if set, zero value otherwise.
@@ -1094,6 +1138,9 @@ func (o ContentObjectApiResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UserPermissions) {
 		toSerialize["user_permissions"] = o.UserPermissions
 	}
+	if !IsNil(o.SearchTypeResult) {
+		toSerialize["searchTypeResult"] = o.SearchTypeResult
+	}
 	if !IsNil(o.Text) {
 		toSerialize["text"] = o.Text
 	}
@@ -1115,8 +1162,8 @@ func (o ContentObjectApiResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Security) {
 		toSerialize["security"] = o.Security
 	}
-	if !IsNil(o.Sensitivity) {
-		toSerialize["sensitivity"] = o.Sensitivity
+	if o.Sensitivity.IsSet() {
+		toSerialize["sensitivity"] = o.Sensitivity.Get()
 	}
 	if !IsNil(o.Compartments) {
 		toSerialize["compartments"] = o.Compartments
@@ -1198,6 +1245,7 @@ func (o *ContentObjectApiResponse) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "is_locked")
 		delete(additionalProperties, "score")
 		delete(additionalProperties, "user_permissions")
+		delete(additionalProperties, "searchTypeResult")
 		delete(additionalProperties, "text")
 		delete(additionalProperties, "text_etag")
 		delete(additionalProperties, "embeddings")

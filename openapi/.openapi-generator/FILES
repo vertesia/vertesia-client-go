@@ -274,6 +274,7 @@ model_computed_facet_response.go
 model_config_modes.go
 model_content_embedding_map.go
 model_content_object_api_response.go
+model_content_object_api_response_search_type_result_inner.go
 model_content_object_api_response_tokens.go
 model_content_object_api_revision.go
 model_content_object_export_artifact.go

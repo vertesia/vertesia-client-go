@@ -3945,7 +3945,14 @@ func (a *AppsAPIService) ListAppVersionsExecute(r ApiListAppVersionsRequest) ([]
 type ApiListAppsRequest struct {
 	ctx         context.Context
 	ApiService  *AppsAPIService
+	scope       *string
 	xApiVersion *string
+}
+
+// Restrict the listing to apps that belong to the current project — those installed into it or that have built versions in it. Defaults to &#x60;account&#x60;, which lists every app visible to the account, including the public catalog.
+func (r ApiListAppsRequest) Scope(scope string) ApiListAppsRequest {
+	r.scope = &scope
+	return r
 }
 
 // Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
@@ -3961,7 +3968,7 @@ func (r ApiListAppsRequest) Execute() ([]AppManifest, *http.Response, error) {
 /*
 ListApps List apps
 
-Lists apps visible to the current account.
+Lists apps visible to the current account. Pass `scope=project` to narrow the listing to apps that belong to the current project.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListAppsRequest
@@ -3995,6 +4002,9 @@ func (a *AppsAPIService) ListAppsExecute(r ApiListAppsRequest) ([]AppManifest, *
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.scope != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "scope", r.scope, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
