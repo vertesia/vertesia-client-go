@@ -29,6 +29,8 @@ type BedrockPalmyraOptions struct {
 	Seed             *float32 `json:"seed,omitempty"`
 	FrequencyPenalty *float32 `json:"frequency_penalty,omitempty"`
 	PresencePenalty  *float32 `json:"presence_penalty,omitempty"`
+	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
+	ServiceTier *string `json:"service_tier,omitempty"`
 }
 
 type _BedrockPalmyraOptions BedrockPalmyraOptions
@@ -331,6 +333,38 @@ func (o *BedrockPalmyraOptions) SetPresencePenalty(v float32) {
 	o.PresencePenalty = &v
 }
 
+// GetServiceTier returns the ServiceTier field value if set, zero value otherwise.
+func (o *BedrockPalmyraOptions) GetServiceTier() string {
+	if o == nil || IsNil(o.ServiceTier) {
+		var ret string
+		return ret
+	}
+	return *o.ServiceTier
+}
+
+// GetServiceTierOk returns a tuple with the ServiceTier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BedrockPalmyraOptions) GetServiceTierOk() (*string, bool) {
+	if o == nil || IsNil(o.ServiceTier) {
+		return nil, false
+	}
+	return o.ServiceTier, true
+}
+
+// HasServiceTier returns a boolean if a field has been set.
+func (o *BedrockPalmyraOptions) HasServiceTier() bool {
+	if o != nil && !IsNil(o.ServiceTier) {
+		return true
+	}
+
+	return false
+}
+
+// SetServiceTier gets a reference to the given string and assigns it to the ServiceTier field.
+func (o *BedrockPalmyraOptions) SetServiceTier(v string) {
+	o.ServiceTier = &v
+}
+
 func (o BedrockPalmyraOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -365,6 +399,9 @@ func (o BedrockPalmyraOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.PresencePenalty) {
 		toSerialize["presence_penalty"] = o.PresencePenalty
+	}
+	if !IsNil(o.ServiceTier) {
+		toSerialize["service_tier"] = o.ServiceTier
 	}
 	return toSerialize, nil
 }

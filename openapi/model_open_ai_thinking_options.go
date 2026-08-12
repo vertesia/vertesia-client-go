@@ -27,6 +27,8 @@ type OpenAiThinkingOptions struct {
 	ReasoningEffort *ReasoningEffort `json:"reasoning_effort,omitempty"`
 	ImageDetail     *string          `json:"image_detail,omitempty"`
 	IncludeThoughts *bool            `json:"include_thoughts,omitempty"`
+	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
+	ServiceTier *string `json:"service_tier,omitempty"`
 }
 
 type _OpenAiThinkingOptions OpenAiThinkingOptions
@@ -265,6 +267,38 @@ func (o *OpenAiThinkingOptions) SetIncludeThoughts(v bool) {
 	o.IncludeThoughts = &v
 }
 
+// GetServiceTier returns the ServiceTier field value if set, zero value otherwise.
+func (o *OpenAiThinkingOptions) GetServiceTier() string {
+	if o == nil || IsNil(o.ServiceTier) {
+		var ret string
+		return ret
+	}
+	return *o.ServiceTier
+}
+
+// GetServiceTierOk returns a tuple with the ServiceTier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiThinkingOptions) GetServiceTierOk() (*string, bool) {
+	if o == nil || IsNil(o.ServiceTier) {
+		return nil, false
+	}
+	return o.ServiceTier, true
+}
+
+// HasServiceTier returns a boolean if a field has been set.
+func (o *OpenAiThinkingOptions) HasServiceTier() bool {
+	if o != nil && !IsNil(o.ServiceTier) {
+		return true
+	}
+
+	return false
+}
+
+// SetServiceTier gets a reference to the given string and assigns it to the ServiceTier field.
+func (o *OpenAiThinkingOptions) SetServiceTier(v string) {
+	o.ServiceTier = &v
+}
+
 func (o OpenAiThinkingOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -293,6 +327,9 @@ func (o OpenAiThinkingOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.IncludeThoughts) {
 		toSerialize["include_thoughts"] = o.IncludeThoughts
+	}
+	if !IsNil(o.ServiceTier) {
+		toSerialize["service_tier"] = o.ServiceTier
 	}
 	return toSerialize, nil
 }

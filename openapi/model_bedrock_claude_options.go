@@ -31,6 +31,8 @@ type BedrockClaudeOptions struct {
 	Effort               *string  `json:"effort,omitempty"`
 	CacheEnabled         *bool    `json:"cache_enabled,omitempty"`
 	CacheTtl             *string  `json:"cache_ttl,omitempty"`
+	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
+	ServiceTier *string `json:"service_tier,omitempty"`
 }
 
 type _BedrockClaudeOptions BedrockClaudeOptions
@@ -397,6 +399,38 @@ func (o *BedrockClaudeOptions) SetCacheTtl(v string) {
 	o.CacheTtl = &v
 }
 
+// GetServiceTier returns the ServiceTier field value if set, zero value otherwise.
+func (o *BedrockClaudeOptions) GetServiceTier() string {
+	if o == nil || IsNil(o.ServiceTier) {
+		var ret string
+		return ret
+	}
+	return *o.ServiceTier
+}
+
+// GetServiceTierOk returns a tuple with the ServiceTier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BedrockClaudeOptions) GetServiceTierOk() (*string, bool) {
+	if o == nil || IsNil(o.ServiceTier) {
+		return nil, false
+	}
+	return o.ServiceTier, true
+}
+
+// HasServiceTier returns a boolean if a field has been set.
+func (o *BedrockClaudeOptions) HasServiceTier() bool {
+	if o != nil && !IsNil(o.ServiceTier) {
+		return true
+	}
+
+	return false
+}
+
+// SetServiceTier gets a reference to the given string and assigns it to the ServiceTier field.
+func (o *BedrockClaudeOptions) SetServiceTier(v string) {
+	o.ServiceTier = &v
+}
+
 func (o BedrockClaudeOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -437,6 +471,9 @@ func (o BedrockClaudeOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.CacheTtl) {
 		toSerialize["cache_ttl"] = o.CacheTtl
+	}
+	if !IsNil(o.ServiceTier) {
+		toSerialize["service_tier"] = o.ServiceTier
 	}
 	return toSerialize, nil
 }

@@ -20,26 +20,30 @@ var _ MappedNullable = &VertexAIGeminiOptions{}
 
 // VertexAIGeminiOptions struct for VertexAIGeminiOptions
 type VertexAIGeminiOptions struct {
-	OptionId                 string         `json:"_option_id"`
-	MaxTokens                *float32       `json:"max_tokens,omitempty"`
-	Temperature              *float32       `json:"temperature,omitempty"`
-	TopP                     *float32       `json:"top_p,omitempty"`
-	TopK                     *float32       `json:"top_k,omitempty"`
-	StopSequence             []string       `json:"stop_sequence,omitempty"`
-	PresencePenalty          *float32       `json:"presence_penalty,omitempty"`
-	FrequencyPenalty         *float32       `json:"frequency_penalty,omitempty"`
-	Seed                     *float32       `json:"seed,omitempty"`
-	Effort                   *string        `json:"effort,omitempty"`
-	IncludeThoughts          *bool          `json:"include_thoughts,omitempty"`
-	ThinkingBudgetTokens     *float32       `json:"thinking_budget_tokens,omitempty"`
-	ThinkingLevel            *ThinkingLevel `json:"thinking_level,omitempty"`
-	Flex                     *bool          `json:"flex,omitempty"`
-	ImageAspectRatio         *string        `json:"image_aspect_ratio,omitempty"`
-	ImageSize                *string        `json:"image_size,omitempty"`
-	PersonGeneration         *string        `json:"person_generation,omitempty"`
-	ProminentPeople          *string        `json:"prominent_people,omitempty"`
-	OutputMimeType           *string        `json:"output_mime_type,omitempty"`
-	OutputCompressionQuality *float32       `json:"output_compression_quality,omitempty"`
+	OptionId             string         `json:"_option_id"`
+	MaxTokens            *float32       `json:"max_tokens,omitempty"`
+	Temperature          *float32       `json:"temperature,omitempty"`
+	TopP                 *float32       `json:"top_p,omitempty"`
+	TopK                 *float32       `json:"top_k,omitempty"`
+	StopSequence         []string       `json:"stop_sequence,omitempty"`
+	PresencePenalty      *float32       `json:"presence_penalty,omitempty"`
+	FrequencyPenalty     *float32       `json:"frequency_penalty,omitempty"`
+	Seed                 *float32       `json:"seed,omitempty"`
+	Effort               *string        `json:"effort,omitempty"`
+	IncludeThoughts      *bool          `json:"include_thoughts,omitempty"`
+	ThinkingBudgetTokens *float32       `json:"thinking_budget_tokens,omitempty"`
+	ThinkingLevel        *ThinkingLevel `json:"thinking_level,omitempty"`
+	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
+	ServiceTier *string `json:"service_tier,omitempty"`
+	// Deprecated: Use service_tier=\"flex\" instead.
+	// Deprecated
+	Flex                     *bool    `json:"flex,omitempty"`
+	ImageAspectRatio         *string  `json:"image_aspect_ratio,omitempty"`
+	ImageSize                *string  `json:"image_size,omitempty"`
+	PersonGeneration         *string  `json:"person_generation,omitempty"`
+	ProminentPeople          *string  `json:"prominent_people,omitempty"`
+	OutputMimeType           *string  `json:"output_mime_type,omitempty"`
+	OutputCompressionQuality *float32 `json:"output_compression_quality,omitempty"`
 }
 
 type _VertexAIGeminiOptions VertexAIGeminiOptions
@@ -470,7 +474,40 @@ func (o *VertexAIGeminiOptions) SetThinkingLevel(v ThinkingLevel) {
 	o.ThinkingLevel = &v
 }
 
+// GetServiceTier returns the ServiceTier field value if set, zero value otherwise.
+func (o *VertexAIGeminiOptions) GetServiceTier() string {
+	if o == nil || IsNil(o.ServiceTier) {
+		var ret string
+		return ret
+	}
+	return *o.ServiceTier
+}
+
+// GetServiceTierOk returns a tuple with the ServiceTier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VertexAIGeminiOptions) GetServiceTierOk() (*string, bool) {
+	if o == nil || IsNil(o.ServiceTier) {
+		return nil, false
+	}
+	return o.ServiceTier, true
+}
+
+// HasServiceTier returns a boolean if a field has been set.
+func (o *VertexAIGeminiOptions) HasServiceTier() bool {
+	if o != nil && !IsNil(o.ServiceTier) {
+		return true
+	}
+
+	return false
+}
+
+// SetServiceTier gets a reference to the given string and assigns it to the ServiceTier field.
+func (o *VertexAIGeminiOptions) SetServiceTier(v string) {
+	o.ServiceTier = &v
+}
+
 // GetFlex returns the Flex field value if set, zero value otherwise.
+// Deprecated
 func (o *VertexAIGeminiOptions) GetFlex() bool {
 	if o == nil || IsNil(o.Flex) {
 		var ret bool
@@ -481,6 +518,7 @@ func (o *VertexAIGeminiOptions) GetFlex() bool {
 
 // GetFlexOk returns a tuple with the Flex field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// Deprecated
 func (o *VertexAIGeminiOptions) GetFlexOk() (*bool, bool) {
 	if o == nil || IsNil(o.Flex) {
 		return nil, false
@@ -498,6 +536,7 @@ func (o *VertexAIGeminiOptions) HasFlex() bool {
 }
 
 // SetFlex gets a reference to the given bool and assigns it to the Flex field.
+// Deprecated
 func (o *VertexAIGeminiOptions) SetFlex(v bool) {
 	o.Flex = &v
 }
@@ -740,6 +779,9 @@ func (o VertexAIGeminiOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ThinkingLevel) {
 		toSerialize["thinking_level"] = o.ThinkingLevel
+	}
+	if !IsNil(o.ServiceTier) {
+		toSerialize["service_tier"] = o.ServiceTier
 	}
 	if !IsNil(o.Flex) {
 		toSerialize["flex"] = o.Flex
