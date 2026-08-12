@@ -193,6 +193,7 @@ model_audit_trail_response.go
 model_auth_token_response.go
 model_autonomous_run_response.go
 model_aws_configuration.go
+model_azure_foundry_chat_options.go
 model_batch_query_payload.go
 model_batch_query_payload_queries_inner.go
 model_batch_query_result.go
@@ -643,6 +644,7 @@ model_mcpo_auth_config.go
 model_mediator_env_config.go
 model_migration_list_response.go
 model_migration_list_response_migrations_inner.go
+model_mistral_text_options.go
 model_modalities.go
 model_modality_defaults.go
 model_model_default.go

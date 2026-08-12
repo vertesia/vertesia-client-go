@@ -25,6 +25,8 @@ type BedrockMantleChatCompletionsOptions struct {
 	Temperature     *float32 `json:"temperature,omitempty"`
 	TopP            *float32 `json:"top_p,omitempty"`
 	StopSequence    []string `json:"stop_sequence,omitempty"`
+	Effort          *string  `json:"effort,omitempty"`
+	ReasoningEffort *string  `json:"reasoning_effort,omitempty"`
 	IncludeThoughts *bool    `json:"include_thoughts,omitempty"`
 }
 
@@ -200,6 +202,70 @@ func (o *BedrockMantleChatCompletionsOptions) SetStopSequence(v []string) {
 	o.StopSequence = v
 }
 
+// GetEffort returns the Effort field value if set, zero value otherwise.
+func (o *BedrockMantleChatCompletionsOptions) GetEffort() string {
+	if o == nil || IsNil(o.Effort) {
+		var ret string
+		return ret
+	}
+	return *o.Effort
+}
+
+// GetEffortOk returns a tuple with the Effort field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BedrockMantleChatCompletionsOptions) GetEffortOk() (*string, bool) {
+	if o == nil || IsNil(o.Effort) {
+		return nil, false
+	}
+	return o.Effort, true
+}
+
+// HasEffort returns a boolean if a field has been set.
+func (o *BedrockMantleChatCompletionsOptions) HasEffort() bool {
+	if o != nil && !IsNil(o.Effort) {
+		return true
+	}
+
+	return false
+}
+
+// SetEffort gets a reference to the given string and assigns it to the Effort field.
+func (o *BedrockMantleChatCompletionsOptions) SetEffort(v string) {
+	o.Effort = &v
+}
+
+// GetReasoningEffort returns the ReasoningEffort field value if set, zero value otherwise.
+func (o *BedrockMantleChatCompletionsOptions) GetReasoningEffort() string {
+	if o == nil || IsNil(o.ReasoningEffort) {
+		var ret string
+		return ret
+	}
+	return *o.ReasoningEffort
+}
+
+// GetReasoningEffortOk returns a tuple with the ReasoningEffort field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BedrockMantleChatCompletionsOptions) GetReasoningEffortOk() (*string, bool) {
+	if o == nil || IsNil(o.ReasoningEffort) {
+		return nil, false
+	}
+	return o.ReasoningEffort, true
+}
+
+// HasReasoningEffort returns a boolean if a field has been set.
+func (o *BedrockMantleChatCompletionsOptions) HasReasoningEffort() bool {
+	if o != nil && !IsNil(o.ReasoningEffort) {
+		return true
+	}
+
+	return false
+}
+
+// SetReasoningEffort gets a reference to the given string and assigns it to the ReasoningEffort field.
+func (o *BedrockMantleChatCompletionsOptions) SetReasoningEffort(v string) {
+	o.ReasoningEffort = &v
+}
+
 // GetIncludeThoughts returns the IncludeThoughts field value if set, zero value otherwise.
 func (o *BedrockMantleChatCompletionsOptions) GetIncludeThoughts() bool {
 	if o == nil || IsNil(o.IncludeThoughts) {
@@ -254,6 +320,12 @@ func (o BedrockMantleChatCompletionsOptions) ToMap() (map[string]interface{}, er
 	}
 	if !IsNil(o.StopSequence) {
 		toSerialize["stop_sequence"] = o.StopSequence
+	}
+	if !IsNil(o.Effort) {
+		toSerialize["effort"] = o.Effort
+	}
+	if !IsNil(o.ReasoningEffort) {
+		toSerialize["reasoning_effort"] = o.ReasoningEffort
 	}
 	if !IsNil(o.IncludeThoughts) {
 		toSerialize["include_thoughts"] = o.IncludeThoughts

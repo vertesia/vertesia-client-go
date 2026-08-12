@@ -18,6 +18,7 @@ import (
 
 // ModelOptions - struct for ModelOptions
 type ModelOptions struct {
+	AzureFoundryChatOptions             *AzureFoundryChatOptions
 	BedrockAI21Options                  *BedrockAI21Options
 	BedrockClaudeOptions                *BedrockClaudeOptions
 	BedrockCohereCommandOptions         *BedrockCohereCommandOptions
@@ -31,6 +32,7 @@ type ModelOptions struct {
 	BedrockPalmyraOptions               *BedrockPalmyraOptions
 	GroqOptions                         *GroqOptions
 	ImagenOptions                       *ImagenOptions
+	MistralTextOptions                  *MistralTextOptions
 	NovaCanvasOptions                   *NovaCanvasOptions
 	OpenAiDalleOptions                  *OpenAiDalleOptions
 	OpenAiGptImageOptions               *OpenAiGptImageOptions
@@ -41,6 +43,13 @@ type ModelOptions struct {
 	VertexAIClaudeOptions               *VertexAIClaudeOptions
 	VertexAIGeminiOptions               *VertexAIGeminiOptions
 	VertexAIGrokOptions                 *VertexAIGrokOptions
+}
+
+// AzureFoundryChatOptionsAsModelOptions is a convenience function that returns AzureFoundryChatOptions wrapped in ModelOptions
+func AzureFoundryChatOptionsAsModelOptions(v *AzureFoundryChatOptions) ModelOptions {
+	return ModelOptions{
+		AzureFoundryChatOptions: v,
+	}
 }
 
 // BedrockAI21OptionsAsModelOptions is a convenience function that returns BedrockAI21Options wrapped in ModelOptions
@@ -134,6 +143,13 @@ func ImagenOptionsAsModelOptions(v *ImagenOptions) ModelOptions {
 	}
 }
 
+// MistralTextOptionsAsModelOptions is a convenience function that returns MistralTextOptions wrapped in ModelOptions
+func MistralTextOptionsAsModelOptions(v *MistralTextOptions) ModelOptions {
+	return ModelOptions{
+		MistralTextOptions: v,
+	}
+}
+
 // NovaCanvasOptionsAsModelOptions is a convenience function that returns NovaCanvasOptions wrapped in ModelOptions
 func NovaCanvasOptionsAsModelOptions(v *NovaCanvasOptions) ModelOptions {
 	return ModelOptions{
@@ -208,6 +224,23 @@ func VertexAIGrokOptionsAsModelOptions(v *VertexAIGrokOptions) ModelOptions {
 func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
+	// try to unmarshal data into AzureFoundryChatOptions
+	err = newStrictDecoder(data).Decode(&dst.AzureFoundryChatOptions)
+	if err == nil {
+		jsonAzureFoundryChatOptions, _ := json.Marshal(dst.AzureFoundryChatOptions)
+		if string(jsonAzureFoundryChatOptions) == "{}" { // empty struct
+			dst.AzureFoundryChatOptions = nil
+		} else {
+			if err = validator.Validate(dst.AzureFoundryChatOptions); err != nil {
+				dst.AzureFoundryChatOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.AzureFoundryChatOptions = nil
+	}
+
 	// try to unmarshal data into BedrockAI21Options
 	err = newStrictDecoder(data).Decode(&dst.BedrockAI21Options)
 	if err == nil {
@@ -429,6 +462,23 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.ImagenOptions = nil
 	}
 
+	// try to unmarshal data into MistralTextOptions
+	err = newStrictDecoder(data).Decode(&dst.MistralTextOptions)
+	if err == nil {
+		jsonMistralTextOptions, _ := json.Marshal(dst.MistralTextOptions)
+		if string(jsonMistralTextOptions) == "{}" { // empty struct
+			dst.MistralTextOptions = nil
+		} else {
+			if err = validator.Validate(dst.MistralTextOptions); err != nil {
+				dst.MistralTextOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.MistralTextOptions = nil
+	}
+
 	// try to unmarshal data into NovaCanvasOptions
 	err = newStrictDecoder(data).Decode(&dst.NovaCanvasOptions)
 	if err == nil {
@@ -601,6 +651,7 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 
 	if match > 1 { // more than 1 match
 		// reset to nil
+		dst.AzureFoundryChatOptions = nil
 		dst.BedrockAI21Options = nil
 		dst.BedrockClaudeOptions = nil
 		dst.BedrockCohereCommandOptions = nil
@@ -614,6 +665,7 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.BedrockPalmyraOptions = nil
 		dst.GroqOptions = nil
 		dst.ImagenOptions = nil
+		dst.MistralTextOptions = nil
 		dst.NovaCanvasOptions = nil
 		dst.OpenAiDalleOptions = nil
 		dst.OpenAiGptImageOptions = nil
@@ -635,6 +687,10 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 
 // Marshal data from the first non-nil pointers in the struct to JSON
 func (src ModelOptions) MarshalJSON() ([]byte, error) {
+	if src.AzureFoundryChatOptions != nil {
+		return json.Marshal(&src.AzureFoundryChatOptions)
+	}
+
 	if src.BedrockAI21Options != nil {
 		return json.Marshal(&src.BedrockAI21Options)
 	}
@@ -687,6 +743,10 @@ func (src ModelOptions) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.ImagenOptions)
 	}
 
+	if src.MistralTextOptions != nil {
+		return json.Marshal(&src.MistralTextOptions)
+	}
+
 	if src.NovaCanvasOptions != nil {
 		return json.Marshal(&src.NovaCanvasOptions)
 	}
@@ -735,6 +795,10 @@ func (obj *ModelOptions) GetActualInstance() interface{} {
 	if obj == nil {
 		return nil
 	}
+	if obj.AzureFoundryChatOptions != nil {
+		return obj.AzureFoundryChatOptions
+	}
+
 	if obj.BedrockAI21Options != nil {
 		return obj.BedrockAI21Options
 	}
@@ -787,6 +851,10 @@ func (obj *ModelOptions) GetActualInstance() interface{} {
 		return obj.ImagenOptions
 	}
 
+	if obj.MistralTextOptions != nil {
+		return obj.MistralTextOptions
+	}
+
 	if obj.NovaCanvasOptions != nil {
 		return obj.NovaCanvasOptions
 	}
@@ -833,6 +901,10 @@ func (obj *ModelOptions) GetActualInstance() interface{} {
 
 // Get the actual instance value
 func (obj ModelOptions) GetActualInstanceValue() interface{} {
+	if obj.AzureFoundryChatOptions != nil {
+		return *obj.AzureFoundryChatOptions
+	}
+
 	if obj.BedrockAI21Options != nil {
 		return *obj.BedrockAI21Options
 	}
@@ -883,6 +955,10 @@ func (obj ModelOptions) GetActualInstanceValue() interface{} {
 
 	if obj.ImagenOptions != nil {
 		return *obj.ImagenOptions
+	}
+
+	if obj.MistralTextOptions != nil {
+		return *obj.MistralTextOptions
 	}
 
 	if obj.NovaCanvasOptions != nil {
