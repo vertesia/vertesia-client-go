@@ -68,9 +68,13 @@ type APIClient struct {
 
 	ContentObjectTypesAPI *ContentObjectTypesAPIService
 
+	ContentQueryAPI *ContentQueryAPIService
+
 	CostsAPI *CostsAPIService
 
 	DataAPI *DataAPIService
+
+	EmailAPI *EmailAPIService
 
 	EnvironmentsAPI *EnvironmentsAPIService
 
@@ -93,6 +97,8 @@ type APIClient struct {
 	OAuthProvidersAPI *OAuthProvidersAPIService
 
 	ObjectsAPI *ObjectsAPIService
+
+	PendingAsksAPI *PendingAsksAPIService
 
 	ProcessesAPI *ProcessesAPIService
 
@@ -155,8 +161,10 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.CollectionsAPI = (*CollectionsAPIService)(&c.common)
 	c.CommandsAPI = (*CommandsAPIService)(&c.common)
 	c.ContentObjectTypesAPI = (*ContentObjectTypesAPIService)(&c.common)
+	c.ContentQueryAPI = (*ContentQueryAPIService)(&c.common)
 	c.CostsAPI = (*CostsAPIService)(&c.common)
 	c.DataAPI = (*DataAPIService)(&c.common)
+	c.EmailAPI = (*EmailAPIService)(&c.common)
 	c.EnvironmentsAPI = (*EnvironmentsAPIService)(&c.common)
 	c.EventIngestChannelsAPI = (*EventIngestChannelsAPIService)(&c.common)
 	c.EventSubscriptionsAPI = (*EventSubscriptionsAPIService)(&c.common)
@@ -168,6 +176,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.OAuthGrantsAPI = (*OAuthGrantsAPIService)(&c.common)
 	c.OAuthProvidersAPI = (*OAuthProvidersAPIService)(&c.common)
 	c.ObjectsAPI = (*ObjectsAPIService)(&c.common)
+	c.PendingAsksAPI = (*PendingAsksAPIService)(&c.common)
 	c.ProcessesAPI = (*ProcessesAPIService)(&c.common)
 	c.ProjectsAPI = (*ProjectsAPIService)(&c.common)
 	c.PromptTemplatesAPI = (*PromptTemplatesAPIService)(&c.common)

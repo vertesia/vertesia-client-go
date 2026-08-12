@@ -9,8 +9,10 @@ api_bulk_operations.go
 api_collections.go
 api_commands.go
 api_content_object_types.go
+api_content_query.go
 api_costs.go
 api_data.go
+api_email.go
 api_environments.go
 api_event_ingest_channels.go
 api_event_subscriptions.go
@@ -22,6 +24,7 @@ api_o_auth_clients.go
 api_o_auth_grants.go
 api_o_auth_providers.go
 api_objects.go
+api_pending_asks.go
 api_processes.go
 api_projects.go
 api_prompt_templates.go
@@ -288,6 +291,11 @@ model_content_object_type_item.go
 model_content_object_type_ref.go
 model_content_object_type_status.go
 model_content_object_user_permissions.go
+model_content_query_payload.go
+model_content_query_payload_dsl.go
+model_content_query_result.go
+model_content_query_result_columns_inner.go
+model_content_query_result_hits_inner.go
 model_content_source.go
 model_content_type_editing_policy.go
 model_content_type_extraction_grounding_policy.go
@@ -328,6 +336,8 @@ model_create_content_object_type_payload.go
 model_create_dashboard_payload.go
 model_create_dashboard_snapshot_payload.go
 model_create_data_store_payload.go
+model_create_email_route_request.go
+model_create_email_route_response.go
 model_create_event_ingest_channel_payload.go
 model_create_event_subscription_payload.go
 model_create_o_auth_client_payload.go
@@ -427,6 +437,7 @@ model_duration_value.go
 model_dynamic_scaling_types.go
 model_elasticsearch_backend.go
 model_email_channel.go
+model_email_route_response.go
 model_embedding.go
 model_embedding_output.go
 model_embedding_result_item.go
@@ -508,6 +519,10 @@ model_file_metadata_response.go
 model_file_metadata_update_result.go
 model_file_processing_status.go
 model_find_payload.go
+model_forward_email_request.go
+model_forward_email_request_attachments_inner.go
+model_forward_email_request_email.go
+model_forward_email_response.go
 model_generate_interaction_payload.go
 model_generate_test_data_payload.go
 model_generated_interaction_definition.go
@@ -605,6 +620,7 @@ model_list_agent_runs_response.go
 model_list_content_object_exports_response.go
 model_list_event_deliveries_payload.go
 model_list_event_deliveries_response.go
+model_list_pending_asks_response.go
 model_list_secrets_response.go
 model_list_workflow_runs_payload.go
 model_list_workflow_runs_response.go
@@ -678,6 +694,8 @@ model_parallel_collect_mode.go
 model_parallel_failure_policy.go
 model_pdf_rendering_metadata.go
 model_pending_activity.go
+model_pending_ask_data.go
+model_pending_ask_status.go
 model_pending_mcp_connection.go
 model_pending_tool_approval_results.go
 model_permission.go
@@ -770,6 +788,8 @@ model_quota_tier_response.go
 model_rate_limit_request_payload.go
 model_rate_limit_request_response.go
 model_reasoning_effort.go
+model_register_pending_ask_request.go
+model_register_pending_ask_response.go
 model_reindex_agent_runs_payload.go
 model_reindex_agent_runs_response.go
 model_reindex_agent_runs_response_errors_inner.go
@@ -782,6 +802,8 @@ model_rendering_template_definition.go
 model_rendering_template_definition_ref.go
 model_resend_configuration.go
 model_resend_configuration_input.go
+model_resolve_pending_ask_request.go
+model_resolve_pending_ask_response.go
 model_resolved_environment_info.go
 model_resolved_interaction_execution_info.go
 model_resolved_runtime_config.go
@@ -819,6 +841,8 @@ model_semantic_condition_on_error.go
 model_semantic_evaluation_record.go
 model_semantic_evaluation_status.go
 model_semantic_evaluator.go
+model_send_email_request.go
+model_send_email_response.go
 model_serper_configuration.go
 model_serper_configuration_input.go
 model_service_account_token_request.go
@@ -909,6 +933,8 @@ model_update_collection_payload.go
 model_update_content_object_payload.go
 model_update_content_object_type_payload.go
 model_update_dashboard_payload.go
+model_update_email_route_request.go
+model_update_email_route_response.go
 model_update_event_ingest_channel_payload.go
 model_update_event_subscription_payload.go
 model_update_execution_run_payload.go

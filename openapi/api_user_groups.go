@@ -16,6 +16,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"reflect"
 	"strings"
 )
 
@@ -584,7 +585,37 @@ func (a *UserGroupsAPIService) ListUserGroupMembersExecute(r ApiListUserGroupMem
 type ApiListUserGroupsRequest struct {
 	ctx         context.Context
 	ApiService  *UserGroupsAPIService
+	search      *string
+	tags        *[]string
+	limit       *float32
+	offset      *float32
+	project     *string
 	xApiVersion *string
+}
+
+func (r ApiListUserGroupsRequest) Search(search string) ApiListUserGroupsRequest {
+	r.search = &search
+	return r
+}
+
+func (r ApiListUserGroupsRequest) Tags(tags []string) ApiListUserGroupsRequest {
+	r.tags = &tags
+	return r
+}
+
+func (r ApiListUserGroupsRequest) Limit(limit float32) ApiListUserGroupsRequest {
+	r.limit = &limit
+	return r
+}
+
+func (r ApiListUserGroupsRequest) Offset(offset float32) ApiListUserGroupsRequest {
+	r.offset = &offset
+	return r
+}
+
+func (r ApiListUserGroupsRequest) Project(project string) ApiListUserGroupsRequest {
+	r.project = &project
+	return r
 }
 
 // Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
@@ -636,6 +667,29 @@ func (a *UserGroupsAPIService) ListUserGroupsExecute(r ApiListUserGroupsRequest)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.search != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "search", r.search, "form", "")
+	}
+	if r.tags != nil {
+		t := *r.tags
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "tags", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "tags", t, "form", "multi")
+		}
+	}
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "form", "")
+	}
+	if r.offset != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "form", "")
+	}
+	if r.project != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "project", r.project, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
