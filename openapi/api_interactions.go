@@ -4052,7 +4052,7 @@ func (r ApiResolveCatalogInteractionRequest) XApiVersion(xApiVersion string) Api
 	return r
 }
 
-func (r ApiResolveCatalogInteractionRequest) Execute() (*CatalogInteractionRef, *http.Response, error) {
+func (r ApiResolveCatalogInteractionRequest) Execute() (*ResolvedCatalogInteraction, *http.Response, error) {
 	return r.ApiService.ResolveCatalogInteractionExecute(r)
 }
 
@@ -4077,13 +4077,13 @@ func (a *InteractionsAPIService) ResolveCatalogInteraction(ctx context.Context, 
 
 // Execute executes the request
 //
-//	@return CatalogInteractionRef
-func (a *InteractionsAPIService) ResolveCatalogInteractionExecute(r ApiResolveCatalogInteractionRequest) (*CatalogInteractionRef, *http.Response, error) {
+//	@return ResolvedCatalogInteraction
+func (a *InteractionsAPIService) ResolveCatalogInteractionExecute(r ApiResolveCatalogInteractionRequest) (*ResolvedCatalogInteraction, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *CatalogInteractionRef
+		localVarReturnValue *ResolvedCatalogInteraction
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.ResolveCatalogInteraction")

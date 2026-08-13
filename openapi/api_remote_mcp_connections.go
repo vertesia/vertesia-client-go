@@ -599,7 +599,7 @@ func (r ApiGetRemoteMcpConnectionStatusRequest) Execute() (*OAuthAuthStatus, *ht
 /*
 GetRemoteMcpConnectionStatus Retrieve a remote MCP connection status
 
-Returns OAuth authentication status for a specific OAuth-enabled MCP collection.
+Returns authentication status for a specific OAuth or API-key MCP collection.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param appInstallId
@@ -879,7 +879,7 @@ func (r ApiListRemoteMcpConnectionStatusesRequest) Execute() ([]OAuthAuthStatus,
 /*
 ListRemoteMcpConnectionStatuses List remote MCP connection statuses
 
-Returns OAuth authentication status for all OAuth-enabled MCP collections in an installed app.
+Returns authentication status for all OAuth and API-key MCP collections in an installed app.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param appInstallId

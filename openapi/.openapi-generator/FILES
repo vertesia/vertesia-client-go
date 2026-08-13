@@ -807,6 +807,8 @@ model_resend_configuration.go
 model_resend_configuration_input.go
 model_resolve_pending_ask_request.go
 model_resolve_pending_ask_response.go
+model_resolved_catalog_interaction.go
+model_resolved_catalog_interaction_runtime.go
 model_resolved_environment_info.go
 model_resolved_interaction_execution_info.go
 model_resolved_runtime_config.go
