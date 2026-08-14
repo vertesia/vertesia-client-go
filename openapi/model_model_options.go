@@ -43,6 +43,7 @@ type ModelOptions struct {
 	VertexAIClaudeOptions               *VertexAIClaudeOptions
 	VertexAIGeminiOptions               *VertexAIGeminiOptions
 	VertexAIGrokOptions                 *VertexAIGrokOptions
+	XAIGrokImageOptions                 *XAIGrokImageOptions
 }
 
 // AzureFoundryChatOptionsAsModelOptions is a convenience function that returns AzureFoundryChatOptions wrapped in ModelOptions
@@ -217,6 +218,13 @@ func VertexAIGeminiOptionsAsModelOptions(v *VertexAIGeminiOptions) ModelOptions 
 func VertexAIGrokOptionsAsModelOptions(v *VertexAIGrokOptions) ModelOptions {
 	return ModelOptions{
 		VertexAIGrokOptions: v,
+	}
+}
+
+// XAIGrokImageOptionsAsModelOptions is a convenience function that returns XAIGrokImageOptions wrapped in ModelOptions
+func XAIGrokImageOptionsAsModelOptions(v *XAIGrokImageOptions) ModelOptions {
+	return ModelOptions{
+		XAIGrokImageOptions: v,
 	}
 }
 
@@ -649,6 +657,23 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.VertexAIGrokOptions = nil
 	}
 
+	// try to unmarshal data into XAIGrokImageOptions
+	err = newStrictDecoder(data).Decode(&dst.XAIGrokImageOptions)
+	if err == nil {
+		jsonXAIGrokImageOptions, _ := json.Marshal(dst.XAIGrokImageOptions)
+		if string(jsonXAIGrokImageOptions) == "{}" { // empty struct
+			dst.XAIGrokImageOptions = nil
+		} else {
+			if err = validator.Validate(dst.XAIGrokImageOptions); err != nil {
+				dst.XAIGrokImageOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.XAIGrokImageOptions = nil
+	}
+
 	if match > 1 { // more than 1 match
 		// reset to nil
 		dst.AzureFoundryChatOptions = nil
@@ -676,6 +701,7 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.VertexAIClaudeOptions = nil
 		dst.VertexAIGeminiOptions = nil
 		dst.VertexAIGrokOptions = nil
+		dst.XAIGrokImageOptions = nil
 
 		return fmt.Errorf("data matches more than one schema in oneOf(ModelOptions)")
 	} else if match == 1 {
@@ -787,6 +813,10 @@ func (src ModelOptions) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.VertexAIGrokOptions)
 	}
 
+	if src.XAIGrokImageOptions != nil {
+		return json.Marshal(&src.XAIGrokImageOptions)
+	}
+
 	return nil, nil // no data in oneOf schemas
 }
 
@@ -895,6 +925,10 @@ func (obj *ModelOptions) GetActualInstance() interface{} {
 		return obj.VertexAIGrokOptions
 	}
 
+	if obj.XAIGrokImageOptions != nil {
+		return obj.XAIGrokImageOptions
+	}
+
 	// all schemas are nil
 	return nil
 }
@@ -999,6 +1033,10 @@ func (obj ModelOptions) GetActualInstanceValue() interface{} {
 
 	if obj.VertexAIGrokOptions != nil {
 		return *obj.VertexAIGrokOptions
+	}
+
+	if obj.XAIGrokImageOptions != nil {
+		return *obj.XAIGrokImageOptions
 	}
 
 	// all schemas are nil
