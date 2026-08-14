@@ -20,7 +20,7 @@ var _ MappedNullable = &AgenticViewSearchConfiguration{}
 // AgenticViewSearchConfiguration struct for AgenticViewSearchConfiguration
 type AgenticViewSearchConfiguration struct {
 	Interaction *string                            `json:"interaction,omitempty"`
-	Config      *InteractionExecutionConfiguration `json:"config,omitempty"`
+	Config      *ViewAgenticExecutionConfiguration `json:"config,omitempty"`
 	// View-specific guidance for Elasticsearch query planning.
 	Instructions *string `json:"instructions,omitempty"`
 	// Generate only Elasticsearch DSL, or generate DSL plus a safe ephemeral result presentation.
@@ -81,9 +81,9 @@ func (o *AgenticViewSearchConfiguration) SetInteraction(v string) {
 }
 
 // GetConfig returns the Config field value if set, zero value otherwise.
-func (o *AgenticViewSearchConfiguration) GetConfig() InteractionExecutionConfiguration {
+func (o *AgenticViewSearchConfiguration) GetConfig() ViewAgenticExecutionConfiguration {
 	if o == nil || IsNil(o.Config) {
-		var ret InteractionExecutionConfiguration
+		var ret ViewAgenticExecutionConfiguration
 		return ret
 	}
 	return *o.Config
@@ -91,7 +91,7 @@ func (o *AgenticViewSearchConfiguration) GetConfig() InteractionExecutionConfigu
 
 // GetConfigOk returns a tuple with the Config field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AgenticViewSearchConfiguration) GetConfigOk() (*InteractionExecutionConfiguration, bool) {
+func (o *AgenticViewSearchConfiguration) GetConfigOk() (*ViewAgenticExecutionConfiguration, bool) {
 	if o == nil || IsNil(o.Config) {
 		return nil, false
 	}
@@ -107,8 +107,8 @@ func (o *AgenticViewSearchConfiguration) HasConfig() bool {
 	return false
 }
 
-// SetConfig gets a reference to the given InteractionExecutionConfiguration and assigns it to the Config field.
-func (o *AgenticViewSearchConfiguration) SetConfig(v InteractionExecutionConfiguration) {
+// SetConfig gets a reference to the given ViewAgenticExecutionConfiguration and assigns it to the Config field.
+func (o *AgenticViewSearchConfiguration) SetConfig(v ViewAgenticExecutionConfiguration) {
 	o.Config = &v
 }
 

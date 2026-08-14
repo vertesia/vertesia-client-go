@@ -20,6 +20,7 @@ var _ MappedNullable = &FacetSpec{}
 
 // FacetSpec struct for FacetSpec
 type FacetSpec struct {
+	// Key the buckets are returned under. `total` is reserved for the match count that every facet response carries, and is rejected with a 400.
 	Name  string `json:"name"`
 	Field string `json:"field"`
 }

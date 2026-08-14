@@ -22,7 +22,7 @@ var _ MappedNullable = &AwsConfiguration{}
 type AwsConfiguration struct {
 	Integration SupportedIntegrationsAws `json:"integration"`
 	Enabled     bool                     `json:"enabled"`
-	S3RoleArn   string                   `json:"s3_role_arn"`
+	S3RoleArn   *string                  `json:"s3_role_arn,omitempty"`
 }
 
 type _AwsConfiguration AwsConfiguration
@@ -31,11 +31,10 @@ type _AwsConfiguration AwsConfiguration
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAwsConfiguration(integration SupportedIntegrationsAws, enabled bool, s3RoleArn string) *AwsConfiguration {
+func NewAwsConfiguration(integration SupportedIntegrationsAws, enabled bool) *AwsConfiguration {
 	this := AwsConfiguration{}
 	this.Integration = integration
 	this.Enabled = enabled
-	this.S3RoleArn = s3RoleArn
 	return &this
 }
 
@@ -95,28 +94,36 @@ func (o *AwsConfiguration) SetEnabled(v bool) {
 	o.Enabled = v
 }
 
-// GetS3RoleArn returns the S3RoleArn field value
+// GetS3RoleArn returns the S3RoleArn field value if set, zero value otherwise.
 func (o *AwsConfiguration) GetS3RoleArn() string {
-	if o == nil {
+	if o == nil || IsNil(o.S3RoleArn) {
 		var ret string
 		return ret
 	}
-
-	return o.S3RoleArn
+	return *o.S3RoleArn
 }
 
-// GetS3RoleArnOk returns a tuple with the S3RoleArn field value
+// GetS3RoleArnOk returns a tuple with the S3RoleArn field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AwsConfiguration) GetS3RoleArnOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.S3RoleArn) {
 		return nil, false
 	}
-	return &o.S3RoleArn, true
+	return o.S3RoleArn, true
 }
 
-// SetS3RoleArn sets field value
+// HasS3RoleArn returns a boolean if a field has been set.
+func (o *AwsConfiguration) HasS3RoleArn() bool {
+	if o != nil && !IsNil(o.S3RoleArn) {
+		return true
+	}
+
+	return false
+}
+
+// SetS3RoleArn gets a reference to the given string and assigns it to the S3RoleArn field.
 func (o *AwsConfiguration) SetS3RoleArn(v string) {
-	o.S3RoleArn = v
+	o.S3RoleArn = &v
 }
 
 func (o AwsConfiguration) MarshalJSON() ([]byte, error) {
@@ -131,7 +138,9 @@ func (o AwsConfiguration) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["integration"] = o.Integration
 	toSerialize["enabled"] = o.Enabled
-	toSerialize["s3_role_arn"] = o.S3RoleArn
+	if !IsNil(o.S3RoleArn) {
+		toSerialize["s3_role_arn"] = o.S3RoleArn
+	}
 	return toSerialize, nil
 }
 
@@ -142,7 +151,6 @@ func (o *AwsConfiguration) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"integration",
 		"enabled",
-		"s3_role_arn",
 	}
 
 	allProperties := make(map[string]interface{})

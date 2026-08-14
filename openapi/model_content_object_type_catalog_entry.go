@@ -34,14 +34,16 @@ type ContentObjectTypeCatalogEntry struct {
 	TableLayout []ColumnLayout `json:"table_layout,omitempty"`
 	IsChunkable *bool          `json:"is_chunkable,omitempty"`
 	// Determines if the content will be validated against the object schema a generation time and save/update time.
-	StrictMode           *bool                     `json:"strict_mode,omitempty"`
-	Status               *ContentObjectTypeStatus  `json:"status,omitempty"`
-	Intake               *ContentTypeIntakePolicy  `json:"intake,omitempty"`
-	Editing              *ContentTypeEditingPolicy `json:"editing,omitempty"`
-	UpdatedBy            *string                   `json:"updated_by,omitempty"`
-	CreatedBy            *string                   `json:"created_by,omitempty"`
-	CreatedAt            *string                   `json:"created_at,omitempty"`
-	UpdatedAt            *string                   `json:"updated_at,omitempty"`
+	StrictMode *bool                     `json:"strict_mode,omitempty"`
+	Status     *ContentObjectTypeStatus  `json:"status,omitempty"`
+	Intake     *ContentTypeIntakePolicy  `json:"intake,omitempty"`
+	Editing    *ContentTypeEditingPolicy `json:"editing,omitempty"`
+	// Display title. Defaults to `name` or `id`.
+	Title                *string `json:"title,omitempty"`
+	UpdatedBy            *string `json:"updated_by,omitempty"`
+	CreatedBy            *string `json:"created_by,omitempty"`
+	CreatedAt            *string `json:"created_at,omitempty"`
+	UpdatedAt            *string `json:"updated_at,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -402,6 +404,38 @@ func (o *ContentObjectTypeCatalogEntry) SetEditing(v ContentTypeEditingPolicy) {
 	o.Editing = &v
 }
 
+// GetTitle returns the Title field value if set, zero value otherwise.
+func (o *ContentObjectTypeCatalogEntry) GetTitle() string {
+	if o == nil || IsNil(o.Title) {
+		var ret string
+		return ret
+	}
+	return *o.Title
+}
+
+// GetTitleOk returns a tuple with the Title field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectTypeCatalogEntry) GetTitleOk() (*string, bool) {
+	if o == nil || IsNil(o.Title) {
+		return nil, false
+	}
+	return o.Title, true
+}
+
+// HasTitle returns a boolean if a field has been set.
+func (o *ContentObjectTypeCatalogEntry) HasTitle() bool {
+	if o != nil && !IsNil(o.Title) {
+		return true
+	}
+
+	return false
+}
+
+// SetTitle gets a reference to the given string and assigns it to the Title field.
+func (o *ContentObjectTypeCatalogEntry) SetTitle(v string) {
+	o.Title = &v
+}
+
 // GetUpdatedBy returns the UpdatedBy field value if set, zero value otherwise.
 func (o *ContentObjectTypeCatalogEntry) GetUpdatedBy() string {
 	if o == nil || IsNil(o.UpdatedBy) {
@@ -569,6 +603,9 @@ func (o ContentObjectTypeCatalogEntry) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Editing) {
 		toSerialize["editing"] = o.Editing
 	}
+	if !IsNil(o.Title) {
+		toSerialize["title"] = o.Title
+	}
 	if !IsNil(o.UpdatedBy) {
 		toSerialize["updated_by"] = o.UpdatedBy
 	}
@@ -636,6 +673,7 @@ func (o *ContentObjectTypeCatalogEntry) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "status")
 		delete(additionalProperties, "intake")
 		delete(additionalProperties, "editing")
+		delete(additionalProperties, "title")
 		delete(additionalProperties, "updated_by")
 		delete(additionalProperties, "created_by")
 		delete(additionalProperties, "created_at")

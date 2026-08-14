@@ -976,6 +976,7 @@ model_view_action_configuration.go
 model_view_action_placement.go
 model_view_action_selection_requirement.go
 model_view_actions_configuration.go
+model_view_agentic_execution_configuration.go
 model_view_agentic_search_mode.go
 model_view_board_card_configuration.go
 model_view_board_column.go

@@ -34,10 +34,12 @@ type InCodeTypeDefinition struct {
 	TableLayout []ColumnLayout `json:"table_layout,omitempty"`
 	IsChunkable *bool          `json:"is_chunkable,omitempty"`
 	// Determines if the content will be validated against the object schema a generation time and save/update time.
-	StrictMode           *bool                     `json:"strict_mode,omitempty"`
-	Status               *ContentObjectTypeStatus  `json:"status,omitempty"`
-	Intake               *ContentTypeIntakePolicy  `json:"intake,omitempty"`
-	Editing              *ContentTypeEditingPolicy `json:"editing,omitempty"`
+	StrictMode *bool                     `json:"strict_mode,omitempty"`
+	Status     *ContentObjectTypeStatus  `json:"status,omitempty"`
+	Intake     *ContentTypeIntakePolicy  `json:"intake,omitempty"`
+	Editing    *ContentTypeEditingPolicy `json:"editing,omitempty"`
+	// Display title. Defaults to `name` or `id`.
+	Title                *string `json:"title,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -398,6 +400,38 @@ func (o *InCodeTypeDefinition) SetEditing(v ContentTypeEditingPolicy) {
 	o.Editing = &v
 }
 
+// GetTitle returns the Title field value if set, zero value otherwise.
+func (o *InCodeTypeDefinition) GetTitle() string {
+	if o == nil || IsNil(o.Title) {
+		var ret string
+		return ret
+	}
+	return *o.Title
+}
+
+// GetTitleOk returns a tuple with the Title field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InCodeTypeDefinition) GetTitleOk() (*string, bool) {
+	if o == nil || IsNil(o.Title) {
+		return nil, false
+	}
+	return o.Title, true
+}
+
+// HasTitle returns a boolean if a field has been set.
+func (o *InCodeTypeDefinition) HasTitle() bool {
+	if o != nil && !IsNil(o.Title) {
+		return true
+	}
+
+	return false
+}
+
+// SetTitle gets a reference to the given string and assigns it to the Title field.
+func (o *InCodeTypeDefinition) SetTitle(v string) {
+	o.Title = &v
+}
+
 func (o InCodeTypeDefinition) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -436,6 +470,9 @@ func (o InCodeTypeDefinition) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Editing) {
 		toSerialize["editing"] = o.Editing
+	}
+	if !IsNil(o.Title) {
+		toSerialize["title"] = o.Title
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -492,6 +529,7 @@ func (o *InCodeTypeDefinition) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "status")
 		delete(additionalProperties, "intake")
 		delete(additionalProperties, "editing")
+		delete(additionalProperties, "title")
 		o.AdditionalProperties = additionalProperties
 	}
 
