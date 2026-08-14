@@ -23,7 +23,7 @@ type AskUserWebhookConfiguration struct {
 	Integration SupportedIntegrationsAskUserWebhook `json:"integration"`
 	Enabled     bool                                `json:"enabled"`
 	// Webhook URL to receive ask_user events
-	WebhookUrl        string  `json:"webhook_url"`
+	WebhookUrl        *string `json:"webhook_url,omitempty"`
 	HasWebhookSecret  *bool   `json:"has_webhook_secret,omitempty"`
 	WebhookSecretHint *string `json:"webhook_secret_hint,omitempty"`
 	// Which events to send: ['requested', 'resolved'] or subset (default: both)
@@ -38,11 +38,10 @@ type _AskUserWebhookConfiguration AskUserWebhookConfiguration
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAskUserWebhookConfiguration(integration SupportedIntegrationsAskUserWebhook, enabled bool, webhookUrl string) *AskUserWebhookConfiguration {
+func NewAskUserWebhookConfiguration(integration SupportedIntegrationsAskUserWebhook, enabled bool) *AskUserWebhookConfiguration {
 	this := AskUserWebhookConfiguration{}
 	this.Integration = integration
 	this.Enabled = enabled
-	this.WebhookUrl = webhookUrl
 	return &this
 }
 
@@ -102,28 +101,36 @@ func (o *AskUserWebhookConfiguration) SetEnabled(v bool) {
 	o.Enabled = v
 }
 
-// GetWebhookUrl returns the WebhookUrl field value
+// GetWebhookUrl returns the WebhookUrl field value if set, zero value otherwise.
 func (o *AskUserWebhookConfiguration) GetWebhookUrl() string {
-	if o == nil {
+	if o == nil || IsNil(o.WebhookUrl) {
 		var ret string
 		return ret
 	}
-
-	return o.WebhookUrl
+	return *o.WebhookUrl
 }
 
-// GetWebhookUrlOk returns a tuple with the WebhookUrl field value
+// GetWebhookUrlOk returns a tuple with the WebhookUrl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AskUserWebhookConfiguration) GetWebhookUrlOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.WebhookUrl) {
 		return nil, false
 	}
-	return &o.WebhookUrl, true
+	return o.WebhookUrl, true
 }
 
-// SetWebhookUrl sets field value
+// HasWebhookUrl returns a boolean if a field has been set.
+func (o *AskUserWebhookConfiguration) HasWebhookUrl() bool {
+	if o != nil && !IsNil(o.WebhookUrl) {
+		return true
+	}
+
+	return false
+}
+
+// SetWebhookUrl gets a reference to the given string and assigns it to the WebhookUrl field.
 func (o *AskUserWebhookConfiguration) SetWebhookUrl(v string) {
-	o.WebhookUrl = v
+	o.WebhookUrl = &v
 }
 
 // GetHasWebhookSecret returns the HasWebhookSecret field value if set, zero value otherwise.
@@ -266,7 +273,9 @@ func (o AskUserWebhookConfiguration) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["integration"] = o.Integration
 	toSerialize["enabled"] = o.Enabled
-	toSerialize["webhook_url"] = o.WebhookUrl
+	if !IsNil(o.WebhookUrl) {
+		toSerialize["webhook_url"] = o.WebhookUrl
+	}
 	if !IsNil(o.HasWebhookSecret) {
 		toSerialize["has_webhook_secret"] = o.HasWebhookSecret
 	}
@@ -289,7 +298,6 @@ func (o *AskUserWebhookConfiguration) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"integration",
 		"enabled",
-		"webhook_url",
 	}
 
 	allProperties := make(map[string]interface{})
