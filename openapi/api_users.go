@@ -455,7 +455,7 @@ func (r ApiUpdateUserRequest) Execute() (*User, *http.Response, error) {
 /*
 UpdateUser Update a user
 
-Updates allowed profile fields for the caller or, for account admins, another user in the current account.
+Updates profile fields for the caller or an administrator. Only account-role administrators may change authorization attributes (properties, clearance, or compartments).
 
 **Required permissions:** `account:member`
 
