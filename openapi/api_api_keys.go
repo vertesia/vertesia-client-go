@@ -754,7 +754,7 @@ func (r ApiUpdateApiKeyRequest) Execute() (*ApiKey, *http.Response, error) {
 /*
 UpdateApiKey Update an API key
 
-Updates API key metadata: name, role, and enabled state.
+Updates API key metadata, security attributes, and enabled state.
 
 **Required permissions:** `api_key:update`
 
