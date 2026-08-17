@@ -35,14 +35,15 @@ type ContentObjectTypeItem struct {
 	// ISO timestamp of when the object was created
 	CreatedAt string `json:"created_at"`
 	// ISO timestamp of when the object was last updated
-	UpdatedAt   string                    `json:"updated_at"`
-	Status      *ContentObjectTypeStatus  `json:"status,omitempty"`
+	UpdatedAt string                   `json:"updated_at"`
+	Status    *ContentObjectTypeStatus `json:"status,omitempty"`
+	// Whether documents of this type can be split into chunks
 	IsChunkable *bool                     `json:"is_chunkable,omitempty"`
 	Intake      *ContentTypeIntakePolicy  `json:"intake,omitempty"`
 	Editing     *ContentTypeEditingPolicy `json:"editing,omitempty"`
-	// This is only included in ContentObjectTypeItem if explicitly requested It is always included in ContentObjectType
+	// Column layout used when listing documents of this type. Only included in ContentObjectTypeItem if explicitly requested; always included in ContentObjectType.
 	TableLayout []ColumnLayout `json:"table_layout,omitempty"`
-	// this is only included in ContentObjectTypeItem if explicitly requested It is always included in ContentObjectType
+	// JSON Schema for the structured properties extracted into documents of this type. Only included in ContentObjectTypeItem if explicitly requested; always included in ContentObjectType.
 	ObjectSchema map[string]interface{} `json:"object_schema,omitempty"`
 	// Determines if the content will be validated against the object schema a generation time and save/update time.
 	StrictMode *bool `json:"strict_mode,omitempty"`

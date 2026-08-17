@@ -25,7 +25,8 @@ type ColumnLayout struct {
 	// The name to display in the table column
 	Name string `json:"name"`
 	// The type of the field specifies how the rendering will be done. If not specified the string type will be used. The type may contain additional parameters prepended using a web-like query string syntax: date?LLL
-	Type     *string     `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
+	// Path of an alternate field to display when the primary field is absent
 	Fallback *string     `json:"fallback,omitempty"`
 	Default  interface{} `json:"default,omitempty"`
 }

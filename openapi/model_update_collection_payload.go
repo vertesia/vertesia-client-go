@@ -19,23 +19,36 @@ var _ MappedNullable = &UpdateCollectionPayload{}
 
 // UpdateCollectionPayload Fields to change on a collection. All optional.
 type UpdateCollectionPayload struct {
-	Description      *string                `json:"description,omitempty"`
-	SkipHeadSync     *bool                  `json:"skip_head_sync,omitempty"`
-	Tags             []string               `json:"tags,omitempty"`
-	Type             NullableString         `json:"type,omitempty"`
-	Query            map[string]interface{} `json:"query,omitempty"`
-	Properties       map[string]interface{} `json:"properties,omitempty"`
-	Parent           NullableString         `json:"parent,omitempty"`
-	TableLayout      []ColumnLayout         `json:"table_layout,omitempty"`
-	AllowedTypes     []string               `json:"allowed_types,omitempty"`
-	UpdatedBy        *string                `json:"updated_by,omitempty"`
-	SharedProperties []string               `json:"shared_properties,omitempty"`
+	// Description of the collection and its purpose
+	Description *string `json:"description,omitempty"`
+	// When true the collection does not track and sync member HEAD revisions. Defaults to false.
+	SkipHeadSync *bool `json:"skip_head_sync,omitempty"`
+	// Categorization tags for the collection
+	Tags []string `json:"tags,omitempty"`
+	// Default content type ID for documents in the collection
+	Type NullableString `json:"type,omitempty"`
+	// MongoDB query that determines membership of a dynamic collection
+	Query map[string]interface{} `json:"query,omitempty"`
+	// Metadata properties attached to the collection
+	Properties map[string]interface{} `json:"properties,omitempty"`
+	// Parent collection ID when the collection is nested
+	Parent NullableString `json:"parent,omitempty"`
+	// Column layout used when listing collection members
+	TableLayout []ColumnLayout `json:"table_layout,omitempty"`
+	// Content type IDs allowed to be added to the collection
+	AllowedTypes []string `json:"allowed_types,omitempty"`
+	// Identity recorded as the updater of the collection
+	UpdatedBy *string `json:"updated_by,omitempty"`
+	// Names of collection properties whose values are propagated to member documents
+	SharedProperties []string `json:"shared_properties,omitempty"`
 	// BLP sensitivity level for member documents
 	Sensitivity *float32 `json:"sensitivity,omitempty"`
 	// Compartments for member documents
-	Compartments         []string `json:"compartments,omitempty"`
-	Name                 *string  `json:"name,omitempty"`
-	Dynamic              *bool    `json:"dynamic,omitempty"`
+	Compartments []string `json:"compartments,omitempty"`
+	// Name of the collection
+	Name *string `json:"name,omitempty"`
+	// When true, membership is determined by `query`; when false, members are added explicitly
+	Dynamic              *bool `json:"dynamic,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
