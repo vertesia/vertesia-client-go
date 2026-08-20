@@ -730,6 +730,8 @@ model_process_script_inline_source.go
 model_process_script_language.go
 model_process_script_resource.go
 model_process_state.go
+model_process_tool_compatibility.go
+model_process_tool_compatibility_reason.go
 model_programmatic_run_response.go
 model_project.go
 model_project_configuration.go
@@ -915,6 +917,7 @@ model_tool_approval_grant.go
 model_tool_collection_auth_type.go
 model_tool_collection_object.go
 model_tool_definition.go
+model_tool_inspection.go
 model_tool_reference.go
 model_tool_result.go
 model_tool_result_meta.go

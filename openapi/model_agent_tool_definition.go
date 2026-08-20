@@ -23,6 +23,8 @@ type AgentToolDefinition struct {
 	Name        string                 `json:"name"`
 	Description *string                `json:"description,omitempty"`
 	InputSchema map[string]interface{} `json:"input_schema"`
+	// Optional MCP outputSchema advertised by the provider for its structuredContent payload. Execution adapters may expose results differently.
+	OutputSchema map[string]interface{} `json:"output_schema,omitempty"`
 	// The tool execution URL. It can be an absolute URL or a path in which case the URL is obtained using the base URL of the tool server API. Ex: http://tool-server.com/api/ Example of relative URLs: \"tools/my-tool-collection\" or \"/api/tools/my-tool-collection\"
 	Url *string `json:"url,omitempty"`
 	// The tool category if any - for UI purposes.
@@ -34,7 +36,8 @@ type AgentToolDefinition struct {
 	// MCP tool annotations providing hints about tool behavior and safety.
 	Annotations *MCPToolAnnotations `json:"annotations,omitempty"`
 	// Approval classification used by interactive agent approval modes. Use `requires_confirmation` for actions that must prompt even in full-control mode.
-	ApprovalClass *AgentToolApprovalClass `json:"approval_class,omitempty"`
+	ApprovalClass        *AgentToolApprovalClass `json:"approval_class,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _AgentToolDefinition AgentToolDefinition
@@ -136,6 +139,38 @@ func (o *AgentToolDefinition) GetInputSchemaOk() (map[string]interface{}, bool) 
 // SetInputSchema sets field value
 func (o *AgentToolDefinition) SetInputSchema(v map[string]interface{}) {
 	o.InputSchema = v
+}
+
+// GetOutputSchema returns the OutputSchema field value if set, zero value otherwise.
+func (o *AgentToolDefinition) GetOutputSchema() map[string]interface{} {
+	if o == nil || IsNil(o.OutputSchema) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.OutputSchema
+}
+
+// GetOutputSchemaOk returns a tuple with the OutputSchema field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentToolDefinition) GetOutputSchemaOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.OutputSchema) {
+		return map[string]interface{}{}, false
+	}
+	return o.OutputSchema, true
+}
+
+// HasOutputSchema returns a boolean if a field has been set.
+func (o *AgentToolDefinition) HasOutputSchema() bool {
+	if o != nil && !IsNil(o.OutputSchema) {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputSchema gets a reference to the given map[string]interface{} and assigns it to the OutputSchema field.
+func (o *AgentToolDefinition) SetOutputSchema(v map[string]interface{}) {
+	o.OutputSchema = v
 }
 
 // GetUrl returns the Url field value if set, zero value otherwise.
@@ -345,6 +380,9 @@ func (o AgentToolDefinition) ToMap() (map[string]interface{}, error) {
 		toSerialize["description"] = o.Description
 	}
 	toSerialize["input_schema"] = o.InputSchema
+	if !IsNil(o.OutputSchema) {
+		toSerialize["output_schema"] = o.OutputSchema
+	}
 	if !IsNil(o.Url) {
 		toSerialize["url"] = o.Url
 	}
@@ -363,6 +401,11 @@ func (o AgentToolDefinition) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ApprovalClass) {
 		toSerialize["approval_class"] = o.ApprovalClass
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -398,6 +441,22 @@ func (o *AgentToolDefinition) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = AgentToolDefinition(varAgentToolDefinition)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "input_schema")
+		delete(additionalProperties, "output_schema")
+		delete(additionalProperties, "url")
+		delete(additionalProperties, "category")
+		delete(additionalProperties, "default")
+		delete(additionalProperties, "tools")
+		delete(additionalProperties, "annotations")
+		delete(additionalProperties, "approval_class")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

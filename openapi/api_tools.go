@@ -17,17 +17,168 @@ import (
 	"net/http"
 	"net/url"
 	"reflect"
+	"strings"
 )
 
 // ToolsAPIService ToolsAPI service
 type ToolsAPIService service
 
+type ApiInspectProjectToolRequest struct {
+	ctx         context.Context
+	ApiService  *ToolsAPIService
+	toolName    string
+	context     *string
+	xApiVersion *string
+}
+
+func (r ApiInspectProjectToolRequest) Context(context string) ApiInspectProjectToolRequest {
+	r.context = &context
+	return r
+}
+
+// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiInspectProjectToolRequest) XApiVersion(xApiVersion string) ApiInspectProjectToolRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiInspectProjectToolRequest) Execute() (*ToolInspection, *http.Response, error) {
+	return r.ApiService.InspectProjectToolExecute(r)
+}
+
+/*
+InspectProjectTool Inspect one project tool
+
+**Required permissions:** `account:member`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param toolName
+	@return ApiInspectProjectToolRequest
+*/
+func (a *ToolsAPIService) InspectProjectTool(ctx context.Context, toolName string) ApiInspectProjectToolRequest {
+	return ApiInspectProjectToolRequest{
+		ApiService: a,
+		ctx:        ctx,
+		toolName:   toolName,
+	}
+}
+
+// Execute executes the request
+//
+//	@return ToolInspection
+func (a *ToolsAPIService) InspectProjectToolExecute(r ApiInspectProjectToolRequest) (*ToolInspection, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ToolInspection
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ToolsAPIService.InspectProjectTool")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/tools/{toolName}"
+	localVarPath = strings.Replace(localVarPath, "{"+"toolName"+"}", url.PathEscape(parameterValueToString(r.toolName, "toolName")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	if r.context != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "context", r.context, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiListAgentToolsRequest struct {
 	ctx         context.Context
 	ApiService  *ToolsAPIService
+	context     *string
 	sources     *[]string
 	exclude     *[]string
 	xApiVersion *string
+}
+
+func (r ApiListAgentToolsRequest) Context(context string) ApiListAgentToolsRequest {
+	r.context = &context
+	return r
 }
 
 // Include only these sources.
@@ -56,6 +207,8 @@ func (r ApiListAgentToolsRequest) Execute() ([]AggregatedTool, *http.Response, e
 ListAgentTools List all tools available in the project
 
 Returns the unified project-scoped tool registry visible to the current principal. Sources can be filtered via the `sources` query string.
+
+**Required permissions:** `account:member`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListAgentToolsRequest
@@ -89,6 +242,9 @@ func (a *ToolsAPIService) ListAgentToolsExecute(r ApiListAgentToolsRequest) ([]A
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.context != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "context", r.context, "form", "")
+	}
 	if r.sources != nil {
 		t := *r.sources
 		if reflect.TypeOf(t).Kind() == reflect.Slice {
@@ -215,6 +371,8 @@ func (r ApiValidateAgentToolNamesRequest) Execute() (*ValidateToolNamesResponse,
 ValidateAgentToolNames Validate tool names against the project registry
 
 Resolves each name to its source or reports it as invalid with a suggestion.
+
+**Required permissions:** `account:member`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiValidateAgentToolNamesRequest

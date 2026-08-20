@@ -58,6 +58,8 @@ type ConversationState struct {
 	ConversationArtifactsBaseUrl *string `json:"conversation_artifacts_base_url,omitempty"`
 	// Reference to tools stored in GCP instead of embedding full tool definitions
 	ToolReference *ToolReference `json:"tool_reference,omitempty"`
+	// Artifact-storage scope containing the referenced tool catalog.
+	ToolCatalogStorageId *string `json:"tool_catalog_storage_id,omitempty"`
 	// Names of currently active tools (base + unlocked). Tool definitions loaded from tool_reference.
 	ActiveToolNames []string `json:"active_tool_names,omitempty"`
 	// Active tools that should not be evicted by bounded active-tool pruning.
@@ -692,6 +694,38 @@ func (o *ConversationState) HasToolReference() bool {
 // SetToolReference gets a reference to the given ToolReference and assigns it to the ToolReference field.
 func (o *ConversationState) SetToolReference(v ToolReference) {
 	o.ToolReference = &v
+}
+
+// GetToolCatalogStorageId returns the ToolCatalogStorageId field value if set, zero value otherwise.
+func (o *ConversationState) GetToolCatalogStorageId() string {
+	if o == nil || IsNil(o.ToolCatalogStorageId) {
+		var ret string
+		return ret
+	}
+	return *o.ToolCatalogStorageId
+}
+
+// GetToolCatalogStorageIdOk returns a tuple with the ToolCatalogStorageId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetToolCatalogStorageIdOk() (*string, bool) {
+	if o == nil || IsNil(o.ToolCatalogStorageId) {
+		return nil, false
+	}
+	return o.ToolCatalogStorageId, true
+}
+
+// HasToolCatalogStorageId returns a boolean if a field has been set.
+func (o *ConversationState) HasToolCatalogStorageId() bool {
+	if o != nil && !IsNil(o.ToolCatalogStorageId) {
+		return true
+	}
+
+	return false
+}
+
+// SetToolCatalogStorageId gets a reference to the given string and assigns it to the ToolCatalogStorageId field.
+func (o *ConversationState) SetToolCatalogStorageId(v string) {
+	o.ToolCatalogStorageId = &v
 }
 
 // GetActiveToolNames returns the ActiveToolNames field value if set, zero value otherwise.
@@ -1423,6 +1457,9 @@ func (o ConversationState) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ToolReference) {
 		toSerialize["tool_reference"] = o.ToolReference
 	}
+	if !IsNil(o.ToolCatalogStorageId) {
+		toSerialize["tool_catalog_storage_id"] = o.ToolCatalogStorageId
+	}
 	if !IsNil(o.ActiveToolNames) {
 		toSerialize["active_tool_names"] = o.ActiveToolNames
 	}
@@ -1552,6 +1589,7 @@ func (o *ConversationState) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "strip_options")
 		delete(additionalProperties, "conversation_artifacts_base_url")
 		delete(additionalProperties, "tool_reference")
+		delete(additionalProperties, "tool_catalog_storage_id")
 		delete(additionalProperties, "active_tool_names")
 		delete(additionalProperties, "pinned_tool_names")
 		delete(additionalProperties, "used_skills")

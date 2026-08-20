@@ -26,8 +26,10 @@ type AggregatedTool struct {
 	Description *string    `json:"description,omitempty"`
 	Title       *string    `json:"title,omitempty"`
 	// Whether the tool is part of the default toolkit when no explicit `tool_names` is provided.
-	IsDefault   *bool               `json:"is_default,omitempty"`
-	Annotations *MCPToolAnnotations `json:"annotations,omitempty"`
+	IsDefault            *bool                     `json:"is_default,omitempty"`
+	Annotations          *MCPToolAnnotations       `json:"annotations,omitempty"`
+	ApprovalClass        *AgentToolApprovalClass   `json:"approval_class,omitempty"`
+	ProcessCompatibility *ProcessToolCompatibility `json:"process_compatibility,omitempty"`
 	// For skills (`learn_*`): tool names this skill unlocks when invoked.
 	UnlockedTools []string `json:"unlocked_tools,omitempty"`
 	// Present when `source === 'app'`: the app installation that provides this tool.
@@ -237,6 +239,70 @@ func (o *AggregatedTool) SetAnnotations(v MCPToolAnnotations) {
 	o.Annotations = &v
 }
 
+// GetApprovalClass returns the ApprovalClass field value if set, zero value otherwise.
+func (o *AggregatedTool) GetApprovalClass() AgentToolApprovalClass {
+	if o == nil || IsNil(o.ApprovalClass) {
+		var ret AgentToolApprovalClass
+		return ret
+	}
+	return *o.ApprovalClass
+}
+
+// GetApprovalClassOk returns a tuple with the ApprovalClass field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AggregatedTool) GetApprovalClassOk() (*AgentToolApprovalClass, bool) {
+	if o == nil || IsNil(o.ApprovalClass) {
+		return nil, false
+	}
+	return o.ApprovalClass, true
+}
+
+// HasApprovalClass returns a boolean if a field has been set.
+func (o *AggregatedTool) HasApprovalClass() bool {
+	if o != nil && !IsNil(o.ApprovalClass) {
+		return true
+	}
+
+	return false
+}
+
+// SetApprovalClass gets a reference to the given AgentToolApprovalClass and assigns it to the ApprovalClass field.
+func (o *AggregatedTool) SetApprovalClass(v AgentToolApprovalClass) {
+	o.ApprovalClass = &v
+}
+
+// GetProcessCompatibility returns the ProcessCompatibility field value if set, zero value otherwise.
+func (o *AggregatedTool) GetProcessCompatibility() ProcessToolCompatibility {
+	if o == nil || IsNil(o.ProcessCompatibility) {
+		var ret ProcessToolCompatibility
+		return ret
+	}
+	return *o.ProcessCompatibility
+}
+
+// GetProcessCompatibilityOk returns a tuple with the ProcessCompatibility field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AggregatedTool) GetProcessCompatibilityOk() (*ProcessToolCompatibility, bool) {
+	if o == nil || IsNil(o.ProcessCompatibility) {
+		return nil, false
+	}
+	return o.ProcessCompatibility, true
+}
+
+// HasProcessCompatibility returns a boolean if a field has been set.
+func (o *AggregatedTool) HasProcessCompatibility() bool {
+	if o != nil && !IsNil(o.ProcessCompatibility) {
+		return true
+	}
+
+	return false
+}
+
+// SetProcessCompatibility gets a reference to the given ProcessToolCompatibility and assigns it to the ProcessCompatibility field.
+func (o *AggregatedTool) SetProcessCompatibility(v ProcessToolCompatibility) {
+	o.ProcessCompatibility = &v
+}
+
 // GetUnlockedTools returns the UnlockedTools field value if set, zero value otherwise.
 func (o *AggregatedTool) GetUnlockedTools() []string {
 	if o == nil || IsNil(o.UnlockedTools) {
@@ -420,6 +486,12 @@ func (o AggregatedTool) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Annotations) {
 		toSerialize["annotations"] = o.Annotations
+	}
+	if !IsNil(o.ApprovalClass) {
+		toSerialize["approval_class"] = o.ApprovalClass
+	}
+	if !IsNil(o.ProcessCompatibility) {
+		toSerialize["process_compatibility"] = o.ProcessCompatibility
 	}
 	if !IsNil(o.UnlockedTools) {
 		toSerialize["unlocked_tools"] = o.UnlockedTools
