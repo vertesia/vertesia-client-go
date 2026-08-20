@@ -29,6 +29,10 @@ type StatelessExecutionOptions struct {
 	ModelOptions            *ModelOptions `json:"model_options,omitempty"`
 	// Stable identity for prompt caching. Providers with cache routing keys receive the value directly; providers with cache breakpoints use its presence to cache the stable prefix before the final dynamic block. Providers with fully implicit caching still require an identical prompt prefix.
 	PromptCacheKey *string `json:"prompt_cache_key,omitempty"`
+	// Controls provider-side explicit caches — cache resources the driver creates and reuses (e.g. Vertex cachedContents). \"auto\" (default) caches the static prefix whenever prompt_cache_key is set; \"off\" never creates or uses a cache resource and leaves the provider payload unchanged. Implicit caching and cache breakpoints are unaffected.
+	PromptCacheMode *PromptCacheMode `json:"prompt_cache_mode,omitempty"`
+	// Lifetime, in seconds, of a provider-side cache resource created for this execution. Defaults to 1800 (30 minutes). Ignored by providers without an explicit cache API.
+	PromptCacheTtlSeconds *int32 `json:"prompt_cache_ttl_seconds,omitempty"`
 	// Per-call HTTP timeouts for upstream LLM-provider calls. These override the driver's default `DriverOptions.httpTimeout` for this execution only.
 	HttpTimeout *HttpTimeoutOptions `json:"httpTimeout,omitempty"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.
@@ -240,6 +244,70 @@ func (o *StatelessExecutionOptions) SetPromptCacheKey(v string) {
 	o.PromptCacheKey = &v
 }
 
+// GetPromptCacheMode returns the PromptCacheMode field value if set, zero value otherwise.
+func (o *StatelessExecutionOptions) GetPromptCacheMode() PromptCacheMode {
+	if o == nil || IsNil(o.PromptCacheMode) {
+		var ret PromptCacheMode
+		return ret
+	}
+	return *o.PromptCacheMode
+}
+
+// GetPromptCacheModeOk returns a tuple with the PromptCacheMode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatelessExecutionOptions) GetPromptCacheModeOk() (*PromptCacheMode, bool) {
+	if o == nil || IsNil(o.PromptCacheMode) {
+		return nil, false
+	}
+	return o.PromptCacheMode, true
+}
+
+// HasPromptCacheMode returns a boolean if a field has been set.
+func (o *StatelessExecutionOptions) HasPromptCacheMode() bool {
+	if o != nil && !IsNil(o.PromptCacheMode) {
+		return true
+	}
+
+	return false
+}
+
+// SetPromptCacheMode gets a reference to the given PromptCacheMode and assigns it to the PromptCacheMode field.
+func (o *StatelessExecutionOptions) SetPromptCacheMode(v PromptCacheMode) {
+	o.PromptCacheMode = &v
+}
+
+// GetPromptCacheTtlSeconds returns the PromptCacheTtlSeconds field value if set, zero value otherwise.
+func (o *StatelessExecutionOptions) GetPromptCacheTtlSeconds() int32 {
+	if o == nil || IsNil(o.PromptCacheTtlSeconds) {
+		var ret int32
+		return ret
+	}
+	return *o.PromptCacheTtlSeconds
+}
+
+// GetPromptCacheTtlSecondsOk returns a tuple with the PromptCacheTtlSeconds field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StatelessExecutionOptions) GetPromptCacheTtlSecondsOk() (*int32, bool) {
+	if o == nil || IsNil(o.PromptCacheTtlSeconds) {
+		return nil, false
+	}
+	return o.PromptCacheTtlSeconds, true
+}
+
+// HasPromptCacheTtlSeconds returns a boolean if a field has been set.
+func (o *StatelessExecutionOptions) HasPromptCacheTtlSeconds() bool {
+	if o != nil && !IsNil(o.PromptCacheTtlSeconds) {
+		return true
+	}
+
+	return false
+}
+
+// SetPromptCacheTtlSeconds gets a reference to the given int32 and assigns it to the PromptCacheTtlSeconds field.
+func (o *StatelessExecutionOptions) SetPromptCacheTtlSeconds(v int32) {
+	o.PromptCacheTtlSeconds = &v
+}
+
 // GetHttpTimeout returns the HttpTimeout field value if set, zero value otherwise.
 func (o *StatelessExecutionOptions) GetHttpTimeout() HttpTimeoutOptions {
 	if o == nil || IsNil(o.HttpTimeout) {
@@ -332,6 +400,12 @@ func (o StatelessExecutionOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.PromptCacheKey) {
 		toSerialize["prompt_cache_key"] = o.PromptCacheKey
+	}
+	if !IsNil(o.PromptCacheMode) {
+		toSerialize["prompt_cache_mode"] = o.PromptCacheMode
+	}
+	if !IsNil(o.PromptCacheTtlSeconds) {
+		toSerialize["prompt_cache_ttl_seconds"] = o.PromptCacheTtlSeconds
 	}
 	if !IsNil(o.HttpTimeout) {
 		toSerialize["httpTimeout"] = o.HttpTimeout
