@@ -32,6 +32,7 @@ type Interaction struct {
 	Environment        *InteractionEnvironment  `json:"environment,omitempty"`
 	Model              *string                  `json:"model,omitempty"`
 	ModelOptions       *ModelOptions            `json:"model_options,omitempty"`
+	StoreMediaResults  *bool                    `json:"store_media_results,omitempty"`
 	Restriction        *RunDataStorageLevel     `json:"restriction,omitempty"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.
 	// Deprecated
@@ -393,6 +394,38 @@ func (o *Interaction) HasModelOptions() bool {
 // SetModelOptions gets a reference to the given ModelOptions and assigns it to the ModelOptions field.
 func (o *Interaction) SetModelOptions(v ModelOptions) {
 	o.ModelOptions = &v
+}
+
+// GetStoreMediaResults returns the StoreMediaResults field value if set, zero value otherwise.
+func (o *Interaction) GetStoreMediaResults() bool {
+	if o == nil || IsNil(o.StoreMediaResults) {
+		var ret bool
+		return ret
+	}
+	return *o.StoreMediaResults
+}
+
+// GetStoreMediaResultsOk returns a tuple with the StoreMediaResults field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Interaction) GetStoreMediaResultsOk() (*bool, bool) {
+	if o == nil || IsNil(o.StoreMediaResults) {
+		return nil, false
+	}
+	return o.StoreMediaResults, true
+}
+
+// HasStoreMediaResults returns a boolean if a field has been set.
+func (o *Interaction) HasStoreMediaResults() bool {
+	if o != nil && !IsNil(o.StoreMediaResults) {
+		return true
+	}
+
+	return false
+}
+
+// SetStoreMediaResults gets a reference to the given bool and assigns it to the StoreMediaResults field.
+func (o *Interaction) SetStoreMediaResults(v bool) {
+	o.StoreMediaResults = &v
 }
 
 // GetRestriction returns the Restriction field value if set, zero value otherwise.
@@ -846,6 +879,9 @@ func (o Interaction) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ModelOptions) {
 		toSerialize["model_options"] = o.ModelOptions
+	}
+	if !IsNil(o.StoreMediaResults) {
+		toSerialize["store_media_results"] = o.StoreMediaResults
 	}
 	if !IsNil(o.Restriction) {
 		toSerialize["restriction"] = o.Restriction

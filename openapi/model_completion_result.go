@@ -22,6 +22,7 @@ type CompletionResult struct {
 	JsonResult     *JsonResult
 	TextResult     *TextResult
 	ThoughtsResult *ThoughtsResult
+	VideoResult    *VideoResult
 }
 
 // ImageResultAsCompletionResult is a convenience function that returns ImageResult wrapped in CompletionResult
@@ -49,6 +50,13 @@ func TextResultAsCompletionResult(v *TextResult) CompletionResult {
 func ThoughtsResultAsCompletionResult(v *ThoughtsResult) CompletionResult {
 	return CompletionResult{
 		ThoughtsResult: v,
+	}
+}
+
+// VideoResultAsCompletionResult is a convenience function that returns VideoResult wrapped in CompletionResult
+func VideoResultAsCompletionResult(v *VideoResult) CompletionResult {
+	return CompletionResult{
+		VideoResult: v,
 	}
 }
 
@@ -124,12 +132,30 @@ func (dst *CompletionResult) UnmarshalJSON(data []byte) error {
 		dst.ThoughtsResult = nil
 	}
 
+	// try to unmarshal data into VideoResult
+	err = newStrictDecoder(data).Decode(&dst.VideoResult)
+	if err == nil {
+		jsonVideoResult, _ := json.Marshal(dst.VideoResult)
+		if string(jsonVideoResult) == "{}" { // empty struct
+			dst.VideoResult = nil
+		} else {
+			if err = validator.Validate(dst.VideoResult); err != nil {
+				dst.VideoResult = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.VideoResult = nil
+	}
+
 	if match > 1 { // more than 1 match
 		// reset to nil
 		dst.ImageResult = nil
 		dst.JsonResult = nil
 		dst.TextResult = nil
 		dst.ThoughtsResult = nil
+		dst.VideoResult = nil
 
 		return fmt.Errorf("data matches more than one schema in oneOf(CompletionResult)")
 	} else if match == 1 {
@@ -157,6 +183,10 @@ func (src CompletionResult) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.ThoughtsResult)
 	}
 
+	if src.VideoResult != nil {
+		return json.Marshal(&src.VideoResult)
+	}
+
 	return nil, nil // no data in oneOf schemas
 }
 
@@ -181,6 +211,10 @@ func (obj *CompletionResult) GetActualInstance() interface{} {
 		return obj.ThoughtsResult
 	}
 
+	if obj.VideoResult != nil {
+		return obj.VideoResult
+	}
+
 	// all schemas are nil
 	return nil
 }
@@ -201,6 +235,10 @@ func (obj CompletionResult) GetActualInstanceValue() interface{} {
 
 	if obj.ThoughtsResult != nil {
 		return *obj.ThoughtsResult
+	}
+
+	if obj.VideoResult != nil {
+		return *obj.VideoResult
 	}
 
 	// all schemas are nil

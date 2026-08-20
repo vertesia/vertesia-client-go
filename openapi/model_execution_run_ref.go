@@ -21,28 +21,27 @@ var _ MappedNullable = &ExecutionRunRef{}
 
 // ExecutionRunRef struct for ExecutionRunRef
 type ExecutionRunRef struct {
-	Id         string                  `json:"id"`
-	Parent     *ExecutionRunParent     `json:"parent,omitempty"`
-	Evaluation *ExecutionRunEvaluation `json:"evaluation,omitempty"`
-	Tags       []string                `json:"tags,omitempty"`
-	// Environment reference - populated with full object in API responses
-	Environment   ExecutionEnvironmentRef           `json:"environment"`
-	ModelId       *string                           `json:"modelId,omitempty"`
-	ResultSchema  *JSONSchema                       `json:"result_schema,omitempty"`
-	Ttl           float32                           `json:"ttl"`
-	Status        ExecutionRunStatus                `json:"status"`
-	FinishReason  *string                           `json:"finish_reason,omitempty"`
-	Prompt        interface{}                       `json:"prompt,omitempty"`
-	TokenUse      *ExecutionTokenUsage              `json:"token_use,omitempty"`
-	Chunks        *float32                          `json:"chunks,omitempty"`
-	ExecutionTime *float32                          `json:"execution_time,omitempty"`
-	CreatedAt     time.Time                         `json:"created_at"`
-	UpdatedAt     time.Time                         `json:"updated_at"`
-	Account       AccountRef                        `json:"account"`
-	Project       ProjectRef                        `json:"project"`
-	Config        InteractionExecutionConfiguration `json:"config"`
-	Error         *InteractionExecutionError        `json:"error,omitempty"`
-	Source        RunSource                         `json:"source"`
+	Id            string                             `json:"id"`
+	Parent        *ExecutionRunParent                `json:"parent,omitempty"`
+	Evaluation    *ExecutionRunEvaluation            `json:"evaluation,omitempty"`
+	Tags          []string                           `json:"tags,omitempty"`
+	Environment   NullableExecutionRunRefEnvironment `json:"environment"`
+	ModelId       *string                            `json:"modelId,omitempty"`
+	ResultSchema  *JSONSchema                        `json:"result_schema,omitempty"`
+	Ttl           float32                            `json:"ttl"`
+	Status        ExecutionRunStatus                 `json:"status"`
+	FinishReason  *string                            `json:"finish_reason,omitempty"`
+	Prompt        interface{}                        `json:"prompt,omitempty"`
+	TokenUse      *ExecutionTokenUsage               `json:"token_use,omitempty"`
+	Chunks        *float32                           `json:"chunks,omitempty"`
+	ExecutionTime *float32                           `json:"execution_time,omitempty"`
+	CreatedAt     time.Time                          `json:"created_at"`
+	UpdatedAt     time.Time                          `json:"updated_at"`
+	Account       AccountRef                         `json:"account"`
+	Project       ProjectRef                         `json:"project"`
+	Config        InteractionExecutionConfiguration  `json:"config"`
+	Error         *InteractionExecutionError         `json:"error,omitempty"`
+	Source        RunSource                          `json:"source"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.
 	// Deprecated
 	OutputModality *Modalities `json:"output_modality,omitempty"`
@@ -62,7 +61,7 @@ type _ExecutionRunRef ExecutionRunRef
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewExecutionRunRef(id string, environment ExecutionEnvironmentRef, ttl float32, status ExecutionRunStatus, createdAt time.Time, updatedAt time.Time, account AccountRef, project ProjectRef, config InteractionExecutionConfiguration, source RunSource, createdBy string, updatedBy string) *ExecutionRunRef {
+func NewExecutionRunRef(id string, environment NullableExecutionRunRefEnvironment, ttl float32, status ExecutionRunStatus, createdAt time.Time, updatedAt time.Time, account AccountRef, project ProjectRef, config InteractionExecutionConfiguration, source RunSource, createdBy string, updatedBy string) *ExecutionRunRef {
 	this := ExecutionRunRef{}
 	this.Id = id
 	this.Environment = environment
@@ -208,27 +207,29 @@ func (o *ExecutionRunRef) SetTags(v []string) {
 }
 
 // GetEnvironment returns the Environment field value
-func (o *ExecutionRunRef) GetEnvironment() ExecutionEnvironmentRef {
-	if o == nil {
-		var ret ExecutionEnvironmentRef
+// If the value is explicit nil, the zero value for ExecutionRunRefEnvironment will be returned
+func (o *ExecutionRunRef) GetEnvironment() ExecutionRunRefEnvironment {
+	if o == nil || o.Environment.Get() == nil {
+		var ret ExecutionRunRefEnvironment
 		return ret
 	}
 
-	return o.Environment
+	return *o.Environment.Get()
 }
 
 // GetEnvironmentOk returns a tuple with the Environment field value
 // and a boolean to check if the value has been set.
-func (o *ExecutionRunRef) GetEnvironmentOk() (*ExecutionEnvironmentRef, bool) {
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *ExecutionRunRef) GetEnvironmentOk() (*ExecutionRunRefEnvironment, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.Environment, true
+	return o.Environment.Get(), o.Environment.IsSet()
 }
 
 // SetEnvironment sets field value
-func (o *ExecutionRunRef) SetEnvironment(v ExecutionEnvironmentRef) {
-	o.Environment = v
+func (o *ExecutionRunRef) SetEnvironment(v ExecutionRunRefEnvironment) {
+	o.Environment.Set(&v)
 }
 
 // GetModelId returns the ModelId field value if set, zero value otherwise.
@@ -912,7 +913,7 @@ func (o ExecutionRunRef) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
-	toSerialize["environment"] = o.Environment
+	toSerialize["environment"] = o.Environment.Get()
 	if !IsNil(o.ModelId) {
 		toSerialize["modelId"] = o.ModelId
 	}

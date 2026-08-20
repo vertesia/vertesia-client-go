@@ -41,6 +41,7 @@ type ModelOptions struct {
 	TextFallbackOptions                 *TextFallbackOptions
 	TwelvelabsPegasusOptions            *TwelvelabsPegasusOptions
 	VertexAIClaudeOptions               *VertexAIClaudeOptions
+	VertexAIGeminiOmniVideoOptions      *VertexAIGeminiOmniVideoOptions
 	VertexAIGeminiOptions               *VertexAIGeminiOptions
 	VertexAIGrokOptions                 *VertexAIGrokOptions
 	XAIGrokImageOptions                 *XAIGrokImageOptions
@@ -204,6 +205,13 @@ func TwelvelabsPegasusOptionsAsModelOptions(v *TwelvelabsPegasusOptions) ModelOp
 func VertexAIClaudeOptionsAsModelOptions(v *VertexAIClaudeOptions) ModelOptions {
 	return ModelOptions{
 		VertexAIClaudeOptions: v,
+	}
+}
+
+// VertexAIGeminiOmniVideoOptionsAsModelOptions is a convenience function that returns VertexAIGeminiOmniVideoOptions wrapped in ModelOptions
+func VertexAIGeminiOmniVideoOptionsAsModelOptions(v *VertexAIGeminiOmniVideoOptions) ModelOptions {
+	return ModelOptions{
+		VertexAIGeminiOmniVideoOptions: v,
 	}
 }
 
@@ -623,6 +631,23 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.VertexAIClaudeOptions = nil
 	}
 
+	// try to unmarshal data into VertexAIGeminiOmniVideoOptions
+	err = newStrictDecoder(data).Decode(&dst.VertexAIGeminiOmniVideoOptions)
+	if err == nil {
+		jsonVertexAIGeminiOmniVideoOptions, _ := json.Marshal(dst.VertexAIGeminiOmniVideoOptions)
+		if string(jsonVertexAIGeminiOmniVideoOptions) == "{}" { // empty struct
+			dst.VertexAIGeminiOmniVideoOptions = nil
+		} else {
+			if err = validator.Validate(dst.VertexAIGeminiOmniVideoOptions); err != nil {
+				dst.VertexAIGeminiOmniVideoOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.VertexAIGeminiOmniVideoOptions = nil
+	}
+
 	// try to unmarshal data into VertexAIGeminiOptions
 	err = newStrictDecoder(data).Decode(&dst.VertexAIGeminiOptions)
 	if err == nil {
@@ -699,6 +724,7 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.TextFallbackOptions = nil
 		dst.TwelvelabsPegasusOptions = nil
 		dst.VertexAIClaudeOptions = nil
+		dst.VertexAIGeminiOmniVideoOptions = nil
 		dst.VertexAIGeminiOptions = nil
 		dst.VertexAIGrokOptions = nil
 		dst.XAIGrokImageOptions = nil
@@ -803,6 +829,10 @@ func (src ModelOptions) MarshalJSON() ([]byte, error) {
 
 	if src.VertexAIClaudeOptions != nil {
 		return json.Marshal(&src.VertexAIClaudeOptions)
+	}
+
+	if src.VertexAIGeminiOmniVideoOptions != nil {
+		return json.Marshal(&src.VertexAIGeminiOmniVideoOptions)
 	}
 
 	if src.VertexAIGeminiOptions != nil {
@@ -917,6 +947,10 @@ func (obj *ModelOptions) GetActualInstance() interface{} {
 		return obj.VertexAIClaudeOptions
 	}
 
+	if obj.VertexAIGeminiOmniVideoOptions != nil {
+		return obj.VertexAIGeminiOmniVideoOptions
+	}
+
 	if obj.VertexAIGeminiOptions != nil {
 		return obj.VertexAIGeminiOptions
 	}
@@ -1025,6 +1059,10 @@ func (obj ModelOptions) GetActualInstanceValue() interface{} {
 
 	if obj.VertexAIClaudeOptions != nil {
 		return *obj.VertexAIClaudeOptions
+	}
+
+	if obj.VertexAIGeminiOmniVideoOptions != nil {
+		return *obj.VertexAIGeminiOmniVideoOptions
 	}
 
 	if obj.VertexAIGeminiOptions != nil {

@@ -504,6 +504,7 @@ model_execution_run_evaluation.go
 model_execution_run_interaction.go
 model_execution_run_parent.go
 model_execution_run_ref.go
+model_execution_run_ref_environment.go
 model_execution_run_status.go
 model_execution_run_workflow.go
 model_execution_token_usage.go
@@ -973,8 +974,10 @@ model_validate_url_response.go
 model_vector_search_query.go
 model_vertesia_sdk_tool_collection_object.go
 model_vertex_ai_claude_options.go
+model_vertex_ai_gemini_omni_video_options.go
 model_vertex_ai_gemini_options.go
 model_vertex_ai_grok_options.go
+model_video_result.go
 model_view_action_configuration.go
 model_view_action_placement.go
 model_view_action_selection_requirement.go
