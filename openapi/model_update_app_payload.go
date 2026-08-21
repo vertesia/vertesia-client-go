@@ -15,13 +15,11 @@ import (
 	"fmt"
 )
 
-// checks if the AppManifest type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &AppManifest{}
+// checks if the UpdateAppPayload type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &UpdateAppPayload{}
 
-// AppManifest struct for AppManifest
-type AppManifest struct {
-	// Monotonic edit revision used to detect concurrent updates.
-	EditRevision int32 `json:"edit_revision"`
+// UpdateAppPayload struct for UpdateAppPayload
+type UpdateAppPayload struct {
 	// The name of the app, used as the id in the system. Must be in kebab case (e.g. my-app).
 	Name string `json:"name"`
 	// Visibility level of the app: - \"public\": visible to all accounts - \"private\": visible only to the owning account - \"vertesia\": visible only to Vertesia team members (any project)
@@ -54,75 +52,44 @@ type AppManifest struct {
 	EndpointOverrides map[string]string `json:"endpoint_overrides,omitempty"`
 	// Optional app version string (e.g. \"1.0.0\") — informational.
 	Version *string `json:"version,omitempty"`
-	// Source metadata for generated or synced app manifests.
-	Source *AppManifestSource `json:"source,omitempty"`
+	// Source repository configuration for apps generated and maintained through AppGen. Branches are mutable development lanes; immutable app versions record their exact source commit in AppVersionRecord.source_commit and AppVersionRecord.storage.source_git.
+	Source *AppSourceConfig `json:"source,omitempty"`
 	// Free-form tags used for classification and filtering. Platform apps carry `\"system\"` so UIs can skip install/uninstall/manage-permission controls that don't apply to synthetic installations.
 	Tags []string `json:"tags,omitempty"`
 	// Access control policy for the app. Defaults to 'all' (ACE-gated everywhere) when undefined. See  {@link  AppAccessControl }  for semantics. May be overridden on the AppInstallation.
 	AccessControl *AppAccessControl `json:"access_control,omitempty"`
-	Id            string            `json:"id"`
-	// The owning account. Undefined for apps imported from a master region.
-	Account              *string `json:"account,omitempty"`
-	CreatedAt            string  `json:"created_at"`
-	UpdatedAt            string  `json:"updated_at"`
+	// Edit revision returned by the last read. Stale revisions are rejected with HTTP 409. Omit for legacy last-write-wins behavior.
+	ExpectedEditRevision *int32 `json:"expected_edit_revision,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
-type _AppManifest AppManifest
+type _UpdateAppPayload UpdateAppPayload
 
-// NewAppManifest instantiates a new AppManifest object
+// NewUpdateAppPayload instantiates a new UpdateAppPayload object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAppManifest(editRevision int32, name string, visibility string, title string, description string, publisher string, status string, id string, createdAt string, updatedAt string) *AppManifest {
-	this := AppManifest{}
-	this.EditRevision = editRevision
+func NewUpdateAppPayload(name string, visibility string, title string, description string, publisher string, status string) *UpdateAppPayload {
+	this := UpdateAppPayload{}
 	this.Name = name
 	this.Visibility = visibility
 	this.Title = title
 	this.Description = description
 	this.Publisher = publisher
 	this.Status = status
-	this.Id = id
-	this.CreatedAt = createdAt
-	this.UpdatedAt = updatedAt
 	return &this
 }
 
-// NewAppManifestWithDefaults instantiates a new AppManifest object
+// NewUpdateAppPayloadWithDefaults instantiates a new UpdateAppPayload object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewAppManifestWithDefaults() *AppManifest {
-	this := AppManifest{}
+func NewUpdateAppPayloadWithDefaults() *UpdateAppPayload {
+	this := UpdateAppPayload{}
 	return &this
-}
-
-// GetEditRevision returns the EditRevision field value
-func (o *AppManifest) GetEditRevision() int32 {
-	if o == nil {
-		var ret int32
-		return ret
-	}
-
-	return o.EditRevision
-}
-
-// GetEditRevisionOk returns a tuple with the EditRevision field value
-// and a boolean to check if the value has been set.
-func (o *AppManifest) GetEditRevisionOk() (*int32, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.EditRevision, true
-}
-
-// SetEditRevision sets field value
-func (o *AppManifest) SetEditRevision(v int32) {
-	o.EditRevision = v
 }
 
 // GetName returns the Name field value
-func (o *AppManifest) GetName() string {
+func (o *UpdateAppPayload) GetName() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -133,7 +100,7 @@ func (o *AppManifest) GetName() string {
 
 // GetNameOk returns a tuple with the Name field value
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetNameOk() (*string, bool) {
+func (o *UpdateAppPayload) GetNameOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -141,12 +108,12 @@ func (o *AppManifest) GetNameOk() (*string, bool) {
 }
 
 // SetName sets field value
-func (o *AppManifest) SetName(v string) {
+func (o *UpdateAppPayload) SetName(v string) {
 	o.Name = v
 }
 
 // GetVisibility returns the Visibility field value
-func (o *AppManifest) GetVisibility() string {
+func (o *UpdateAppPayload) GetVisibility() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -157,7 +124,7 @@ func (o *AppManifest) GetVisibility() string {
 
 // GetVisibilityOk returns a tuple with the Visibility field value
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetVisibilityOk() (*string, bool) {
+func (o *UpdateAppPayload) GetVisibilityOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -165,12 +132,12 @@ func (o *AppManifest) GetVisibilityOk() (*string, bool) {
 }
 
 // SetVisibility sets field value
-func (o *AppManifest) SetVisibility(v string) {
+func (o *UpdateAppPayload) SetVisibility(v string) {
 	o.Visibility = v
 }
 
 // GetTitle returns the Title field value
-func (o *AppManifest) GetTitle() string {
+func (o *UpdateAppPayload) GetTitle() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -181,7 +148,7 @@ func (o *AppManifest) GetTitle() string {
 
 // GetTitleOk returns a tuple with the Title field value
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetTitleOk() (*string, bool) {
+func (o *UpdateAppPayload) GetTitleOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -189,12 +156,12 @@ func (o *AppManifest) GetTitleOk() (*string, bool) {
 }
 
 // SetTitle sets field value
-func (o *AppManifest) SetTitle(v string) {
+func (o *UpdateAppPayload) SetTitle(v string) {
 	o.Title = v
 }
 
 // GetDescription returns the Description field value
-func (o *AppManifest) GetDescription() string {
+func (o *UpdateAppPayload) GetDescription() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -205,7 +172,7 @@ func (o *AppManifest) GetDescription() string {
 
 // GetDescriptionOk returns a tuple with the Description field value
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetDescriptionOk() (*string, bool) {
+func (o *UpdateAppPayload) GetDescriptionOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -213,12 +180,12 @@ func (o *AppManifest) GetDescriptionOk() (*string, bool) {
 }
 
 // SetDescription sets field value
-func (o *AppManifest) SetDescription(v string) {
+func (o *UpdateAppPayload) SetDescription(v string) {
 	o.Description = v
 }
 
 // GetPublisher returns the Publisher field value
-func (o *AppManifest) GetPublisher() string {
+func (o *UpdateAppPayload) GetPublisher() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -229,7 +196,7 @@ func (o *AppManifest) GetPublisher() string {
 
 // GetPublisherOk returns a tuple with the Publisher field value
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetPublisherOk() (*string, bool) {
+func (o *UpdateAppPayload) GetPublisherOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -237,12 +204,12 @@ func (o *AppManifest) GetPublisherOk() (*string, bool) {
 }
 
 // SetPublisher sets field value
-func (o *AppManifest) SetPublisher(v string) {
+func (o *UpdateAppPayload) SetPublisher(v string) {
 	o.Publisher = v
 }
 
 // GetIcon returns the Icon field value if set, zero value otherwise.
-func (o *AppManifest) GetIcon() string {
+func (o *UpdateAppPayload) GetIcon() string {
 	if o == nil || IsNil(o.Icon) {
 		var ret string
 		return ret
@@ -252,7 +219,7 @@ func (o *AppManifest) GetIcon() string {
 
 // GetIconOk returns a tuple with the Icon field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetIconOk() (*string, bool) {
+func (o *UpdateAppPayload) GetIconOk() (*string, bool) {
 	if o == nil || IsNil(o.Icon) {
 		return nil, false
 	}
@@ -260,7 +227,7 @@ func (o *AppManifest) GetIconOk() (*string, bool) {
 }
 
 // HasIcon returns a boolean if a field has been set.
-func (o *AppManifest) HasIcon() bool {
+func (o *UpdateAppPayload) HasIcon() bool {
 	if o != nil && !IsNil(o.Icon) {
 		return true
 	}
@@ -269,12 +236,12 @@ func (o *AppManifest) HasIcon() bool {
 }
 
 // SetIcon gets a reference to the given string and assigns it to the Icon field.
-func (o *AppManifest) SetIcon(v string) {
+func (o *UpdateAppPayload) SetIcon(v string) {
 	o.Icon = &v
 }
 
 // GetColor returns the Color field value if set, zero value otherwise.
-func (o *AppManifest) GetColor() string {
+func (o *UpdateAppPayload) GetColor() string {
 	if o == nil || IsNil(o.Color) {
 		var ret string
 		return ret
@@ -284,7 +251,7 @@ func (o *AppManifest) GetColor() string {
 
 // GetColorOk returns a tuple with the Color field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetColorOk() (*string, bool) {
+func (o *UpdateAppPayload) GetColorOk() (*string, bool) {
 	if o == nil || IsNil(o.Color) {
 		return nil, false
 	}
@@ -292,7 +259,7 @@ func (o *AppManifest) GetColorOk() (*string, bool) {
 }
 
 // HasColor returns a boolean if a field has been set.
-func (o *AppManifest) HasColor() bool {
+func (o *UpdateAppPayload) HasColor() bool {
 	if o != nil && !IsNil(o.Color) {
 		return true
 	}
@@ -301,12 +268,12 @@ func (o *AppManifest) HasColor() bool {
 }
 
 // SetColor gets a reference to the given string and assigns it to the Color field.
-func (o *AppManifest) SetColor(v string) {
+func (o *UpdateAppPayload) SetColor(v string) {
 	o.Color = &v
 }
 
 // GetPreviewScreenshot returns the PreviewScreenshot field value if set, zero value otherwise.
-func (o *AppManifest) GetPreviewScreenshot() AppManifestPreviewScreenshot {
+func (o *UpdateAppPayload) GetPreviewScreenshot() AppManifestPreviewScreenshot {
 	if o == nil || IsNil(o.PreviewScreenshot) {
 		var ret AppManifestPreviewScreenshot
 		return ret
@@ -316,7 +283,7 @@ func (o *AppManifest) GetPreviewScreenshot() AppManifestPreviewScreenshot {
 
 // GetPreviewScreenshotOk returns a tuple with the PreviewScreenshot field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetPreviewScreenshotOk() (*AppManifestPreviewScreenshot, bool) {
+func (o *UpdateAppPayload) GetPreviewScreenshotOk() (*AppManifestPreviewScreenshot, bool) {
 	if o == nil || IsNil(o.PreviewScreenshot) {
 		return nil, false
 	}
@@ -324,7 +291,7 @@ func (o *AppManifest) GetPreviewScreenshotOk() (*AppManifestPreviewScreenshot, b
 }
 
 // HasPreviewScreenshot returns a boolean if a field has been set.
-func (o *AppManifest) HasPreviewScreenshot() bool {
+func (o *UpdateAppPayload) HasPreviewScreenshot() bool {
 	if o != nil && !IsNil(o.PreviewScreenshot) {
 		return true
 	}
@@ -333,12 +300,12 @@ func (o *AppManifest) HasPreviewScreenshot() bool {
 }
 
 // SetPreviewScreenshot gets a reference to the given AppManifestPreviewScreenshot and assigns it to the PreviewScreenshot field.
-func (o *AppManifest) SetPreviewScreenshot(v AppManifestPreviewScreenshot) {
+func (o *UpdateAppPayload) SetPreviewScreenshot(v AppManifestPreviewScreenshot) {
 	o.PreviewScreenshot = &v
 }
 
 // GetStatus returns the Status field value
-func (o *AppManifest) GetStatus() string {
+func (o *UpdateAppPayload) GetStatus() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -349,7 +316,7 @@ func (o *AppManifest) GetStatus() string {
 
 // GetStatusOk returns a tuple with the Status field value
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetStatusOk() (*string, bool) {
+func (o *UpdateAppPayload) GetStatusOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -357,12 +324,12 @@ func (o *AppManifest) GetStatusOk() (*string, bool) {
 }
 
 // SetStatus sets field value
-func (o *AppManifest) SetStatus(v string) {
+func (o *UpdateAppPayload) SetStatus(v string) {
 	o.Status = v
 }
 
 // GetUi returns the Ui field value if set, zero value otherwise.
-func (o *AppManifest) GetUi() AppUIConfig {
+func (o *UpdateAppPayload) GetUi() AppUIConfig {
 	if o == nil || IsNil(o.Ui) {
 		var ret AppUIConfig
 		return ret
@@ -372,7 +339,7 @@ func (o *AppManifest) GetUi() AppUIConfig {
 
 // GetUiOk returns a tuple with the Ui field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetUiOk() (*AppUIConfig, bool) {
+func (o *UpdateAppPayload) GetUiOk() (*AppUIConfig, bool) {
 	if o == nil || IsNil(o.Ui) {
 		return nil, false
 	}
@@ -380,7 +347,7 @@ func (o *AppManifest) GetUiOk() (*AppUIConfig, bool) {
 }
 
 // HasUi returns a boolean if a field has been set.
-func (o *AppManifest) HasUi() bool {
+func (o *UpdateAppPayload) HasUi() bool {
 	if o != nil && !IsNil(o.Ui) {
 		return true
 	}
@@ -389,12 +356,12 @@ func (o *AppManifest) HasUi() bool {
 }
 
 // SetUi gets a reference to the given AppUIConfig and assigns it to the Ui field.
-func (o *AppManifest) SetUi(v AppUIConfig) {
+func (o *UpdateAppPayload) SetUi(v AppUIConfig) {
 	o.Ui = &v
 }
 
 // GetToolCollections returns the ToolCollections field value if set, zero value otherwise.
-func (o *AppManifest) GetToolCollections() []ToolCollectionObject {
+func (o *UpdateAppPayload) GetToolCollections() []ToolCollectionObject {
 	if o == nil || IsNil(o.ToolCollections) {
 		var ret []ToolCollectionObject
 		return ret
@@ -404,7 +371,7 @@ func (o *AppManifest) GetToolCollections() []ToolCollectionObject {
 
 // GetToolCollectionsOk returns a tuple with the ToolCollections field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetToolCollectionsOk() ([]ToolCollectionObject, bool) {
+func (o *UpdateAppPayload) GetToolCollectionsOk() ([]ToolCollectionObject, bool) {
 	if o == nil || IsNil(o.ToolCollections) {
 		return nil, false
 	}
@@ -412,7 +379,7 @@ func (o *AppManifest) GetToolCollectionsOk() ([]ToolCollectionObject, bool) {
 }
 
 // HasToolCollections returns a boolean if a field has been set.
-func (o *AppManifest) HasToolCollections() bool {
+func (o *UpdateAppPayload) HasToolCollections() bool {
 	if o != nil && !IsNil(o.ToolCollections) {
 		return true
 	}
@@ -421,12 +388,12 @@ func (o *AppManifest) HasToolCollections() bool {
 }
 
 // SetToolCollections gets a reference to the given []ToolCollectionObject and assigns it to the ToolCollections field.
-func (o *AppManifest) SetToolCollections(v []ToolCollectionObject) {
+func (o *UpdateAppPayload) SetToolCollections(v []ToolCollectionObject) {
 	o.ToolCollections = v
 }
 
 // GetOauthProviders returns the OauthProviders field value if set, zero value otherwise.
-func (o *AppManifest) GetOauthProviders() map[string]MCPOAuthConfig {
+func (o *UpdateAppPayload) GetOauthProviders() map[string]MCPOAuthConfig {
 	if o == nil || IsNil(o.OauthProviders) {
 		var ret map[string]MCPOAuthConfig
 		return ret
@@ -436,7 +403,7 @@ func (o *AppManifest) GetOauthProviders() map[string]MCPOAuthConfig {
 
 // GetOauthProvidersOk returns a tuple with the OauthProviders field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetOauthProvidersOk() (map[string]MCPOAuthConfig, bool) {
+func (o *UpdateAppPayload) GetOauthProvidersOk() (map[string]MCPOAuthConfig, bool) {
 	if o == nil || IsNil(o.OauthProviders) {
 		return map[string]MCPOAuthConfig{}, false
 	}
@@ -444,7 +411,7 @@ func (o *AppManifest) GetOauthProvidersOk() (map[string]MCPOAuthConfig, bool) {
 }
 
 // HasOauthProviders returns a boolean if a field has been set.
-func (o *AppManifest) HasOauthProviders() bool {
+func (o *UpdateAppPayload) HasOauthProviders() bool {
 	if o != nil && !IsNil(o.OauthProviders) {
 		return true
 	}
@@ -453,12 +420,12 @@ func (o *AppManifest) HasOauthProviders() bool {
 }
 
 // SetOauthProviders gets a reference to the given map[string]MCPOAuthConfig and assigns it to the OauthProviders field.
-func (o *AppManifest) SetOauthProviders(v map[string]MCPOAuthConfig) {
+func (o *UpdateAppPayload) SetOauthProviders(v map[string]MCPOAuthConfig) {
 	o.OauthProviders = v
 }
 
 // GetInteractions returns the Interactions field value if set, zero value otherwise.
-func (o *AppManifest) GetInteractions() string {
+func (o *UpdateAppPayload) GetInteractions() string {
 	if o == nil || IsNil(o.Interactions) {
 		var ret string
 		return ret
@@ -468,7 +435,7 @@ func (o *AppManifest) GetInteractions() string {
 
 // GetInteractionsOk returns a tuple with the Interactions field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetInteractionsOk() (*string, bool) {
+func (o *UpdateAppPayload) GetInteractionsOk() (*string, bool) {
 	if o == nil || IsNil(o.Interactions) {
 		return nil, false
 	}
@@ -476,7 +443,7 @@ func (o *AppManifest) GetInteractionsOk() (*string, bool) {
 }
 
 // HasInteractions returns a boolean if a field has been set.
-func (o *AppManifest) HasInteractions() bool {
+func (o *UpdateAppPayload) HasInteractions() bool {
 	if o != nil && !IsNil(o.Interactions) {
 		return true
 	}
@@ -485,13 +452,13 @@ func (o *AppManifest) HasInteractions() bool {
 }
 
 // SetInteractions gets a reference to the given string and assigns it to the Interactions field.
-func (o *AppManifest) SetInteractions(v string) {
+func (o *UpdateAppPayload) SetInteractions(v string) {
 	o.Interactions = &v
 }
 
 // GetSettingsSchema returns the SettingsSchema field value if set, zero value otherwise.
 // Deprecated
-func (o *AppManifest) GetSettingsSchema() JSONSchema {
+func (o *UpdateAppPayload) GetSettingsSchema() JSONSchema {
 	if o == nil || IsNil(o.SettingsSchema) {
 		var ret JSONSchema
 		return ret
@@ -502,7 +469,7 @@ func (o *AppManifest) GetSettingsSchema() JSONSchema {
 // GetSettingsSchemaOk returns a tuple with the SettingsSchema field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // Deprecated
-func (o *AppManifest) GetSettingsSchemaOk() (*JSONSchema, bool) {
+func (o *UpdateAppPayload) GetSettingsSchemaOk() (*JSONSchema, bool) {
 	if o == nil || IsNil(o.SettingsSchema) {
 		return nil, false
 	}
@@ -510,7 +477,7 @@ func (o *AppManifest) GetSettingsSchemaOk() (*JSONSchema, bool) {
 }
 
 // HasSettingsSchema returns a boolean if a field has been set.
-func (o *AppManifest) HasSettingsSchema() bool {
+func (o *UpdateAppPayload) HasSettingsSchema() bool {
 	if o != nil && !IsNil(o.SettingsSchema) {
 		return true
 	}
@@ -520,12 +487,12 @@ func (o *AppManifest) HasSettingsSchema() bool {
 
 // SetSettingsSchema gets a reference to the given JSONSchema and assigns it to the SettingsSchema field.
 // Deprecated
-func (o *AppManifest) SetSettingsSchema(v JSONSchema) {
+func (o *UpdateAppPayload) SetSettingsSchema(v JSONSchema) {
 	o.SettingsSchema = &v
 }
 
 // GetCapabilities returns the Capabilities field value if set, zero value otherwise.
-func (o *AppManifest) GetCapabilities() []AppCapabilities {
+func (o *UpdateAppPayload) GetCapabilities() []AppCapabilities {
 	if o == nil || IsNil(o.Capabilities) {
 		var ret []AppCapabilities
 		return ret
@@ -535,7 +502,7 @@ func (o *AppManifest) GetCapabilities() []AppCapabilities {
 
 // GetCapabilitiesOk returns a tuple with the Capabilities field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetCapabilitiesOk() ([]AppCapabilities, bool) {
+func (o *UpdateAppPayload) GetCapabilitiesOk() ([]AppCapabilities, bool) {
 	if o == nil || IsNil(o.Capabilities) {
 		return nil, false
 	}
@@ -543,7 +510,7 @@ func (o *AppManifest) GetCapabilitiesOk() ([]AppCapabilities, bool) {
 }
 
 // HasCapabilities returns a boolean if a field has been set.
-func (o *AppManifest) HasCapabilities() bool {
+func (o *UpdateAppPayload) HasCapabilities() bool {
 	if o != nil && !IsNil(o.Capabilities) {
 		return true
 	}
@@ -552,12 +519,12 @@ func (o *AppManifest) HasCapabilities() bool {
 }
 
 // SetCapabilities gets a reference to the given []AppCapabilities and assigns it to the Capabilities field.
-func (o *AppManifest) SetCapabilities(v []AppCapabilities) {
+func (o *UpdateAppPayload) SetCapabilities(v []AppCapabilities) {
 	o.Capabilities = v
 }
 
 // GetEndpoint returns the Endpoint field value if set, zero value otherwise.
-func (o *AppManifest) GetEndpoint() string {
+func (o *UpdateAppPayload) GetEndpoint() string {
 	if o == nil || IsNil(o.Endpoint) {
 		var ret string
 		return ret
@@ -567,7 +534,7 @@ func (o *AppManifest) GetEndpoint() string {
 
 // GetEndpointOk returns a tuple with the Endpoint field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetEndpointOk() (*string, bool) {
+func (o *UpdateAppPayload) GetEndpointOk() (*string, bool) {
 	if o == nil || IsNil(o.Endpoint) {
 		return nil, false
 	}
@@ -575,7 +542,7 @@ func (o *AppManifest) GetEndpointOk() (*string, bool) {
 }
 
 // HasEndpoint returns a boolean if a field has been set.
-func (o *AppManifest) HasEndpoint() bool {
+func (o *UpdateAppPayload) HasEndpoint() bool {
 	if o != nil && !IsNil(o.Endpoint) {
 		return true
 	}
@@ -584,12 +551,12 @@ func (o *AppManifest) HasEndpoint() bool {
 }
 
 // SetEndpoint gets a reference to the given string and assigns it to the Endpoint field.
-func (o *AppManifest) SetEndpoint(v string) {
+func (o *UpdateAppPayload) SetEndpoint(v string) {
 	o.Endpoint = &v
 }
 
 // GetEndpointOverrides returns the EndpointOverrides field value if set, zero value otherwise.
-func (o *AppManifest) GetEndpointOverrides() map[string]string {
+func (o *UpdateAppPayload) GetEndpointOverrides() map[string]string {
 	if o == nil || IsNil(o.EndpointOverrides) {
 		var ret map[string]string
 		return ret
@@ -599,7 +566,7 @@ func (o *AppManifest) GetEndpointOverrides() map[string]string {
 
 // GetEndpointOverridesOk returns a tuple with the EndpointOverrides field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetEndpointOverridesOk() (map[string]string, bool) {
+func (o *UpdateAppPayload) GetEndpointOverridesOk() (map[string]string, bool) {
 	if o == nil || IsNil(o.EndpointOverrides) {
 		return map[string]string{}, false
 	}
@@ -607,7 +574,7 @@ func (o *AppManifest) GetEndpointOverridesOk() (map[string]string, bool) {
 }
 
 // HasEndpointOverrides returns a boolean if a field has been set.
-func (o *AppManifest) HasEndpointOverrides() bool {
+func (o *UpdateAppPayload) HasEndpointOverrides() bool {
 	if o != nil && !IsNil(o.EndpointOverrides) {
 		return true
 	}
@@ -616,12 +583,12 @@ func (o *AppManifest) HasEndpointOverrides() bool {
 }
 
 // SetEndpointOverrides gets a reference to the given map[string]string and assigns it to the EndpointOverrides field.
-func (o *AppManifest) SetEndpointOverrides(v map[string]string) {
+func (o *UpdateAppPayload) SetEndpointOverrides(v map[string]string) {
 	o.EndpointOverrides = v
 }
 
 // GetVersion returns the Version field value if set, zero value otherwise.
-func (o *AppManifest) GetVersion() string {
+func (o *UpdateAppPayload) GetVersion() string {
 	if o == nil || IsNil(o.Version) {
 		var ret string
 		return ret
@@ -631,7 +598,7 @@ func (o *AppManifest) GetVersion() string {
 
 // GetVersionOk returns a tuple with the Version field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetVersionOk() (*string, bool) {
+func (o *UpdateAppPayload) GetVersionOk() (*string, bool) {
 	if o == nil || IsNil(o.Version) {
 		return nil, false
 	}
@@ -639,7 +606,7 @@ func (o *AppManifest) GetVersionOk() (*string, bool) {
 }
 
 // HasVersion returns a boolean if a field has been set.
-func (o *AppManifest) HasVersion() bool {
+func (o *UpdateAppPayload) HasVersion() bool {
 	if o != nil && !IsNil(o.Version) {
 		return true
 	}
@@ -648,14 +615,14 @@ func (o *AppManifest) HasVersion() bool {
 }
 
 // SetVersion gets a reference to the given string and assigns it to the Version field.
-func (o *AppManifest) SetVersion(v string) {
+func (o *UpdateAppPayload) SetVersion(v string) {
 	o.Version = &v
 }
 
 // GetSource returns the Source field value if set, zero value otherwise.
-func (o *AppManifest) GetSource() AppManifestSource {
+func (o *UpdateAppPayload) GetSource() AppSourceConfig {
 	if o == nil || IsNil(o.Source) {
-		var ret AppManifestSource
+		var ret AppSourceConfig
 		return ret
 	}
 	return *o.Source
@@ -663,7 +630,7 @@ func (o *AppManifest) GetSource() AppManifestSource {
 
 // GetSourceOk returns a tuple with the Source field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetSourceOk() (*AppManifestSource, bool) {
+func (o *UpdateAppPayload) GetSourceOk() (*AppSourceConfig, bool) {
 	if o == nil || IsNil(o.Source) {
 		return nil, false
 	}
@@ -671,7 +638,7 @@ func (o *AppManifest) GetSourceOk() (*AppManifestSource, bool) {
 }
 
 // HasSource returns a boolean if a field has been set.
-func (o *AppManifest) HasSource() bool {
+func (o *UpdateAppPayload) HasSource() bool {
 	if o != nil && !IsNil(o.Source) {
 		return true
 	}
@@ -679,13 +646,13 @@ func (o *AppManifest) HasSource() bool {
 	return false
 }
 
-// SetSource gets a reference to the given AppManifestSource and assigns it to the Source field.
-func (o *AppManifest) SetSource(v AppManifestSource) {
+// SetSource gets a reference to the given AppSourceConfig and assigns it to the Source field.
+func (o *UpdateAppPayload) SetSource(v AppSourceConfig) {
 	o.Source = &v
 }
 
 // GetTags returns the Tags field value if set, zero value otherwise.
-func (o *AppManifest) GetTags() []string {
+func (o *UpdateAppPayload) GetTags() []string {
 	if o == nil || IsNil(o.Tags) {
 		var ret []string
 		return ret
@@ -695,7 +662,7 @@ func (o *AppManifest) GetTags() []string {
 
 // GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetTagsOk() ([]string, bool) {
+func (o *UpdateAppPayload) GetTagsOk() ([]string, bool) {
 	if o == nil || IsNil(o.Tags) {
 		return nil, false
 	}
@@ -703,7 +670,7 @@ func (o *AppManifest) GetTagsOk() ([]string, bool) {
 }
 
 // HasTags returns a boolean if a field has been set.
-func (o *AppManifest) HasTags() bool {
+func (o *UpdateAppPayload) HasTags() bool {
 	if o != nil && !IsNil(o.Tags) {
 		return true
 	}
@@ -712,12 +679,12 @@ func (o *AppManifest) HasTags() bool {
 }
 
 // SetTags gets a reference to the given []string and assigns it to the Tags field.
-func (o *AppManifest) SetTags(v []string) {
+func (o *UpdateAppPayload) SetTags(v []string) {
 	o.Tags = v
 }
 
 // GetAccessControl returns the AccessControl field value if set, zero value otherwise.
-func (o *AppManifest) GetAccessControl() AppAccessControl {
+func (o *UpdateAppPayload) GetAccessControl() AppAccessControl {
 	if o == nil || IsNil(o.AccessControl) {
 		var ret AppAccessControl
 		return ret
@@ -727,7 +694,7 @@ func (o *AppManifest) GetAccessControl() AppAccessControl {
 
 // GetAccessControlOk returns a tuple with the AccessControl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetAccessControlOk() (*AppAccessControl, bool) {
+func (o *UpdateAppPayload) GetAccessControlOk() (*AppAccessControl, bool) {
 	if o == nil || IsNil(o.AccessControl) {
 		return nil, false
 	}
@@ -735,7 +702,7 @@ func (o *AppManifest) GetAccessControlOk() (*AppAccessControl, bool) {
 }
 
 // HasAccessControl returns a boolean if a field has been set.
-func (o *AppManifest) HasAccessControl() bool {
+func (o *UpdateAppPayload) HasAccessControl() bool {
 	if o != nil && !IsNil(o.AccessControl) {
 		return true
 	}
@@ -744,115 +711,43 @@ func (o *AppManifest) HasAccessControl() bool {
 }
 
 // SetAccessControl gets a reference to the given AppAccessControl and assigns it to the AccessControl field.
-func (o *AppManifest) SetAccessControl(v AppAccessControl) {
+func (o *UpdateAppPayload) SetAccessControl(v AppAccessControl) {
 	o.AccessControl = &v
 }
 
-// GetId returns the Id field value
-func (o *AppManifest) GetId() string {
-	if o == nil {
-		var ret string
+// GetExpectedEditRevision returns the ExpectedEditRevision field value if set, zero value otherwise.
+func (o *UpdateAppPayload) GetExpectedEditRevision() int32 {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		var ret int32
 		return ret
 	}
-
-	return o.Id
+	return *o.ExpectedEditRevision
 }
 
-// GetIdOk returns a tuple with the Id field value
+// GetExpectedEditRevisionOk returns a tuple with the ExpectedEditRevision field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AppManifest) GetIdOk() (*string, bool) {
-	if o == nil {
+func (o *UpdateAppPayload) GetExpectedEditRevisionOk() (*int32, bool) {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
 		return nil, false
 	}
-	return &o.Id, true
+	return o.ExpectedEditRevision, true
 }
 
-// SetId sets field value
-func (o *AppManifest) SetId(v string) {
-	o.Id = v
-}
-
-// GetAccount returns the Account field value if set, zero value otherwise.
-func (o *AppManifest) GetAccount() string {
-	if o == nil || IsNil(o.Account) {
-		var ret string
-		return ret
-	}
-	return *o.Account
-}
-
-// GetAccountOk returns a tuple with the Account field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *AppManifest) GetAccountOk() (*string, bool) {
-	if o == nil || IsNil(o.Account) {
-		return nil, false
-	}
-	return o.Account, true
-}
-
-// HasAccount returns a boolean if a field has been set.
-func (o *AppManifest) HasAccount() bool {
-	if o != nil && !IsNil(o.Account) {
+// HasExpectedEditRevision returns a boolean if a field has been set.
+func (o *UpdateAppPayload) HasExpectedEditRevision() bool {
+	if o != nil && !IsNil(o.ExpectedEditRevision) {
 		return true
 	}
 
 	return false
 }
 
-// SetAccount gets a reference to the given string and assigns it to the Account field.
-func (o *AppManifest) SetAccount(v string) {
-	o.Account = &v
+// SetExpectedEditRevision gets a reference to the given int32 and assigns it to the ExpectedEditRevision field.
+func (o *UpdateAppPayload) SetExpectedEditRevision(v int32) {
+	o.ExpectedEditRevision = &v
 }
 
-// GetCreatedAt returns the CreatedAt field value
-func (o *AppManifest) GetCreatedAt() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.CreatedAt
-}
-
-// GetCreatedAtOk returns a tuple with the CreatedAt field value
-// and a boolean to check if the value has been set.
-func (o *AppManifest) GetCreatedAtOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.CreatedAt, true
-}
-
-// SetCreatedAt sets field value
-func (o *AppManifest) SetCreatedAt(v string) {
-	o.CreatedAt = v
-}
-
-// GetUpdatedAt returns the UpdatedAt field value
-func (o *AppManifest) GetUpdatedAt() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.UpdatedAt
-}
-
-// GetUpdatedAtOk returns a tuple with the UpdatedAt field value
-// and a boolean to check if the value has been set.
-func (o *AppManifest) GetUpdatedAtOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.UpdatedAt, true
-}
-
-// SetUpdatedAt sets field value
-func (o *AppManifest) SetUpdatedAt(v string) {
-	o.UpdatedAt = v
-}
-
-func (o AppManifest) MarshalJSON() ([]byte, error) {
+func (o UpdateAppPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -860,9 +755,8 @@ func (o AppManifest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o AppManifest) ToMap() (map[string]interface{}, error) {
+func (o UpdateAppPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["edit_revision"] = o.EditRevision
 	toSerialize["name"] = o.Name
 	toSerialize["visibility"] = o.Visibility
 	toSerialize["title"] = o.Title
@@ -914,12 +808,9 @@ func (o AppManifest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.AccessControl) {
 		toSerialize["access_control"] = o.AccessControl
 	}
-	toSerialize["id"] = o.Id
-	if !IsNil(o.Account) {
-		toSerialize["account"] = o.Account
+	if !IsNil(o.ExpectedEditRevision) {
+		toSerialize["expected_edit_revision"] = o.ExpectedEditRevision
 	}
-	toSerialize["created_at"] = o.CreatedAt
-	toSerialize["updated_at"] = o.UpdatedAt
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -928,21 +819,17 @@ func (o AppManifest) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-func (o *AppManifest) UnmarshalJSON(data []byte) (err error) {
+func (o *UpdateAppPayload) UnmarshalJSON(data []byte) (err error) {
 	// This validates that all required properties are included in the JSON object
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"edit_revision",
 		"name",
 		"visibility",
 		"title",
 		"description",
 		"publisher",
 		"status",
-		"id",
-		"created_at",
-		"updated_at",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -959,20 +846,19 @@ func (o *AppManifest) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
-	varAppManifest := _AppManifest{}
+	varUpdateAppPayload := _UpdateAppPayload{}
 
-	err = json.Unmarshal(data, &varAppManifest)
+	err = json.Unmarshal(data, &varUpdateAppPayload)
 
 	if err != nil {
 		return err
 	}
 
-	*o = AppManifest(varAppManifest)
+	*o = UpdateAppPayload(varUpdateAppPayload)
 
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "edit_revision")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "visibility")
 		delete(additionalProperties, "title")
@@ -994,48 +880,45 @@ func (o *AppManifest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "source")
 		delete(additionalProperties, "tags")
 		delete(additionalProperties, "access_control")
-		delete(additionalProperties, "id")
-		delete(additionalProperties, "account")
-		delete(additionalProperties, "created_at")
-		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "expected_edit_revision")
 		o.AdditionalProperties = additionalProperties
 	}
 
 	return err
 }
 
-type NullableAppManifest struct {
-	value *AppManifest
+type NullableUpdateAppPayload struct {
+	value *UpdateAppPayload
 	isSet bool
 }
 
-func (v NullableAppManifest) Get() *AppManifest {
+func (v NullableUpdateAppPayload) Get() *UpdateAppPayload {
 	return v.value
 }
 
-func (v *NullableAppManifest) Set(val *AppManifest) {
+func (v *NullableUpdateAppPayload) Set(val *UpdateAppPayload) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableAppManifest) IsSet() bool {
+func (v NullableUpdateAppPayload) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableAppManifest) Unset() {
+func (v *NullableUpdateAppPayload) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableAppManifest(val *AppManifest) *NullableAppManifest {
-	return &NullableAppManifest{value: val, isSet: true}
+func NewNullableUpdateAppPayload(val *UpdateAppPayload) *NullableUpdateAppPayload {
+	return &NullableUpdateAppPayload{value: val, isSet: true}
 }
 
-func (v NullableAppManifest) MarshalJSON() ([]byte, error) {
+func (v NullableUpdateAppPayload) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableAppManifest) UnmarshalJSON(src []byte) error {
+func (v *NullableUpdateAppPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

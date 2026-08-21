@@ -4937,15 +4937,15 @@ func (a *AppsAPIService) UninstallAppExecute(r ApiUninstallAppRequest) (*CountRe
 }
 
 type ApiUpdateAppRequest struct {
-	ctx             context.Context
-	ApiService      *AppsAPIService
-	id              string
-	appManifestData *AppManifestData
-	xApiVersion     *string
+	ctx              context.Context
+	ApiService       *AppsAPIService
+	id               string
+	updateAppPayload *UpdateAppPayload
+	xApiVersion      *string
 }
 
-func (r ApiUpdateAppRequest) AppManifestData(appManifestData AppManifestData) ApiUpdateAppRequest {
-	r.appManifestData = &appManifestData
+func (r ApiUpdateAppRequest) UpdateAppPayload(updateAppPayload UpdateAppPayload) ApiUpdateAppRequest {
+	r.updateAppPayload = &updateAppPayload
 	return r
 }
 
@@ -5000,8 +5000,8 @@ func (a *AppsAPIService) UpdateAppExecute(r ApiUpdateAppRequest) (*AppManifest, 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.appManifestData == nil {
-		return localVarReturnValue, nil, reportError("appManifestData is required and must be specified")
+	if r.updateAppPayload == nil {
+		return localVarReturnValue, nil, reportError("updateAppPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -5025,7 +5025,7 @@ func (a *AppsAPIService) UpdateAppExecute(r ApiUpdateAppRequest) (*AppManifest, 
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.appManifestData
+	localVarPostBody = r.updateAppPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

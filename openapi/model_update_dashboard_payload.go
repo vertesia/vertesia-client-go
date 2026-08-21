@@ -33,6 +33,8 @@ type UpdateDashboardPayload struct {
 	QueryParameters map[string]string `json:"queryParameters,omitempty"`
 	// Complete Vega-Lite specification (use vconcat/hconcat for multiple panels)
 	Spec map[string]interface{} `json:"spec,omitempty"`
+	// Edit revision returned by the last read. Stale revisions are rejected with HTTP 409. Omit for legacy last-write-wins behavior.
+	ExpectedEditRevision *int32 `json:"expected_edit_revision,omitempty"`
 	// Skip auto-version creation
 	SkipVersioning       *bool `json:"skip_versioning,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -281,6 +283,38 @@ func (o *UpdateDashboardPayload) SetSpec(v map[string]interface{}) {
 	o.Spec = v
 }
 
+// GetExpectedEditRevision returns the ExpectedEditRevision field value if set, zero value otherwise.
+func (o *UpdateDashboardPayload) GetExpectedEditRevision() int32 {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		var ret int32
+		return ret
+	}
+	return *o.ExpectedEditRevision
+}
+
+// GetExpectedEditRevisionOk returns a tuple with the ExpectedEditRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateDashboardPayload) GetExpectedEditRevisionOk() (*int32, bool) {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		return nil, false
+	}
+	return o.ExpectedEditRevision, true
+}
+
+// HasExpectedEditRevision returns a boolean if a field has been set.
+func (o *UpdateDashboardPayload) HasExpectedEditRevision() bool {
+	if o != nil && !IsNil(o.ExpectedEditRevision) {
+		return true
+	}
+
+	return false
+}
+
+// SetExpectedEditRevision gets a reference to the given int32 and assigns it to the ExpectedEditRevision field.
+func (o *UpdateDashboardPayload) SetExpectedEditRevision(v int32) {
+	o.ExpectedEditRevision = &v
+}
+
 // GetSkipVersioning returns the SkipVersioning field value if set, zero value otherwise.
 func (o *UpdateDashboardPayload) GetSkipVersioning() bool {
 	if o == nil || IsNil(o.SkipVersioning) {
@@ -344,6 +378,9 @@ func (o UpdateDashboardPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Spec) {
 		toSerialize["spec"] = o.Spec
 	}
+	if !IsNil(o.ExpectedEditRevision) {
+		toSerialize["expected_edit_revision"] = o.ExpectedEditRevision
+	}
 	if !IsNil(o.SkipVersioning) {
 		toSerialize["skip_versioning"] = o.SkipVersioning
 	}
@@ -376,6 +413,7 @@ func (o *UpdateDashboardPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "queryLimit")
 		delete(additionalProperties, "queryParameters")
 		delete(additionalProperties, "spec")
+		delete(additionalProperties, "expected_edit_revision")
 		delete(additionalProperties, "skip_versioning")
 		o.AdditionalProperties = additionalProperties
 	}

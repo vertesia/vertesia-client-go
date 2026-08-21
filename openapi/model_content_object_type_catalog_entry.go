@@ -40,11 +40,13 @@ type ContentObjectTypeCatalogEntry struct {
 	Intake     *ContentTypeIntakePolicy  `json:"intake,omitempty"`
 	Editing    *ContentTypeEditingPolicy `json:"editing,omitempty"`
 	// Display title. Defaults to `name` or `id`.
-	Title                *string `json:"title,omitempty"`
-	UpdatedBy            *string `json:"updated_by,omitempty"`
-	CreatedBy            *string `json:"created_by,omitempty"`
-	CreatedAt            *string `json:"created_at,omitempty"`
-	UpdatedAt            *string `json:"updated_at,omitempty"`
+	Title     *string `json:"title,omitempty"`
+	UpdatedBy *string `json:"updated_by,omitempty"`
+	CreatedBy *string `json:"created_by,omitempty"`
+	CreatedAt *string `json:"created_at,omitempty"`
+	UpdatedAt *string `json:"updated_at,omitempty"`
+	// Stored-resource revision. Omitted for app-contributed in-code types.
+	EditRevision         *int32 `json:"edit_revision,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -565,6 +567,38 @@ func (o *ContentObjectTypeCatalogEntry) SetUpdatedAt(v string) {
 	o.UpdatedAt = &v
 }
 
+// GetEditRevision returns the EditRevision field value if set, zero value otherwise.
+func (o *ContentObjectTypeCatalogEntry) GetEditRevision() int32 {
+	if o == nil || IsNil(o.EditRevision) {
+		var ret int32
+		return ret
+	}
+	return *o.EditRevision
+}
+
+// GetEditRevisionOk returns a tuple with the EditRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectTypeCatalogEntry) GetEditRevisionOk() (*int32, bool) {
+	if o == nil || IsNil(o.EditRevision) {
+		return nil, false
+	}
+	return o.EditRevision, true
+}
+
+// HasEditRevision returns a boolean if a field has been set.
+func (o *ContentObjectTypeCatalogEntry) HasEditRevision() bool {
+	if o != nil && !IsNil(o.EditRevision) {
+		return true
+	}
+
+	return false
+}
+
+// SetEditRevision gets a reference to the given int32 and assigns it to the EditRevision field.
+func (o *ContentObjectTypeCatalogEntry) SetEditRevision(v int32) {
+	o.EditRevision = &v
+}
+
 func (o ContentObjectTypeCatalogEntry) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -618,6 +652,9 @@ func (o ContentObjectTypeCatalogEntry) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
+	}
+	if !IsNil(o.EditRevision) {
+		toSerialize["edit_revision"] = o.EditRevision
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -679,6 +716,7 @@ func (o *ContentObjectTypeCatalogEntry) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "created_by")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "edit_revision")
 		o.AdditionalProperties = additionalProperties
 	}
 

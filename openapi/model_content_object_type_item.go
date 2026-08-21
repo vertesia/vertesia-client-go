@@ -22,6 +22,8 @@ var _ MappedNullable = &ContentObjectTypeItem{}
 type ContentObjectTypeItem struct {
 	// Unique identifier for the object
 	Id string `json:"id"`
+	// Monotonic edit revision used to detect concurrent updates.
+	EditRevision int32 `json:"edit_revision"`
 	// Human-readable name or title
 	Name string `json:"name"`
 	// Optional detailed description of the object
@@ -55,9 +57,10 @@ type _ContentObjectTypeItem ContentObjectTypeItem
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewContentObjectTypeItem(id string, name string, updatedBy string, createdBy string, createdAt string, updatedAt string) *ContentObjectTypeItem {
+func NewContentObjectTypeItem(id string, editRevision int32, name string, updatedBy string, createdBy string, createdAt string, updatedAt string) *ContentObjectTypeItem {
 	this := ContentObjectTypeItem{}
 	this.Id = id
+	this.EditRevision = editRevision
 	this.Name = name
 	this.UpdatedBy = updatedBy
 	this.CreatedBy = createdBy
@@ -96,6 +99,30 @@ func (o *ContentObjectTypeItem) GetIdOk() (*string, bool) {
 // SetId sets field value
 func (o *ContentObjectTypeItem) SetId(v string) {
 	o.Id = v
+}
+
+// GetEditRevision returns the EditRevision field value
+func (o *ContentObjectTypeItem) GetEditRevision() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.EditRevision
+}
+
+// GetEditRevisionOk returns a tuple with the EditRevision field value
+// and a boolean to check if the value has been set.
+func (o *ContentObjectTypeItem) GetEditRevisionOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.EditRevision, true
+}
+
+// SetEditRevision sets field value
+func (o *ContentObjectTypeItem) SetEditRevision(v int32) {
+	o.EditRevision = v
 }
 
 // GetName returns the Name field value
@@ -517,6 +544,7 @@ func (o ContentObjectTypeItem) MarshalJSON() ([]byte, error) {
 func (o ContentObjectTypeItem) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
+	toSerialize["edit_revision"] = o.EditRevision
 	toSerialize["name"] = o.Name
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
@@ -558,6 +586,7 @@ func (o *ContentObjectTypeItem) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"id",
+		"edit_revision",
 		"name",
 		"updated_by",
 		"created_by",

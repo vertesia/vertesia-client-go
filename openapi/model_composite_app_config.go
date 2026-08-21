@@ -20,6 +20,8 @@ var _ MappedNullable = &CompositeAppConfig{}
 
 // CompositeAppConfig CompositeApp shell configuration. This is the main configuration interface for storing CompositeApp settings. Used as the MongoDB model for persisting CompositeApp configurations.
 type CompositeAppConfig struct {
+	// Monotonic edit revision used to detect concurrent updates.
+	EditRevision int32 `json:"edit_revision"`
 	// The unique identifier for this CompositeApp configuration Undefined if the configuration doesn't exists yet.
 	Id *string `json:"id,omitempty"`
 	// The project this CompositeApp belongs to
@@ -58,8 +60,9 @@ type _CompositeAppConfig CompositeAppConfig
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCompositeAppConfig(project string, apps []CompositeAppEntry) *CompositeAppConfig {
+func NewCompositeAppConfig(editRevision int32, project string, apps []CompositeAppEntry) *CompositeAppConfig {
 	this := CompositeAppConfig{}
+	this.EditRevision = editRevision
 	this.Project = project
 	this.Apps = apps
 	return &this
@@ -71,6 +74,30 @@ func NewCompositeAppConfig(project string, apps []CompositeAppEntry) *CompositeA
 func NewCompositeAppConfigWithDefaults() *CompositeAppConfig {
 	this := CompositeAppConfig{}
 	return &this
+}
+
+// GetEditRevision returns the EditRevision field value
+func (o *CompositeAppConfig) GetEditRevision() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.EditRevision
+}
+
+// GetEditRevisionOk returns a tuple with the EditRevision field value
+// and a boolean to check if the value has been set.
+func (o *CompositeAppConfig) GetEditRevisionOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.EditRevision, true
+}
+
+// SetEditRevision sets field value
+func (o *CompositeAppConfig) SetEditRevision(v int32) {
+	o.EditRevision = v
 }
 
 // GetId returns the Id field value if set, zero value otherwise.
@@ -532,6 +559,7 @@ func (o CompositeAppConfig) MarshalJSON() ([]byte, error) {
 
 func (o CompositeAppConfig) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	toSerialize["edit_revision"] = o.EditRevision
 	if !IsNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
@@ -578,6 +606,7 @@ func (o *CompositeAppConfig) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
+		"edit_revision",
 		"project",
 		"apps",
 	}

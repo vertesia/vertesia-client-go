@@ -19,8 +19,10 @@ var _ MappedNullable = &UpdateProcessDefinitionPayload{}
 
 // UpdateProcessDefinitionPayload struct for UpdateProcessDefinitionPayload
 type UpdateProcessDefinitionPayload struct {
-	Name        *string `json:"name,omitempty"`
-	Description *string `json:"description,omitempty"`
+	// Edit revision returned by the last read. Stale revisions are rejected with HTTP 409. Omit for legacy last-write-wins behavior.
+	ExpectedEditRevision *int32  `json:"expected_edit_revision,omitempty"`
+	Name                 *string `json:"name,omitempty"`
+	Description          *string `json:"description,omitempty"`
 	// Deprecated: Status is server-owned. Use publish/archive endpoints instead of updating it directly.
 	// Deprecated
 	Status *ProcessDefinitionStatus `json:"status,omitempty"`
@@ -46,6 +48,38 @@ func NewUpdateProcessDefinitionPayload() *UpdateProcessDefinitionPayload {
 func NewUpdateProcessDefinitionPayloadWithDefaults() *UpdateProcessDefinitionPayload {
 	this := UpdateProcessDefinitionPayload{}
 	return &this
+}
+
+// GetExpectedEditRevision returns the ExpectedEditRevision field value if set, zero value otherwise.
+func (o *UpdateProcessDefinitionPayload) GetExpectedEditRevision() int32 {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		var ret int32
+		return ret
+	}
+	return *o.ExpectedEditRevision
+}
+
+// GetExpectedEditRevisionOk returns a tuple with the ExpectedEditRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateProcessDefinitionPayload) GetExpectedEditRevisionOk() (*int32, bool) {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		return nil, false
+	}
+	return o.ExpectedEditRevision, true
+}
+
+// HasExpectedEditRevision returns a boolean if a field has been set.
+func (o *UpdateProcessDefinitionPayload) HasExpectedEditRevision() bool {
+	if o != nil && !IsNil(o.ExpectedEditRevision) {
+		return true
+	}
+
+	return false
+}
+
+// SetExpectedEditRevision gets a reference to the given int32 and assigns it to the ExpectedEditRevision field.
+func (o *UpdateProcessDefinitionPayload) SetExpectedEditRevision(v int32) {
+	o.ExpectedEditRevision = &v
 }
 
 // GetName returns the Name field value if set, zero value otherwise.
@@ -256,6 +290,9 @@ func (o UpdateProcessDefinitionPayload) MarshalJSON() ([]byte, error) {
 
 func (o UpdateProcessDefinitionPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.ExpectedEditRevision) {
+		toSerialize["expected_edit_revision"] = o.ExpectedEditRevision
+	}
 	if !IsNil(o.Name) {
 		toSerialize["name"] = o.Name
 	}

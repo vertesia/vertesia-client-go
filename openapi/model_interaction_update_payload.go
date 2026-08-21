@@ -20,25 +20,27 @@ var _ MappedNullable = &InteractionUpdatePayload{}
 
 // InteractionUpdatePayload struct for InteractionUpdatePayload
 type InteractionUpdatePayload struct {
-	Status             *InteractionStatus       `json:"status,omitempty"`
-	Parent             *string                  `json:"parent,omitempty"`
-	Visibility         *InteractionVisibility   `json:"visibility,omitempty"`
-	Version            *float32                 `json:"version,omitempty"`
-	TestData           map[string]interface{}   `json:"test_data,omitempty"`
-	InteractionSchema  *InteractionResultSchema `json:"interaction_schema,omitempty"`
-	CachePolicy        *CachePolicy             `json:"cache_policy,omitempty"`
-	Prompts            []PromptSegmentDef       `json:"prompts,omitempty"`
-	LastPublishedAt    *time.Time               `json:"last_published_at,omitempty"`
-	Name               *string                  `json:"name,omitempty"`
-	Endpoint           *string                  `json:"endpoint,omitempty"`
-	Description        *string                  `json:"description,omitempty"`
-	Tags               []string                 `json:"tags,omitempty"`
-	AgentRunnerOptions *AgentRunnerOptions      `json:"agent_runner_options,omitempty"`
-	Environment        *InteractionEnvironment  `json:"environment,omitempty"`
-	Model              *string                  `json:"model,omitempty"`
-	ModelOptions       *ModelOptions            `json:"model_options,omitempty"`
-	StoreMediaResults  *bool                    `json:"store_media_results,omitempty"`
-	Restriction        *RunDataStorageLevel     `json:"restriction,omitempty"`
+	// Edit revision returned by the last read. Stale revisions are rejected with HTTP 409. Omit for legacy last-write-wins behavior.
+	ExpectedEditRevision *int32                          `json:"expected_edit_revision,omitempty"`
+	Status               *InteractionStatus              `json:"status,omitempty"`
+	Parent               *string                         `json:"parent,omitempty"`
+	Visibility           *InteractionVisibility          `json:"visibility,omitempty"`
+	Version              *float32                        `json:"version,omitempty"`
+	TestData             map[string]interface{}          `json:"test_data,omitempty"`
+	InteractionSchema    *InteractionResultSchema        `json:"interaction_schema,omitempty"`
+	CachePolicy          *CachePolicy                    `json:"cache_policy,omitempty"`
+	Prompts              []InteractionPromptSegmentInput `json:"prompts,omitempty"`
+	LastPublishedAt      *time.Time                      `json:"last_published_at,omitempty"`
+	Name                 *string                         `json:"name,omitempty"`
+	Endpoint             *string                         `json:"endpoint,omitempty"`
+	Description          *string                         `json:"description,omitempty"`
+	Tags                 []string                        `json:"tags,omitempty"`
+	AgentRunnerOptions   *AgentRunnerOptions             `json:"agent_runner_options,omitempty"`
+	Environment          *InteractionEnvironment         `json:"environment,omitempty"`
+	Model                *string                         `json:"model,omitempty"`
+	ModelOptions         *ModelOptions                   `json:"model_options,omitempty"`
+	StoreMediaResults    *bool                           `json:"store_media_results,omitempty"`
+	Restriction          *RunDataStorageLevel            `json:"restriction,omitempty"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.
 	// Deprecated
 	OutputModality *Modalities                                           `json:"output_modality,omitempty"`
@@ -60,6 +62,38 @@ func NewInteractionUpdatePayload() *InteractionUpdatePayload {
 func NewInteractionUpdatePayloadWithDefaults() *InteractionUpdatePayload {
 	this := InteractionUpdatePayload{}
 	return &this
+}
+
+// GetExpectedEditRevision returns the ExpectedEditRevision field value if set, zero value otherwise.
+func (o *InteractionUpdatePayload) GetExpectedEditRevision() int32 {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		var ret int32
+		return ret
+	}
+	return *o.ExpectedEditRevision
+}
+
+// GetExpectedEditRevisionOk returns a tuple with the ExpectedEditRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InteractionUpdatePayload) GetExpectedEditRevisionOk() (*int32, bool) {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		return nil, false
+	}
+	return o.ExpectedEditRevision, true
+}
+
+// HasExpectedEditRevision returns a boolean if a field has been set.
+func (o *InteractionUpdatePayload) HasExpectedEditRevision() bool {
+	if o != nil && !IsNil(o.ExpectedEditRevision) {
+		return true
+	}
+
+	return false
+}
+
+// SetExpectedEditRevision gets a reference to the given int32 and assigns it to the ExpectedEditRevision field.
+func (o *InteractionUpdatePayload) SetExpectedEditRevision(v int32) {
+	o.ExpectedEditRevision = &v
 }
 
 // GetStatus returns the Status field value if set, zero value otherwise.
@@ -287,9 +321,9 @@ func (o *InteractionUpdatePayload) SetCachePolicy(v CachePolicy) {
 }
 
 // GetPrompts returns the Prompts field value if set, zero value otherwise.
-func (o *InteractionUpdatePayload) GetPrompts() []PromptSegmentDef {
+func (o *InteractionUpdatePayload) GetPrompts() []InteractionPromptSegmentInput {
 	if o == nil || IsNil(o.Prompts) {
-		var ret []PromptSegmentDef
+		var ret []InteractionPromptSegmentInput
 		return ret
 	}
 	return o.Prompts
@@ -297,7 +331,7 @@ func (o *InteractionUpdatePayload) GetPrompts() []PromptSegmentDef {
 
 // GetPromptsOk returns a tuple with the Prompts field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InteractionUpdatePayload) GetPromptsOk() ([]PromptSegmentDef, bool) {
+func (o *InteractionUpdatePayload) GetPromptsOk() ([]InteractionPromptSegmentInput, bool) {
 	if o == nil || IsNil(o.Prompts) {
 		return nil, false
 	}
@@ -313,8 +347,8 @@ func (o *InteractionUpdatePayload) HasPrompts() bool {
 	return false
 }
 
-// SetPrompts gets a reference to the given []PromptSegmentDef and assigns it to the Prompts field.
-func (o *InteractionUpdatePayload) SetPrompts(v []PromptSegmentDef) {
+// SetPrompts gets a reference to the given []InteractionPromptSegmentInput and assigns it to the Prompts field.
+func (o *InteractionUpdatePayload) SetPrompts(v []InteractionPromptSegmentInput) {
 	o.Prompts = v
 }
 
@@ -758,6 +792,9 @@ func (o InteractionUpdatePayload) MarshalJSON() ([]byte, error) {
 
 func (o InteractionUpdatePayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.ExpectedEditRevision) {
+		toSerialize["expected_edit_revision"] = o.ExpectedEditRevision
+	}
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}

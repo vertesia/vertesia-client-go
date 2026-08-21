@@ -1077,7 +1077,7 @@ func (r ApiUpdateProcessDefinitionRequest) Execute() (*ProcessDefinition, *http.
 /*
 UpdateProcessDefinition Update a process definition
 
-Updates the latest draft revision in place when the current head is a draft. Updating a published head forks a new latest draft revision while keeping the published revision immutable.
+Updates the latest draft revision in place when the current head is a draft. Updating a published head forks a new latest draft revision while keeping the published revision immutable. The processId must identify the current head; non-head revisions are rejected with HTTP 400 and the response identifies the head to update.
 
 **Required permissions:** `workflow:admin`
 

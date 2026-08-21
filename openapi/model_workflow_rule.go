@@ -22,6 +22,8 @@ var _ MappedNullable = &WorkflowRule{}
 type WorkflowRule struct {
 	// Unique identifier for the object
 	Id string `json:"id"`
+	// Monotonic edit revision used to detect concurrent updates.
+	EditRevision int32 `json:"edit_revision"`
 	// Human-readable name or title
 	Name string `json:"name"`
 	// Optional detailed description of the object
@@ -60,9 +62,10 @@ type _WorkflowRule WorkflowRule
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewWorkflowRule(id string, name string, updatedBy string, createdBy string, createdAt string, updatedAt string, endpoint string, inputType WorkflowRuleInputType) *WorkflowRule {
+func NewWorkflowRule(id string, editRevision int32, name string, updatedBy string, createdBy string, createdAt string, updatedAt string, endpoint string, inputType WorkflowRuleInputType) *WorkflowRule {
 	this := WorkflowRule{}
 	this.Id = id
+	this.EditRevision = editRevision
 	this.Name = name
 	this.UpdatedBy = updatedBy
 	this.CreatedBy = createdBy
@@ -107,6 +110,30 @@ func (o *WorkflowRule) GetIdOk() (*string, bool) {
 // SetId sets field value
 func (o *WorkflowRule) SetId(v string) {
 	o.Id = v
+}
+
+// GetEditRevision returns the EditRevision field value
+func (o *WorkflowRule) GetEditRevision() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.EditRevision
+}
+
+// GetEditRevisionOk returns a tuple with the EditRevision field value
+// and a boolean to check if the value has been set.
+func (o *WorkflowRule) GetEditRevisionOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.EditRevision, true
+}
+
+// SetEditRevision sets field value
+func (o *WorkflowRule) SetEditRevision(v int32) {
+	o.EditRevision = v
 }
 
 // GetName returns the Name field value
@@ -576,6 +603,7 @@ func (o WorkflowRule) MarshalJSON() ([]byte, error) {
 func (o WorkflowRule) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
+	toSerialize["edit_revision"] = o.EditRevision
 	toSerialize["name"] = o.Name
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
@@ -624,6 +652,7 @@ func (o *WorkflowRule) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"id",
+		"edit_revision",
 		"name",
 		"updated_by",
 		"created_by",
@@ -661,6 +690,7 @@ func (o *WorkflowRule) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "id")
+		delete(additionalProperties, "edit_revision")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "description")
 		delete(additionalProperties, "tags")

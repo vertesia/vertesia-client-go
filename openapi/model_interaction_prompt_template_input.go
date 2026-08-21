@@ -16,11 +16,11 @@ import (
 	"time"
 )
 
-// checks if the PromptTemplate type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &PromptTemplate{}
+// checks if the InteractionPromptTemplateInput type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &InteractionPromptTemplateInput{}
 
-// PromptTemplate struct for PromptTemplate
-type PromptTemplate struct {
+// InteractionPromptTemplateInput struct for InteractionPromptTemplateInput
+type InteractionPromptTemplateInput struct {
 	Role        PromptRole   `json:"role"`
 	Content     string       `json:"content"`
 	ContentType TemplateType `json:"content_type"`
@@ -30,7 +30,7 @@ type PromptTemplate struct {
 	Status      PromptStatus `json:"status"`
 	Version     float32      `json:"version"`
 	// Monotonic edit revision used to detect concurrent updates.
-	EditRevision    int32                  `json:"edit_revision"`
+	EditRevision    *int32                 `json:"edit_revision,omitempty"`
 	Parent          *string                `json:"parent,omitempty"`
 	Description     *string                `json:"description,omitempty"`
 	TestData        map[string]interface{} `json:"test_data,omitempty"`
@@ -44,14 +44,14 @@ type PromptTemplate struct {
 	UpdatedAt       time.Time              `json:"updated_at"`
 }
 
-type _PromptTemplate PromptTemplate
+type _InteractionPromptTemplateInput InteractionPromptTemplateInput
 
-// NewPromptTemplate instantiates a new PromptTemplate object
+// NewInteractionPromptTemplateInput instantiates a new InteractionPromptTemplateInput object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewPromptTemplate(role PromptRole, content string, contentType TemplateType, id string, name string, status PromptStatus, version float32, editRevision int32, project InteractionProject, createdBy string, updatedBy string, createdAt time.Time, updatedAt time.Time) *PromptTemplate {
-	this := PromptTemplate{}
+func NewInteractionPromptTemplateInput(role PromptRole, content string, contentType TemplateType, id string, name string, status PromptStatus, version float32, project InteractionProject, createdBy string, updatedBy string, createdAt time.Time, updatedAt time.Time) *InteractionPromptTemplateInput {
+	this := InteractionPromptTemplateInput{}
 	this.Role = role
 	this.Content = content
 	this.ContentType = contentType
@@ -59,7 +59,6 @@ func NewPromptTemplate(role PromptRole, content string, contentType TemplateType
 	this.Name = name
 	this.Status = status
 	this.Version = version
-	this.EditRevision = editRevision
 	this.Project = project
 	this.CreatedBy = createdBy
 	this.UpdatedBy = updatedBy
@@ -68,16 +67,16 @@ func NewPromptTemplate(role PromptRole, content string, contentType TemplateType
 	return &this
 }
 
-// NewPromptTemplateWithDefaults instantiates a new PromptTemplate object
+// NewInteractionPromptTemplateInputWithDefaults instantiates a new InteractionPromptTemplateInput object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewPromptTemplateWithDefaults() *PromptTemplate {
-	this := PromptTemplate{}
+func NewInteractionPromptTemplateInputWithDefaults() *InteractionPromptTemplateInput {
+	this := InteractionPromptTemplateInput{}
 	return &this
 }
 
 // GetRole returns the Role field value
-func (o *PromptTemplate) GetRole() PromptRole {
+func (o *InteractionPromptTemplateInput) GetRole() PromptRole {
 	if o == nil {
 		var ret PromptRole
 		return ret
@@ -88,7 +87,7 @@ func (o *PromptTemplate) GetRole() PromptRole {
 
 // GetRoleOk returns a tuple with the Role field value
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetRoleOk() (*PromptRole, bool) {
+func (o *InteractionPromptTemplateInput) GetRoleOk() (*PromptRole, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -96,12 +95,12 @@ func (o *PromptTemplate) GetRoleOk() (*PromptRole, bool) {
 }
 
 // SetRole sets field value
-func (o *PromptTemplate) SetRole(v PromptRole) {
+func (o *InteractionPromptTemplateInput) SetRole(v PromptRole) {
 	o.Role = v
 }
 
 // GetContent returns the Content field value
-func (o *PromptTemplate) GetContent() string {
+func (o *InteractionPromptTemplateInput) GetContent() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -112,7 +111,7 @@ func (o *PromptTemplate) GetContent() string {
 
 // GetContentOk returns a tuple with the Content field value
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetContentOk() (*string, bool) {
+func (o *InteractionPromptTemplateInput) GetContentOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -120,12 +119,12 @@ func (o *PromptTemplate) GetContentOk() (*string, bool) {
 }
 
 // SetContent sets field value
-func (o *PromptTemplate) SetContent(v string) {
+func (o *InteractionPromptTemplateInput) SetContent(v string) {
 	o.Content = v
 }
 
 // GetContentType returns the ContentType field value
-func (o *PromptTemplate) GetContentType() TemplateType {
+func (o *InteractionPromptTemplateInput) GetContentType() TemplateType {
 	if o == nil {
 		var ret TemplateType
 		return ret
@@ -136,7 +135,7 @@ func (o *PromptTemplate) GetContentType() TemplateType {
 
 // GetContentTypeOk returns a tuple with the ContentType field value
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetContentTypeOk() (*TemplateType, bool) {
+func (o *InteractionPromptTemplateInput) GetContentTypeOk() (*TemplateType, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -144,12 +143,12 @@ func (o *PromptTemplate) GetContentTypeOk() (*TemplateType, bool) {
 }
 
 // SetContentType sets field value
-func (o *PromptTemplate) SetContentType(v TemplateType) {
+func (o *InteractionPromptTemplateInput) SetContentType(v TemplateType) {
 	o.ContentType = v
 }
 
 // GetInputSchema returns the InputSchema field value if set, zero value otherwise.
-func (o *PromptTemplate) GetInputSchema() JSONSchema {
+func (o *InteractionPromptTemplateInput) GetInputSchema() JSONSchema {
 	if o == nil || IsNil(o.InputSchema) {
 		var ret JSONSchema
 		return ret
@@ -159,7 +158,7 @@ func (o *PromptTemplate) GetInputSchema() JSONSchema {
 
 // GetInputSchemaOk returns a tuple with the InputSchema field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetInputSchemaOk() (*JSONSchema, bool) {
+func (o *InteractionPromptTemplateInput) GetInputSchemaOk() (*JSONSchema, bool) {
 	if o == nil || IsNil(o.InputSchema) {
 		return nil, false
 	}
@@ -167,7 +166,7 @@ func (o *PromptTemplate) GetInputSchemaOk() (*JSONSchema, bool) {
 }
 
 // HasInputSchema returns a boolean if a field has been set.
-func (o *PromptTemplate) HasInputSchema() bool {
+func (o *InteractionPromptTemplateInput) HasInputSchema() bool {
 	if o != nil && !IsNil(o.InputSchema) {
 		return true
 	}
@@ -176,12 +175,12 @@ func (o *PromptTemplate) HasInputSchema() bool {
 }
 
 // SetInputSchema gets a reference to the given JSONSchema and assigns it to the InputSchema field.
-func (o *PromptTemplate) SetInputSchema(v JSONSchema) {
+func (o *InteractionPromptTemplateInput) SetInputSchema(v JSONSchema) {
 	o.InputSchema = &v
 }
 
 // GetId returns the Id field value
-func (o *PromptTemplate) GetId() string {
+func (o *InteractionPromptTemplateInput) GetId() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -192,7 +191,7 @@ func (o *PromptTemplate) GetId() string {
 
 // GetIdOk returns a tuple with the Id field value
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetIdOk() (*string, bool) {
+func (o *InteractionPromptTemplateInput) GetIdOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -200,12 +199,12 @@ func (o *PromptTemplate) GetIdOk() (*string, bool) {
 }
 
 // SetId sets field value
-func (o *PromptTemplate) SetId(v string) {
+func (o *InteractionPromptTemplateInput) SetId(v string) {
 	o.Id = v
 }
 
 // GetName returns the Name field value
-func (o *PromptTemplate) GetName() string {
+func (o *InteractionPromptTemplateInput) GetName() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -216,7 +215,7 @@ func (o *PromptTemplate) GetName() string {
 
 // GetNameOk returns a tuple with the Name field value
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetNameOk() (*string, bool) {
+func (o *InteractionPromptTemplateInput) GetNameOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -224,12 +223,12 @@ func (o *PromptTemplate) GetNameOk() (*string, bool) {
 }
 
 // SetName sets field value
-func (o *PromptTemplate) SetName(v string) {
+func (o *InteractionPromptTemplateInput) SetName(v string) {
 	o.Name = v
 }
 
 // GetStatus returns the Status field value
-func (o *PromptTemplate) GetStatus() PromptStatus {
+func (o *InteractionPromptTemplateInput) GetStatus() PromptStatus {
 	if o == nil {
 		var ret PromptStatus
 		return ret
@@ -240,7 +239,7 @@ func (o *PromptTemplate) GetStatus() PromptStatus {
 
 // GetStatusOk returns a tuple with the Status field value
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetStatusOk() (*PromptStatus, bool) {
+func (o *InteractionPromptTemplateInput) GetStatusOk() (*PromptStatus, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -248,12 +247,12 @@ func (o *PromptTemplate) GetStatusOk() (*PromptStatus, bool) {
 }
 
 // SetStatus sets field value
-func (o *PromptTemplate) SetStatus(v PromptStatus) {
+func (o *InteractionPromptTemplateInput) SetStatus(v PromptStatus) {
 	o.Status = v
 }
 
 // GetVersion returns the Version field value
-func (o *PromptTemplate) GetVersion() float32 {
+func (o *InteractionPromptTemplateInput) GetVersion() float32 {
 	if o == nil {
 		var ret float32
 		return ret
@@ -264,7 +263,7 @@ func (o *PromptTemplate) GetVersion() float32 {
 
 // GetVersionOk returns a tuple with the Version field value
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetVersionOk() (*float32, bool) {
+func (o *InteractionPromptTemplateInput) GetVersionOk() (*float32, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -272,36 +271,44 @@ func (o *PromptTemplate) GetVersionOk() (*float32, bool) {
 }
 
 // SetVersion sets field value
-func (o *PromptTemplate) SetVersion(v float32) {
+func (o *InteractionPromptTemplateInput) SetVersion(v float32) {
 	o.Version = v
 }
 
-// GetEditRevision returns the EditRevision field value
-func (o *PromptTemplate) GetEditRevision() int32 {
-	if o == nil {
+// GetEditRevision returns the EditRevision field value if set, zero value otherwise.
+func (o *InteractionPromptTemplateInput) GetEditRevision() int32 {
+	if o == nil || IsNil(o.EditRevision) {
 		var ret int32
 		return ret
 	}
-
-	return o.EditRevision
+	return *o.EditRevision
 }
 
-// GetEditRevisionOk returns a tuple with the EditRevision field value
+// GetEditRevisionOk returns a tuple with the EditRevision field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetEditRevisionOk() (*int32, bool) {
-	if o == nil {
+func (o *InteractionPromptTemplateInput) GetEditRevisionOk() (*int32, bool) {
+	if o == nil || IsNil(o.EditRevision) {
 		return nil, false
 	}
-	return &o.EditRevision, true
+	return o.EditRevision, true
 }
 
-// SetEditRevision sets field value
-func (o *PromptTemplate) SetEditRevision(v int32) {
-	o.EditRevision = v
+// HasEditRevision returns a boolean if a field has been set.
+func (o *InteractionPromptTemplateInput) HasEditRevision() bool {
+	if o != nil && !IsNil(o.EditRevision) {
+		return true
+	}
+
+	return false
+}
+
+// SetEditRevision gets a reference to the given int32 and assigns it to the EditRevision field.
+func (o *InteractionPromptTemplateInput) SetEditRevision(v int32) {
+	o.EditRevision = &v
 }
 
 // GetParent returns the Parent field value if set, zero value otherwise.
-func (o *PromptTemplate) GetParent() string {
+func (o *InteractionPromptTemplateInput) GetParent() string {
 	if o == nil || IsNil(o.Parent) {
 		var ret string
 		return ret
@@ -311,7 +318,7 @@ func (o *PromptTemplate) GetParent() string {
 
 // GetParentOk returns a tuple with the Parent field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetParentOk() (*string, bool) {
+func (o *InteractionPromptTemplateInput) GetParentOk() (*string, bool) {
 	if o == nil || IsNil(o.Parent) {
 		return nil, false
 	}
@@ -319,7 +326,7 @@ func (o *PromptTemplate) GetParentOk() (*string, bool) {
 }
 
 // HasParent returns a boolean if a field has been set.
-func (o *PromptTemplate) HasParent() bool {
+func (o *InteractionPromptTemplateInput) HasParent() bool {
 	if o != nil && !IsNil(o.Parent) {
 		return true
 	}
@@ -328,12 +335,12 @@ func (o *PromptTemplate) HasParent() bool {
 }
 
 // SetParent gets a reference to the given string and assigns it to the Parent field.
-func (o *PromptTemplate) SetParent(v string) {
+func (o *InteractionPromptTemplateInput) SetParent(v string) {
 	o.Parent = &v
 }
 
 // GetDescription returns the Description field value if set, zero value otherwise.
-func (o *PromptTemplate) GetDescription() string {
+func (o *InteractionPromptTemplateInput) GetDescription() string {
 	if o == nil || IsNil(o.Description) {
 		var ret string
 		return ret
@@ -343,7 +350,7 @@ func (o *PromptTemplate) GetDescription() string {
 
 // GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetDescriptionOk() (*string, bool) {
+func (o *InteractionPromptTemplateInput) GetDescriptionOk() (*string, bool) {
 	if o == nil || IsNil(o.Description) {
 		return nil, false
 	}
@@ -351,7 +358,7 @@ func (o *PromptTemplate) GetDescriptionOk() (*string, bool) {
 }
 
 // HasDescription returns a boolean if a field has been set.
-func (o *PromptTemplate) HasDescription() bool {
+func (o *InteractionPromptTemplateInput) HasDescription() bool {
 	if o != nil && !IsNil(o.Description) {
 		return true
 	}
@@ -360,12 +367,12 @@ func (o *PromptTemplate) HasDescription() bool {
 }
 
 // SetDescription gets a reference to the given string and assigns it to the Description field.
-func (o *PromptTemplate) SetDescription(v string) {
+func (o *InteractionPromptTemplateInput) SetDescription(v string) {
 	o.Description = &v
 }
 
 // GetTestData returns the TestData field value if set, zero value otherwise.
-func (o *PromptTemplate) GetTestData() map[string]interface{} {
+func (o *InteractionPromptTemplateInput) GetTestData() map[string]interface{} {
 	if o == nil || IsNil(o.TestData) {
 		var ret map[string]interface{}
 		return ret
@@ -375,7 +382,7 @@ func (o *PromptTemplate) GetTestData() map[string]interface{} {
 
 // GetTestDataOk returns a tuple with the TestData field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetTestDataOk() (map[string]interface{}, bool) {
+func (o *InteractionPromptTemplateInput) GetTestDataOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.TestData) {
 		return map[string]interface{}{}, false
 	}
@@ -383,7 +390,7 @@ func (o *PromptTemplate) GetTestDataOk() (map[string]interface{}, bool) {
 }
 
 // HasTestData returns a boolean if a field has been set.
-func (o *PromptTemplate) HasTestData() bool {
+func (o *InteractionPromptTemplateInput) HasTestData() bool {
 	if o != nil && !IsNil(o.TestData) {
 		return true
 	}
@@ -392,12 +399,12 @@ func (o *PromptTemplate) HasTestData() bool {
 }
 
 // SetTestData gets a reference to the given map[string]interface{} and assigns it to the TestData field.
-func (o *PromptTemplate) SetTestData(v map[string]interface{}) {
+func (o *InteractionPromptTemplateInput) SetTestData(v map[string]interface{}) {
 	o.TestData = v
 }
 
 // GetScript returns the Script field value if set, zero value otherwise.
-func (o *PromptTemplate) GetScript() string {
+func (o *InteractionPromptTemplateInput) GetScript() string {
 	if o == nil || IsNil(o.Script) {
 		var ret string
 		return ret
@@ -407,7 +414,7 @@ func (o *PromptTemplate) GetScript() string {
 
 // GetScriptOk returns a tuple with the Script field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetScriptOk() (*string, bool) {
+func (o *InteractionPromptTemplateInput) GetScriptOk() (*string, bool) {
 	if o == nil || IsNil(o.Script) {
 		return nil, false
 	}
@@ -415,7 +422,7 @@ func (o *PromptTemplate) GetScriptOk() (*string, bool) {
 }
 
 // HasScript returns a boolean if a field has been set.
-func (o *PromptTemplate) HasScript() bool {
+func (o *InteractionPromptTemplateInput) HasScript() bool {
 	if o != nil && !IsNil(o.Script) {
 		return true
 	}
@@ -424,12 +431,12 @@ func (o *PromptTemplate) HasScript() bool {
 }
 
 // SetScript gets a reference to the given string and assigns it to the Script field.
-func (o *PromptTemplate) SetScript(v string) {
+func (o *InteractionPromptTemplateInput) SetScript(v string) {
 	o.Script = &v
 }
 
 // GetProject returns the Project field value
-func (o *PromptTemplate) GetProject() InteractionProject {
+func (o *InteractionPromptTemplateInput) GetProject() InteractionProject {
 	if o == nil {
 		var ret InteractionProject
 		return ret
@@ -440,7 +447,7 @@ func (o *PromptTemplate) GetProject() InteractionProject {
 
 // GetProjectOk returns a tuple with the Project field value
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetProjectOk() (*InteractionProject, bool) {
+func (o *InteractionPromptTemplateInput) GetProjectOk() (*InteractionProject, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -448,12 +455,12 @@ func (o *PromptTemplate) GetProjectOk() (*InteractionProject, bool) {
 }
 
 // SetProject sets field value
-func (o *PromptTemplate) SetProject(v InteractionProject) {
+func (o *InteractionPromptTemplateInput) SetProject(v InteractionProject) {
 	o.Project = v
 }
 
 // GetTags returns the Tags field value if set, zero value otherwise.
-func (o *PromptTemplate) GetTags() []string {
+func (o *InteractionPromptTemplateInput) GetTags() []string {
 	if o == nil || IsNil(o.Tags) {
 		var ret []string
 		return ret
@@ -463,7 +470,7 @@ func (o *PromptTemplate) GetTags() []string {
 
 // GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetTagsOk() ([]string, bool) {
+func (o *InteractionPromptTemplateInput) GetTagsOk() ([]string, bool) {
 	if o == nil || IsNil(o.Tags) {
 		return nil, false
 	}
@@ -471,7 +478,7 @@ func (o *PromptTemplate) GetTagsOk() ([]string, bool) {
 }
 
 // HasTags returns a boolean if a field has been set.
-func (o *PromptTemplate) HasTags() bool {
+func (o *InteractionPromptTemplateInput) HasTags() bool {
 	if o != nil && !IsNil(o.Tags) {
 		return true
 	}
@@ -480,12 +487,12 @@ func (o *PromptTemplate) HasTags() bool {
 }
 
 // SetTags gets a reference to the given []string and assigns it to the Tags field.
-func (o *PromptTemplate) SetTags(v []string) {
+func (o *InteractionPromptTemplateInput) SetTags(v []string) {
 	o.Tags = v
 }
 
 // GetLastPublishedAt returns the LastPublishedAt field value if set, zero value otherwise.
-func (o *PromptTemplate) GetLastPublishedAt() time.Time {
+func (o *InteractionPromptTemplateInput) GetLastPublishedAt() time.Time {
 	if o == nil || IsNil(o.LastPublishedAt) {
 		var ret time.Time
 		return ret
@@ -495,7 +502,7 @@ func (o *PromptTemplate) GetLastPublishedAt() time.Time {
 
 // GetLastPublishedAtOk returns a tuple with the LastPublishedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetLastPublishedAtOk() (*time.Time, bool) {
+func (o *InteractionPromptTemplateInput) GetLastPublishedAtOk() (*time.Time, bool) {
 	if o == nil || IsNil(o.LastPublishedAt) {
 		return nil, false
 	}
@@ -503,7 +510,7 @@ func (o *PromptTemplate) GetLastPublishedAtOk() (*time.Time, bool) {
 }
 
 // HasLastPublishedAt returns a boolean if a field has been set.
-func (o *PromptTemplate) HasLastPublishedAt() bool {
+func (o *InteractionPromptTemplateInput) HasLastPublishedAt() bool {
 	if o != nil && !IsNil(o.LastPublishedAt) {
 		return true
 	}
@@ -512,12 +519,12 @@ func (o *PromptTemplate) HasLastPublishedAt() bool {
 }
 
 // SetLastPublishedAt gets a reference to the given time.Time and assigns it to the LastPublishedAt field.
-func (o *PromptTemplate) SetLastPublishedAt(v time.Time) {
+func (o *InteractionPromptTemplateInput) SetLastPublishedAt(v time.Time) {
 	o.LastPublishedAt = &v
 }
 
 // GetCreatedBy returns the CreatedBy field value
-func (o *PromptTemplate) GetCreatedBy() string {
+func (o *InteractionPromptTemplateInput) GetCreatedBy() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -528,7 +535,7 @@ func (o *PromptTemplate) GetCreatedBy() string {
 
 // GetCreatedByOk returns a tuple with the CreatedBy field value
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetCreatedByOk() (*string, bool) {
+func (o *InteractionPromptTemplateInput) GetCreatedByOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -536,12 +543,12 @@ func (o *PromptTemplate) GetCreatedByOk() (*string, bool) {
 }
 
 // SetCreatedBy sets field value
-func (o *PromptTemplate) SetCreatedBy(v string) {
+func (o *InteractionPromptTemplateInput) SetCreatedBy(v string) {
 	o.CreatedBy = v
 }
 
 // GetUpdatedBy returns the UpdatedBy field value
-func (o *PromptTemplate) GetUpdatedBy() string {
+func (o *InteractionPromptTemplateInput) GetUpdatedBy() string {
 	if o == nil {
 		var ret string
 		return ret
@@ -552,7 +559,7 @@ func (o *PromptTemplate) GetUpdatedBy() string {
 
 // GetUpdatedByOk returns a tuple with the UpdatedBy field value
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetUpdatedByOk() (*string, bool) {
+func (o *InteractionPromptTemplateInput) GetUpdatedByOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -560,12 +567,12 @@ func (o *PromptTemplate) GetUpdatedByOk() (*string, bool) {
 }
 
 // SetUpdatedBy sets field value
-func (o *PromptTemplate) SetUpdatedBy(v string) {
+func (o *InteractionPromptTemplateInput) SetUpdatedBy(v string) {
 	o.UpdatedBy = v
 }
 
 // GetCreatedAt returns the CreatedAt field value
-func (o *PromptTemplate) GetCreatedAt() time.Time {
+func (o *InteractionPromptTemplateInput) GetCreatedAt() time.Time {
 	if o == nil {
 		var ret time.Time
 		return ret
@@ -576,7 +583,7 @@ func (o *PromptTemplate) GetCreatedAt() time.Time {
 
 // GetCreatedAtOk returns a tuple with the CreatedAt field value
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetCreatedAtOk() (*time.Time, bool) {
+func (o *InteractionPromptTemplateInput) GetCreatedAtOk() (*time.Time, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -584,12 +591,12 @@ func (o *PromptTemplate) GetCreatedAtOk() (*time.Time, bool) {
 }
 
 // SetCreatedAt sets field value
-func (o *PromptTemplate) SetCreatedAt(v time.Time) {
+func (o *InteractionPromptTemplateInput) SetCreatedAt(v time.Time) {
 	o.CreatedAt = v
 }
 
 // GetUpdatedAt returns the UpdatedAt field value
-func (o *PromptTemplate) GetUpdatedAt() time.Time {
+func (o *InteractionPromptTemplateInput) GetUpdatedAt() time.Time {
 	if o == nil {
 		var ret time.Time
 		return ret
@@ -600,7 +607,7 @@ func (o *PromptTemplate) GetUpdatedAt() time.Time {
 
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value
 // and a boolean to check if the value has been set.
-func (o *PromptTemplate) GetUpdatedAtOk() (*time.Time, bool) {
+func (o *InteractionPromptTemplateInput) GetUpdatedAtOk() (*time.Time, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -608,11 +615,11 @@ func (o *PromptTemplate) GetUpdatedAtOk() (*time.Time, bool) {
 }
 
 // SetUpdatedAt sets field value
-func (o *PromptTemplate) SetUpdatedAt(v time.Time) {
+func (o *InteractionPromptTemplateInput) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = v
 }
 
-func (o PromptTemplate) MarshalJSON() ([]byte, error) {
+func (o InteractionPromptTemplateInput) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -620,7 +627,7 @@ func (o PromptTemplate) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o PromptTemplate) ToMap() (map[string]interface{}, error) {
+func (o InteractionPromptTemplateInput) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["role"] = o.Role
 	toSerialize["content"] = o.Content
@@ -632,7 +639,9 @@ func (o PromptTemplate) ToMap() (map[string]interface{}, error) {
 	toSerialize["name"] = o.Name
 	toSerialize["status"] = o.Status
 	toSerialize["version"] = o.Version
-	toSerialize["edit_revision"] = o.EditRevision
+	if !IsNil(o.EditRevision) {
+		toSerialize["edit_revision"] = o.EditRevision
+	}
 	if !IsNil(o.Parent) {
 		toSerialize["parent"] = o.Parent
 	}
@@ -659,7 +668,7 @@ func (o PromptTemplate) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-func (o *PromptTemplate) UnmarshalJSON(data []byte) (err error) {
+func (o *InteractionPromptTemplateInput) UnmarshalJSON(data []byte) (err error) {
 	// This validates that all required properties are included in the JSON object
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
@@ -671,7 +680,6 @@ func (o *PromptTemplate) UnmarshalJSON(data []byte) (err error) {
 		"name",
 		"status",
 		"version",
-		"edit_revision",
 		"project",
 		"created_by",
 		"updated_by",
@@ -693,51 +701,51 @@ func (o *PromptTemplate) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
-	varPromptTemplate := _PromptTemplate{}
+	varInteractionPromptTemplateInput := _InteractionPromptTemplateInput{}
 
-	err = json.Unmarshal(data, &varPromptTemplate)
+	err = json.Unmarshal(data, &varInteractionPromptTemplateInput)
 
 	if err != nil {
 		return err
 	}
 
-	*o = PromptTemplate(varPromptTemplate)
+	*o = InteractionPromptTemplateInput(varInteractionPromptTemplateInput)
 
 	return err
 }
 
-type NullablePromptTemplate struct {
-	value *PromptTemplate
+type NullableInteractionPromptTemplateInput struct {
+	value *InteractionPromptTemplateInput
 	isSet bool
 }
 
-func (v NullablePromptTemplate) Get() *PromptTemplate {
+func (v NullableInteractionPromptTemplateInput) Get() *InteractionPromptTemplateInput {
 	return v.value
 }
 
-func (v *NullablePromptTemplate) Set(val *PromptTemplate) {
+func (v *NullableInteractionPromptTemplateInput) Set(val *InteractionPromptTemplateInput) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullablePromptTemplate) IsSet() bool {
+func (v NullableInteractionPromptTemplateInput) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullablePromptTemplate) Unset() {
+func (v *NullableInteractionPromptTemplateInput) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullablePromptTemplate(val *PromptTemplate) *NullablePromptTemplate {
-	return &NullablePromptTemplate{value: val, isSet: true}
+func NewNullableInteractionPromptTemplateInput(val *InteractionPromptTemplateInput) *NullableInteractionPromptTemplateInput {
+	return &NullableInteractionPromptTemplateInput{value: val, isSet: true}
 }
 
-func (v NullablePromptTemplate) MarshalJSON() ([]byte, error) {
+func (v NullableInteractionPromptTemplateInput) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullablePromptTemplate) UnmarshalJSON(src []byte) error {
+func (v *NullableInteractionPromptTemplateInput) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

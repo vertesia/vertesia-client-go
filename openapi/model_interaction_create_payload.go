@@ -21,21 +21,21 @@ var _ MappedNullable = &InteractionCreatePayload{}
 
 // InteractionCreatePayload struct for InteractionCreatePayload
 type InteractionCreatePayload struct {
-	Status             InteractionStatus        `json:"status"`
-	TestData           map[string]interface{}   `json:"test_data,omitempty"`
-	InteractionSchema  *InteractionResultSchema `json:"interaction_schema,omitempty"`
-	CachePolicy        *CachePolicy             `json:"cache_policy,omitempty"`
-	Prompts            []PromptSegmentDef       `json:"prompts"`
-	LastPublishedAt    *time.Time               `json:"last_published_at,omitempty"`
-	Name               string                   `json:"name"`
-	Description        *string                  `json:"description,omitempty"`
-	AgentRunnerOptions *AgentRunnerOptions      `json:"agent_runner_options,omitempty"`
-	ResultSchema       *InteractionResultSchema `json:"result_schema,omitempty"`
-	Environment        *InteractionEnvironment  `json:"environment,omitempty"`
-	Model              *string                  `json:"model,omitempty"`
-	ModelOptions       *ModelOptions            `json:"model_options,omitempty"`
-	StoreMediaResults  *bool                    `json:"store_media_results,omitempty"`
-	Restriction        *RunDataStorageLevel     `json:"restriction,omitempty"`
+	Status             InteractionStatus               `json:"status"`
+	TestData           map[string]interface{}          `json:"test_data,omitempty"`
+	InteractionSchema  *InteractionResultSchema        `json:"interaction_schema,omitempty"`
+	CachePolicy        *CachePolicy                    `json:"cache_policy,omitempty"`
+	Prompts            []InteractionPromptSegmentInput `json:"prompts"`
+	LastPublishedAt    *time.Time                      `json:"last_published_at,omitempty"`
+	Name               string                          `json:"name"`
+	Description        *string                         `json:"description,omitempty"`
+	AgentRunnerOptions *AgentRunnerOptions             `json:"agent_runner_options,omitempty"`
+	ResultSchema       *InteractionResultSchema        `json:"result_schema,omitempty"`
+	Environment        *InteractionEnvironment         `json:"environment,omitempty"`
+	Model              *string                         `json:"model,omitempty"`
+	ModelOptions       *ModelOptions                   `json:"model_options,omitempty"`
+	StoreMediaResults  *bool                           `json:"store_media_results,omitempty"`
+	Restriction        *RunDataStorageLevel            `json:"restriction,omitempty"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.
 	// Deprecated
 	OutputModality *Modalities            `json:"output_modality,omitempty"`
@@ -49,7 +49,7 @@ type _InteractionCreatePayload InteractionCreatePayload
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewInteractionCreatePayload(status InteractionStatus, prompts []PromptSegmentDef, name string) *InteractionCreatePayload {
+func NewInteractionCreatePayload(status InteractionStatus, prompts []InteractionPromptSegmentInput, name string) *InteractionCreatePayload {
 	this := InteractionCreatePayload{}
 	this.Status = status
 	this.Prompts = prompts
@@ -186,9 +186,9 @@ func (o *InteractionCreatePayload) SetCachePolicy(v CachePolicy) {
 }
 
 // GetPrompts returns the Prompts field value
-func (o *InteractionCreatePayload) GetPrompts() []PromptSegmentDef {
+func (o *InteractionCreatePayload) GetPrompts() []InteractionPromptSegmentInput {
 	if o == nil {
-		var ret []PromptSegmentDef
+		var ret []InteractionPromptSegmentInput
 		return ret
 	}
 
@@ -197,7 +197,7 @@ func (o *InteractionCreatePayload) GetPrompts() []PromptSegmentDef {
 
 // GetPromptsOk returns a tuple with the Prompts field value
 // and a boolean to check if the value has been set.
-func (o *InteractionCreatePayload) GetPromptsOk() ([]PromptSegmentDef, bool) {
+func (o *InteractionCreatePayload) GetPromptsOk() ([]InteractionPromptSegmentInput, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -205,7 +205,7 @@ func (o *InteractionCreatePayload) GetPromptsOk() ([]PromptSegmentDef, bool) {
 }
 
 // SetPrompts sets field value
-func (o *InteractionCreatePayload) SetPrompts(v []PromptSegmentDef) {
+func (o *InteractionCreatePayload) SetPrompts(v []InteractionPromptSegmentInput) {
 	o.Prompts = v
 }
 

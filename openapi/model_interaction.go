@@ -21,7 +21,9 @@ var _ MappedNullable = &Interaction{}
 
 // Interaction struct for Interaction
 type Interaction struct {
-	Id                 string                   `json:"id"`
+	Id string `json:"id"`
+	// Monotonic edit revision used to detect concurrent updates.
+	EditRevision       int32                    `json:"edit_revision"`
 	Name               string                   `json:"name"`
 	Endpoint           string                   `json:"endpoint"`
 	Description        *string                  `json:"description,omitempty"`
@@ -58,9 +60,10 @@ type _Interaction Interaction
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewInteraction(id string, name string, endpoint string, project InteractionProject, tags []string, status InteractionStatus, visibility InteractionVisibility, version float32, prompts []PromptSegmentDef, createdBy string, updatedBy string, createdAt time.Time, updatedAt time.Time) *Interaction {
+func NewInteraction(id string, editRevision int32, name string, endpoint string, project InteractionProject, tags []string, status InteractionStatus, visibility InteractionVisibility, version float32, prompts []PromptSegmentDef, createdBy string, updatedBy string, createdAt time.Time, updatedAt time.Time) *Interaction {
 	this := Interaction{}
 	this.Id = id
+	this.EditRevision = editRevision
 	this.Name = name
 	this.Endpoint = endpoint
 	this.Project = project
@@ -106,6 +109,30 @@ func (o *Interaction) GetIdOk() (*string, bool) {
 // SetId sets field value
 func (o *Interaction) SetId(v string) {
 	o.Id = v
+}
+
+// GetEditRevision returns the EditRevision field value
+func (o *Interaction) GetEditRevision() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.EditRevision
+}
+
+// GetEditRevisionOk returns a tuple with the EditRevision field value
+// and a boolean to check if the value has been set.
+func (o *Interaction) GetEditRevisionOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.EditRevision, true
+}
+
+// SetEditRevision sets field value
+func (o *Interaction) SetEditRevision(v int32) {
+	o.EditRevision = v
 }
 
 // GetName returns the Name field value
@@ -858,6 +885,7 @@ func (o Interaction) MarshalJSON() ([]byte, error) {
 func (o Interaction) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
+	toSerialize["edit_revision"] = o.EditRevision
 	toSerialize["name"] = o.Name
 	toSerialize["endpoint"] = o.Endpoint
 	if !IsNil(o.Description) {
@@ -921,6 +949,7 @@ func (o *Interaction) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"id",
+		"edit_revision",
 		"name",
 		"endpoint",
 		"project",

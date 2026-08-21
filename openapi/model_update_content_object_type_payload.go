@@ -17,7 +17,7 @@ import (
 // checks if the UpdateContentObjectTypePayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &UpdateContentObjectTypePayload{}
 
-// UpdateContentObjectTypePayload Fields to change on a content object type. Every field is optional — only the ones present are written, and the rest are left as they are.
+// UpdateContentObjectTypePayload Fields to change on a content object type. Only fields present are written; expected_edit_revision prevents overwriting a concurrent edit.
 type UpdateContentObjectTypePayload struct {
 	Status *ContentObjectTypeStatus `json:"status,omitempty"`
 	// Whether documents of this type can be split into chunks
@@ -35,7 +35,9 @@ type UpdateContentObjectTypePayload struct {
 	// Optional detailed description of the object
 	Description *string `json:"description,omitempty"`
 	// Optional array of categorization tags
-	Tags                 []string `json:"tags,omitempty"`
+	Tags []string `json:"tags,omitempty"`
+	// Edit revision returned by the last read. Stale revisions are rejected with HTTP 409. Omit for legacy last-write-wins behavior.
+	ExpectedEditRevision *int32 `json:"expected_edit_revision,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -378,6 +380,38 @@ func (o *UpdateContentObjectTypePayload) SetTags(v []string) {
 	o.Tags = v
 }
 
+// GetExpectedEditRevision returns the ExpectedEditRevision field value if set, zero value otherwise.
+func (o *UpdateContentObjectTypePayload) GetExpectedEditRevision() int32 {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		var ret int32
+		return ret
+	}
+	return *o.ExpectedEditRevision
+}
+
+// GetExpectedEditRevisionOk returns a tuple with the ExpectedEditRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateContentObjectTypePayload) GetExpectedEditRevisionOk() (*int32, bool) {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		return nil, false
+	}
+	return o.ExpectedEditRevision, true
+}
+
+// HasExpectedEditRevision returns a boolean if a field has been set.
+func (o *UpdateContentObjectTypePayload) HasExpectedEditRevision() bool {
+	if o != nil && !IsNil(o.ExpectedEditRevision) {
+		return true
+	}
+
+	return false
+}
+
+// SetExpectedEditRevision gets a reference to the given int32 and assigns it to the ExpectedEditRevision field.
+func (o *UpdateContentObjectTypePayload) SetExpectedEditRevision(v int32) {
+	o.ExpectedEditRevision = &v
+}
+
 func (o UpdateContentObjectTypePayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -418,6 +452,9 @@ func (o UpdateContentObjectTypePayload) ToMap() (map[string]interface{}, error) 
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
+	if !IsNil(o.ExpectedEditRevision) {
+		toSerialize["expected_edit_revision"] = o.ExpectedEditRevision
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -450,6 +487,7 @@ func (o *UpdateContentObjectTypePayload) UnmarshalJSON(data []byte) (err error) 
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "description")
 		delete(additionalProperties, "tags")
+		delete(additionalProperties, "expected_edit_revision")
 		o.AdditionalProperties = additionalProperties
 	}
 

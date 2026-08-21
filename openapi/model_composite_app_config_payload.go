@@ -19,6 +19,8 @@ var _ MappedNullable = &CompositeAppConfigPayload{}
 
 // CompositeAppConfigPayload struct for CompositeAppConfigPayload
 type CompositeAppConfigPayload struct {
+	// Edit revision returned by the last read. Stale revisions are rejected with HTTP 409. Omit for legacy last-write-wins behavior.
+	ExpectedEditRevision *int32 `json:"expected_edit_revision,omitempty"`
 	// Card display overrides (includes visibility)
 	Card *CompositeAppCardOverrides `json:"card,omitempty"`
 	// Optional logo overrides (replaces default Vertesia logo)
@@ -62,6 +64,38 @@ func NewCompositeAppConfigPayload() *CompositeAppConfigPayload {
 func NewCompositeAppConfigPayloadWithDefaults() *CompositeAppConfigPayload {
 	this := CompositeAppConfigPayload{}
 	return &this
+}
+
+// GetExpectedEditRevision returns the ExpectedEditRevision field value if set, zero value otherwise.
+func (o *CompositeAppConfigPayload) GetExpectedEditRevision() int32 {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		var ret int32
+		return ret
+	}
+	return *o.ExpectedEditRevision
+}
+
+// GetExpectedEditRevisionOk returns a tuple with the ExpectedEditRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CompositeAppConfigPayload) GetExpectedEditRevisionOk() (*int32, bool) {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		return nil, false
+	}
+	return o.ExpectedEditRevision, true
+}
+
+// HasExpectedEditRevision returns a boolean if a field has been set.
+func (o *CompositeAppConfigPayload) HasExpectedEditRevision() bool {
+	if o != nil && !IsNil(o.ExpectedEditRevision) {
+		return true
+	}
+
+	return false
+}
+
+// SetExpectedEditRevision gets a reference to the given int32 and assigns it to the ExpectedEditRevision field.
+func (o *CompositeAppConfigPayload) SetExpectedEditRevision(v int32) {
+	o.ExpectedEditRevision = &v
 }
 
 // GetCard returns the Card field value if set, zero value otherwise.
@@ -475,6 +509,9 @@ func (o CompositeAppConfigPayload) MarshalJSON() ([]byte, error) {
 
 func (o CompositeAppConfigPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.ExpectedEditRevision) {
+		toSerialize["expected_edit_revision"] = o.ExpectedEditRevision
+	}
 	if !IsNil(o.Card) {
 		toSerialize["card"] = o.Card
 	}

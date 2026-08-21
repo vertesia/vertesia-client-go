@@ -33,6 +33,8 @@ type PromptTemplateUpdatePayload struct {
 	Script          *string                `json:"script,omitempty"`
 	Tags            []string               `json:"tags,omitempty"`
 	LastPublishedAt *time.Time             `json:"last_published_at,omitempty"`
+	// Edit revision returned by the last read. Stale revisions are rejected with HTTP 409. Omit for legacy last-write-wins behavior.
+	ExpectedEditRevision *int32 `json:"expected_edit_revision,omitempty"`
 }
 
 // NewPromptTemplateUpdatePayload instantiates a new PromptTemplateUpdatePayload object
@@ -468,6 +470,38 @@ func (o *PromptTemplateUpdatePayload) SetLastPublishedAt(v time.Time) {
 	o.LastPublishedAt = &v
 }
 
+// GetExpectedEditRevision returns the ExpectedEditRevision field value if set, zero value otherwise.
+func (o *PromptTemplateUpdatePayload) GetExpectedEditRevision() int32 {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		var ret int32
+		return ret
+	}
+	return *o.ExpectedEditRevision
+}
+
+// GetExpectedEditRevisionOk returns a tuple with the ExpectedEditRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PromptTemplateUpdatePayload) GetExpectedEditRevisionOk() (*int32, bool) {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		return nil, false
+	}
+	return o.ExpectedEditRevision, true
+}
+
+// HasExpectedEditRevision returns a boolean if a field has been set.
+func (o *PromptTemplateUpdatePayload) HasExpectedEditRevision() bool {
+	if o != nil && !IsNil(o.ExpectedEditRevision) {
+		return true
+	}
+
+	return false
+}
+
+// SetExpectedEditRevision gets a reference to the given int32 and assigns it to the ExpectedEditRevision field.
+func (o *PromptTemplateUpdatePayload) SetExpectedEditRevision(v int32) {
+	o.ExpectedEditRevision = &v
+}
+
 func (o PromptTemplateUpdatePayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -516,6 +550,9 @@ func (o PromptTemplateUpdatePayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.LastPublishedAt) {
 		toSerialize["last_published_at"] = o.LastPublishedAt
+	}
+	if !IsNil(o.ExpectedEditRevision) {
+		toSerialize["expected_edit_revision"] = o.ExpectedEditRevision
 	}
 	return toSerialize, nil
 }

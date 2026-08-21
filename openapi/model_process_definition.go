@@ -21,20 +21,22 @@ var _ MappedNullable = &ProcessDefinition{}
 
 // ProcessDefinition struct for ProcessDefinition
 type ProcessDefinition struct {
-	Id          string                         `json:"id"`
-	Account     string                         `json:"account"`
-	Project     string                         `json:"project"`
-	Name        string                         `json:"name"`
-	Description *string                        `json:"description,omitempty"`
-	Status      ProcessDefinitionStatus        `json:"status"`
-	Version     float32                        `json:"version"`
-	Revision    *ProcessDefinitionRevisionInfo `json:"revision,omitempty"`
-	Tags        []string                       `json:"tags,omitempty"`
-	Definition  ProcessDefinitionBody          `json:"definition"`
-	CreatedAt   time.Time                      `json:"created_at"`
-	UpdatedAt   time.Time                      `json:"updated_at"`
-	CreatedBy   string                         `json:"created_by"`
-	UpdatedBy   string                         `json:"updated_by"`
+	Id string `json:"id"`
+	// Monotonic edit revision used to detect concurrent updates.
+	EditRevision int32                          `json:"edit_revision"`
+	Account      string                         `json:"account"`
+	Project      string                         `json:"project"`
+	Name         string                         `json:"name"`
+	Description  *string                        `json:"description,omitempty"`
+	Status       ProcessDefinitionStatus        `json:"status"`
+	Version      float32                        `json:"version"`
+	Revision     *ProcessDefinitionRevisionInfo `json:"revision,omitempty"`
+	Tags         []string                       `json:"tags,omitempty"`
+	Definition   ProcessDefinitionBody          `json:"definition"`
+	CreatedAt    time.Time                      `json:"created_at"`
+	UpdatedAt    time.Time                      `json:"updated_at"`
+	CreatedBy    string                         `json:"created_by"`
+	UpdatedBy    string                         `json:"updated_by"`
 }
 
 type _ProcessDefinition ProcessDefinition
@@ -43,9 +45,10 @@ type _ProcessDefinition ProcessDefinition
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewProcessDefinition(id string, account string, project string, name string, status ProcessDefinitionStatus, version float32, definition ProcessDefinitionBody, createdAt time.Time, updatedAt time.Time, createdBy string, updatedBy string) *ProcessDefinition {
+func NewProcessDefinition(id string, editRevision int32, account string, project string, name string, status ProcessDefinitionStatus, version float32, definition ProcessDefinitionBody, createdAt time.Time, updatedAt time.Time, createdBy string, updatedBy string) *ProcessDefinition {
 	this := ProcessDefinition{}
 	this.Id = id
+	this.EditRevision = editRevision
 	this.Account = account
 	this.Project = project
 	this.Name = name
@@ -89,6 +92,30 @@ func (o *ProcessDefinition) GetIdOk() (*string, bool) {
 // SetId sets field value
 func (o *ProcessDefinition) SetId(v string) {
 	o.Id = v
+}
+
+// GetEditRevision returns the EditRevision field value
+func (o *ProcessDefinition) GetEditRevision() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.EditRevision
+}
+
+// GetEditRevisionOk returns a tuple with the EditRevision field value
+// and a boolean to check if the value has been set.
+func (o *ProcessDefinition) GetEditRevisionOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.EditRevision, true
+}
+
+// SetEditRevision sets field value
+func (o *ProcessDefinition) SetEditRevision(v int32) {
+	o.EditRevision = v
 }
 
 // GetAccount returns the Account field value
@@ -438,6 +465,7 @@ func (o ProcessDefinition) MarshalJSON() ([]byte, error) {
 func (o ProcessDefinition) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
+	toSerialize["edit_revision"] = o.EditRevision
 	toSerialize["account"] = o.Account
 	toSerialize["project"] = o.Project
 	toSerialize["name"] = o.Name
@@ -466,6 +494,7 @@ func (o *ProcessDefinition) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"id",
+		"edit_revision",
 		"account",
 		"project",
 		"name",

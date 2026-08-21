@@ -592,6 +592,9 @@ model_interaction_execution_result.go
 model_interaction_fork_payload.go
 model_interaction_name.go
 model_interaction_project.go
+model_interaction_prompt_segment_input.go
+model_interaction_prompt_segment_input_template.go
+model_interaction_prompt_template_input.go
 model_interaction_publish_payload.go
 model_interaction_ref.go
 model_interaction_ref_with_schema.go
@@ -939,6 +942,7 @@ model_update_agent_artifact_content_payload.go
 model_update_agent_artifact_content_response.go
 model_update_api_key_payload.go
 model_update_app_installation_tool_allowlist_payload.go
+model_update_app_payload.go
 model_update_collection_payload.go
 model_update_content_object_payload.go
 model_update_content_object_type_payload.go
@@ -959,6 +963,9 @@ model_update_task_payload.go
 model_update_user_group_payload.go
 model_update_user_payload.go
 model_update_view_experience_request.go
+model_update_workflow_definition_payload.go
+model_update_workflow_definition_payload_with_activities.go
+model_update_workflow_definition_payload_with_steps.go
 model_update_workflow_rule_payload.go
 model_upsert_app_version_request.go
 model_used_skill.go

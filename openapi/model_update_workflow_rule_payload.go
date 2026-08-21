@@ -19,7 +19,9 @@ var _ MappedNullable = &UpdateWorkflowRulePayload{}
 
 // UpdateWorkflowRulePayload Fields to change on a workflow rule. All optional.
 type UpdateWorkflowRulePayload struct {
-	Match map[string]interface{} `json:"match,omitempty"`
+	// Edit revision returned by the last read. Stale revisions are rejected with HTTP 409. Omit for legacy last-write-wins behavior.
+	ExpectedEditRevision *int32                 `json:"expected_edit_revision,omitempty"`
+	Match                map[string]interface{} `json:"match,omitempty"`
 	// Activities configuration if any.
 	Config map[string]interface{} `json:"config,omitempty"`
 	// Debug mode for the rule
@@ -68,6 +70,38 @@ func NewUpdateWorkflowRulePayloadWithDefaults() *UpdateWorkflowRulePayload {
 	var debug bool = false
 	this.Debug = &debug
 	return &this
+}
+
+// GetExpectedEditRevision returns the ExpectedEditRevision field value if set, zero value otherwise.
+func (o *UpdateWorkflowRulePayload) GetExpectedEditRevision() int32 {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		var ret int32
+		return ret
+	}
+	return *o.ExpectedEditRevision
+}
+
+// GetExpectedEditRevisionOk returns a tuple with the ExpectedEditRevision field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateWorkflowRulePayload) GetExpectedEditRevisionOk() (*int32, bool) {
+	if o == nil || IsNil(o.ExpectedEditRevision) {
+		return nil, false
+	}
+	return o.ExpectedEditRevision, true
+}
+
+// HasExpectedEditRevision returns a boolean if a field has been set.
+func (o *UpdateWorkflowRulePayload) HasExpectedEditRevision() bool {
+	if o != nil && !IsNil(o.ExpectedEditRevision) {
+		return true
+	}
+
+	return false
+}
+
+// SetExpectedEditRevision gets a reference to the given int32 and assigns it to the ExpectedEditRevision field.
+func (o *UpdateWorkflowRulePayload) SetExpectedEditRevision(v int32) {
+	o.ExpectedEditRevision = &v
 }
 
 // GetMatch returns the Match field value if set, zero value otherwise.
@@ -528,6 +562,9 @@ func (o UpdateWorkflowRulePayload) MarshalJSON() ([]byte, error) {
 
 func (o UpdateWorkflowRulePayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.ExpectedEditRevision) {
+		toSerialize["expected_edit_revision"] = o.ExpectedEditRevision
+	}
 	if !IsNil(o.Match) {
 		toSerialize["match"] = o.Match
 	}
@@ -592,6 +629,7 @@ func (o *UpdateWorkflowRulePayload) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "expected_edit_revision")
 		delete(additionalProperties, "match")
 		delete(additionalProperties, "config")
 		delete(additionalProperties, "debug")

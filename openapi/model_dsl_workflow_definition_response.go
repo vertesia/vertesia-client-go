@@ -34,6 +34,8 @@ type DSLWorkflowDefinitionResponse struct {
 	DebugMode  *bool                  `json:"debug_mode,omitempty"`
 	// Unique identifier for the object
 	Id string `json:"id"`
+	// Monotonic edit revision used to detect concurrent updates.
+	EditRevision int32 `json:"edit_revision"`
 	// Identifier of the user who last modified the object
 	UpdatedBy string `json:"updated_by"`
 	// Identifier of the user who created the object
@@ -52,11 +54,12 @@ type _DSLWorkflowDefinitionResponse DSLWorkflowDefinitionResponse
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDSLWorkflowDefinitionResponse(name string, vars map[string]interface{}, id string, updatedBy string, createdBy string, createdAt string, updatedAt string, specFormat string) *DSLWorkflowDefinitionResponse {
+func NewDSLWorkflowDefinitionResponse(name string, vars map[string]interface{}, id string, editRevision int32, updatedBy string, createdBy string, createdAt string, updatedAt string, specFormat string) *DSLWorkflowDefinitionResponse {
 	this := DSLWorkflowDefinitionResponse{}
 	this.Name = name
 	this.Vars = vars
 	this.Id = id
+	this.EditRevision = editRevision
 	this.UpdatedBy = updatedBy
 	this.CreatedBy = createdBy
 	this.CreatedAt = createdAt
@@ -369,6 +372,30 @@ func (o *DSLWorkflowDefinitionResponse) SetId(v string) {
 	o.Id = v
 }
 
+// GetEditRevision returns the EditRevision field value
+func (o *DSLWorkflowDefinitionResponse) GetEditRevision() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.EditRevision
+}
+
+// GetEditRevisionOk returns a tuple with the EditRevision field value
+// and a boolean to check if the value has been set.
+func (o *DSLWorkflowDefinitionResponse) GetEditRevisionOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.EditRevision, true
+}
+
+// SetEditRevision sets field value
+func (o *DSLWorkflowDefinitionResponse) SetEditRevision(v int32) {
+	o.EditRevision = v
+}
+
 // GetUpdatedBy returns the UpdatedBy field value
 func (o *DSLWorkflowDefinitionResponse) GetUpdatedBy() string {
 	if o == nil {
@@ -555,6 +582,7 @@ func (o DSLWorkflowDefinitionResponse) ToMap() (map[string]interface{}, error) {
 		toSerialize["debug_mode"] = o.DebugMode
 	}
 	toSerialize["id"] = o.Id
+	toSerialize["edit_revision"] = o.EditRevision
 	toSerialize["updated_by"] = o.UpdatedBy
 	toSerialize["created_by"] = o.CreatedBy
 	toSerialize["created_at"] = o.CreatedAt
@@ -574,6 +602,7 @@ func (o *DSLWorkflowDefinitionResponse) UnmarshalJSON(data []byte) (err error) {
 		"name",
 		"vars",
 		"id",
+		"edit_revision",
 		"updated_by",
 		"created_by",
 		"created_at",

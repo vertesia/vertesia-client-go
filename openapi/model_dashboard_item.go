@@ -22,6 +22,8 @@ var _ MappedNullable = &DashboardItem{}
 type DashboardItem struct {
 	// Unique identifier for the object
 	Id string `json:"id"`
+	// Monotonic edit revision used to detect concurrent updates.
+	EditRevision int32 `json:"edit_revision"`
 	// Human-readable name or title
 	Name string `json:"name"`
 	// Optional detailed description of the object
@@ -60,9 +62,10 @@ type _DashboardItem DashboardItem
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDashboardItem(id string, name string, tags []string, updatedBy string, createdBy string, createdAt string, updatedAt string, storeId string, status DashboardStatus, panelCount float32, queryCount float32) *DashboardItem {
+func NewDashboardItem(id string, editRevision int32, name string, tags []string, updatedBy string, createdBy string, createdAt string, updatedAt string, storeId string, status DashboardStatus, panelCount float32, queryCount float32) *DashboardItem {
 	this := DashboardItem{}
 	this.Id = id
+	this.EditRevision = editRevision
 	this.Name = name
 	this.Tags = tags
 	this.UpdatedBy = updatedBy
@@ -106,6 +109,30 @@ func (o *DashboardItem) GetIdOk() (*string, bool) {
 // SetId sets field value
 func (o *DashboardItem) SetId(v string) {
 	o.Id = v
+}
+
+// GetEditRevision returns the EditRevision field value
+func (o *DashboardItem) GetEditRevision() int32 {
+	if o == nil {
+		var ret int32
+		return ret
+	}
+
+	return o.EditRevision
+}
+
+// GetEditRevisionOk returns a tuple with the EditRevision field value
+// and a boolean to check if the value has been set.
+func (o *DashboardItem) GetEditRevisionOk() (*int32, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.EditRevision, true
+}
+
+// SetEditRevision sets field value
+func (o *DashboardItem) SetEditRevision(v int32) {
+	o.EditRevision = v
 }
 
 // GetName returns the Name field value
@@ -519,6 +546,7 @@ func (o DashboardItem) MarshalJSON() ([]byte, error) {
 func (o DashboardItem) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
+	toSerialize["edit_revision"] = o.EditRevision
 	toSerialize["name"] = o.Name
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
@@ -553,6 +581,7 @@ func (o *DashboardItem) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"id",
+		"edit_revision",
 		"name",
 		"tags",
 		"updated_by",

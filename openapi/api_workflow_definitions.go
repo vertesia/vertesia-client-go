@@ -574,15 +574,15 @@ func (a *WorkflowDefinitionsAPIService) ListWorkflowDefinitionsExecute(r ApiList
 }
 
 type ApiUpdateWorkflowDefinitionRequest struct {
-	ctx                       context.Context
-	ApiService                *WorkflowDefinitionsAPIService
-	workflowId                string
-	workflowDefinitionPayload *WorkflowDefinitionPayload
-	xApiVersion               *string
+	ctx                             context.Context
+	ApiService                      *WorkflowDefinitionsAPIService
+	workflowId                      string
+	updateWorkflowDefinitionPayload *UpdateWorkflowDefinitionPayload
+	xApiVersion                     *string
 }
 
-func (r ApiUpdateWorkflowDefinitionRequest) WorkflowDefinitionPayload(workflowDefinitionPayload WorkflowDefinitionPayload) ApiUpdateWorkflowDefinitionRequest {
-	r.workflowDefinitionPayload = &workflowDefinitionPayload
+func (r ApiUpdateWorkflowDefinitionRequest) UpdateWorkflowDefinitionPayload(updateWorkflowDefinitionPayload UpdateWorkflowDefinitionPayload) ApiUpdateWorkflowDefinitionRequest {
+	r.updateWorkflowDefinitionPayload = &updateWorkflowDefinitionPayload
 	return r
 }
 
@@ -637,8 +637,8 @@ func (a *WorkflowDefinitionsAPIService) UpdateWorkflowDefinitionExecute(r ApiUpd
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.workflowDefinitionPayload == nil {
-		return localVarReturnValue, nil, reportError("workflowDefinitionPayload is required and must be specified")
+	if r.updateWorkflowDefinitionPayload == nil {
+		return localVarReturnValue, nil, reportError("updateWorkflowDefinitionPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -662,7 +662,7 @@ func (a *WorkflowDefinitionsAPIService) UpdateWorkflowDefinitionExecute(r ApiUpd
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.workflowDefinitionPayload
+	localVarPostBody = r.updateWorkflowDefinitionPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
