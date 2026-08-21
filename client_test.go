@@ -6,6 +6,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"image"
 	"image/color"
@@ -344,16 +345,23 @@ func TestGeneratedGoClientPromptInteractionLifecycle(t *testing.T) {
 		t.Fatal("renderPrompt returned no rendered output")
 	}
 
-	segment := NewPromptSegmentDef(PROMPTSEGMENTDEFTYPE_TEMPLATE)
-	promptID := prompt.GetId()
-	segment.SetTemplate(PromptSegmentDefTemplate{String: &promptID})
-	interactionPayload := NewInteractionCreatePayload(
-		INTERACTIONSTATUS_DRAFT,
-		[]PromptSegmentDef{*segment},
-		uniqueName("go-openapi-interaction"),
-	)
-	interactionPayload.SetVisibility(INTERACTIONVISIBILITY_PRIVATE)
-	interactionPayload.SetTags([]string{"integration-test", "openapi-go"})
+	interactionPayloadJSON, err := json.Marshal(map[string]interface{}{
+		"status": INTERACTIONSTATUS_DRAFT,
+		"prompts": []map[string]interface{}{{
+			"type":     PROMPTSEGMENTDEFTYPE_TEMPLATE,
+			"template": prompt.GetId(),
+		}},
+		"name":       uniqueName("go-openapi-interaction"),
+		"visibility": INTERACTIONVISIBILITY_PRIVATE,
+		"tags":       []string{"integration-test", "openapi-go"},
+	})
+	if err != nil {
+		t.Fatalf("marshal interaction payload failed: %v", err)
+	}
+	interactionPayload := NewInteractionCreatePayloadWithDefaults()
+	if err := json.Unmarshal(interactionPayloadJSON, interactionPayload); err != nil {
+		t.Fatalf("unmarshal interaction payload failed: %v", err)
+	}
 	interaction, _, err := studioClient.InteractionsAPI.CreateInteraction(studioCtx).
 		InteractionCreatePayload(*interactionPayload).
 		Execute()
