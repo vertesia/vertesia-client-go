@@ -22,6 +22,14 @@ var _ MappedNullable = &CreateAgentRunPayload{}
 type CreateAgentRunPayload struct {
 	// Interaction ID or code (e.g. \"sys:generic_question\").
 	Interaction string `json:"interaction"`
+	// Caller-provided conversation title.
+	Title *string `json:"title,omitempty"`
+	// Caller-provided conversation topic. Suppresses automatic topic generation.
+	Topic *string `json:"topic,omitempty"`
+	// Whether to generate a conversation title and topic automatically. Defaults to true; a caller-provided topic always suppresses generation.
+	GenerateTopic *bool `json:"generate_topic,omitempty"`
+	// Whether to generate lessons automatically at completion. Defaults to true; conversation content remains searchable when disabled.
+	GenerateLessons *bool `json:"generate_lessons,omitempty"`
 	// Input parameters, typed per interaction
 	Data map[string]interface{} `json:"data,omitempty"`
 	// Execution configuration (environment, model, model_options, etc.)
@@ -122,6 +130,134 @@ func (o *CreateAgentRunPayload) GetInteractionOk() (*string, bool) {
 // SetInteraction sets field value
 func (o *CreateAgentRunPayload) SetInteraction(v string) {
 	o.Interaction = v
+}
+
+// GetTitle returns the Title field value if set, zero value otherwise.
+func (o *CreateAgentRunPayload) GetTitle() string {
+	if o == nil || IsNil(o.Title) {
+		var ret string
+		return ret
+	}
+	return *o.Title
+}
+
+// GetTitleOk returns a tuple with the Title field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAgentRunPayload) GetTitleOk() (*string, bool) {
+	if o == nil || IsNil(o.Title) {
+		return nil, false
+	}
+	return o.Title, true
+}
+
+// HasTitle returns a boolean if a field has been set.
+func (o *CreateAgentRunPayload) HasTitle() bool {
+	if o != nil && !IsNil(o.Title) {
+		return true
+	}
+
+	return false
+}
+
+// SetTitle gets a reference to the given string and assigns it to the Title field.
+func (o *CreateAgentRunPayload) SetTitle(v string) {
+	o.Title = &v
+}
+
+// GetTopic returns the Topic field value if set, zero value otherwise.
+func (o *CreateAgentRunPayload) GetTopic() string {
+	if o == nil || IsNil(o.Topic) {
+		var ret string
+		return ret
+	}
+	return *o.Topic
+}
+
+// GetTopicOk returns a tuple with the Topic field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAgentRunPayload) GetTopicOk() (*string, bool) {
+	if o == nil || IsNil(o.Topic) {
+		return nil, false
+	}
+	return o.Topic, true
+}
+
+// HasTopic returns a boolean if a field has been set.
+func (o *CreateAgentRunPayload) HasTopic() bool {
+	if o != nil && !IsNil(o.Topic) {
+		return true
+	}
+
+	return false
+}
+
+// SetTopic gets a reference to the given string and assigns it to the Topic field.
+func (o *CreateAgentRunPayload) SetTopic(v string) {
+	o.Topic = &v
+}
+
+// GetGenerateTopic returns the GenerateTopic field value if set, zero value otherwise.
+func (o *CreateAgentRunPayload) GetGenerateTopic() bool {
+	if o == nil || IsNil(o.GenerateTopic) {
+		var ret bool
+		return ret
+	}
+	return *o.GenerateTopic
+}
+
+// GetGenerateTopicOk returns a tuple with the GenerateTopic field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAgentRunPayload) GetGenerateTopicOk() (*bool, bool) {
+	if o == nil || IsNil(o.GenerateTopic) {
+		return nil, false
+	}
+	return o.GenerateTopic, true
+}
+
+// HasGenerateTopic returns a boolean if a field has been set.
+func (o *CreateAgentRunPayload) HasGenerateTopic() bool {
+	if o != nil && !IsNil(o.GenerateTopic) {
+		return true
+	}
+
+	return false
+}
+
+// SetGenerateTopic gets a reference to the given bool and assigns it to the GenerateTopic field.
+func (o *CreateAgentRunPayload) SetGenerateTopic(v bool) {
+	o.GenerateTopic = &v
+}
+
+// GetGenerateLessons returns the GenerateLessons field value if set, zero value otherwise.
+func (o *CreateAgentRunPayload) GetGenerateLessons() bool {
+	if o == nil || IsNil(o.GenerateLessons) {
+		var ret bool
+		return ret
+	}
+	return *o.GenerateLessons
+}
+
+// GetGenerateLessonsOk returns a tuple with the GenerateLessons field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAgentRunPayload) GetGenerateLessonsOk() (*bool, bool) {
+	if o == nil || IsNil(o.GenerateLessons) {
+		return nil, false
+	}
+	return o.GenerateLessons, true
+}
+
+// HasGenerateLessons returns a boolean if a field has been set.
+func (o *CreateAgentRunPayload) HasGenerateLessons() bool {
+	if o != nil && !IsNil(o.GenerateLessons) {
+		return true
+	}
+
+	return false
+}
+
+// SetGenerateLessons gets a reference to the given bool and assigns it to the GenerateLessons field.
+func (o *CreateAgentRunPayload) SetGenerateLessons(v bool) {
+	o.GenerateLessons = &v
 }
 
 // GetData returns the Data field value if set, zero value otherwise.
@@ -1002,6 +1138,18 @@ func (o CreateAgentRunPayload) MarshalJSON() ([]byte, error) {
 func (o CreateAgentRunPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["interaction"] = o.Interaction
+	if !IsNil(o.Title) {
+		toSerialize["title"] = o.Title
+	}
+	if !IsNil(o.Topic) {
+		toSerialize["topic"] = o.Topic
+	}
+	if !IsNil(o.GenerateTopic) {
+		toSerialize["generate_topic"] = o.GenerateTopic
+	}
+	if !IsNil(o.GenerateLessons) {
+		toSerialize["generate_lessons"] = o.GenerateLessons
+	}
 	if !IsNil(o.Data) {
 		toSerialize["data"] = o.Data
 	}
@@ -1127,6 +1275,10 @@ func (o *CreateAgentRunPayload) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "interaction")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "topic")
+		delete(additionalProperties, "generate_topic")
+		delete(additionalProperties, "generate_lessons")
 		delete(additionalProperties, "data")
 		delete(additionalProperties, "config")
 		delete(additionalProperties, "interactive")

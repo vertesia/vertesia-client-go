@@ -111,6 +111,10 @@ type AgentRun struct {
 	EnvironmentRef *ResourceRef `json:"environmentRef,omitempty"`
 	// Conversation topic (longer description from topic analysis)
 	Topic *string `json:"topic,omitempty"`
+	// Whether automatic conversation title/topic generation is enabled for this run.
+	GenerateTopic *bool `json:"generate_topic,omitempty"`
+	// Whether automatic lessons generation is enabled for this run.
+	GenerateLessons *bool `json:"generate_lessons,omitempty"`
 	// Lessons learned from the conversation (extracted at completion)
 	LessonsLearned []string `json:"lessons_learned,omitempty"`
 	// When the last successful archive completed
@@ -1502,6 +1506,70 @@ func (o *AgentRun) SetTopic(v string) {
 	o.Topic = &v
 }
 
+// GetGenerateTopic returns the GenerateTopic field value if set, zero value otherwise.
+func (o *AgentRun) GetGenerateTopic() bool {
+	if o == nil || IsNil(o.GenerateTopic) {
+		var ret bool
+		return ret
+	}
+	return *o.GenerateTopic
+}
+
+// GetGenerateTopicOk returns a tuple with the GenerateTopic field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRun) GetGenerateTopicOk() (*bool, bool) {
+	if o == nil || IsNil(o.GenerateTopic) {
+		return nil, false
+	}
+	return o.GenerateTopic, true
+}
+
+// HasGenerateTopic returns a boolean if a field has been set.
+func (o *AgentRun) HasGenerateTopic() bool {
+	if o != nil && !IsNil(o.GenerateTopic) {
+		return true
+	}
+
+	return false
+}
+
+// SetGenerateTopic gets a reference to the given bool and assigns it to the GenerateTopic field.
+func (o *AgentRun) SetGenerateTopic(v bool) {
+	o.GenerateTopic = &v
+}
+
+// GetGenerateLessons returns the GenerateLessons field value if set, zero value otherwise.
+func (o *AgentRun) GetGenerateLessons() bool {
+	if o == nil || IsNil(o.GenerateLessons) {
+		var ret bool
+		return ret
+	}
+	return *o.GenerateLessons
+}
+
+// GetGenerateLessonsOk returns a tuple with the GenerateLessons field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRun) GetGenerateLessonsOk() (*bool, bool) {
+	if o == nil || IsNil(o.GenerateLessons) {
+		return nil, false
+	}
+	return o.GenerateLessons, true
+}
+
+// HasGenerateLessons returns a boolean if a field has been set.
+func (o *AgentRun) HasGenerateLessons() bool {
+	if o != nil && !IsNil(o.GenerateLessons) {
+		return true
+	}
+
+	return false
+}
+
+// SetGenerateLessons gets a reference to the given bool and assigns it to the GenerateLessons field.
+func (o *AgentRun) SetGenerateLessons(v bool) {
+	o.GenerateLessons = &v
+}
+
 // GetLessonsLearned returns the LessonsLearned field value if set, zero value otherwise.
 func (o *AgentRun) GetLessonsLearned() []string {
 	if o == nil || IsNil(o.LessonsLearned) {
@@ -1783,6 +1851,12 @@ func (o AgentRun) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Topic) {
 		toSerialize["topic"] = o.Topic
 	}
+	if !IsNil(o.GenerateTopic) {
+		toSerialize["generate_topic"] = o.GenerateTopic
+	}
+	if !IsNil(o.GenerateLessons) {
+		toSerialize["generate_lessons"] = o.GenerateLessons
+	}
 	if !IsNil(o.LessonsLearned) {
 		toSerialize["lessons_learned"] = o.LessonsLearned
 	}
@@ -1897,6 +1971,8 @@ func (o *AgentRun) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "interactionRef")
 		delete(additionalProperties, "environmentRef")
 		delete(additionalProperties, "topic")
+		delete(additionalProperties, "generate_topic")
+		delete(additionalProperties, "generate_lessons")
 		delete(additionalProperties, "lessons_learned")
 		delete(additionalProperties, "archived_at")
 		delete(additionalProperties, "archive_version")
