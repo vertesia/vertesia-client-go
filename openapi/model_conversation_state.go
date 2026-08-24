@@ -83,7 +83,7 @@ type ConversationState struct {
 	LatestActivityId *string `json:"latest_activity_id,omitempty"`
 	// Stable streaming ID from the latest LLM call. Unlike Temporal activity IDs, this is scoped to the concrete workflow run that produced the stream, so it remains safe across continue-as-new.
 	LatestStreamingId *string `json:"latest_streaming_id,omitempty"`
-	// Names of skills whose full instructions are already present in the live conversation history (i.e. were delivered by a prior `learn_<skill>` call). Used to make skill re-activation idempotent: a repeat call returns a short \"already active\" acknowledgement instead of re-dumping the instructions.  Unlike `unlocked_tools` (which must survive a checkpoint so tools stay unlocked), this list is reset when a checkpoint compacts the conversation, because the summary no longer carries the skill instructions and the next call must re-deliver them.
+	// Names of skills whose full instructions are already present in the live conversation history (i.e. were delivered by a prior `learn_<skill>` call). Used to make skill re-activation idempotent: a repeat call returns a short \"already active\" acknowledgement instead of re-dumping the instructions.  Unlike `unlocked_tools` (which must survive a checkpoint so tools stay unlocked), this list tracks only instructions present in the current compacted conversation. Checkpoints restore active builtin skill bodies and preserve their names; skills that cannot be restored are removed so the next call can re-deliver them.
 	SkillInstructionsDelivered []string `json:"skill_instructions_delivered,omitempty"`
 	// Stable ids of initialization tool calls completed before the first model turn.
 	InitializationCallIds []string `json:"initialization_call_ids,omitempty"`

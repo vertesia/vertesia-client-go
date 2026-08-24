@@ -28,7 +28,7 @@ type AppDevelopmentTaskDetails struct {
 	SourceCommit string `json:"source_commit"`
 	// Branch-head commit date, when available.
 	CommitDate *string `json:"commit_date,omitempty"`
-	// Latest Studio Assistant run started for this task branch.
+	// Latest App Builder parent run started for this task branch.
 	AgentRun *AgentRunSearchHit `json:"agent_run,omitempty"`
 }
 

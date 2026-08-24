@@ -1023,7 +1023,7 @@ func (r ApiGetAppDevelopmentTaskRequest) Execute() (*AppDevelopmentTaskDetails, 
 /*
 GetAppDevelopmentTask Get an app development task
 
-Returns the agent/* Git branch and the latest matching parent Studio Assistant run, when started.
+Returns the agent/* Git branch and the latest matching App Builder parent run, when started.
 
 **Required permissions:** `account:member`
 
@@ -4597,6 +4597,158 @@ func (a *AppsAPIService) StartAppBuildExecute(r ApiStartAppBuildRequest) (*Start
 	}
 	// body params
 	localVarPostBody = r.startAppBuildRequest
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiStartAppDevelopmentTaskRequest struct {
+	ctx                            context.Context
+	ApiService                     *AppsAPIService
+	id                             string
+	taskId                         string
+	startAppDevelopmentTaskRequest *StartAppDevelopmentTaskRequest
+	xApiVersion                    *string
+}
+
+func (r ApiStartAppDevelopmentTaskRequest) StartAppDevelopmentTaskRequest(startAppDevelopmentTaskRequest StartAppDevelopmentTaskRequest) ApiStartAppDevelopmentTaskRequest {
+	r.startAppDevelopmentTaskRequest = &startAppDevelopmentTaskRequest
+	return r
+}
+
+// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiStartAppDevelopmentTaskRequest) XApiVersion(xApiVersion string) ApiStartAppDevelopmentTaskRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiStartAppDevelopmentTaskRequest) Execute() (*AgentRunResponse, *http.Response, error) {
+	return r.ApiService.StartAppDevelopmentTaskExecute(r)
+}
+
+/*
+StartAppDevelopmentTask Start an app development task run
+
+Starts the policy-controlled App Builder parent on an existing agent/* task branch. The server fixes the interaction, orchestration skill, implementation denylist, lifecycle data, and run tags.
+
+**Required permissions:** `app:manage`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param id
+	@param taskId
+	@return ApiStartAppDevelopmentTaskRequest
+*/
+func (a *AppsAPIService) StartAppDevelopmentTask(ctx context.Context, id string, taskId string) ApiStartAppDevelopmentTaskRequest {
+	return ApiStartAppDevelopmentTaskRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+		taskId:     taskId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return AgentRunResponse
+func (a *AppsAPIService) StartAppDevelopmentTaskExecute(r ApiStartAppDevelopmentTaskRequest) (*AgentRunResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *AgentRunResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AppsAPIService.StartAppDevelopmentTask")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/apps/{id}/development-tasks/{taskId}/runs"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(parameterValueToString(r.id, "id")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"taskId"+"}", url.PathEscape(parameterValueToString(r.taskId, "taskId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.startAppDevelopmentTaskRequest == nil {
+		return localVarReturnValue, nil, reportError("startAppDevelopmentTaskRequest is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	// body params
+	localVarPostBody = r.startAppDevelopmentTaskRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

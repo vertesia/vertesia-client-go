@@ -20,7 +20,7 @@ var _ MappedNullable = &StartAppScaffoldRequest{}
 
 // StartAppScaffoldRequest struct for StartAppScaffoldRequest
 type StartAppScaffoldRequest struct {
-	// App id / package name to create. It is normalized to the same slug rules used by
+	// Package name for the new app to create and scaffold. This is not the id of an existing app.
 	AppId       string              `json:"app_id"`
 	Title       *string             `json:"title,omitempty"`
 	Description *string             `json:"description,omitempty"`

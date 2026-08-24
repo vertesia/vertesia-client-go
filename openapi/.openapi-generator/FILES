@@ -895,6 +895,7 @@ model_sort_option.go
 model_sort_order.go
 model_start_app_build_request.go
 model_start_app_build_response.go
+model_start_app_development_task_request.go
 model_start_app_scaffold_request.go
 model_start_app_scaffold_response.go
 model_start_content_object_export_request.go
