@@ -320,6 +320,8 @@ model_copy_file_payload.go
 model_copy_file_response.go
 model_cost_analytics_query.go
 model_cost_analytics_response.go
+model_cost_analytics_response_pricing_coverage.go
+model_cost_analytics_response_pricing_coverage_unpriced_inner.go
 model_cost_analytics_response_query_range.go
 model_cost_by_dimension.go
 model_cost_run_price_query.go

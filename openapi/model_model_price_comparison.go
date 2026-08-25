@@ -20,9 +20,11 @@ var _ MappedNullable = &ModelPriceComparison{}
 
 // ModelPriceComparison struct for ModelPriceComparison
 type ModelPriceComparison struct {
-	Model                                   string   `json:"model"`
-	Provider                                *string  `json:"provider,omitempty"`
-	ProviderAccountId                       *string  `json:"provider_account_id,omitempty"`
+	Model             string  `json:"model"`
+	Provider          *string `json:"provider,omitempty"`
+	ProviderAccountId *string `json:"provider_account_id,omitempty"`
+	// Processing tier this price applies to
+	ServiceTier                             *string  `json:"service_tier,omitempty"`
 	ListPriceDate                           *string  `json:"list_price_date,omitempty"`
 	EffectiveFrom                           *string  `json:"effective_from,omitempty"`
 	EffectiveTo                             *string  `json:"effective_to,omitempty"`
@@ -144,6 +146,38 @@ func (o *ModelPriceComparison) HasProviderAccountId() bool {
 // SetProviderAccountId gets a reference to the given string and assigns it to the ProviderAccountId field.
 func (o *ModelPriceComparison) SetProviderAccountId(v string) {
 	o.ProviderAccountId = &v
+}
+
+// GetServiceTier returns the ServiceTier field value if set, zero value otherwise.
+func (o *ModelPriceComparison) GetServiceTier() string {
+	if o == nil || IsNil(o.ServiceTier) {
+		var ret string
+		return ret
+	}
+	return *o.ServiceTier
+}
+
+// GetServiceTierOk returns a tuple with the ServiceTier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ModelPriceComparison) GetServiceTierOk() (*string, bool) {
+	if o == nil || IsNil(o.ServiceTier) {
+		return nil, false
+	}
+	return o.ServiceTier, true
+}
+
+// HasServiceTier returns a boolean if a field has been set.
+func (o *ModelPriceComparison) HasServiceTier() bool {
+	if o != nil && !IsNil(o.ServiceTier) {
+		return true
+	}
+
+	return false
+}
+
+// SetServiceTier gets a reference to the given string and assigns it to the ServiceTier field.
+func (o *ModelPriceComparison) SetServiceTier(v string) {
+	o.ServiceTier = &v
 }
 
 // GetListPriceDate returns the ListPriceDate field value if set, zero value otherwise.
@@ -538,6 +572,9 @@ func (o ModelPriceComparison) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ProviderAccountId) {
 		toSerialize["provider_account_id"] = o.ProviderAccountId
+	}
+	if !IsNil(o.ServiceTier) {
+		toSerialize["service_tier"] = o.ServiceTier
 	}
 	if !IsNil(o.ListPriceDate) {
 		toSerialize["list_price_date"] = o.ListPriceDate

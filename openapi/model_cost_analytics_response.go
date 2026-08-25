@@ -20,12 +20,13 @@ var _ MappedNullable = &CostAnalyticsResponse{}
 
 // CostAnalyticsResponse struct for CostAnalyticsResponse
 type CostAnalyticsResponse struct {
-	Summary              CostSummary                     `json:"summary"`
-	ByDimension          []CostByDimension               `json:"by_dimension"`
-	TimeSeries           []CostTimeSeriesPoint           `json:"time_series"`
-	Pricing              []ModelPricing                  `json:"pricing"`
-	QueryRange           CostAnalyticsResponseQueryRange `json:"query_range"`
-	Cached               bool                            `json:"cached"`
+	Summary              CostSummary                           `json:"summary"`
+	ByDimension          []CostByDimension                     `json:"by_dimension"`
+	TimeSeries           []CostTimeSeriesPoint                 `json:"time_series"`
+	Pricing              []ModelPricing                        `json:"pricing"`
+	PricingCoverage      *CostAnalyticsResponsePricingCoverage `json:"pricing_coverage,omitempty"`
+	QueryRange           CostAnalyticsResponseQueryRange       `json:"query_range"`
+	Cached               bool                                  `json:"cached"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -150,6 +151,38 @@ func (o *CostAnalyticsResponse) SetPricing(v []ModelPricing) {
 	o.Pricing = v
 }
 
+// GetPricingCoverage returns the PricingCoverage field value if set, zero value otherwise.
+func (o *CostAnalyticsResponse) GetPricingCoverage() CostAnalyticsResponsePricingCoverage {
+	if o == nil || IsNil(o.PricingCoverage) {
+		var ret CostAnalyticsResponsePricingCoverage
+		return ret
+	}
+	return *o.PricingCoverage
+}
+
+// GetPricingCoverageOk returns a tuple with the PricingCoverage field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CostAnalyticsResponse) GetPricingCoverageOk() (*CostAnalyticsResponsePricingCoverage, bool) {
+	if o == nil || IsNil(o.PricingCoverage) {
+		return nil, false
+	}
+	return o.PricingCoverage, true
+}
+
+// HasPricingCoverage returns a boolean if a field has been set.
+func (o *CostAnalyticsResponse) HasPricingCoverage() bool {
+	if o != nil && !IsNil(o.PricingCoverage) {
+		return true
+	}
+
+	return false
+}
+
+// SetPricingCoverage gets a reference to the given CostAnalyticsResponsePricingCoverage and assigns it to the PricingCoverage field.
+func (o *CostAnalyticsResponse) SetPricingCoverage(v CostAnalyticsResponsePricingCoverage) {
+	o.PricingCoverage = &v
+}
+
 // GetQueryRange returns the QueryRange field value
 func (o *CostAnalyticsResponse) GetQueryRange() CostAnalyticsResponseQueryRange {
 	if o == nil {
@@ -212,6 +245,9 @@ func (o CostAnalyticsResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize["by_dimension"] = o.ByDimension
 	toSerialize["time_series"] = o.TimeSeries
 	toSerialize["pricing"] = o.Pricing
+	if !IsNil(o.PricingCoverage) {
+		toSerialize["pricing_coverage"] = o.PricingCoverage
+	}
 	toSerialize["query_range"] = o.QueryRange
 	toSerialize["cached"] = o.Cached
 
@@ -266,6 +302,7 @@ func (o *CostAnalyticsResponse) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "by_dimension")
 		delete(additionalProperties, "time_series")
 		delete(additionalProperties, "pricing")
+		delete(additionalProperties, "pricing_coverage")
 		delete(additionalProperties, "query_range")
 		delete(additionalProperties, "cached")
 		o.AdditionalProperties = additionalProperties

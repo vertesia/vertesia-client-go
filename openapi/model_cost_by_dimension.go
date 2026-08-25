@@ -23,6 +23,7 @@ type CostByDimension struct {
 	Dimension             string                `json:"dimension"`
 	Label                 *string               `json:"label,omitempty"`
 	Provider              *string               `json:"provider,omitempty"`
+	ServiceTier           *string               `json:"service_tier,omitempty"`
 	Cost                  float32               `json:"cost"`
 	InputTokens           float32               `json:"input_tokens"`
 	CachedInputTokens     *float32              `json:"cached_input_tokens,omitempty"`
@@ -142,6 +143,38 @@ func (o *CostByDimension) HasProvider() bool {
 // SetProvider gets a reference to the given string and assigns it to the Provider field.
 func (o *CostByDimension) SetProvider(v string) {
 	o.Provider = &v
+}
+
+// GetServiceTier returns the ServiceTier field value if set, zero value otherwise.
+func (o *CostByDimension) GetServiceTier() string {
+	if o == nil || IsNil(o.ServiceTier) {
+		var ret string
+		return ret
+	}
+	return *o.ServiceTier
+}
+
+// GetServiceTierOk returns a tuple with the ServiceTier field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CostByDimension) GetServiceTierOk() (*string, bool) {
+	if o == nil || IsNil(o.ServiceTier) {
+		return nil, false
+	}
+	return o.ServiceTier, true
+}
+
+// HasServiceTier returns a boolean if a field has been set.
+func (o *CostByDimension) HasServiceTier() bool {
+	if o != nil && !IsNil(o.ServiceTier) {
+		return true
+	}
+
+	return false
+}
+
+// SetServiceTier gets a reference to the given string and assigns it to the ServiceTier field.
+func (o *CostByDimension) SetServiceTier(v string) {
+	o.ServiceTier = &v
 }
 
 // GetCost returns the Cost field value
@@ -352,6 +385,9 @@ func (o CostByDimension) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Provider) {
 		toSerialize["provider"] = o.Provider
+	}
+	if !IsNil(o.ServiceTier) {
+		toSerialize["service_tier"] = o.ServiceTier
 	}
 	toSerialize["cost"] = o.Cost
 	toSerialize["input_tokens"] = o.InputTokens
