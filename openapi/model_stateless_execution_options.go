@@ -29,9 +29,9 @@ type StatelessExecutionOptions struct {
 	ModelOptions            *ModelOptions `json:"model_options,omitempty"`
 	// Stable identity for prompt caching. Providers with cache routing keys receive the value directly; providers with cache breakpoints use its presence to cache the stable prefix before the final dynamic block. Providers with fully implicit caching still require an identical prompt prefix.
 	PromptCacheKey *string `json:"prompt_cache_key,omitempty"`
-	// Controls provider-side explicit caches — cache resources the driver creates and reuses (e.g. Vertex cachedContents). \"auto\" (default) caches the static prefix whenever prompt_cache_key is set; \"off\" never creates or uses a cache resource and leaves the provider payload unchanged. Implicit caching and cache breakpoints are unaffected.
+	// Controls provider-side explicit caches — cache resources the driver creates and reuses (e.g. Vertex cachedContents). \"auto\" (default) caches the static prefix whenever prompt_cache_key is set; \"off\" never creates or uses a cache resource and leaves the provider payload unchanged; \"required\" behaves like auto but surfaces cache preparation failures instead of falling back. Implicit caching and cache breakpoints are unaffected.
 	PromptCacheMode *PromptCacheMode `json:"prompt_cache_mode,omitempty"`
-	// Lifetime, in seconds, of a provider-side cache resource created for this execution. Defaults to 1800 (30 minutes). Ignored by providers without an explicit cache API.
+	// Lifetime, in seconds, of a provider-side cache resource created for this execution. Defaults to 1800 (30 minutes) and must be at least 60 seconds. Ignored by providers without an explicit cache API.
 	PromptCacheTtlSeconds *int32 `json:"prompt_cache_ttl_seconds,omitempty"`
 	// Per-call HTTP timeouts for upstream LLM-provider calls. These override the driver's default `DriverOptions.httpTimeout` for this execution only.
 	HttpTimeout *HttpTimeoutOptions `json:"httpTimeout,omitempty"`

@@ -22,7 +22,7 @@ var _ MappedNullable = &AppUIConfig{}
 type AppUIConfig struct {
 	// The source URL of the app. The src can be a template which contain a variable named `buildId` which will be replaced with the current build id. For example: `/plugins/vertesia-review-center-${buildId}`
 	Src string `json:"src"`
-	// The isolation strategy. If not specified it defaults to shadow. - shadow - use Shadow DOM to fully isolate the plugin from the host. - css - inject the plugin's styles (minus the preflight) into the host document;   lighter but styles may conflict with the host.
+	// The isolation strategy. If not specified it defaults to shadow. - shadow - use Shadow DOM to fully isolate the plugin from the host. - css - inject the plugin's styles (minus the preflight) into the host document; lighter but styles may conflict with the host. - iframe - load a standalone application in a sandboxed iframe so it owns its JavaScript and dependency graph.
 	Isolation *string `json:"isolation,omitempty"`
 	// When true the host modifies the app's css at load time to attempt to fix broken or missing styles. Only takes effect in css isolation mode. Defaults to false.
 	CssRebuild *bool `json:"css_rebuild,omitempty"`

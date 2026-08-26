@@ -28,6 +28,10 @@ type InteractionExecutionConfiguration struct {
 	ModelOptions *ModelOptions        `json:"model_options,omitempty"`
 	// Stable provider-side routing key for automatic prompt caching.
 	PromptCacheKey *string `json:"prompt_cache_key,omitempty"`
+	// Controls provider-side explicit caching: auto falls back safely, off disables it, and required surfaces cache preparation failures for diagnostics.
+	PromptCacheMode *PromptCacheMode `json:"prompt_cache_mode,omitempty"`
+	// Caller-selected explicit cache lifetime in seconds. Defaults remain provider-specific; Vertex Gemini requires at least 60 seconds.
+	PromptCacheTtlSeconds *int32 `json:"prompt_cache_ttl_seconds,omitempty"`
 	// Put the result schema after the cached prefix; Vertesia still validates the returned JSON against it.
 	PromptCacheSchemaSuffix *bool `json:"prompt_cache_schema_suffix,omitempty"`
 	// Per-run HTTP timeouts for upstream LLM-provider calls.
@@ -307,6 +311,70 @@ func (o *InteractionExecutionConfiguration) SetPromptCacheKey(v string) {
 	o.PromptCacheKey = &v
 }
 
+// GetPromptCacheMode returns the PromptCacheMode field value if set, zero value otherwise.
+func (o *InteractionExecutionConfiguration) GetPromptCacheMode() PromptCacheMode {
+	if o == nil || IsNil(o.PromptCacheMode) {
+		var ret PromptCacheMode
+		return ret
+	}
+	return *o.PromptCacheMode
+}
+
+// GetPromptCacheModeOk returns a tuple with the PromptCacheMode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InteractionExecutionConfiguration) GetPromptCacheModeOk() (*PromptCacheMode, bool) {
+	if o == nil || IsNil(o.PromptCacheMode) {
+		return nil, false
+	}
+	return o.PromptCacheMode, true
+}
+
+// HasPromptCacheMode returns a boolean if a field has been set.
+func (o *InteractionExecutionConfiguration) HasPromptCacheMode() bool {
+	if o != nil && !IsNil(o.PromptCacheMode) {
+		return true
+	}
+
+	return false
+}
+
+// SetPromptCacheMode gets a reference to the given PromptCacheMode and assigns it to the PromptCacheMode field.
+func (o *InteractionExecutionConfiguration) SetPromptCacheMode(v PromptCacheMode) {
+	o.PromptCacheMode = &v
+}
+
+// GetPromptCacheTtlSeconds returns the PromptCacheTtlSeconds field value if set, zero value otherwise.
+func (o *InteractionExecutionConfiguration) GetPromptCacheTtlSeconds() int32 {
+	if o == nil || IsNil(o.PromptCacheTtlSeconds) {
+		var ret int32
+		return ret
+	}
+	return *o.PromptCacheTtlSeconds
+}
+
+// GetPromptCacheTtlSecondsOk returns a tuple with the PromptCacheTtlSeconds field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InteractionExecutionConfiguration) GetPromptCacheTtlSecondsOk() (*int32, bool) {
+	if o == nil || IsNil(o.PromptCacheTtlSeconds) {
+		return nil, false
+	}
+	return o.PromptCacheTtlSeconds, true
+}
+
+// HasPromptCacheTtlSeconds returns a boolean if a field has been set.
+func (o *InteractionExecutionConfiguration) HasPromptCacheTtlSeconds() bool {
+	if o != nil && !IsNil(o.PromptCacheTtlSeconds) {
+		return true
+	}
+
+	return false
+}
+
+// SetPromptCacheTtlSeconds gets a reference to the given int32 and assigns it to the PromptCacheTtlSeconds field.
+func (o *InteractionExecutionConfiguration) SetPromptCacheTtlSeconds(v int32) {
+	o.PromptCacheTtlSeconds = &v
+}
+
 // GetPromptCacheSchemaSuffix returns the PromptCacheSchemaSuffix field value if set, zero value otherwise.
 func (o *InteractionExecutionConfiguration) GetPromptCacheSchemaSuffix() bool {
 	if o == nil || IsNil(o.PromptCacheSchemaSuffix) {
@@ -404,6 +472,12 @@ func (o InteractionExecutionConfiguration) ToMap() (map[string]interface{}, erro
 	}
 	if !IsNil(o.PromptCacheKey) {
 		toSerialize["prompt_cache_key"] = o.PromptCacheKey
+	}
+	if !IsNil(o.PromptCacheMode) {
+		toSerialize["prompt_cache_mode"] = o.PromptCacheMode
+	}
+	if !IsNil(o.PromptCacheTtlSeconds) {
+		toSerialize["prompt_cache_ttl_seconds"] = o.PromptCacheTtlSeconds
 	}
 	if !IsNil(o.PromptCacheSchemaSuffix) {
 		toSerialize["prompt_cache_schema_suffix"] = o.PromptCacheSchemaSuffix

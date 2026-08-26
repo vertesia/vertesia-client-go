@@ -22,6 +22,7 @@ type PromptCacheMode string
 const (
 	PROMPTCACHEMODE_AUTO                     PromptCacheMode = "auto"
 	PROMPTCACHEMODE_OFF                      PromptCacheMode = "off"
+	PROMPTCACHEMODE_REQUIRED                 PromptCacheMode = "required"
 	PROMPTCACHEMODE_UNKNOWN_DEFAULT_OPEN_API PromptCacheMode = "unknown_default_open_api"
 )
 
@@ -29,6 +30,7 @@ const (
 var AllowedPromptCacheModeEnumValues = []PromptCacheMode{
 	"auto",
 	"off",
+	"required",
 	"unknown_default_open_api",
 }
 

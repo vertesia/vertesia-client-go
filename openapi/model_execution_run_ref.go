@@ -21,27 +21,28 @@ var _ MappedNullable = &ExecutionRunRef{}
 
 // ExecutionRunRef struct for ExecutionRunRef
 type ExecutionRunRef struct {
-	Id            string                             `json:"id"`
-	Parent        *ExecutionRunParent                `json:"parent,omitempty"`
-	Evaluation    *ExecutionRunEvaluation            `json:"evaluation,omitempty"`
-	Tags          []string                           `json:"tags,omitempty"`
-	Environment   NullableExecutionRunRefEnvironment `json:"environment"`
-	ModelId       *string                            `json:"modelId,omitempty"`
-	ResultSchema  *JSONSchema                        `json:"result_schema,omitempty"`
-	Ttl           float32                            `json:"ttl"`
-	Status        ExecutionRunStatus                 `json:"status"`
-	FinishReason  *string                            `json:"finish_reason,omitempty"`
-	Prompt        interface{}                        `json:"prompt,omitempty"`
-	TokenUse      *ExecutionTokenUsage               `json:"token_use,omitempty"`
-	Chunks        *float32                           `json:"chunks,omitempty"`
-	ExecutionTime *float32                           `json:"execution_time,omitempty"`
-	CreatedAt     time.Time                          `json:"created_at"`
-	UpdatedAt     time.Time                          `json:"updated_at"`
-	Account       AccountRef                         `json:"account"`
-	Project       ProjectRef                         `json:"project"`
-	Config        InteractionExecutionConfiguration  `json:"config"`
-	Error         *InteractionExecutionError         `json:"error,omitempty"`
-	Source        RunSource                          `json:"source"`
+	Id                     string                             `json:"id"`
+	Parent                 *ExecutionRunParent                `json:"parent,omitempty"`
+	Evaluation             *ExecutionRunEvaluation            `json:"evaluation,omitempty"`
+	Tags                   []string                           `json:"tags,omitempty"`
+	Environment            NullableExecutionRunRefEnvironment `json:"environment"`
+	ModelId                *string                            `json:"modelId,omitempty"`
+	ResultSchema           *JSONSchema                        `json:"result_schema,omitempty"`
+	Ttl                    float32                            `json:"ttl"`
+	Status                 ExecutionRunStatus                 `json:"status"`
+	FinishReason           *string                            `json:"finish_reason,omitempty"`
+	Prompt                 interface{}                        `json:"prompt,omitempty"`
+	TokenUse               *ExecutionTokenUsage               `json:"token_use,omitempty"`
+	PromptCacheDiagnostics []PromptCacheDiagnostic            `json:"prompt_cache_diagnostics,omitempty"`
+	Chunks                 *float32                           `json:"chunks,omitempty"`
+	ExecutionTime          *float32                           `json:"execution_time,omitempty"`
+	CreatedAt              time.Time                          `json:"created_at"`
+	UpdatedAt              time.Time                          `json:"updated_at"`
+	Account                AccountRef                         `json:"account"`
+	Project                ProjectRef                         `json:"project"`
+	Config                 InteractionExecutionConfiguration  `json:"config"`
+	Error                  *InteractionExecutionError         `json:"error,omitempty"`
+	Source                 RunSource                          `json:"source"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.
 	// Deprecated
 	OutputModality *Modalities `json:"output_modality,omitempty"`
@@ -439,6 +440,38 @@ func (o *ExecutionRunRef) HasTokenUse() bool {
 // SetTokenUse gets a reference to the given ExecutionTokenUsage and assigns it to the TokenUse field.
 func (o *ExecutionRunRef) SetTokenUse(v ExecutionTokenUsage) {
 	o.TokenUse = &v
+}
+
+// GetPromptCacheDiagnostics returns the PromptCacheDiagnostics field value if set, zero value otherwise.
+func (o *ExecutionRunRef) GetPromptCacheDiagnostics() []PromptCacheDiagnostic {
+	if o == nil || IsNil(o.PromptCacheDiagnostics) {
+		var ret []PromptCacheDiagnostic
+		return ret
+	}
+	return o.PromptCacheDiagnostics
+}
+
+// GetPromptCacheDiagnosticsOk returns a tuple with the PromptCacheDiagnostics field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExecutionRunRef) GetPromptCacheDiagnosticsOk() ([]PromptCacheDiagnostic, bool) {
+	if o == nil || IsNil(o.PromptCacheDiagnostics) {
+		return nil, false
+	}
+	return o.PromptCacheDiagnostics, true
+}
+
+// HasPromptCacheDiagnostics returns a boolean if a field has been set.
+func (o *ExecutionRunRef) HasPromptCacheDiagnostics() bool {
+	if o != nil && !IsNil(o.PromptCacheDiagnostics) {
+		return true
+	}
+
+	return false
+}
+
+// SetPromptCacheDiagnostics gets a reference to the given []PromptCacheDiagnostic and assigns it to the PromptCacheDiagnostics field.
+func (o *ExecutionRunRef) SetPromptCacheDiagnostics(v []PromptCacheDiagnostic) {
+	o.PromptCacheDiagnostics = v
 }
 
 // GetChunks returns the Chunks field value if set, zero value otherwise.
@@ -931,6 +964,9 @@ func (o ExecutionRunRef) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.TokenUse) {
 		toSerialize["token_use"] = o.TokenUse
 	}
+	if !IsNil(o.PromptCacheDiagnostics) {
+		toSerialize["prompt_cache_diagnostics"] = o.PromptCacheDiagnostics
+	}
 	if !IsNil(o.Chunks) {
 		toSerialize["chunks"] = o.Chunks
 	}
@@ -1029,6 +1065,7 @@ func (o *ExecutionRunRef) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "finish_reason")
 		delete(additionalProperties, "prompt")
 		delete(additionalProperties, "token_use")
+		delete(additionalProperties, "prompt_cache_diagnostics")
 		delete(additionalProperties, "chunks")
 		delete(additionalProperties, "execution_time")
 		delete(additionalProperties, "created_at")
