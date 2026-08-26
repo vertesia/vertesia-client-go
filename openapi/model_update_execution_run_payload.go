@@ -25,23 +25,24 @@ type UpdateExecutionRunPayload struct {
 	Evaluation *ExecutionRunEvaluation `json:"evaluation,omitempty"`
 	Tags       []string                `json:"tags,omitempty"`
 	// Environment reference - populated with full object in API responses
-	Environment   *ExecutionEnvironmentRef           `json:"environment,omitempty"`
-	ModelId       *string                            `json:"modelId,omitempty"`
-	ResultSchema  *JSONSchema                        `json:"result_schema,omitempty"`
-	Ttl           *float32                           `json:"ttl,omitempty"`
-	Status        *ExecutionRunStatus                `json:"status,omitempty"`
-	FinishReason  *string                            `json:"finish_reason,omitempty"`
-	Prompt        interface{}                        `json:"prompt,omitempty"`
-	TokenUse      *ExecutionTokenUsage               `json:"token_use,omitempty"`
-	Chunks        *float32                           `json:"chunks,omitempty"`
-	ExecutionTime *float32                           `json:"execution_time,omitempty"`
-	CreatedAt     *time.Time                         `json:"created_at,omitempty"`
-	UpdatedAt     *time.Time                         `json:"updated_at,omitempty"`
-	Account       *AccountRef                        `json:"account,omitempty"`
-	Project       *ProjectRef                        `json:"project,omitempty"`
-	Config        *InteractionExecutionConfiguration `json:"config,omitempty"`
-	Error         *InteractionExecutionError         `json:"error,omitempty"`
-	Source        *RunSource                         `json:"source,omitempty"`
+	Environment            *ExecutionEnvironmentRef           `json:"environment,omitempty"`
+	ModelId                *string                            `json:"modelId,omitempty"`
+	ResultSchema           *JSONSchema                        `json:"result_schema,omitempty"`
+	Ttl                    *float32                           `json:"ttl,omitempty"`
+	Status                 *ExecutionRunStatus                `json:"status,omitempty"`
+	FinishReason           *string                            `json:"finish_reason,omitempty"`
+	Prompt                 interface{}                        `json:"prompt,omitempty"`
+	TokenUse               *ExecutionTokenUsage               `json:"token_use,omitempty"`
+	PromptCacheDiagnostics []PromptCacheDiagnostic            `json:"prompt_cache_diagnostics,omitempty"`
+	Chunks                 *float32                           `json:"chunks,omitempty"`
+	ExecutionTime          *float32                           `json:"execution_time,omitempty"`
+	CreatedAt              *time.Time                         `json:"created_at,omitempty"`
+	UpdatedAt              *time.Time                         `json:"updated_at,omitempty"`
+	Account                *AccountRef                        `json:"account,omitempty"`
+	Project                *ProjectRef                        `json:"project,omitempty"`
+	Config                 *InteractionExecutionConfiguration `json:"config,omitempty"`
+	Error                  *InteractionExecutionError         `json:"error,omitempty"`
+	Source                 *RunSource                         `json:"source,omitempty"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.
 	// Deprecated
 	OutputModality *Modalities `json:"output_modality,omitempty"`
@@ -455,6 +456,38 @@ func (o *UpdateExecutionRunPayload) HasTokenUse() bool {
 // SetTokenUse gets a reference to the given ExecutionTokenUsage and assigns it to the TokenUse field.
 func (o *UpdateExecutionRunPayload) SetTokenUse(v ExecutionTokenUsage) {
 	o.TokenUse = &v
+}
+
+// GetPromptCacheDiagnostics returns the PromptCacheDiagnostics field value if set, zero value otherwise.
+func (o *UpdateExecutionRunPayload) GetPromptCacheDiagnostics() []PromptCacheDiagnostic {
+	if o == nil || IsNil(o.PromptCacheDiagnostics) {
+		var ret []PromptCacheDiagnostic
+		return ret
+	}
+	return o.PromptCacheDiagnostics
+}
+
+// GetPromptCacheDiagnosticsOk returns a tuple with the PromptCacheDiagnostics field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateExecutionRunPayload) GetPromptCacheDiagnosticsOk() ([]PromptCacheDiagnostic, bool) {
+	if o == nil || IsNil(o.PromptCacheDiagnostics) {
+		return nil, false
+	}
+	return o.PromptCacheDiagnostics, true
+}
+
+// HasPromptCacheDiagnostics returns a boolean if a field has been set.
+func (o *UpdateExecutionRunPayload) HasPromptCacheDiagnostics() bool {
+	if o != nil && !IsNil(o.PromptCacheDiagnostics) {
+		return true
+	}
+
+	return false
+}
+
+// SetPromptCacheDiagnostics gets a reference to the given []PromptCacheDiagnostic and assigns it to the PromptCacheDiagnostics field.
+func (o *UpdateExecutionRunPayload) SetPromptCacheDiagnostics(v []PromptCacheDiagnostic) {
+	o.PromptCacheDiagnostics = v
 }
 
 // GetChunks returns the Chunks field value if set, zero value otherwise.
@@ -954,6 +987,9 @@ func (o UpdateExecutionRunPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.TokenUse) {
 		toSerialize["token_use"] = o.TokenUse
 	}
+	if !IsNil(o.PromptCacheDiagnostics) {
+		toSerialize["prompt_cache_diagnostics"] = o.PromptCacheDiagnostics
+	}
 	if !IsNil(o.Chunks) {
 		toSerialize["chunks"] = o.Chunks
 	}
@@ -1030,6 +1066,7 @@ func (o *UpdateExecutionRunPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "finish_reason")
 		delete(additionalProperties, "prompt")
 		delete(additionalProperties, "token_use")
+		delete(additionalProperties, "prompt_cache_diagnostics")
 		delete(additionalProperties, "chunks")
 		delete(additionalProperties, "execution_time")
 		delete(additionalProperties, "created_at")
