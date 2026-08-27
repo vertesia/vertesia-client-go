@@ -42,9 +42,12 @@ type ComplexSearchQuery struct {
 	// dynamicScaling rescales the weights when a particular search type is not present in the results, per object. e.g. Weights of 5,3,2 will be treated as 0,3,2 if the first search type is not present in the results. Ignored when scoreAggregation is 'smart' Default is 'on'
 	DynamicScaling *DynamicScalingTypes `json:"dynamic_scaling,omitempty"`
 	// rrf: Reciprocal Rank Fusion rsf: Reciprocal Score Fusion smart: Our own algorithm (default and recommended)
-	ScoreAggregation *ScoreAggregationTypes `json:"score_aggregation,omitempty"`
-	Match            map[string]interface{} `json:"match,omitempty"`
+	ScoreAggregation     *ScoreAggregationTypes `json:"score_aggregation,omitempty"`
+	Match                map[string]interface{} `json:"match,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ComplexSearchQuery ComplexSearchQuery
 
 // NewComplexSearchQuery instantiates a new ComplexSearchQuery object
 // This constructor will assign default values to properties that have it defined,
@@ -735,9 +738,9 @@ func (o *ComplexSearchQuery) SetScoreAggregation(v ScoreAggregationTypes) {
 	o.ScoreAggregation = &v
 }
 
-// GetMatch returns the Match field value if set, zero value otherwise.
+// GetMatch returns the Match field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ComplexSearchQuery) GetMatch() map[string]interface{} {
-	if o == nil || IsNil(o.Match) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -746,6 +749,7 @@ func (o *ComplexSearchQuery) GetMatch() map[string]interface{} {
 
 // GetMatchOk returns a tuple with the Match field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ComplexSearchQuery) GetMatchOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Match) {
 		return map[string]interface{}{}, false
@@ -840,10 +844,57 @@ func (o ComplexSearchQuery) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ScoreAggregation) {
 		toSerialize["score_aggregation"] = o.ScoreAggregation
 	}
-	if !IsNil(o.Match) {
+	if o.Match != nil {
 		toSerialize["match"] = o.Match
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ComplexSearchQuery) UnmarshalJSON(data []byte) (err error) {
+	varComplexSearchQuery := _ComplexSearchQuery{}
+
+	err = json.Unmarshal(data, &varComplexSearchQuery)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ComplexSearchQuery(varComplexSearchQuery)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "ids")
+		delete(additionalProperties, "createdFrom")
+		delete(additionalProperties, "createdTo")
+		delete(additionalProperties, "updatedFrom")
+		delete(additionalProperties, "updatedTo")
+		delete(additionalProperties, "location")
+		delete(additionalProperties, "parent")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "types")
+		delete(additionalProperties, "all_revisions")
+		delete(additionalProperties, "from_root")
+		delete(additionalProperties, "vector")
+		delete(additionalProperties, "full_text")
+		delete(additionalProperties, "weights")
+		delete(additionalProperties, "dynamic_scaling")
+		delete(additionalProperties, "score_aggregation")
+		delete(additionalProperties, "match")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableComplexSearchQuery struct {

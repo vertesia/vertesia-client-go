@@ -48,9 +48,9 @@ func NewDSLChildWorkflowStepOptionsWithDefaults() *DSLChildWorkflowStepOptions {
 	return &this
 }
 
-// GetMemo returns the Memo field value if set, zero value otherwise.
+// GetMemo returns the Memo field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *DSLChildWorkflowStepOptions) GetMemo() map[string]interface{} {
-	if o == nil || IsNil(o.Memo) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -59,6 +59,7 @@ func (o *DSLChildWorkflowStepOptions) GetMemo() map[string]interface{} {
 
 // GetMemoOk returns a tuple with the Memo field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DSLChildWorkflowStepOptions) GetMemoOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Memo) {
 		return map[string]interface{}{}, false
@@ -378,7 +379,7 @@ func (o DSLChildWorkflowStepOptions) MarshalJSON() ([]byte, error) {
 
 func (o DSLChildWorkflowStepOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.Memo) {
+	if o.Memo != nil {
 		toSerialize["memo"] = o.Memo
 	}
 	if !IsNil(o.Retry) {

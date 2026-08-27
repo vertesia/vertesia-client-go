@@ -23,14 +23,15 @@ type BatchQueryResultItem struct {
 	// Column metadata
 	Columns []QueryResultColumn `json:"columns"`
 	// Result rows
-	Rows []map[string]interface{} `json:"rows"`
+	Rows []*map[string]interface{} `json:"rows"`
 	// Number of rows returned
 	RowCount float32 `json:"row_count"`
 	// Query execution time in milliseconds
 	ExecutionTimeMs float32 `json:"execution_time_ms"`
 	// Error message if query failed (used in batch queries)
-	Error *string `json:"error,omitempty"`
-	Name  string  `json:"name"`
+	Error                *string `json:"error,omitempty"`
+	Name                 string  `json:"name"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _BatchQueryResultItem BatchQueryResultItem
@@ -39,7 +40,7 @@ type _BatchQueryResultItem BatchQueryResultItem
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBatchQueryResultItem(columns []QueryResultColumn, rows []map[string]interface{}, rowCount float32, executionTimeMs float32, name string) *BatchQueryResultItem {
+func NewBatchQueryResultItem(columns []QueryResultColumn, rows []*map[string]interface{}, rowCount float32, executionTimeMs float32, name string) *BatchQueryResultItem {
 	this := BatchQueryResultItem{}
 	this.Columns = columns
 	this.Rows = rows
@@ -82,9 +83,9 @@ func (o *BatchQueryResultItem) SetColumns(v []QueryResultColumn) {
 }
 
 // GetRows returns the Rows field value
-func (o *BatchQueryResultItem) GetRows() []map[string]interface{} {
+func (o *BatchQueryResultItem) GetRows() []*map[string]interface{} {
 	if o == nil {
-		var ret []map[string]interface{}
+		var ret []*map[string]interface{}
 		return ret
 	}
 
@@ -93,7 +94,7 @@ func (o *BatchQueryResultItem) GetRows() []map[string]interface{} {
 
 // GetRowsOk returns a tuple with the Rows field value
 // and a boolean to check if the value has been set.
-func (o *BatchQueryResultItem) GetRowsOk() ([]map[string]interface{}, bool) {
+func (o *BatchQueryResultItem) GetRowsOk() ([]*map[string]interface{}, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -101,7 +102,7 @@ func (o *BatchQueryResultItem) GetRowsOk() ([]map[string]interface{}, bool) {
 }
 
 // SetRows sets field value
-func (o *BatchQueryResultItem) SetRows(v []map[string]interface{}) {
+func (o *BatchQueryResultItem) SetRows(v []*map[string]interface{}) {
 	o.Rows = v
 }
 
@@ -227,6 +228,11 @@ func (o BatchQueryResultItem) ToMap() (map[string]interface{}, error) {
 		toSerialize["error"] = o.Error
 	}
 	toSerialize["name"] = o.Name
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -265,6 +271,18 @@ func (o *BatchQueryResultItem) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = BatchQueryResultItem(varBatchQueryResultItem)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "columns")
+		delete(additionalProperties, "rows")
+		delete(additionalProperties, "row_count")
+		delete(additionalProperties, "execution_time_ms")
+		delete(additionalProperties, "error")
+		delete(additionalProperties, "name")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -40,6 +40,7 @@ type OAuthClient struct {
 	CreatedAt              string                 `json:"created_at"`
 	UpdatedAt              string                 `json:"updated_at"`
 	ClientId               string                 `json:"client_id"`
+	AdditionalProperties   map[string]interface{}
 }
 
 type _OAuthClient OAuthClient
@@ -410,9 +411,9 @@ func (o *OAuthClient) SetRestrictToOwnerAccount(v bool) {
 	o.RestrictToOwnerAccount = &v
 }
 
-// GetMetadata returns the Metadata field value if set, zero value otherwise.
+// GetMetadata returns the Metadata field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *OAuthClient) GetMetadata() map[string]interface{} {
-	if o == nil || IsNil(o.Metadata) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -421,6 +422,7 @@ func (o *OAuthClient) GetMetadata() map[string]interface{} {
 
 // GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *OAuthClient) GetMetadataOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Metadata) {
 		return map[string]interface{}{}, false
@@ -607,7 +609,7 @@ func (o OAuthClient) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RestrictToOwnerAccount) {
 		toSerialize["restrict_to_owner_account"] = o.RestrictToOwnerAccount
 	}
-	if !IsNil(o.Metadata) {
+	if o.Metadata != nil {
 		toSerialize["metadata"] = o.Metadata
 	}
 	if !IsNil(o.CreatedBy) {
@@ -619,6 +621,11 @@ func (o OAuthClient) ToMap() (map[string]interface{}, error) {
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["client_id"] = o.ClientId
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -665,6 +672,31 @@ func (o *OAuthClient) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = OAuthClient(varOAuthClient)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "client_name")
+		delete(additionalProperties, "client_type")
+		delete(additionalProperties, "redirect_uris")
+		delete(additionalProperties, "grant_types")
+		delete(additionalProperties, "response_types")
+		delete(additionalProperties, "token_endpoint_auth_method")
+		delete(additionalProperties, "allowed_scopes")
+		delete(additionalProperties, "default_scopes")
+		delete(additionalProperties, "registration_source")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "project_binding_mode")
+		delete(additionalProperties, "fixed_project_id")
+		delete(additionalProperties, "restrict_to_owner_account")
+		delete(additionalProperties, "metadata")
+		delete(additionalProperties, "created_by")
+		delete(additionalProperties, "client_secret_configured")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "client_id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

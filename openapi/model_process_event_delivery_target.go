@@ -22,15 +22,16 @@ var _ MappedNullable = &ProcessEventDeliveryTarget{}
 type ProcessEventDeliveryTarget struct {
 	Type string `json:"type"`
 	// Stored process ID, app ref, or system ref. Required unless process_definition is supplied.
-	ProcessRef        *string                 `json:"process_ref,omitempty"`
-	ProcessVersion    *float32                `json:"process_version,omitempty"`
-	ProcessDefinition *ProcessDefinitionBody  `json:"process_definition,omitempty"`
-	RunType           *ProcessRunType         `json:"run_type,omitempty"`
-	Data              map[string]interface{}  `json:"data,omitempty"`
-	Config            map[string]interface{}  `json:"config,omitempty"`
-	Visibility        *ConversationVisibility `json:"visibility,omitempty"`
-	Tags              []string                `json:"tags,omitempty"`
-	Categories        []string                `json:"categories,omitempty"`
+	ProcessRef           *string                 `json:"process_ref,omitempty"`
+	ProcessVersion       *float32                `json:"process_version,omitempty"`
+	ProcessDefinition    *ProcessDefinitionBody  `json:"process_definition,omitempty"`
+	RunType              *ProcessRunType         `json:"run_type,omitempty"`
+	Data                 map[string]interface{}  `json:"data,omitempty"`
+	Config               map[string]interface{}  `json:"config,omitempty"`
+	Visibility           *ConversationVisibility `json:"visibility,omitempty"`
+	Tags                 []string                `json:"tags,omitempty"`
+	Categories           []string                `json:"categories,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ProcessEventDeliveryTarget ProcessEventDeliveryTarget
@@ -205,9 +206,9 @@ func (o *ProcessEventDeliveryTarget) SetRunType(v ProcessRunType) {
 	o.RunType = &v
 }
 
-// GetData returns the Data field value if set, zero value otherwise.
+// GetData returns the Data field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ProcessEventDeliveryTarget) GetData() map[string]interface{} {
-	if o == nil || IsNil(o.Data) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -216,6 +217,7 @@ func (o *ProcessEventDeliveryTarget) GetData() map[string]interface{} {
 
 // GetDataOk returns a tuple with the Data field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ProcessEventDeliveryTarget) GetDataOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Data) {
 		return map[string]interface{}{}, false
@@ -237,9 +239,9 @@ func (o *ProcessEventDeliveryTarget) SetData(v map[string]interface{}) {
 	o.Data = v
 }
 
-// GetConfig returns the Config field value if set, zero value otherwise.
+// GetConfig returns the Config field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ProcessEventDeliveryTarget) GetConfig() map[string]interface{} {
-	if o == nil || IsNil(o.Config) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -248,6 +250,7 @@ func (o *ProcessEventDeliveryTarget) GetConfig() map[string]interface{} {
 
 // GetConfigOk returns a tuple with the Config field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ProcessEventDeliveryTarget) GetConfigOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Config) {
 		return map[string]interface{}{}, false
@@ -388,10 +391,10 @@ func (o ProcessEventDeliveryTarget) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RunType) {
 		toSerialize["run_type"] = o.RunType
 	}
-	if !IsNil(o.Data) {
+	if o.Data != nil {
 		toSerialize["data"] = o.Data
 	}
-	if !IsNil(o.Config) {
+	if o.Config != nil {
 		toSerialize["config"] = o.Config
 	}
 	if !IsNil(o.Visibility) {
@@ -403,6 +406,11 @@ func (o ProcessEventDeliveryTarget) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Categories) {
 		toSerialize["categories"] = o.Categories
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -437,6 +445,22 @@ func (o *ProcessEventDeliveryTarget) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = ProcessEventDeliveryTarget(varProcessEventDeliveryTarget)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "process_ref")
+		delete(additionalProperties, "process_version")
+		delete(additionalProperties, "process_definition")
+		delete(additionalProperties, "run_type")
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "config")
+		delete(additionalProperties, "visibility")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "categories")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

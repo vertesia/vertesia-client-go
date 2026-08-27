@@ -503,9 +503,9 @@ func (o *ContentObjectApiResponse) SetProperties(v map[string]interface{}) {
 	o.Properties = v
 }
 
-// GetMetadata returns the Metadata field value if set, zero value otherwise.
+// GetMetadata returns the Metadata field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ContentObjectApiResponse) GetMetadata() map[string]interface{} {
-	if o == nil || IsNil(o.Metadata) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -514,6 +514,7 @@ func (o *ContentObjectApiResponse) GetMetadata() map[string]interface{} {
 
 // GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ContentObjectApiResponse) GetMetadataOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Metadata) {
 		return map[string]interface{}{}, false
@@ -911,9 +912,9 @@ func (o *ContentObjectApiResponse) SetPartsEtag(v string) {
 	o.PartsEtag = &v
 }
 
-// GetTranscript returns the Transcript field value if set, zero value otherwise.
+// GetTranscript returns the Transcript field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ContentObjectApiResponse) GetTranscript() map[string]interface{} {
-	if o == nil || IsNil(o.Transcript) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -922,6 +923,7 @@ func (o *ContentObjectApiResponse) GetTranscript() map[string]interface{} {
 
 // GetTranscriptOk returns a tuple with the Transcript field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ContentObjectApiResponse) GetTranscriptOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Transcript) {
 		return map[string]interface{}{}, false
@@ -1119,7 +1121,7 @@ func (o ContentObjectApiResponse) ToMap() (map[string]interface{}, error) {
 		toSerialize["external_id"] = o.ExternalId
 	}
 	toSerialize["properties"] = o.Properties
-	if !IsNil(o.Metadata) {
+	if o.Metadata != nil {
 		toSerialize["metadata"] = o.Metadata
 	}
 	if !IsNil(o.Tokens) {
@@ -1156,7 +1158,7 @@ func (o ContentObjectApiResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PartsEtag) {
 		toSerialize["parts_etag"] = o.PartsEtag
 	}
-	if !IsNil(o.Transcript) {
+	if o.Transcript != nil {
 		toSerialize["transcript"] = o.Transcript
 	}
 	if !IsNil(o.Security) {

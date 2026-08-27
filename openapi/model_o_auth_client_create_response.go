@@ -41,6 +41,7 @@ type OAuthClientCreateResponse struct {
 	UpdatedAt              string                 `json:"updated_at"`
 	ClientId               string                 `json:"client_id"`
 	ClientSecret           *string                `json:"client_secret,omitempty"`
+	AdditionalProperties   map[string]interface{}
 }
 
 type _OAuthClientCreateResponse OAuthClientCreateResponse
@@ -411,9 +412,9 @@ func (o *OAuthClientCreateResponse) SetRestrictToOwnerAccount(v bool) {
 	o.RestrictToOwnerAccount = &v
 }
 
-// GetMetadata returns the Metadata field value if set, zero value otherwise.
+// GetMetadata returns the Metadata field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *OAuthClientCreateResponse) GetMetadata() map[string]interface{} {
-	if o == nil || IsNil(o.Metadata) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -422,6 +423,7 @@ func (o *OAuthClientCreateResponse) GetMetadata() map[string]interface{} {
 
 // GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *OAuthClientCreateResponse) GetMetadataOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Metadata) {
 		return map[string]interface{}{}, false
@@ -640,7 +642,7 @@ func (o OAuthClientCreateResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.RestrictToOwnerAccount) {
 		toSerialize["restrict_to_owner_account"] = o.RestrictToOwnerAccount
 	}
-	if !IsNil(o.Metadata) {
+	if o.Metadata != nil {
 		toSerialize["metadata"] = o.Metadata
 	}
 	if !IsNil(o.CreatedBy) {
@@ -655,6 +657,11 @@ func (o OAuthClientCreateResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ClientSecret) {
 		toSerialize["client_secret"] = o.ClientSecret
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -701,6 +708,32 @@ func (o *OAuthClientCreateResponse) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = OAuthClientCreateResponse(varOAuthClientCreateResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "client_name")
+		delete(additionalProperties, "client_type")
+		delete(additionalProperties, "redirect_uris")
+		delete(additionalProperties, "grant_types")
+		delete(additionalProperties, "response_types")
+		delete(additionalProperties, "token_endpoint_auth_method")
+		delete(additionalProperties, "allowed_scopes")
+		delete(additionalProperties, "default_scopes")
+		delete(additionalProperties, "registration_source")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "project_binding_mode")
+		delete(additionalProperties, "fixed_project_id")
+		delete(additionalProperties, "restrict_to_owner_account")
+		delete(additionalProperties, "metadata")
+		delete(additionalProperties, "created_by")
+		delete(additionalProperties, "client_secret_configured")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "client_id")
+		delete(additionalProperties, "client_secret")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

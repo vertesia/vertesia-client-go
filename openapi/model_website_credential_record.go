@@ -35,14 +35,15 @@ type WebsiteCredentialRecord struct {
 	Notes                 *string                        `json:"notes,omitempty"`
 	TotpMetadata          *WebsiteCredentialTotpMetadata `json:"totp_metadata,omitempty"`
 	// Optional ISO timestamp after which the credential is no longer usable. Expired credentials are hidden from lookup and cannot be filled.
-	ExpiresAt         *string `json:"expires_at,omitempty"`
-	CreatedAt         *string `json:"created_at,omitempty"`
-	UpdatedAt         *string `json:"updated_at,omitempty"`
-	HasUsernameSecret bool    `json:"has_username_secret"`
-	HasPassword       bool    `json:"has_password"`
-	HasTotp           bool    `json:"has_totp"`
-	HasOauth          bool    `json:"has_oauth"`
-	PasswordHint      *string `json:"password_hint,omitempty"`
+	ExpiresAt            *string `json:"expires_at,omitempty"`
+	CreatedAt            *string `json:"created_at,omitempty"`
+	UpdatedAt            *string `json:"updated_at,omitempty"`
+	HasUsernameSecret    bool    `json:"has_username_secret"`
+	HasPassword          bool    `json:"has_password"`
+	HasTotp              bool    `json:"has_totp"`
+	HasOauth             bool    `json:"has_oauth"`
+	PasswordHint         *string `json:"password_hint,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _WebsiteCredentialRecord WebsiteCredentialRecord
@@ -282,9 +283,9 @@ func (o *WebsiteCredentialRecord) SetUsernameSecretEnabled(v bool) {
 	o.UsernameSecretEnabled = v
 }
 
-// GetProperties returns the Properties field value if set, zero value otherwise.
+// GetProperties returns the Properties field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *WebsiteCredentialRecord) GetProperties() map[string]interface{} {
-	if o == nil || IsNil(o.Properties) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -293,6 +294,7 @@ func (o *WebsiteCredentialRecord) GetProperties() map[string]interface{} {
 
 // GetPropertiesOk returns a tuple with the Properties field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *WebsiteCredentialRecord) GetPropertiesOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Properties) {
 		return map[string]interface{}{}, false
@@ -720,7 +722,7 @@ func (o WebsiteCredentialRecord) ToMap() (map[string]interface{}, error) {
 		toSerialize["username_hint"] = o.UsernameHint
 	}
 	toSerialize["username_secret_enabled"] = o.UsernameSecretEnabled
-	if !IsNil(o.Properties) {
+	if o.Properties != nil {
 		toSerialize["properties"] = o.Properties
 	}
 	if !IsNil(o.Tags) {
@@ -754,6 +756,11 @@ func (o WebsiteCredentialRecord) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PasswordHint) {
 		toSerialize["password_hint"] = o.PasswordHint
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -797,6 +804,34 @@ func (o *WebsiteCredentialRecord) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = WebsiteCredentialRecord(varWebsiteCredentialRecord)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "credential_ref")
+		delete(additionalProperties, "project")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "websites")
+		delete(additionalProperties, "username")
+		delete(additionalProperties, "username_hint")
+		delete(additionalProperties, "username_secret_enabled")
+		delete(additionalProperties, "properties")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "enabled")
+		delete(additionalProperties, "capabilities")
+		delete(additionalProperties, "notes")
+		delete(additionalProperties, "totp_metadata")
+		delete(additionalProperties, "expires_at")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "has_username_secret")
+		delete(additionalProperties, "has_password")
+		delete(additionalProperties, "has_totp")
+		delete(additionalProperties, "has_oauth")
+		delete(additionalProperties, "password_hint")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

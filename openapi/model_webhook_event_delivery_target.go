@@ -25,14 +25,15 @@ type WebhookEventDeliveryTarget struct {
 	// Server-managed: whether a signing secret is stored. Set by the server, never by callers.
 	HasSecret bool `json:"has_secret"`
 	// Server-managed: label of the active signing secret.
-	SecretLabel      *string                `json:"secret_label,omitempty"`
-	SigningMode      *WebhookSigningMode    `json:"signing_mode,omitempty"`
-	PayloadMode      *WebhookPayloadMode    `json:"payload_mode,omitempty"`
-	Headers          map[string]string      `json:"headers,omitempty"`
-	EncryptedHeaders *bool                  `json:"encrypted_headers,omitempty"`
-	TimeoutMs        *float32               `json:"timeout_ms,omitempty"`
-	ResultPath       *string                `json:"result_path,omitempty"`
-	CustomData       map[string]interface{} `json:"custom_data,omitempty"`
+	SecretLabel          *string                `json:"secret_label,omitempty"`
+	SigningMode          *WebhookSigningMode    `json:"signing_mode,omitempty"`
+	PayloadMode          *WebhookPayloadMode    `json:"payload_mode,omitempty"`
+	Headers              map[string]string      `json:"headers,omitempty"`
+	EncryptedHeaders     *bool                  `json:"encrypted_headers,omitempty"`
+	TimeoutMs            *float32               `json:"timeout_ms,omitempty"`
+	ResultPath           *string                `json:"result_path,omitempty"`
+	CustomData           map[string]interface{} `json:"custom_data,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _WebhookEventDeliveryTarget WebhookEventDeliveryTarget
@@ -353,9 +354,9 @@ func (o *WebhookEventDeliveryTarget) SetResultPath(v string) {
 	o.ResultPath = &v
 }
 
-// GetCustomData returns the CustomData field value if set, zero value otherwise.
+// GetCustomData returns the CustomData field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *WebhookEventDeliveryTarget) GetCustomData() map[string]interface{} {
-	if o == nil || IsNil(o.CustomData) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -364,6 +365,7 @@ func (o *WebhookEventDeliveryTarget) GetCustomData() map[string]interface{} {
 
 // GetCustomDataOk returns a tuple with the CustomData field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *WebhookEventDeliveryTarget) GetCustomDataOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.CustomData) {
 		return map[string]interface{}{}, false
@@ -419,9 +421,14 @@ func (o WebhookEventDeliveryTarget) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ResultPath) {
 		toSerialize["result_path"] = o.ResultPath
 	}
-	if !IsNil(o.CustomData) {
+	if o.CustomData != nil {
 		toSerialize["custom_data"] = o.CustomData
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -458,6 +465,23 @@ func (o *WebhookEventDeliveryTarget) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = WebhookEventDeliveryTarget(varWebhookEventDeliveryTarget)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "url")
+		delete(additionalProperties, "has_secret")
+		delete(additionalProperties, "secret_label")
+		delete(additionalProperties, "signing_mode")
+		delete(additionalProperties, "payload_mode")
+		delete(additionalProperties, "headers")
+		delete(additionalProperties, "encrypted_headers")
+		delete(additionalProperties, "timeout_ms")
+		delete(additionalProperties, "result_path")
+		delete(additionalProperties, "custom_data")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

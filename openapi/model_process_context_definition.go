@@ -20,8 +20,9 @@ var _ MappedNullable = &ProcessContextDefinition{}
 
 // ProcessContextDefinition struct for ProcessContextDefinition
 type ProcessContextDefinition struct {
-	Schema  JSONSchema             `json:"schema"`
-	Initial map[string]interface{} `json:"initial"`
+	Schema               JSONSchema             `json:"schema"`
+	Initial              map[string]interface{} `json:"initial"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ProcessContextDefinition ProcessContextDefinition
@@ -70,6 +71,7 @@ func (o *ProcessContextDefinition) SetSchema(v JSONSchema) {
 }
 
 // GetInitial returns the Initial field value
+// If the value is explicit nil, the zero value for map[string]interface{} will be returned
 func (o *ProcessContextDefinition) GetInitial() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
@@ -81,8 +83,9 @@ func (o *ProcessContextDefinition) GetInitial() map[string]interface{} {
 
 // GetInitialOk returns a tuple with the Initial field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ProcessContextDefinition) GetInitialOk() (map[string]interface{}, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Initial) {
 		return map[string]interface{}{}, false
 	}
 	return o.Initial, true
@@ -104,7 +107,14 @@ func (o ProcessContextDefinition) MarshalJSON() ([]byte, error) {
 func (o ProcessContextDefinition) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["schema"] = o.Schema
-	toSerialize["initial"] = o.Initial
+	if o.Initial != nil {
+		toSerialize["initial"] = o.Initial
+	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -140,6 +150,14 @@ func (o *ProcessContextDefinition) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = ProcessContextDefinition(varProcessContextDefinition)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "schema")
+		delete(additionalProperties, "initial")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

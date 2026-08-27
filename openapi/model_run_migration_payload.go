@@ -19,9 +19,12 @@ var _ MappedNullable = &RunMigrationPayload{}
 
 // RunMigrationPayload struct for RunMigrationPayload
 type RunMigrationPayload struct {
-	Force  *bool                  `json:"force,omitempty"`
-	Params map[string]interface{} `json:"params,omitempty"`
+	Force                *bool                  `json:"force,omitempty"`
+	Params               map[string]interface{} `json:"params,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _RunMigrationPayload RunMigrationPayload
 
 // NewRunMigrationPayload instantiates a new RunMigrationPayload object
 // This constructor will assign default values to properties that have it defined,
@@ -72,9 +75,9 @@ func (o *RunMigrationPayload) SetForce(v bool) {
 	o.Force = &v
 }
 
-// GetParams returns the Params field value if set, zero value otherwise.
+// GetParams returns the Params field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *RunMigrationPayload) GetParams() map[string]interface{} {
-	if o == nil || IsNil(o.Params) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -83,6 +86,7 @@ func (o *RunMigrationPayload) GetParams() map[string]interface{} {
 
 // GetParamsOk returns a tuple with the Params field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *RunMigrationPayload) GetParamsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Params) {
 		return map[string]interface{}{}, false
@@ -117,10 +121,37 @@ func (o RunMigrationPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Force) {
 		toSerialize["force"] = o.Force
 	}
-	if !IsNil(o.Params) {
+	if o.Params != nil {
 		toSerialize["params"] = o.Params
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *RunMigrationPayload) UnmarshalJSON(data []byte) (err error) {
+	varRunMigrationPayload := _RunMigrationPayload{}
+
+	err = json.Unmarshal(data, &varRunMigrationPayload)
+
+	if err != nil {
+		return err
+	}
+
+	*o = RunMigrationPayload(varRunMigrationPayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "force")
+		delete(additionalProperties, "params")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableRunMigrationPayload struct {

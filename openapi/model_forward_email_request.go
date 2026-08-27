@@ -70,9 +70,9 @@ func (o *ForwardEmailRequest) SetEmail(v ForwardEmailRequestEmail) {
 	o.Email = v
 }
 
-// GetContext returns the Context field value if set, zero value otherwise.
+// GetContext returns the Context field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ForwardEmailRequest) GetContext() map[string]interface{} {
-	if o == nil || IsNil(o.Context) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -81,6 +81,7 @@ func (o *ForwardEmailRequest) GetContext() map[string]interface{} {
 
 // GetContextOk returns a tuple with the Context field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ForwardEmailRequest) GetContextOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Context) {
 		return map[string]interface{}{}, false
@@ -145,7 +146,7 @@ func (o ForwardEmailRequest) MarshalJSON() ([]byte, error) {
 func (o ForwardEmailRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["email"] = o.Email
-	if !IsNil(o.Context) {
+	if o.Context != nil {
 		toSerialize["context"] = o.Context
 	}
 	if !IsNil(o.Attachments) {

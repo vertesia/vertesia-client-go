@@ -20,9 +20,10 @@ var _ MappedNullable = &ObjectSearchResponse{}
 
 // ObjectSearchResponse struct for ObjectSearchResponse
 type ObjectSearchResponse struct {
-	Results      []ProjectedContentObjectApiResponse `json:"results"`
-	Facets       ComputedFacetResponse               `json:"facets"`
-	Aggregations map[string]interface{}              `json:"aggregations,omitempty"`
+	Results              []ProjectedContentObjectApiResponse `json:"results"`
+	Facets               ComputedFacetResponse               `json:"facets"`
+	Aggregations         map[string]interface{}              `json:"aggregations,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ObjectSearchResponse ObjectSearchResponse
@@ -94,9 +95,9 @@ func (o *ObjectSearchResponse) SetFacets(v ComputedFacetResponse) {
 	o.Facets = v
 }
 
-// GetAggregations returns the Aggregations field value if set, zero value otherwise.
+// GetAggregations returns the Aggregations field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ObjectSearchResponse) GetAggregations() map[string]interface{} {
-	if o == nil || IsNil(o.Aggregations) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -105,6 +106,7 @@ func (o *ObjectSearchResponse) GetAggregations() map[string]interface{} {
 
 // GetAggregationsOk returns a tuple with the Aggregations field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ObjectSearchResponse) GetAggregationsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Aggregations) {
 		return map[string]interface{}{}, false
@@ -138,9 +140,14 @@ func (o ObjectSearchResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["results"] = o.Results
 	toSerialize["facets"] = o.Facets
-	if !IsNil(o.Aggregations) {
+	if o.Aggregations != nil {
 		toSerialize["aggregations"] = o.Aggregations
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -176,6 +183,15 @@ func (o *ObjectSearchResponse) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = ObjectSearchResponse(varObjectSearchResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "results")
+		delete(additionalProperties, "facets")
+		delete(additionalProperties, "aggregations")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

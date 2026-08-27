@@ -217,9 +217,9 @@ func (o *Project) SetConfiguration(v ProjectConfiguration) {
 	o.Configuration = v
 }
 
-// GetIntegrations returns the Integrations field value if set, zero value otherwise.
+// GetIntegrations returns the Integrations field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *Project) GetIntegrations() map[string]interface{} {
-	if o == nil || IsNil(o.Integrations) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -228,6 +228,7 @@ func (o *Project) GetIntegrations() map[string]interface{} {
 
 // GetIntegrationsOk returns a tuple with the Integrations field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *Project) GetIntegrationsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Integrations) {
 		return map[string]interface{}{}, false
@@ -387,7 +388,7 @@ func (o Project) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["account"] = o.Account
 	toSerialize["configuration"] = o.Configuration
-	if !IsNil(o.Integrations) {
+	if o.Integrations != nil {
 		toSerialize["integrations"] = o.Integrations
 	}
 	toSerialize["plugins"] = o.Plugins

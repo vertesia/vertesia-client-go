@@ -46,8 +46,9 @@ type WorkflowRun struct {
 	// The current activity state of the conversation. - 'working': The agent is actively processing - 'idle': The agent is waiting for user input
 	ActivityState *ConversationActivityState `json:"activity_state,omitempty"`
 	// Whether this conversation is interactive (accepts user input).
-	Interactive *bool                  `json:"interactive,omitempty"`
-	Memo        map[string]interface{} `json:"memo,omitempty"`
+	Interactive          *bool                  `json:"interactive,omitempty"`
+	Memo                 map[string]interface{} `json:"memo,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _WorkflowRun WorkflowRun
@@ -805,6 +806,11 @@ func (o WorkflowRun) ToMap() (map[string]interface{}, error) {
 	if o.Memo != nil {
 		toSerialize["memo"] = o.Memo
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -840,6 +846,33 @@ func (o *WorkflowRun) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = WorkflowRun(varWorkflowRun)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "started_at")
+		delete(additionalProperties, "closed_at")
+		delete(additionalProperties, "execution_duration")
+		delete(additionalProperties, "run_id")
+		delete(additionalProperties, "workflow_id")
+		delete(additionalProperties, "initiated_by")
+		delete(additionalProperties, "interaction_name")
+		delete(additionalProperties, "input")
+		delete(additionalProperties, "result")
+		delete(additionalProperties, "error")
+		delete(additionalProperties, "has_reported_errors")
+		delete(additionalProperties, "raw")
+		delete(additionalProperties, "vertesia_workflow_type")
+		delete(additionalProperties, "interactions")
+		delete(additionalProperties, "visibility")
+		delete(additionalProperties, "topic")
+		delete(additionalProperties, "activity_state")
+		delete(additionalProperties, "interactive")
+		delete(additionalProperties, "memo")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

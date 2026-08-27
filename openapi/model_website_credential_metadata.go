@@ -32,7 +32,8 @@ type WebsiteCredentialMetadata struct {
 	Notes          *string                        `json:"notes,omitempty"`
 	Totp           *WebsiteCredentialTotpMetadata `json:"totp,omitempty"`
 	// Optional ISO timestamp after which the credential is no longer usable. Expired credentials are hidden from lookup and cannot be filled.
-	ExpiresAt *string `json:"expires_at,omitempty"`
+	ExpiresAt            *string `json:"expires_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _WebsiteCredentialMetadata WebsiteCredentialMetadata
@@ -200,9 +201,9 @@ func (o *WebsiteCredentialMetadata) SetUsernameSecret(v bool) {
 	o.UsernameSecret = &v
 }
 
-// GetProperties returns the Properties field value if set, zero value otherwise.
+// GetProperties returns the Properties field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *WebsiteCredentialMetadata) GetProperties() map[string]interface{} {
-	if o == nil || IsNil(o.Properties) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -211,6 +212,7 @@ func (o *WebsiteCredentialMetadata) GetProperties() map[string]interface{} {
 
 // GetPropertiesOk returns a tuple with the Properties field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *WebsiteCredentialMetadata) GetPropertiesOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Properties) {
 		return map[string]interface{}{}, false
@@ -445,7 +447,7 @@ func (o WebsiteCredentialMetadata) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UsernameSecret) {
 		toSerialize["username_secret"] = o.UsernameSecret
 	}
-	if !IsNil(o.Properties) {
+	if o.Properties != nil {
 		toSerialize["properties"] = o.Properties
 	}
 	if !IsNil(o.Tags) {
@@ -466,6 +468,11 @@ func (o WebsiteCredentialMetadata) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ExpiresAt) {
 		toSerialize["expires_at"] = o.ExpiresAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -501,6 +508,24 @@ func (o *WebsiteCredentialMetadata) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = WebsiteCredentialMetadata(varWebsiteCredentialMetadata)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "websites")
+		delete(additionalProperties, "username")
+		delete(additionalProperties, "username_hint")
+		delete(additionalProperties, "username_secret")
+		delete(additionalProperties, "properties")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "enabled")
+		delete(additionalProperties, "capabilities")
+		delete(additionalProperties, "notes")
+		delete(additionalProperties, "totp")
+		delete(additionalProperties, "expires_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

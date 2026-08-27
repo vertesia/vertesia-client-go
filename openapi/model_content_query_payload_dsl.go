@@ -19,11 +19,11 @@ var _ MappedNullable = &ContentQueryPayloadDsl{}
 
 // ContentQueryPayloadDsl struct for ContentQueryPayloadDsl
 type ContentQueryPayloadDsl struct {
-	Query map[string]interface{}   `json:"query,omitempty"`
-	Aggs  map[string]interface{}   `json:"aggs,omitempty"`
-	Size  *float32                 `json:"size,omitempty"`
-	From  *float32                 `json:"from,omitempty"`
-	Sort  []map[string]interface{} `json:"sort,omitempty"`
+	Query map[string]interface{}    `json:"query,omitempty"`
+	Aggs  map[string]interface{}    `json:"aggs,omitempty"`
+	Size  *float32                  `json:"size,omitempty"`
+	From  *float32                  `json:"from,omitempty"`
+	Sort  []*map[string]interface{} `json:"sort,omitempty"`
 }
 
 // NewContentQueryPayloadDsl instantiates a new ContentQueryPayloadDsl object
@@ -43,9 +43,9 @@ func NewContentQueryPayloadDslWithDefaults() *ContentQueryPayloadDsl {
 	return &this
 }
 
-// GetQuery returns the Query field value if set, zero value otherwise.
+// GetQuery returns the Query field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ContentQueryPayloadDsl) GetQuery() map[string]interface{} {
-	if o == nil || IsNil(o.Query) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -54,6 +54,7 @@ func (o *ContentQueryPayloadDsl) GetQuery() map[string]interface{} {
 
 // GetQueryOk returns a tuple with the Query field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ContentQueryPayloadDsl) GetQueryOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Query) {
 		return map[string]interface{}{}, false
@@ -75,9 +76,9 @@ func (o *ContentQueryPayloadDsl) SetQuery(v map[string]interface{}) {
 	o.Query = v
 }
 
-// GetAggs returns the Aggs field value if set, zero value otherwise.
+// GetAggs returns the Aggs field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ContentQueryPayloadDsl) GetAggs() map[string]interface{} {
-	if o == nil || IsNil(o.Aggs) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -86,6 +87,7 @@ func (o *ContentQueryPayloadDsl) GetAggs() map[string]interface{} {
 
 // GetAggsOk returns a tuple with the Aggs field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ContentQueryPayloadDsl) GetAggsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Aggs) {
 		return map[string]interface{}{}, false
@@ -172,9 +174,9 @@ func (o *ContentQueryPayloadDsl) SetFrom(v float32) {
 }
 
 // GetSort returns the Sort field value if set, zero value otherwise.
-func (o *ContentQueryPayloadDsl) GetSort() []map[string]interface{} {
+func (o *ContentQueryPayloadDsl) GetSort() []*map[string]interface{} {
 	if o == nil || IsNil(o.Sort) {
-		var ret []map[string]interface{}
+		var ret []*map[string]interface{}
 		return ret
 	}
 	return o.Sort
@@ -182,7 +184,7 @@ func (o *ContentQueryPayloadDsl) GetSort() []map[string]interface{} {
 
 // GetSortOk returns a tuple with the Sort field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ContentQueryPayloadDsl) GetSortOk() ([]map[string]interface{}, bool) {
+func (o *ContentQueryPayloadDsl) GetSortOk() ([]*map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Sort) {
 		return nil, false
 	}
@@ -198,8 +200,8 @@ func (o *ContentQueryPayloadDsl) HasSort() bool {
 	return false
 }
 
-// SetSort gets a reference to the given []map[string]interface{} and assigns it to the Sort field.
-func (o *ContentQueryPayloadDsl) SetSort(v []map[string]interface{}) {
+// SetSort gets a reference to the given []*map[string]interface{} and assigns it to the Sort field.
+func (o *ContentQueryPayloadDsl) SetSort(v []*map[string]interface{}) {
 	o.Sort = v
 }
 
@@ -213,10 +215,10 @@ func (o ContentQueryPayloadDsl) MarshalJSON() ([]byte, error) {
 
 func (o ContentQueryPayloadDsl) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.Query) {
+	if o.Query != nil {
 		toSerialize["query"] = o.Query
 	}
-	if !IsNil(o.Aggs) {
+	if o.Aggs != nil {
 		toSerialize["aggs"] = o.Aggs
 	}
 	if !IsNil(o.Size) {

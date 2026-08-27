@@ -39,8 +39,9 @@ type DataStoreTableDetail struct {
 	// Table creation timestamp
 	CreatedAt *string `json:"created_at,omitempty"`
 	// Last modification timestamp
-	UpdatedAt  *string                  `json:"updated_at,omitempty"`
-	SampleData []map[string]interface{} `json:"sample_data,omitempty"`
+	UpdatedAt            *string                  `json:"updated_at,omitempty"`
+	SampleData           []map[string]interface{} `json:"sample_data,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _DataStoreTableDetail DataStoreTableDetail
@@ -430,6 +431,11 @@ func (o DataStoreTableDetail) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SampleData) {
 		toSerialize["sample_data"] = o.SampleData
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -466,6 +472,23 @@ func (o *DataStoreTableDetail) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = DataStoreTableDetail(varDataStoreTableDetail)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "columns")
+		delete(additionalProperties, "foreign_keys")
+		delete(additionalProperties, "indexes")
+		delete(additionalProperties, "semantic_type")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "row_count")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "sample_data")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -20,19 +20,22 @@ var _ MappedNullable = &UpdateProjectPayload{}
 
 // UpdateProjectPayload struct for UpdateProjectPayload
 type UpdateProjectPayload struct {
-	Id            *string                `json:"id,omitempty"`
-	Name          *string                `json:"name,omitempty"`
-	Namespace     *string                `json:"namespace,omitempty"`
-	Description   *string                `json:"description,omitempty"`
-	Account       *string                `json:"account,omitempty"`
-	Configuration *ProjectConfiguration  `json:"configuration,omitempty"`
-	Integrations  map[string]interface{} `json:"integrations,omitempty"`
-	Plugins       []string               `json:"plugins,omitempty"`
-	CreatedBy     *string                `json:"created_by,omitempty"`
-	UpdatedBy     *string                `json:"updated_by,omitempty"`
-	CreatedAt     *time.Time             `json:"created_at,omitempty"`
-	UpdatedAt     *time.Time             `json:"updated_at,omitempty"`
+	Id                   *string                `json:"id,omitempty"`
+	Name                 *string                `json:"name,omitempty"`
+	Namespace            *string                `json:"namespace,omitempty"`
+	Description          *string                `json:"description,omitempty"`
+	Account              *string                `json:"account,omitempty"`
+	Configuration        *ProjectConfiguration  `json:"configuration,omitempty"`
+	Integrations         map[string]interface{} `json:"integrations,omitempty"`
+	Plugins              []string               `json:"plugins,omitempty"`
+	CreatedBy            *string                `json:"created_by,omitempty"`
+	UpdatedBy            *string                `json:"updated_by,omitempty"`
+	CreatedAt            *time.Time             `json:"created_at,omitempty"`
+	UpdatedAt            *time.Time             `json:"updated_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateProjectPayload UpdateProjectPayload
 
 // NewUpdateProjectPayload instantiates a new UpdateProjectPayload object
 // This constructor will assign default values to properties that have it defined,
@@ -243,9 +246,9 @@ func (o *UpdateProjectPayload) SetConfiguration(v ProjectConfiguration) {
 	o.Configuration = &v
 }
 
-// GetIntegrations returns the Integrations field value if set, zero value otherwise.
+// GetIntegrations returns the Integrations field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *UpdateProjectPayload) GetIntegrations() map[string]interface{} {
-	if o == nil || IsNil(o.Integrations) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -254,6 +257,7 @@ func (o *UpdateProjectPayload) GetIntegrations() map[string]interface{} {
 
 // GetIntegrationsOk returns a tuple with the Integrations field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *UpdateProjectPayload) GetIntegrationsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Integrations) {
 		return map[string]interface{}{}, false
@@ -463,7 +467,7 @@ func (o UpdateProjectPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Configuration) {
 		toSerialize["configuration"] = o.Configuration
 	}
-	if !IsNil(o.Integrations) {
+	if o.Integrations != nil {
 		toSerialize["integrations"] = o.Integrations
 	}
 	if !IsNil(o.Plugins) {
@@ -481,7 +485,44 @@ func (o UpdateProjectPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateProjectPayload) UnmarshalJSON(data []byte) (err error) {
+	varUpdateProjectPayload := _UpdateProjectPayload{}
+
+	err = json.Unmarshal(data, &varUpdateProjectPayload)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateProjectPayload(varUpdateProjectPayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "namespace")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "account")
+		delete(additionalProperties, "configuration")
+		delete(additionalProperties, "integrations")
+		delete(additionalProperties, "plugins")
+		delete(additionalProperties, "created_by")
+		delete(additionalProperties, "updated_by")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateProjectPayload struct {

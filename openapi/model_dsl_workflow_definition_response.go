@@ -43,9 +43,10 @@ type DSLWorkflowDefinitionResponse struct {
 	// ISO timestamp of when the object was created
 	CreatedAt string `json:"created_at"`
 	// ISO timestamp of when the object was last updated
-	UpdatedAt   string                 `json:"updated_at"`
-	InputSchema map[string]interface{} `json:"input_schema,omitempty"`
-	SpecFormat  string                 `json:"spec_format"`
+	UpdatedAt            string                 `json:"updated_at"`
+	InputSchema          map[string]interface{} `json:"input_schema,omitempty"`
+	SpecFormat           string                 `json:"spec_format"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _DSLWorkflowDefinitionResponse DSLWorkflowDefinitionResponse
@@ -229,6 +230,7 @@ func (o *DSLWorkflowDefinitionResponse) SetActivities(v []DSLActivitySpec) {
 }
 
 // GetVars returns the Vars field value
+// If the value is explicit nil, the zero value for map[string]interface{} will be returned
 func (o *DSLWorkflowDefinitionResponse) GetVars() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
@@ -240,8 +242,9 @@ func (o *DSLWorkflowDefinitionResponse) GetVars() map[string]interface{} {
 
 // GetVarsOk returns a tuple with the Vars field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DSLWorkflowDefinitionResponse) GetVarsOk() (map[string]interface{}, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Vars) {
 		return map[string]interface{}{}, false
 	}
 	return o.Vars, true
@@ -492,9 +495,9 @@ func (o *DSLWorkflowDefinitionResponse) SetUpdatedAt(v string) {
 	o.UpdatedAt = v
 }
 
-// GetInputSchema returns the InputSchema field value if set, zero value otherwise.
+// GetInputSchema returns the InputSchema field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *DSLWorkflowDefinitionResponse) GetInputSchema() map[string]interface{} {
-	if o == nil || IsNil(o.InputSchema) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -503,6 +506,7 @@ func (o *DSLWorkflowDefinitionResponse) GetInputSchema() map[string]interface{} 
 
 // GetInputSchemaOk returns a tuple with the InputSchema field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DSLWorkflowDefinitionResponse) GetInputSchemaOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.InputSchema) {
 		return map[string]interface{}{}, false
@@ -571,7 +575,9 @@ func (o DSLWorkflowDefinitionResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Activities) {
 		toSerialize["activities"] = o.Activities
 	}
-	toSerialize["vars"] = o.Vars
+	if o.Vars != nil {
+		toSerialize["vars"] = o.Vars
+	}
 	if !IsNil(o.Options) {
 		toSerialize["options"] = o.Options
 	}
@@ -587,10 +593,15 @@ func (o DSLWorkflowDefinitionResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize["created_by"] = o.CreatedBy
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt
-	if !IsNil(o.InputSchema) {
+	if o.InputSchema != nil {
 		toSerialize["input_schema"] = o.InputSchema
 	}
 	toSerialize["spec_format"] = o.SpecFormat
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -633,6 +644,29 @@ func (o *DSLWorkflowDefinitionResponse) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = DSLWorkflowDefinitionResponse(varDSLWorkflowDefinitionResponse)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "steps")
+		delete(additionalProperties, "activities")
+		delete(additionalProperties, "vars")
+		delete(additionalProperties, "options")
+		delete(additionalProperties, "result")
+		delete(additionalProperties, "debug_mode")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "edit_revision")
+		delete(additionalProperties, "updated_by")
+		delete(additionalProperties, "created_by")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "input_schema")
+		delete(additionalProperties, "spec_format")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

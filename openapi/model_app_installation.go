@@ -31,9 +31,10 @@ type AppInstallation struct {
 	// OAuth bindings created at install time via oauth_providers provisioning. Maps provider key → OAuth provider ObjectId. Multiple collections sharing the same provider all resolve to the same OAuth provider.
 	ProviderBindings []AppInstallationProviderBinding `json:"provider_bindings,omitempty"`
 	// Per-installation override of the manifest's access_control policy. When set, takes precedence over the manifest value. When undefined, the manifest value (or 'all' default) applies.
-	AccessControl *AppAccessControl `json:"access_control,omitempty"`
-	CreatedAt     string            `json:"created_at"`
-	UpdatedAt     string            `json:"updated_at"`
+	AccessControl        *AppAccessControl `json:"access_control,omitempty"`
+	CreatedAt            string            `json:"created_at"`
+	UpdatedAt            string            `json:"updated_at"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _AppInstallation AppInstallation
@@ -132,9 +133,9 @@ func (o *AppInstallation) SetManifest(v string) {
 	o.Manifest = v
 }
 
-// GetSettings returns the Settings field value if set, zero value otherwise.
+// GetSettings returns the Settings field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *AppInstallation) GetSettings() map[string]interface{} {
-	if o == nil || IsNil(o.Settings) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -143,6 +144,7 @@ func (o *AppInstallation) GetSettings() map[string]interface{} {
 
 // GetSettingsOk returns a tuple with the Settings field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *AppInstallation) GetSettingsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Settings) {
 		return map[string]interface{}{}, false
@@ -353,7 +355,7 @@ func (o AppInstallation) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	toSerialize["project"] = o.Project
 	toSerialize["manifest"] = o.Manifest
-	if !IsNil(o.Settings) {
+	if o.Settings != nil {
 		toSerialize["settings"] = o.Settings
 	}
 	if !IsNil(o.ToolAllowlist) {
@@ -370,6 +372,11 @@ func (o AppInstallation) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -408,6 +415,22 @@ func (o *AppInstallation) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = AppInstallation(varAppInstallation)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "project")
+		delete(additionalProperties, "manifest")
+		delete(additionalProperties, "settings")
+		delete(additionalProperties, "tool_allowlist")
+		delete(additionalProperties, "oauth_bindings")
+		delete(additionalProperties, "provider_bindings")
+		delete(additionalProperties, "access_control")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }
