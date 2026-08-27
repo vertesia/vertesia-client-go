@@ -24,12 +24,16 @@ type ResendConfiguration struct {
 	Enabled     bool                        `json:"enabled"`
 	HasApiKey   *bool                       `json:"has_api_key,omitempty"`
 	ApiKeyHint  *string                     `json:"api_key_hint,omitempty"`
+	// Decrypted credential returned only to authenticated agent principals for runtime use. Human and service-account callers receive null; presence and hint fields report configuration status.
+	ApiKey NullableString `json:"api_key"`
 	// Domain for email (both sending and receiving). Must be verified in Resend.
 	EmailDomain string `json:"email_domain"`
 	// Default display name for outgoing emails (e.g., \"Vertesia - Project Name\")
 	DefaultFromName   *string `json:"default_from_name,omitempty"`
 	HasWebhookSecret  *bool   `json:"has_webhook_secret,omitempty"`
 	WebhookSecretHint *string `json:"webhook_secret_hint,omitempty"`
+	// Decrypted credential returned only to authenticated agent principals for runtime use. Human and service-account callers receive null; presence and hint fields report configuration status.
+	WebhookSecret NullableString `json:"webhook_secret"`
 	// Domains allowed to send emails TO start agents (for inbound validation)
 	AllowedSenderDomains []string `json:"allowed_sender_domains,omitempty"`
 	// Require sender to have project access to start agents via email (default: true)
@@ -44,11 +48,13 @@ type _ResendConfiguration ResendConfiguration
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewResendConfiguration(integration SupportedIntegrationsResend, enabled bool, emailDomain string) *ResendConfiguration {
+func NewResendConfiguration(integration SupportedIntegrationsResend, enabled bool, apiKey NullableString, emailDomain string, webhookSecret NullableString) *ResendConfiguration {
 	this := ResendConfiguration{}
 	this.Integration = integration
 	this.Enabled = enabled
+	this.ApiKey = apiKey
 	this.EmailDomain = emailDomain
+	this.WebhookSecret = webhookSecret
 	return &this
 }
 
@@ -172,6 +178,32 @@ func (o *ResendConfiguration) SetApiKeyHint(v string) {
 	o.ApiKeyHint = &v
 }
 
+// GetApiKey returns the ApiKey field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *ResendConfiguration) GetApiKey() string {
+	if o == nil || o.ApiKey.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.ApiKey.Get()
+}
+
+// GetApiKeyOk returns a tuple with the ApiKey field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *ResendConfiguration) GetApiKeyOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.ApiKey.Get(), o.ApiKey.IsSet()
+}
+
+// SetApiKey sets field value
+func (o *ResendConfiguration) SetApiKey(v string) {
+	o.ApiKey.Set(&v)
+}
+
 // GetEmailDomain returns the EmailDomain field value
 func (o *ResendConfiguration) GetEmailDomain() string {
 	if o == nil {
@@ -292,6 +324,32 @@ func (o *ResendConfiguration) SetWebhookSecretHint(v string) {
 	o.WebhookSecretHint = &v
 }
 
+// GetWebhookSecret returns the WebhookSecret field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *ResendConfiguration) GetWebhookSecret() string {
+	if o == nil || o.WebhookSecret.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.WebhookSecret.Get()
+}
+
+// GetWebhookSecretOk returns a tuple with the WebhookSecret field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *ResendConfiguration) GetWebhookSecretOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.WebhookSecret.Get(), o.WebhookSecret.IsSet()
+}
+
+// SetWebhookSecret sets field value
+func (o *ResendConfiguration) SetWebhookSecret(v string) {
+	o.WebhookSecret.Set(&v)
+}
+
 // GetAllowedSenderDomains returns the AllowedSenderDomains field value if set, zero value otherwise.
 func (o *ResendConfiguration) GetAllowedSenderDomains() []string {
 	if o == nil || IsNil(o.AllowedSenderDomains) {
@@ -406,6 +464,7 @@ func (o ResendConfiguration) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ApiKeyHint) {
 		toSerialize["api_key_hint"] = o.ApiKeyHint
 	}
+	toSerialize["api_key"] = o.ApiKey.Get()
 	toSerialize["email_domain"] = o.EmailDomain
 	if !IsNil(o.DefaultFromName) {
 		toSerialize["default_from_name"] = o.DefaultFromName
@@ -416,6 +475,7 @@ func (o ResendConfiguration) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.WebhookSecretHint) {
 		toSerialize["webhook_secret_hint"] = o.WebhookSecretHint
 	}
+	toSerialize["webhook_secret"] = o.WebhookSecret.Get()
 	if !IsNil(o.AllowedSenderDomains) {
 		toSerialize["allowed_sender_domains"] = o.AllowedSenderDomains
 	}
@@ -435,7 +495,9 @@ func (o *ResendConfiguration) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"integration",
 		"enabled",
+		"api_key",
 		"email_domain",
+		"webhook_secret",
 	}
 
 	allProperties := make(map[string]interface{})

@@ -24,6 +24,8 @@ type ExaConfiguration struct {
 	Enabled     bool                     `json:"enabled"`
 	HasApiKey   *bool                    `json:"has_api_key,omitempty"`
 	ApiKeyHint  *string                  `json:"api_key_hint,omitempty"`
+	// Decrypted credential returned only to authenticated agent principals for runtime use. Human and service-account callers receive null; presence and hint fields report configuration status.
+	ApiKey NullableString `json:"api_key"`
 }
 
 type _ExaConfiguration ExaConfiguration
@@ -32,10 +34,11 @@ type _ExaConfiguration ExaConfiguration
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewExaConfiguration(integration SupportedIntegrationsExa, enabled bool) *ExaConfiguration {
+func NewExaConfiguration(integration SupportedIntegrationsExa, enabled bool, apiKey NullableString) *ExaConfiguration {
 	this := ExaConfiguration{}
 	this.Integration = integration
 	this.Enabled = enabled
+	this.ApiKey = apiKey
 	return &this
 }
 
@@ -159,6 +162,32 @@ func (o *ExaConfiguration) SetApiKeyHint(v string) {
 	o.ApiKeyHint = &v
 }
 
+// GetApiKey returns the ApiKey field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *ExaConfiguration) GetApiKey() string {
+	if o == nil || o.ApiKey.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.ApiKey.Get()
+}
+
+// GetApiKeyOk returns a tuple with the ApiKey field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *ExaConfiguration) GetApiKeyOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.ApiKey.Get(), o.ApiKey.IsSet()
+}
+
+// SetApiKey sets field value
+func (o *ExaConfiguration) SetApiKey(v string) {
+	o.ApiKey.Set(&v)
+}
+
 func (o ExaConfiguration) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -177,6 +206,7 @@ func (o ExaConfiguration) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ApiKeyHint) {
 		toSerialize["api_key_hint"] = o.ApiKeyHint
 	}
+	toSerialize["api_key"] = o.ApiKey.Get()
 	return toSerialize, nil
 }
 
@@ -187,6 +217,7 @@ func (o *ExaConfiguration) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"integration",
 		"enabled",
+		"api_key",
 	}
 
 	allProperties := make(map[string]interface{})

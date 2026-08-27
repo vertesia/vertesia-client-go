@@ -24,7 +24,9 @@ type SerperConfiguration struct {
 	Enabled     bool                        `json:"enabled"`
 	HasApiKey   *bool                       `json:"has_api_key,omitempty"`
 	ApiKeyHint  *string                     `json:"api_key_hint,omitempty"`
-	Url         *string                     `json:"url,omitempty"`
+	// Decrypted credential returned only to authenticated agent principals for runtime use. Human and service-account callers receive null; presence and hint fields report configuration status.
+	ApiKey NullableString `json:"api_key"`
+	Url    *string        `json:"url,omitempty"`
 }
 
 type _SerperConfiguration SerperConfiguration
@@ -33,10 +35,11 @@ type _SerperConfiguration SerperConfiguration
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSerperConfiguration(integration SupportedIntegrationsSerper, enabled bool) *SerperConfiguration {
+func NewSerperConfiguration(integration SupportedIntegrationsSerper, enabled bool, apiKey NullableString) *SerperConfiguration {
 	this := SerperConfiguration{}
 	this.Integration = integration
 	this.Enabled = enabled
+	this.ApiKey = apiKey
 	return &this
 }
 
@@ -160,6 +163,32 @@ func (o *SerperConfiguration) SetApiKeyHint(v string) {
 	o.ApiKeyHint = &v
 }
 
+// GetApiKey returns the ApiKey field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *SerperConfiguration) GetApiKey() string {
+	if o == nil || o.ApiKey.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.ApiKey.Get()
+}
+
+// GetApiKeyOk returns a tuple with the ApiKey field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *SerperConfiguration) GetApiKeyOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.ApiKey.Get(), o.ApiKey.IsSet()
+}
+
+// SetApiKey sets field value
+func (o *SerperConfiguration) SetApiKey(v string) {
+	o.ApiKey.Set(&v)
+}
+
 // GetUrl returns the Url field value if set, zero value otherwise.
 func (o *SerperConfiguration) GetUrl() string {
 	if o == nil || IsNil(o.Url) {
@@ -210,6 +239,7 @@ func (o SerperConfiguration) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ApiKeyHint) {
 		toSerialize["api_key_hint"] = o.ApiKeyHint
 	}
+	toSerialize["api_key"] = o.ApiKey.Get()
 	if !IsNil(o.Url) {
 		toSerialize["url"] = o.Url
 	}
@@ -223,6 +253,7 @@ func (o *SerperConfiguration) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"integration",
 		"enabled",
+		"api_key",
 	}
 
 	allProperties := make(map[string]interface{})
