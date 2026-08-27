@@ -26,6 +26,8 @@ type AskUserWebhookConfiguration struct {
 	WebhookUrl        *string `json:"webhook_url,omitempty"`
 	HasWebhookSecret  *bool   `json:"has_webhook_secret,omitempty"`
 	WebhookSecretHint *string `json:"webhook_secret_hint,omitempty"`
+	// Decrypted credential returned only to authenticated agent principals for runtime use. Human and service-account callers receive null; presence and hint fields report configuration status.
+	WebhookSecret NullableString `json:"webhook_secret"`
 	// Which events to send: ['requested', 'resolved'] or subset (default: both)
 	Events []string `json:"events,omitempty"`
 	// Custom headers to include in webhook requests
@@ -38,10 +40,11 @@ type _AskUserWebhookConfiguration AskUserWebhookConfiguration
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewAskUserWebhookConfiguration(integration SupportedIntegrationsAskUserWebhook, enabled bool) *AskUserWebhookConfiguration {
+func NewAskUserWebhookConfiguration(integration SupportedIntegrationsAskUserWebhook, enabled bool, webhookSecret NullableString) *AskUserWebhookConfiguration {
 	this := AskUserWebhookConfiguration{}
 	this.Integration = integration
 	this.Enabled = enabled
+	this.WebhookSecret = webhookSecret
 	return &this
 }
 
@@ -197,6 +200,32 @@ func (o *AskUserWebhookConfiguration) SetWebhookSecretHint(v string) {
 	o.WebhookSecretHint = &v
 }
 
+// GetWebhookSecret returns the WebhookSecret field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *AskUserWebhookConfiguration) GetWebhookSecret() string {
+	if o == nil || o.WebhookSecret.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.WebhookSecret.Get()
+}
+
+// GetWebhookSecretOk returns a tuple with the WebhookSecret field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *AskUserWebhookConfiguration) GetWebhookSecretOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.WebhookSecret.Get(), o.WebhookSecret.IsSet()
+}
+
+// SetWebhookSecret sets field value
+func (o *AskUserWebhookConfiguration) SetWebhookSecret(v string) {
+	o.WebhookSecret.Set(&v)
+}
+
 // GetEvents returns the Events field value if set, zero value otherwise.
 func (o *AskUserWebhookConfiguration) GetEvents() []string {
 	if o == nil || IsNil(o.Events) {
@@ -282,6 +311,7 @@ func (o AskUserWebhookConfiguration) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.WebhookSecretHint) {
 		toSerialize["webhook_secret_hint"] = o.WebhookSecretHint
 	}
+	toSerialize["webhook_secret"] = o.WebhookSecret.Get()
 	if !IsNil(o.Events) {
 		toSerialize["events"] = o.Events
 	}
@@ -298,6 +328,7 @@ func (o *AskUserWebhookConfiguration) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"integration",
 		"enabled",
+		"webhook_secret",
 	}
 
 	allProperties := make(map[string]interface{})

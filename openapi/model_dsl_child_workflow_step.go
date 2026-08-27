@@ -20,9 +20,13 @@ var _ MappedNullable = &DSLChildWorkflowStep{}
 
 // DSLChildWorkflowStep struct for DSLChildWorkflowStep
 type DSLChildWorkflowStep struct {
-	// The type fo the step. If not set defaults to \"activity\"
+	// Identifies this step as a child workflow
 	Type string `json:"type"`
 	Name string `json:"name"`
+	// Title of the child workflow to be displayed in the UI workflow builder
+	Title *string `json:"title,omitempty"`
+	// Description of the child workflow displayed in the UI workflow builder
+	Description *string `json:"description,omitempty"`
 	// The parameters to pass to the child workflow. These parameters will be merged over the parent workflow vars and passed altogether to the child workflow.
 	Vars  map[string]interface{} `json:"vars,omitempty"`
 	Async *bool                  `json:"async,omitempty"`
@@ -103,6 +107,70 @@ func (o *DSLChildWorkflowStep) GetNameOk() (*string, bool) {
 // SetName sets field value
 func (o *DSLChildWorkflowStep) SetName(v string) {
 	o.Name = v
+}
+
+// GetTitle returns the Title field value if set, zero value otherwise.
+func (o *DSLChildWorkflowStep) GetTitle() string {
+	if o == nil || IsNil(o.Title) {
+		var ret string
+		return ret
+	}
+	return *o.Title
+}
+
+// GetTitleOk returns a tuple with the Title field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DSLChildWorkflowStep) GetTitleOk() (*string, bool) {
+	if o == nil || IsNil(o.Title) {
+		return nil, false
+	}
+	return o.Title, true
+}
+
+// HasTitle returns a boolean if a field has been set.
+func (o *DSLChildWorkflowStep) HasTitle() bool {
+	if o != nil && !IsNil(o.Title) {
+		return true
+	}
+
+	return false
+}
+
+// SetTitle gets a reference to the given string and assigns it to the Title field.
+func (o *DSLChildWorkflowStep) SetTitle(v string) {
+	o.Title = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *DSLChildWorkflowStep) GetDescription() string {
+	if o == nil || IsNil(o.Description) {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DSLChildWorkflowStep) GetDescriptionOk() (*string, bool) {
+	if o == nil || IsNil(o.Description) {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *DSLChildWorkflowStep) HasDescription() bool {
+	if o != nil && !IsNil(o.Description) {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *DSLChildWorkflowStep) SetDescription(v string) {
+	o.Description = &v
 }
 
 // GetVars returns the Vars field value if set, zero value otherwise.
@@ -309,6 +377,12 @@ func (o DSLChildWorkflowStep) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["type"] = o.Type
 	toSerialize["name"] = o.Name
+	if !IsNil(o.Title) {
+		toSerialize["title"] = o.Title
+	}
+	if !IsNil(o.Description) {
+		toSerialize["description"] = o.Description
+	}
 	if !IsNil(o.Vars) {
 		toSerialize["vars"] = o.Vars
 	}
@@ -373,6 +447,8 @@ func (o *DSLChildWorkflowStep) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "type")
 		delete(additionalProperties, "name")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "description")
 		delete(additionalProperties, "vars")
 		delete(additionalProperties, "async")
 		delete(additionalProperties, "output")
