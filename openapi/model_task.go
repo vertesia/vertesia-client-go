@@ -21,20 +21,21 @@ var _ MappedNullable = &Task{}
 
 // Task struct for Task
 type Task struct {
-	Id          string                 `json:"id"`
-	Account     string                 `json:"account"`
-	Project     string                 `json:"project"`
-	Title       string                 `json:"title"`
-	Description *string                `json:"description,omitempty"`
-	Status      DurableTaskStatus      `json:"status"`
-	Assignee    *string                `json:"assignee,omitempty"`
-	Fields      []TaskField            `json:"fields"`
-	Result      map[string]interface{} `json:"result,omitempty"`
-	Source      TaskSource             `json:"source"`
-	DueAt       *time.Time             `json:"due_at,omitempty"`
-	CreatedAt   time.Time              `json:"created_at"`
-	CompletedAt *time.Time             `json:"completed_at,omitempty"`
-	UpdatedAt   *time.Time             `json:"updated_at,omitempty"`
+	Id                   string                 `json:"id"`
+	Account              string                 `json:"account"`
+	Project              string                 `json:"project"`
+	Title                string                 `json:"title"`
+	Description          *string                `json:"description,omitempty"`
+	Status               DurableTaskStatus      `json:"status"`
+	Assignee             *string                `json:"assignee,omitempty"`
+	Fields               []TaskField            `json:"fields"`
+	Result               map[string]interface{} `json:"result,omitempty"`
+	Source               TaskSource             `json:"source"`
+	DueAt                *time.Time             `json:"due_at,omitempty"`
+	CreatedAt            time.Time              `json:"created_at"`
+	CompletedAt          *time.Time             `json:"completed_at,omitempty"`
+	UpdatedAt            *time.Time             `json:"updated_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Task Task
@@ -272,9 +273,9 @@ func (o *Task) SetFields(v []TaskField) {
 	o.Fields = v
 }
 
-// GetResult returns the Result field value if set, zero value otherwise.
+// GetResult returns the Result field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *Task) GetResult() map[string]interface{} {
-	if o == nil || IsNil(o.Result) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -283,6 +284,7 @@ func (o *Task) GetResult() map[string]interface{} {
 
 // GetResultOk returns a tuple with the Result field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *Task) GetResultOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Result) {
 		return map[string]interface{}{}, false
@@ -470,7 +472,7 @@ func (o Task) ToMap() (map[string]interface{}, error) {
 		toSerialize["assignee"] = o.Assignee
 	}
 	toSerialize["fields"] = o.Fields
-	if !IsNil(o.Result) {
+	if o.Result != nil {
 		toSerialize["result"] = o.Result
 	}
 	toSerialize["source"] = o.Source
@@ -484,6 +486,11 @@ func (o Task) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -525,6 +532,26 @@ func (o *Task) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = Task(varTask)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "account")
+		delete(additionalProperties, "project")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "assignee")
+		delete(additionalProperties, "fields")
+		delete(additionalProperties, "result")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "due_at")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "completed_at")
+		delete(additionalProperties, "updated_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

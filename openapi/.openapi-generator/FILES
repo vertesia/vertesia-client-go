@@ -698,6 +698,7 @@ model_open_ai_dalle_options.go
 model_open_ai_gpt_image_options.go
 model_open_ai_text_options.go
 model_open_ai_thinking_options.go
+model_open_router_text_options.go
 model_parallel_collect_definition.go
 model_parallel_collect_field.go
 model_parallel_collect_mode.go

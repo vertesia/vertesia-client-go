@@ -20,13 +20,14 @@ var _ MappedNullable = &WorkflowEventDeliveryTarget{}
 
 // WorkflowEventDeliveryTarget struct for WorkflowEventDeliveryTarget
 type WorkflowEventDeliveryTarget struct {
-	Type             string                 `json:"type"`
-	Endpoint         string                 `json:"endpoint"`
-	WorkflowClass    *string                `json:"workflow_class,omitempty"`
-	TaskQueue        *string                `json:"task_queue,omitempty"`
-	Vars             map[string]interface{} `json:"vars,omitempty"`
-	InputType        *WorkflowRuleInputType `json:"input_type,omitempty"`
-	MigratedRuleName *string                `json:"migrated_rule_name,omitempty"`
+	Type                 string                 `json:"type"`
+	Endpoint             string                 `json:"endpoint"`
+	WorkflowClass        *string                `json:"workflow_class,omitempty"`
+	TaskQueue            *string                `json:"task_queue,omitempty"`
+	Vars                 map[string]interface{} `json:"vars,omitempty"`
+	InputType            *WorkflowRuleInputType `json:"input_type,omitempty"`
+	MigratedRuleName     *string                `json:"migrated_rule_name,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _WorkflowEventDeliveryTarget WorkflowEventDeliveryTarget
@@ -162,9 +163,9 @@ func (o *WorkflowEventDeliveryTarget) SetTaskQueue(v string) {
 	o.TaskQueue = &v
 }
 
-// GetVars returns the Vars field value if set, zero value otherwise.
+// GetVars returns the Vars field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *WorkflowEventDeliveryTarget) GetVars() map[string]interface{} {
-	if o == nil || IsNil(o.Vars) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -173,6 +174,7 @@ func (o *WorkflowEventDeliveryTarget) GetVars() map[string]interface{} {
 
 // GetVarsOk returns a tuple with the Vars field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *WorkflowEventDeliveryTarget) GetVarsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Vars) {
 		return map[string]interface{}{}, false
@@ -276,7 +278,7 @@ func (o WorkflowEventDeliveryTarget) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.TaskQueue) {
 		toSerialize["task_queue"] = o.TaskQueue
 	}
-	if !IsNil(o.Vars) {
+	if o.Vars != nil {
 		toSerialize["vars"] = o.Vars
 	}
 	if !IsNil(o.InputType) {
@@ -285,6 +287,11 @@ func (o WorkflowEventDeliveryTarget) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.MigratedRuleName) {
 		toSerialize["migrated_rule_name"] = o.MigratedRuleName
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -320,6 +327,19 @@ func (o *WorkflowEventDeliveryTarget) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = WorkflowEventDeliveryTarget(varWorkflowEventDeliveryTarget)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "endpoint")
+		delete(additionalProperties, "workflow_class")
+		delete(additionalProperties, "task_queue")
+		delete(additionalProperties, "vars")
+		delete(additionalProperties, "input_type")
+		delete(additionalProperties, "migrated_rule_name")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -56,7 +56,8 @@ type Collection struct {
 	// Compartments — propagated to member documents (union across collections)
 	Compartments []string `json:"compartments,omitempty"`
 	// List of property names from the collection's properties that should be shared with (injected into) member objects. These properties will be propagated to all members of this collection and merged as arrays.
-	SharedProperties []string `json:"shared_properties,omitempty"`
+	SharedProperties     []string `json:"shared_properties,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _Collection Collection
@@ -496,9 +497,9 @@ func (o *Collection) SetAllowedTypes(v []string) {
 	o.AllowedTypes = v
 }
 
-// GetProperties returns the Properties field value if set, zero value otherwise.
+// GetProperties returns the Properties field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *Collection) GetProperties() map[string]interface{} {
-	if o == nil || IsNil(o.Properties) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -507,6 +508,7 @@ func (o *Collection) GetProperties() map[string]interface{} {
 
 // GetPropertiesOk returns a tuple with the Properties field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *Collection) GetPropertiesOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Properties) {
 		return map[string]interface{}{}, false
@@ -528,9 +530,9 @@ func (o *Collection) SetProperties(v map[string]interface{}) {
 	o.Properties = v
 }
 
-// GetQuery returns the Query field value if set, zero value otherwise.
+// GetQuery returns the Query field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *Collection) GetQuery() map[string]interface{} {
-	if o == nil || IsNil(o.Query) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -539,6 +541,7 @@ func (o *Collection) GetQuery() map[string]interface{} {
 
 // GetQueryOk returns a tuple with the Query field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *Collection) GetQueryOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Query) {
 		return map[string]interface{}{}, false
@@ -725,10 +728,10 @@ func (o Collection) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.AllowedTypes) {
 		toSerialize["allowed_types"] = o.AllowedTypes
 	}
-	if !IsNil(o.Properties) {
+	if o.Properties != nil {
 		toSerialize["properties"] = o.Properties
 	}
-	if !IsNil(o.Query) {
+	if o.Query != nil {
 		toSerialize["query"] = o.Query
 	}
 	if !IsNil(o.Security) {
@@ -743,6 +746,11 @@ func (o Collection) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SharedProperties) {
 		toSerialize["shared_properties"] = o.SharedProperties
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -785,6 +793,33 @@ func (o *Collection) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = Collection(varCollection)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_by")
+		delete(additionalProperties, "created_by")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "dynamic")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "skip_head_sync")
+		delete(additionalProperties, "parents")
+		delete(additionalProperties, "table_layout")
+		delete(additionalProperties, "allowed_types")
+		delete(additionalProperties, "properties")
+		delete(additionalProperties, "query")
+		delete(additionalProperties, "security")
+		delete(additionalProperties, "sensitivity")
+		delete(additionalProperties, "compartments")
+		delete(additionalProperties, "shared_properties")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

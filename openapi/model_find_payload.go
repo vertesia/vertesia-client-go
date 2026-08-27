@@ -20,12 +20,13 @@ var _ MappedNullable = &FindPayload{}
 
 // FindPayload struct for FindPayload
 type FindPayload struct {
-	Query        map[string]interface{} `json:"query"`
-	Offset       *float32               `json:"offset,omitempty"`
-	Limit        *float32               `json:"limit,omitempty"`
-	Select       *string                `json:"select,omitempty"`
-	AllRevisions *bool                  `json:"all_revisions,omitempty"`
-	FromRoot     *string                `json:"from_root,omitempty"`
+	Query                map[string]interface{} `json:"query"`
+	Offset               *float32               `json:"offset,omitempty"`
+	Limit                *float32               `json:"limit,omitempty"`
+	Select               *string                `json:"select,omitempty"`
+	AllRevisions         *bool                  `json:"all_revisions,omitempty"`
+	FromRoot             *string                `json:"from_root,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _FindPayload FindPayload
@@ -49,6 +50,7 @@ func NewFindPayloadWithDefaults() *FindPayload {
 }
 
 // GetQuery returns the Query field value
+// If the value is explicit nil, the zero value for map[string]interface{} will be returned
 func (o *FindPayload) GetQuery() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
@@ -60,8 +62,9 @@ func (o *FindPayload) GetQuery() map[string]interface{} {
 
 // GetQueryOk returns a tuple with the Query field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *FindPayload) GetQueryOk() (map[string]interface{}, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Query) {
 		return map[string]interface{}{}, false
 	}
 	return o.Query, true
@@ -242,7 +245,9 @@ func (o FindPayload) MarshalJSON() ([]byte, error) {
 
 func (o FindPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["query"] = o.Query
+	if o.Query != nil {
+		toSerialize["query"] = o.Query
+	}
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
 	}
@@ -258,6 +263,11 @@ func (o FindPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.FromRoot) {
 		toSerialize["from_root"] = o.FromRoot
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -292,6 +302,18 @@ func (o *FindPayload) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = FindPayload(varFindPayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "query")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "select")
+		delete(additionalProperties, "all_revisions")
+		delete(additionalProperties, "from_root")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

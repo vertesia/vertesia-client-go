@@ -47,18 +47,19 @@ type NodeDefinition struct {
 	Transitions      []TransitionDefinition `json:"transitions,omitempty"`
 	Tools            []string               `json:"tools,omitempty"`
 	// Model id override for this node. If unset, falls back to the process run's `config.model`, then to the project's default. Useful when a specific node needs heavier reasoning (e.g. Opus for legal flagging) while the rest of the process uses a cheaper default.
-	Model          *string                       `json:"model,omitempty"`
-	Task           *HumanTaskDefinition          `json:"task,omitempty"`
-	Foreach        *string                       `json:"foreach,omitempty"`
-	As             *string                       `json:"as,omitempty"`
-	ItemId         *string                       `json:"item_id,omitempty"`
-	Node           *NodeDefinition               `json:"node,omitempty"`
-	MaxConcurrency *float32                      `json:"max_concurrency,omitempty"`
-	Collect        *NodeDefinitionCollect        `json:"collect,omitempty"`
-	FailurePolicy  *ParallelFailurePolicy        `json:"failure_policy,omitempty"`
-	Join           *BranchJoinPolicy             `json:"join,omitempty"`
-	Branches       []NodeDefinitionBranchesInner `json:"branches,omitempty"`
-	Metadata       map[string]interface{}        `json:"metadata,omitempty"`
+	Model                *string                       `json:"model,omitempty"`
+	Task                 *HumanTaskDefinition          `json:"task,omitempty"`
+	Foreach              *string                       `json:"foreach,omitempty"`
+	As                   *string                       `json:"as,omitempty"`
+	ItemId               *string                       `json:"item_id,omitempty"`
+	Node                 *NodeDefinition               `json:"node,omitempty"`
+	MaxConcurrency       *float32                      `json:"max_concurrency,omitempty"`
+	Collect              *NodeDefinitionCollect        `json:"collect,omitempty"`
+	FailurePolicy        *ParallelFailurePolicy        `json:"failure_policy,omitempty"`
+	Join                 *BranchJoinPolicy             `json:"join,omitempty"`
+	Branches             []NodeDefinitionBranchesInner `json:"branches,omitempty"`
+	Metadata             map[string]interface{}        `json:"metadata,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _NodeDefinition NodeDefinition
@@ -457,9 +458,9 @@ func (o *NodeDefinition) SetPrompt(v string) {
 	o.Prompt = &v
 }
 
-// GetInput returns the Input field value if set, zero value otherwise.
+// GetInput returns the Input field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *NodeDefinition) GetInput() map[string]interface{} {
-	if o == nil || IsNil(o.Input) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -468,6 +469,7 @@ func (o *NodeDefinition) GetInput() map[string]interface{} {
 
 // GetInputOk returns a tuple with the Input field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *NodeDefinition) GetInputOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Input) {
 		return map[string]interface{}{}, false
@@ -489,9 +491,9 @@ func (o *NodeDefinition) SetInput(v map[string]interface{}) {
 	o.Input = v
 }
 
-// GetConfig returns the Config field value if set, zero value otherwise.
+// GetConfig returns the Config field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *NodeDefinition) GetConfig() map[string]interface{} {
-	if o == nil || IsNil(o.Config) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -500,6 +502,7 @@ func (o *NodeDefinition) GetConfig() map[string]interface{} {
 
 // GetConfigOk returns a tuple with the Config field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *NodeDefinition) GetConfigOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Config) {
 		return map[string]interface{}{}, false
@@ -1205,10 +1208,10 @@ func (o NodeDefinition) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Prompt) {
 		toSerialize["prompt"] = o.Prompt
 	}
-	if !IsNil(o.Input) {
+	if o.Input != nil {
 		toSerialize["input"] = o.Input
 	}
-	if !IsNil(o.Config) {
+	if o.Config != nil {
 		toSerialize["config"] = o.Config
 	}
 	if !IsNil(o.Title) {
@@ -1271,6 +1274,11 @@ func (o NodeDefinition) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Metadata) {
 		toSerialize["metadata"] = o.Metadata
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -1305,6 +1313,46 @@ func (o *NodeDefinition) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = NodeDefinition(varNodeDefinition)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "tool")
+		delete(additionalProperties, "script")
+		delete(additionalProperties, "timeout")
+		delete(additionalProperties, "interaction")
+		delete(additionalProperties, "process")
+		delete(additionalProperties, "process_definition")
+		delete(additionalProperties, "process_version")
+		delete(additionalProperties, "run_type")
+		delete(additionalProperties, "returns")
+		delete(additionalProperties, "result_schema")
+		delete(additionalProperties, "prompt")
+		delete(additionalProperties, "input")
+		delete(additionalProperties, "config")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "human_description")
+		delete(additionalProperties, "writes")
+		delete(additionalProperties, "skippable")
+		delete(additionalProperties, "max_retries")
+		delete(additionalProperties, "transitions")
+		delete(additionalProperties, "tools")
+		delete(additionalProperties, "model")
+		delete(additionalProperties, "task")
+		delete(additionalProperties, "foreach")
+		delete(additionalProperties, "as")
+		delete(additionalProperties, "item_id")
+		delete(additionalProperties, "node")
+		delete(additionalProperties, "max_concurrency")
+		delete(additionalProperties, "collect")
+		delete(additionalProperties, "failure_policy")
+		delete(additionalProperties, "join")
+		delete(additionalProperties, "branches")
+		delete(additionalProperties, "metadata")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

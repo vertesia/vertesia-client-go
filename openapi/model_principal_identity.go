@@ -20,12 +20,13 @@ var _ MappedNullable = &PrincipalIdentity{}
 
 // PrincipalIdentity Response shape of the `/iam/users/identity` endpoint: the current principal's  {@link  PrincipalContext }  plus its id. Distinct from `PrincipalContext` itself because the id is identity metadata, not a merged BLP field — adding it to `PrincipalContext` would unintentionally expose `$principal.id` to PrincipalSet rule evaluation.
 type PrincipalIdentity struct {
-	Clearance    float32                `json:"clearance"`
-	Compartments []string               `json:"compartments"`
-	Email        *string                `json:"email,omitempty"`
-	Tags         []string               `json:"tags"`
-	Properties   map[string]interface{} `json:"properties"`
-	Id           string                 `json:"id"`
+	Clearance            float32                `json:"clearance"`
+	Compartments         []string               `json:"compartments"`
+	Email                *string                `json:"email,omitempty"`
+	Tags                 []string               `json:"tags"`
+	Properties           map[string]interface{} `json:"properties"`
+	Id                   string                 `json:"id"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _PrincipalIdentity PrincipalIdentity
@@ -157,6 +158,7 @@ func (o *PrincipalIdentity) SetTags(v []string) {
 }
 
 // GetProperties returns the Properties field value
+// If the value is explicit nil, the zero value for map[string]interface{} will be returned
 func (o *PrincipalIdentity) GetProperties() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
@@ -168,8 +170,9 @@ func (o *PrincipalIdentity) GetProperties() map[string]interface{} {
 
 // GetPropertiesOk returns a tuple with the Properties field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *PrincipalIdentity) GetPropertiesOk() (map[string]interface{}, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Properties) {
 		return map[string]interface{}{}, false
 	}
 	return o.Properties, true
@@ -220,8 +223,15 @@ func (o PrincipalIdentity) ToMap() (map[string]interface{}, error) {
 		toSerialize["email"] = o.Email
 	}
 	toSerialize["tags"] = o.Tags
-	toSerialize["properties"] = o.Properties
+	if o.Properties != nil {
+		toSerialize["properties"] = o.Properties
+	}
 	toSerialize["id"] = o.Id
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -260,6 +270,18 @@ func (o *PrincipalIdentity) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = PrincipalIdentity(varPrincipalIdentity)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "clearance")
+		delete(additionalProperties, "compartments")
+		delete(additionalProperties, "email")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "properties")
+		delete(additionalProperties, "id")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

@@ -29,7 +29,8 @@ type QueryResult struct {
 	// Query execution time in milliseconds
 	ExecutionTimeMs float32 `json:"execution_time_ms"`
 	// Error message if query failed (used in batch queries)
-	Error *string `json:"error,omitempty"`
+	Error                *string `json:"error,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _QueryResult QueryResult
@@ -200,6 +201,11 @@ func (o QueryResult) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -237,6 +243,17 @@ func (o *QueryResult) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = QueryResult(varQueryResult)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "columns")
+		delete(additionalProperties, "rows")
+		delete(additionalProperties, "row_count")
+		delete(additionalProperties, "execution_time_ms")
+		delete(additionalProperties, "error")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

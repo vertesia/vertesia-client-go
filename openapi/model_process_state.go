@@ -52,6 +52,7 @@ func NewProcessStateWithDefaults() *ProcessState {
 }
 
 // GetContext returns the Context field value
+// If the value is explicit nil, the zero value for map[string]interface{} will be returned
 func (o *ProcessState) GetContext() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
@@ -63,8 +64,9 @@ func (o *ProcessState) GetContext() map[string]interface{} {
 
 // GetContextOk returns a tuple with the Context field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ProcessState) GetContextOk() (map[string]interface{}, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Context) {
 		return map[string]interface{}{}, false
 	}
 	return o.Context, true
@@ -189,7 +191,9 @@ func (o ProcessState) MarshalJSON() ([]byte, error) {
 
 func (o ProcessState) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["context"] = o.Context
+	if o.Context != nil {
+		toSerialize["context"] = o.Context
+	}
 	toSerialize["current_node"] = o.CurrentNode
 	toSerialize["node_history"] = o.NodeHistory
 	if !IsNil(o.NodeHistoryRef) {

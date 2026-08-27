@@ -33,6 +33,7 @@ type CreateOAuthClientPayload struct {
 	RestrictToOwnerAccount  *bool                         `json:"restrict_to_owner_account,omitempty"`
 	ClientSecret            *string                       `json:"client_secret,omitempty"`
 	Metadata                map[string]interface{}        `json:"metadata,omitempty"`
+	AdditionalProperties    map[string]interface{}
 }
 
 type _CreateOAuthClientPayload CreateOAuthClientPayload
@@ -424,9 +425,9 @@ func (o *CreateOAuthClientPayload) SetClientSecret(v string) {
 	o.ClientSecret = &v
 }
 
-// GetMetadata returns the Metadata field value if set, zero value otherwise.
+// GetMetadata returns the Metadata field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *CreateOAuthClientPayload) GetMetadata() map[string]interface{} {
-	if o == nil || IsNil(o.Metadata) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -435,6 +436,7 @@ func (o *CreateOAuthClientPayload) GetMetadata() map[string]interface{} {
 
 // GetMetadataOk returns a tuple with the Metadata field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *CreateOAuthClientPayload) GetMetadataOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Metadata) {
 		return map[string]interface{}{}, false
@@ -498,9 +500,14 @@ func (o CreateOAuthClientPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ClientSecret) {
 		toSerialize["client_secret"] = o.ClientSecret
 	}
-	if !IsNil(o.Metadata) {
+	if o.Metadata != nil {
 		toSerialize["metadata"] = o.Metadata
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -536,6 +543,25 @@ func (o *CreateOAuthClientPayload) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = CreateOAuthClientPayload(varCreateOAuthClientPayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "client_name")
+		delete(additionalProperties, "client_type")
+		delete(additionalProperties, "redirect_uris")
+		delete(additionalProperties, "grant_types")
+		delete(additionalProperties, "response_types")
+		delete(additionalProperties, "token_endpoint_auth_method")
+		delete(additionalProperties, "allowed_scopes")
+		delete(additionalProperties, "default_scopes")
+		delete(additionalProperties, "project_binding_mode")
+		delete(additionalProperties, "fixed_project_id")
+		delete(additionalProperties, "restrict_to_owner_account")
+		delete(additionalProperties, "client_secret")
+		delete(additionalProperties, "metadata")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

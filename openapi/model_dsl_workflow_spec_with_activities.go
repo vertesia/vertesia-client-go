@@ -30,8 +30,9 @@ type DSLWorkflowSpecWithActivities struct {
 	Steps       []DSLWorkflowStep      `json:"steps,omitempty"`
 	// Deprecated: use steps instead
 	// Deprecated
-	Activities []DSLActivitySpec `json:"activities"`
-	SpecFormat string            `json:"spec_format"`
+	Activities           []DSLActivitySpec `json:"activities"`
+	SpecFormat           string            `json:"spec_format"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _DSLWorkflowSpecWithActivities DSLWorkflowSpecWithActivities
@@ -146,6 +147,7 @@ func (o *DSLWorkflowSpecWithActivities) SetTags(v []string) {
 }
 
 // GetVars returns the Vars field value
+// If the value is explicit nil, the zero value for map[string]interface{} will be returned
 func (o *DSLWorkflowSpecWithActivities) GetVars() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
@@ -157,8 +159,9 @@ func (o *DSLWorkflowSpecWithActivities) GetVars() map[string]interface{} {
 
 // GetVarsOk returns a tuple with the Vars field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DSLWorkflowSpecWithActivities) GetVarsOk() (map[string]interface{}, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Vars) {
 		return map[string]interface{}{}, false
 	}
 	return o.Vars, true
@@ -365,7 +368,9 @@ func (o DSLWorkflowSpecWithActivities) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
-	toSerialize["vars"] = o.Vars
+	if o.Vars != nil {
+		toSerialize["vars"] = o.Vars
+	}
 	if !IsNil(o.Options) {
 		toSerialize["options"] = o.Options
 	}
@@ -380,6 +385,11 @@ func (o DSLWorkflowSpecWithActivities) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["activities"] = o.Activities
 	toSerialize["spec_format"] = o.SpecFormat
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -417,6 +427,22 @@ func (o *DSLWorkflowSpecWithActivities) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = DSLWorkflowSpecWithActivities(varDSLWorkflowSpecWithActivities)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "vars")
+		delete(additionalProperties, "options")
+		delete(additionalProperties, "result")
+		delete(additionalProperties, "debug_mode")
+		delete(additionalProperties, "steps")
+		delete(additionalProperties, "activities")
+		delete(additionalProperties, "spec_format")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

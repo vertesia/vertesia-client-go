@@ -23,11 +23,12 @@ type ImportTableData struct {
 	// Where the data comes from
 	Source ImportDataSource `json:"source"`
 	// Inline data (when source is 'inline')
-	Data []map[string]interface{} `json:"data,omitempty"`
+	Data []*map[string]interface{} `json:"data,omitempty"`
 	// URI for external data (gcs: gs://..., url: https://..., artifact: out/file.csv)
 	Uri *string `json:"uri,omitempty"`
 	// Data format for external sources
-	Format *ImportDataFormat `json:"format,omitempty"`
+	Format               *ImportDataFormat `json:"format,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ImportTableData ImportTableData
@@ -75,9 +76,9 @@ func (o *ImportTableData) SetSource(v ImportDataSource) {
 }
 
 // GetData returns the Data field value if set, zero value otherwise.
-func (o *ImportTableData) GetData() []map[string]interface{} {
+func (o *ImportTableData) GetData() []*map[string]interface{} {
 	if o == nil || IsNil(o.Data) {
-		var ret []map[string]interface{}
+		var ret []*map[string]interface{}
 		return ret
 	}
 	return o.Data
@@ -85,7 +86,7 @@ func (o *ImportTableData) GetData() []map[string]interface{} {
 
 // GetDataOk returns a tuple with the Data field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *ImportTableData) GetDataOk() ([]map[string]interface{}, bool) {
+func (o *ImportTableData) GetDataOk() ([]*map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Data) {
 		return nil, false
 	}
@@ -101,8 +102,8 @@ func (o *ImportTableData) HasData() bool {
 	return false
 }
 
-// SetData gets a reference to the given []map[string]interface{} and assigns it to the Data field.
-func (o *ImportTableData) SetData(v []map[string]interface{}) {
+// SetData gets a reference to the given []*map[string]interface{} and assigns it to the Data field.
+func (o *ImportTableData) SetData(v []*map[string]interface{}) {
 	o.Data = v
 }
 
@@ -190,6 +191,11 @@ func (o ImportTableData) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Format) {
 		toSerialize["format"] = o.Format
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -224,6 +230,16 @@ func (o *ImportTableData) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = ImportTableData(varImportTableData)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "data")
+		delete(additionalProperties, "uri")
+		delete(additionalProperties, "format")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

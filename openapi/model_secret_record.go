@@ -20,17 +20,18 @@ var _ MappedNullable = &SecretRecord{}
 
 // SecretRecord struct for SecretRecord
 type SecretRecord struct {
-	Id         string                   `json:"id"`
-	SecretRef  string                   `json:"secret_ref"`
-	Kind       SecretKind               `json:"kind"`
-	Project    string                   `json:"project"`
-	Name       string                   `json:"name"`
-	Enabled    *bool                    `json:"enabled,omitempty"`
-	Tags       []string                 `json:"tags,omitempty"`
-	Properties map[string]interface{}   `json:"properties,omitempty"`
-	CreatedAt  *string                  `json:"created_at,omitempty"`
-	UpdatedAt  *string                  `json:"updated_at,omitempty"`
-	Details    *WebsiteCredentialRecord `json:"details,omitempty"`
+	Id                   string                   `json:"id"`
+	SecretRef            string                   `json:"secret_ref"`
+	Kind                 SecretKind               `json:"kind"`
+	Project              string                   `json:"project"`
+	Name                 string                   `json:"name"`
+	Enabled              *bool                    `json:"enabled,omitempty"`
+	Tags                 []string                 `json:"tags,omitempty"`
+	Properties           map[string]interface{}   `json:"properties,omitempty"`
+	CreatedAt            *string                  `json:"created_at,omitempty"`
+	UpdatedAt            *string                  `json:"updated_at,omitempty"`
+	Details              *WebsiteCredentialRecord `json:"details,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _SecretRecord SecretRecord
@@ -241,9 +242,9 @@ func (o *SecretRecord) SetTags(v []string) {
 	o.Tags = v
 }
 
-// GetProperties returns the Properties field value if set, zero value otherwise.
+// GetProperties returns the Properties field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *SecretRecord) GetProperties() map[string]interface{} {
-	if o == nil || IsNil(o.Properties) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -252,6 +253,7 @@ func (o *SecretRecord) GetProperties() map[string]interface{} {
 
 // GetPropertiesOk returns a tuple with the Properties field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *SecretRecord) GetPropertiesOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Properties) {
 		return map[string]interface{}{}, false
@@ -390,7 +392,7 @@ func (o SecretRecord) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
-	if !IsNil(o.Properties) {
+	if o.Properties != nil {
 		toSerialize["properties"] = o.Properties
 	}
 	if !IsNil(o.CreatedAt) {
@@ -402,6 +404,11 @@ func (o SecretRecord) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Details) {
 		toSerialize["details"] = o.Details
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -440,6 +447,23 @@ func (o *SecretRecord) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = SecretRecord(varSecretRecord)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "secret_ref")
+		delete(additionalProperties, "kind")
+		delete(additionalProperties, "project")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "enabled")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "properties")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "details")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

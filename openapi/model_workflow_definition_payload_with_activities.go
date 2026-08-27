@@ -153,6 +153,7 @@ func (o *WorkflowDefinitionPayloadWithActivities) SetTags(v []string) {
 }
 
 // GetVars returns the Vars field value
+// If the value is explicit nil, the zero value for map[string]interface{} will be returned
 func (o *WorkflowDefinitionPayloadWithActivities) GetVars() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
@@ -164,8 +165,9 @@ func (o *WorkflowDefinitionPayloadWithActivities) GetVars() map[string]interface
 
 // GetVarsOk returns a tuple with the Vars field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *WorkflowDefinitionPayloadWithActivities) GetVarsOk() (map[string]interface{}, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Vars) {
 		return map[string]interface{}{}, false
 	}
 	return o.Vars, true
@@ -468,7 +470,9 @@ func (o WorkflowDefinitionPayloadWithActivities) ToMap() (map[string]interface{}
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
-	toSerialize["vars"] = o.Vars
+	if o.Vars != nil {
+		toSerialize["vars"] = o.Vars
+	}
 	if !IsNil(o.Options) {
 		toSerialize["options"] = o.Options
 	}

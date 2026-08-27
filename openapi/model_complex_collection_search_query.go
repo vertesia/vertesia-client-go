@@ -19,16 +19,19 @@ var _ MappedNullable = &ComplexCollectionSearchQuery{}
 
 // ComplexCollectionSearchQuery struct for ComplexCollectionSearchQuery
 type ComplexCollectionSearchQuery struct {
-	Parent  NullableString         `json:"parent,omitempty"`
-	Dynamic *bool                  `json:"dynamic,omitempty"`
-	Status  *CollectionStatus      `json:"status,omitempty"`
-	Limit   *float32               `json:"limit,omitempty"`
-	Offset  *float32               `json:"offset,omitempty"`
-	Name    *string                `json:"name,omitempty"`
-	Type    *string                `json:"type,omitempty"`
-	Types   []string               `json:"types,omitempty"`
-	Match   map[string]interface{} `json:"match,omitempty"`
+	Parent               NullableString         `json:"parent,omitempty"`
+	Dynamic              *bool                  `json:"dynamic,omitempty"`
+	Status               *CollectionStatus      `json:"status,omitempty"`
+	Limit                *float32               `json:"limit,omitempty"`
+	Offset               *float32               `json:"offset,omitempty"`
+	Name                 *string                `json:"name,omitempty"`
+	Type                 *string                `json:"type,omitempty"`
+	Types                []string               `json:"types,omitempty"`
+	Match                map[string]interface{} `json:"match,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _ComplexCollectionSearchQuery ComplexCollectionSearchQuery
 
 // NewComplexCollectionSearchQuery instantiates a new ComplexCollectionSearchQuery object
 // This constructor will assign default values to properties that have it defined,
@@ -314,9 +317,9 @@ func (o *ComplexCollectionSearchQuery) SetTypes(v []string) {
 	o.Types = v
 }
 
-// GetMatch returns the Match field value if set, zero value otherwise.
+// GetMatch returns the Match field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ComplexCollectionSearchQuery) GetMatch() map[string]interface{} {
-	if o == nil || IsNil(o.Match) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -325,6 +328,7 @@ func (o *ComplexCollectionSearchQuery) GetMatch() map[string]interface{} {
 
 // GetMatchOk returns a tuple with the Match field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ComplexCollectionSearchQuery) GetMatchOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Match) {
 		return map[string]interface{}{}, false
@@ -380,10 +384,44 @@ func (o ComplexCollectionSearchQuery) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Types) {
 		toSerialize["types"] = o.Types
 	}
-	if !IsNil(o.Match) {
+	if o.Match != nil {
 		toSerialize["match"] = o.Match
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *ComplexCollectionSearchQuery) UnmarshalJSON(data []byte) (err error) {
+	varComplexCollectionSearchQuery := _ComplexCollectionSearchQuery{}
+
+	err = json.Unmarshal(data, &varComplexCollectionSearchQuery)
+
+	if err != nil {
+		return err
+	}
+
+	*o = ComplexCollectionSearchQuery(varComplexCollectionSearchQuery)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "parent")
+		delete(additionalProperties, "dynamic")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "limit")
+		delete(additionalProperties, "offset")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "types")
+		delete(additionalProperties, "match")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableComplexCollectionSearchQuery struct {

@@ -118,6 +118,7 @@ func (o *AgentToolDefinition) SetDescription(v string) {
 }
 
 // GetInputSchema returns the InputSchema field value
+// If the value is explicit nil, the zero value for map[string]interface{} will be returned
 func (o *AgentToolDefinition) GetInputSchema() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
@@ -129,8 +130,9 @@ func (o *AgentToolDefinition) GetInputSchema() map[string]interface{} {
 
 // GetInputSchemaOk returns a tuple with the InputSchema field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *AgentToolDefinition) GetInputSchemaOk() (map[string]interface{}, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.InputSchema) {
 		return map[string]interface{}{}, false
 	}
 	return o.InputSchema, true
@@ -379,7 +381,9 @@ func (o AgentToolDefinition) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
-	toSerialize["input_schema"] = o.InputSchema
+	if o.InputSchema != nil {
+		toSerialize["input_schema"] = o.InputSchema
+	}
 	if !IsNil(o.OutputSchema) {
 		toSerialize["output_schema"] = o.OutputSchema
 	}

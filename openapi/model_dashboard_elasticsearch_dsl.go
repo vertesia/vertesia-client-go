@@ -19,12 +19,15 @@ var _ MappedNullable = &DashboardElasticsearchDsl{}
 
 // DashboardElasticsearchDsl Elasticsearch DSL supported by dashboard data sources. Queries execute through Vertesia Store, so project/security filtering remains server-side.
 type DashboardElasticsearchDsl struct {
-	Query map[string]interface{}   `json:"query,omitempty"`
-	Aggs  map[string]interface{}   `json:"aggs,omitempty"`
-	Size  *float32                 `json:"size,omitempty"`
-	From  *float32                 `json:"from,omitempty"`
-	Sort  []map[string]interface{} `json:"sort,omitempty"`
+	Query                map[string]interface{}   `json:"query,omitempty"`
+	Aggs                 map[string]interface{}   `json:"aggs,omitempty"`
+	Size                 *float32                 `json:"size,omitempty"`
+	From                 *float32                 `json:"from,omitempty"`
+	Sort                 []map[string]interface{} `json:"sort,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _DashboardElasticsearchDsl DashboardElasticsearchDsl
 
 // NewDashboardElasticsearchDsl instantiates a new DashboardElasticsearchDsl object
 // This constructor will assign default values to properties that have it defined,
@@ -43,9 +46,9 @@ func NewDashboardElasticsearchDslWithDefaults() *DashboardElasticsearchDsl {
 	return &this
 }
 
-// GetQuery returns the Query field value if set, zero value otherwise.
+// GetQuery returns the Query field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *DashboardElasticsearchDsl) GetQuery() map[string]interface{} {
-	if o == nil || IsNil(o.Query) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -54,6 +57,7 @@ func (o *DashboardElasticsearchDsl) GetQuery() map[string]interface{} {
 
 // GetQueryOk returns a tuple with the Query field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DashboardElasticsearchDsl) GetQueryOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Query) {
 		return map[string]interface{}{}, false
@@ -75,9 +79,9 @@ func (o *DashboardElasticsearchDsl) SetQuery(v map[string]interface{}) {
 	o.Query = v
 }
 
-// GetAggs returns the Aggs field value if set, zero value otherwise.
+// GetAggs returns the Aggs field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *DashboardElasticsearchDsl) GetAggs() map[string]interface{} {
-	if o == nil || IsNil(o.Aggs) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -86,6 +90,7 @@ func (o *DashboardElasticsearchDsl) GetAggs() map[string]interface{} {
 
 // GetAggsOk returns a tuple with the Aggs field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *DashboardElasticsearchDsl) GetAggsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Aggs) {
 		return map[string]interface{}{}, false
@@ -213,10 +218,10 @@ func (o DashboardElasticsearchDsl) MarshalJSON() ([]byte, error) {
 
 func (o DashboardElasticsearchDsl) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.Query) {
+	if o.Query != nil {
 		toSerialize["query"] = o.Query
 	}
-	if !IsNil(o.Aggs) {
+	if o.Aggs != nil {
 		toSerialize["aggs"] = o.Aggs
 	}
 	if !IsNil(o.Size) {
@@ -228,7 +233,37 @@ func (o DashboardElasticsearchDsl) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Sort) {
 		toSerialize["sort"] = o.Sort
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *DashboardElasticsearchDsl) UnmarshalJSON(data []byte) (err error) {
+	varDashboardElasticsearchDsl := _DashboardElasticsearchDsl{}
+
+	err = json.Unmarshal(data, &varDashboardElasticsearchDsl)
+
+	if err != nil {
+		return err
+	}
+
+	*o = DashboardElasticsearchDsl(varDashboardElasticsearchDsl)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "query")
+		delete(additionalProperties, "aggs")
+		delete(additionalProperties, "size")
+		delete(additionalProperties, "from")
+		delete(additionalProperties, "sort")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableDashboardElasticsearchDsl struct {

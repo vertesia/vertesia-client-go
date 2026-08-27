@@ -29,7 +29,8 @@ type AppInstallationPayload struct {
 	// OAuth credentials for named providers, keyed by the provider key from oauth_providers. Collected from the user at install time for providers with required_at_install. Separate from oauth_params to avoid key collisions between provider keys and collection ids.
 	OauthProviderParams map[string]OAuthClientCredentials `json:"oauth_provider_params,omitempty"`
 	// API keys for auth: 'api_key' collections, keyed by collection.id. Collected from the user at install time for collections with api_key_config.required_at_install. Each key is stored in the installing project's encrypted secret store, replacing any key already held for that collection.
-	ApiKeyParams map[string]McpApiKeyCredential `json:"api_key_params,omitempty"`
+	ApiKeyParams         map[string]McpApiKeyCredential `json:"api_key_params,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _AppInstallationPayload AppInstallationPayload
@@ -76,9 +77,9 @@ func (o *AppInstallationPayload) SetAppId(v string) {
 	o.AppId = v
 }
 
-// GetSettings returns the Settings field value if set, zero value otherwise.
+// GetSettings returns the Settings field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *AppInstallationPayload) GetSettings() map[string]interface{} {
-	if o == nil || IsNil(o.Settings) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -87,6 +88,7 @@ func (o *AppInstallationPayload) GetSettings() map[string]interface{} {
 
 // GetSettingsOk returns a tuple with the Settings field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *AppInstallationPayload) GetSettingsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Settings) {
 		return map[string]interface{}{}, false
@@ -258,7 +260,7 @@ func (o AppInstallationPayload) MarshalJSON() ([]byte, error) {
 func (o AppInstallationPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["app_id"] = o.AppId
-	if !IsNil(o.Settings) {
+	if o.Settings != nil {
 		toSerialize["settings"] = o.Settings
 	}
 	if o.AccessControl.IsSet() {
@@ -273,6 +275,11 @@ func (o AppInstallationPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ApiKeyParams) {
 		toSerialize["api_key_params"] = o.ApiKeyParams
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -307,6 +314,18 @@ func (o *AppInstallationPayload) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = AppInstallationPayload(varAppInstallationPayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "app_id")
+		delete(additionalProperties, "settings")
+		delete(additionalProperties, "access_control")
+		delete(additionalProperties, "oauth_params")
+		delete(additionalProperties, "oauth_provider_params")
+		delete(additionalProperties, "api_key_params")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

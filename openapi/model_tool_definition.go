@@ -20,9 +20,10 @@ var _ MappedNullable = &ToolDefinition{}
 
 // ToolDefinition Tool definition for LLM tool use. The input_schema uses a permissive type to support both: - AJV's JSONSchemaType<T> for type-safe schema generation - Plain object schemas for simpler cases
 type ToolDefinition struct {
-	Name        string                 `json:"name"`
-	Description *string                `json:"description,omitempty"`
-	InputSchema map[string]interface{} `json:"input_schema"`
+	Name                 string                 `json:"name"`
+	Description          *string                `json:"description,omitempty"`
+	InputSchema          map[string]interface{} `json:"input_schema"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _ToolDefinition ToolDefinition
@@ -103,6 +104,7 @@ func (o *ToolDefinition) SetDescription(v string) {
 }
 
 // GetInputSchema returns the InputSchema field value
+// If the value is explicit nil, the zero value for map[string]interface{} will be returned
 func (o *ToolDefinition) GetInputSchema() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
@@ -114,8 +116,9 @@ func (o *ToolDefinition) GetInputSchema() map[string]interface{} {
 
 // GetInputSchemaOk returns a tuple with the InputSchema field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *ToolDefinition) GetInputSchemaOk() (map[string]interface{}, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.InputSchema) {
 		return map[string]interface{}{}, false
 	}
 	return o.InputSchema, true
@@ -140,7 +143,14 @@ func (o ToolDefinition) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
-	toSerialize["input_schema"] = o.InputSchema
+	if o.InputSchema != nil {
+		toSerialize["input_schema"] = o.InputSchema
+	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -176,6 +186,15 @@ func (o *ToolDefinition) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = ToolDefinition(varToolDefinition)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "input_schema")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

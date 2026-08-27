@@ -29,6 +29,9 @@ type OpenAiThinkingOptions struct {
 	IncludeThoughts *bool            `json:"include_thoughts,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
 	ServiceTier *string `json:"service_tier,omitempty"`
+	// Additional provider-specific fields merged into the OpenAI-compatible request body.
+	ExtraBody            map[string]interface{} `json:"extra_body,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _OpenAiThinkingOptions OpenAiThinkingOptions
@@ -299,6 +302,38 @@ func (o *OpenAiThinkingOptions) SetServiceTier(v string) {
 	o.ServiceTier = &v
 }
 
+// GetExtraBody returns the ExtraBody field value if set, zero value otherwise.
+func (o *OpenAiThinkingOptions) GetExtraBody() map[string]interface{} {
+	if o == nil || IsNil(o.ExtraBody) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.ExtraBody
+}
+
+// GetExtraBodyOk returns a tuple with the ExtraBody field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiThinkingOptions) GetExtraBodyOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.ExtraBody) {
+		return map[string]interface{}{}, false
+	}
+	return o.ExtraBody, true
+}
+
+// HasExtraBody returns a boolean if a field has been set.
+func (o *OpenAiThinkingOptions) HasExtraBody() bool {
+	if o != nil && !IsNil(o.ExtraBody) {
+		return true
+	}
+
+	return false
+}
+
+// SetExtraBody gets a reference to the given map[string]interface{} and assigns it to the ExtraBody field.
+func (o *OpenAiThinkingOptions) SetExtraBody(v map[string]interface{}) {
+	o.ExtraBody = v
+}
+
 func (o OpenAiThinkingOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -331,6 +366,14 @@ func (o OpenAiThinkingOptions) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ServiceTier) {
 		toSerialize["service_tier"] = o.ServiceTier
 	}
+	if !IsNil(o.ExtraBody) {
+		toSerialize["extra_body"] = o.ExtraBody
+	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -365,6 +408,21 @@ func (o *OpenAiThinkingOptions) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = OpenAiThinkingOptions(varOpenAiThinkingOptions)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "_option_id")
+		delete(additionalProperties, "max_tokens")
+		delete(additionalProperties, "stop_sequence")
+		delete(additionalProperties, "effort")
+		delete(additionalProperties, "reasoning_effort")
+		delete(additionalProperties, "image_detail")
+		delete(additionalProperties, "include_thoughts")
+		delete(additionalProperties, "service_tier")
+		delete(additionalProperties, "extra_body")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

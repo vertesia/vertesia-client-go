@@ -20,7 +20,8 @@ var _ MappedNullable = &CompleteTaskPayload{}
 
 // CompleteTaskPayload struct for CompleteTaskPayload
 type CompleteTaskPayload struct {
-	Result map[string]interface{} `json:"result"`
+	Result               map[string]interface{} `json:"result"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CompleteTaskPayload CompleteTaskPayload
@@ -44,6 +45,7 @@ func NewCompleteTaskPayloadWithDefaults() *CompleteTaskPayload {
 }
 
 // GetResult returns the Result field value
+// If the value is explicit nil, the zero value for map[string]interface{} will be returned
 func (o *CompleteTaskPayload) GetResult() map[string]interface{} {
 	if o == nil {
 		var ret map[string]interface{}
@@ -55,8 +57,9 @@ func (o *CompleteTaskPayload) GetResult() map[string]interface{} {
 
 // GetResultOk returns a tuple with the Result field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *CompleteTaskPayload) GetResultOk() (map[string]interface{}, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Result) {
 		return map[string]interface{}{}, false
 	}
 	return o.Result, true
@@ -77,7 +80,14 @@ func (o CompleteTaskPayload) MarshalJSON() ([]byte, error) {
 
 func (o CompleteTaskPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["result"] = o.Result
+	if o.Result != nil {
+		toSerialize["result"] = o.Result
+	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -112,6 +122,13 @@ func (o *CompleteTaskPayload) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = CompleteTaskPayload(varCompleteTaskPayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "result")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

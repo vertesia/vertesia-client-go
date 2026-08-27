@@ -43,20 +43,21 @@ type AppVersionRecord struct {
 	Description        *string            `json:"description,omitempty"`
 	Storage            *AppVersionStorage `json:"storage,omitempty"`
 	// Exact Git commit used to build this immutable version.
-	SourceCommit       *string                `json:"source_commit,omitempty"`
-	Urls               *AppVersionUrls        `json:"urls,omitempty"`
-	Manifest           map[string]interface{} `json:"manifest,omitempty"`
-	Files              []string               `json:"files,omitempty"`
-	FileCount          *float32               `json:"file_count,omitempty"`
-	SourceFileCount    *float32               `json:"source_file_count,omitempty"`
-	ScreenshotArtifact *string                `json:"screenshot_artifact,omitempty"`
-	Checks             []string               `json:"checks,omitempty"`
-	CreatedBy          *string                `json:"created_by,omitempty"`
-	CreatedAt          string                 `json:"created_at"`
-	UpdatedAt          string                 `json:"updated_at"`
-	BuiltAt            *string                `json:"built_at,omitempty"`
-	CheckedAt          *string                `json:"checked_at,omitempty"`
-	ExpiresAt          *string                `json:"expires_at,omitempty"`
+	SourceCommit         *string                `json:"source_commit,omitempty"`
+	Urls                 *AppVersionUrls        `json:"urls,omitempty"`
+	Manifest             map[string]interface{} `json:"manifest,omitempty"`
+	Files                []string               `json:"files,omitempty"`
+	FileCount            *float32               `json:"file_count,omitempty"`
+	SourceFileCount      *float32               `json:"source_file_count,omitempty"`
+	ScreenshotArtifact   *string                `json:"screenshot_artifact,omitempty"`
+	Checks               []string               `json:"checks,omitempty"`
+	CreatedBy            *string                `json:"created_by,omitempty"`
+	CreatedAt            string                 `json:"created_at"`
+	UpdatedAt            string                 `json:"updated_at"`
+	BuiltAt              *string                `json:"built_at,omitempty"`
+	CheckedAt            *string                `json:"checked_at,omitempty"`
+	ExpiresAt            *string                `json:"expires_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _AppVersionRecord AppVersionRecord
@@ -696,9 +697,9 @@ func (o *AppVersionRecord) SetUrls(v AppVersionUrls) {
 	o.Urls = &v
 }
 
-// GetManifest returns the Manifest field value if set, zero value otherwise.
+// GetManifest returns the Manifest field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *AppVersionRecord) GetManifest() map[string]interface{} {
-	if o == nil || IsNil(o.Manifest) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -707,6 +708,7 @@ func (o *AppVersionRecord) GetManifest() map[string]interface{} {
 
 // GetManifestOk returns a tuple with the Manifest field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *AppVersionRecord) GetManifestOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Manifest) {
 		return map[string]interface{}{}, false
@@ -1121,7 +1123,7 @@ func (o AppVersionRecord) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Urls) {
 		toSerialize["urls"] = o.Urls
 	}
-	if !IsNil(o.Manifest) {
+	if o.Manifest != nil {
 		toSerialize["manifest"] = o.Manifest
 	}
 	if !IsNil(o.Files) {
@@ -1153,6 +1155,11 @@ func (o AppVersionRecord) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ExpiresAt) {
 		toSerialize["expires_at"] = o.ExpiresAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -1196,6 +1203,45 @@ func (o *AppVersionRecord) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = AppVersionRecord(varAppVersionRecord)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "account")
+		delete(additionalProperties, "project")
+		delete(additionalProperties, "app")
+		delete(additionalProperties, "app_id")
+		delete(additionalProperties, "app_name")
+		delete(additionalProperties, "version_id")
+		delete(additionalProperties, "kind")
+		delete(additionalProperties, "state")
+		delete(additionalProperties, "promoted")
+		delete(additionalProperties, "target")
+		delete(additionalProperties, "agent_run_id")
+		delete(additionalProperties, "development_task_id")
+		delete(additionalProperties, "build_workflow_id")
+		delete(additionalProperties, "build_workflow_run_id")
+		delete(additionalProperties, "sandbox_id")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "storage")
+		delete(additionalProperties, "source_commit")
+		delete(additionalProperties, "urls")
+		delete(additionalProperties, "manifest")
+		delete(additionalProperties, "files")
+		delete(additionalProperties, "file_count")
+		delete(additionalProperties, "source_file_count")
+		delete(additionalProperties, "screenshot_artifact")
+		delete(additionalProperties, "checks")
+		delete(additionalProperties, "created_by")
+		delete(additionalProperties, "created_at")
+		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "built_at")
+		delete(additionalProperties, "checked_at")
+		delete(additionalProperties, "expires_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

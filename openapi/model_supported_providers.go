@@ -35,6 +35,7 @@ const (
 	SUPPORTEDPROVIDERS_WATSONX                  SupportedProviders = "watsonx"
 	SUPPORTEDPROVIDERS_XAI                      SupportedProviders = "xai"
 	SUPPORTEDPROVIDERS_ANTHROPIC                SupportedProviders = "anthropic"
+	SUPPORTEDPROVIDERS_OPENROUTER               SupportedProviders = "openrouter"
 	SUPPORTEDPROVIDERS_VIRTUAL_LB               SupportedProviders = "virtual_lb"
 	SUPPORTEDPROVIDERS_VIRTUAL_MEDIATOR         SupportedProviders = "virtual_mediator"
 	SUPPORTEDPROVIDERS_TEST                     SupportedProviders = "test"
@@ -58,6 +59,7 @@ var AllowedSupportedProvidersEnumValues = []SupportedProviders{
 	"watsonx",
 	"xai",
 	"anthropic",
+	"openrouter",
 	"virtual_lb",
 	"virtual_mediator",
 	"test",

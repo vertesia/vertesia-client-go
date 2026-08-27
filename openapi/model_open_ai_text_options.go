@@ -33,6 +33,8 @@ type OpenAiTextOptions struct {
 	IncludeThoughts  *bool            `json:"include_thoughts,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
 	ServiceTier *string `json:"service_tier,omitempty"`
+	// Additional provider-specific fields merged into the OpenAI-compatible request body.
+	ExtraBody map[string]interface{} `json:"extra_body,omitempty"`
 }
 
 type _OpenAiTextOptions OpenAiTextOptions
@@ -431,6 +433,38 @@ func (o *OpenAiTextOptions) SetServiceTier(v string) {
 	o.ServiceTier = &v
 }
 
+// GetExtraBody returns the ExtraBody field value if set, zero value otherwise.
+func (o *OpenAiTextOptions) GetExtraBody() map[string]interface{} {
+	if o == nil || IsNil(o.ExtraBody) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.ExtraBody
+}
+
+// GetExtraBodyOk returns a tuple with the ExtraBody field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiTextOptions) GetExtraBodyOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.ExtraBody) {
+		return map[string]interface{}{}, false
+	}
+	return o.ExtraBody, true
+}
+
+// HasExtraBody returns a boolean if a field has been set.
+func (o *OpenAiTextOptions) HasExtraBody() bool {
+	if o != nil && !IsNil(o.ExtraBody) {
+		return true
+	}
+
+	return false
+}
+
+// SetExtraBody gets a reference to the given map[string]interface{} and assigns it to the ExtraBody field.
+func (o *OpenAiTextOptions) SetExtraBody(v map[string]interface{}) {
+	o.ExtraBody = v
+}
+
 func (o OpenAiTextOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -474,6 +508,9 @@ func (o OpenAiTextOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ServiceTier) {
 		toSerialize["service_tier"] = o.ServiceTier
+	}
+	if !IsNil(o.ExtraBody) {
+		toSerialize["extra_body"] = o.ExtraBody
 	}
 	return toSerialize, nil
 }

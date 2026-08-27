@@ -38,6 +38,7 @@ type ModelOptions struct {
 	OpenAiGptImageOptions               *OpenAiGptImageOptions
 	OpenAiTextOptions                   *OpenAiTextOptions
 	OpenAiThinkingOptions               *OpenAiThinkingOptions
+	OpenRouterTextOptions               *OpenRouterTextOptions
 	TextFallbackOptions                 *TextFallbackOptions
 	TwelvelabsPegasusOptions            *TwelvelabsPegasusOptions
 	VertexAIClaudeOptions               *VertexAIClaudeOptions
@@ -184,6 +185,13 @@ func OpenAiTextOptionsAsModelOptions(v *OpenAiTextOptions) ModelOptions {
 func OpenAiThinkingOptionsAsModelOptions(v *OpenAiThinkingOptions) ModelOptions {
 	return ModelOptions{
 		OpenAiThinkingOptions: v,
+	}
+}
+
+// OpenRouterTextOptionsAsModelOptions is a convenience function that returns OpenRouterTextOptions wrapped in ModelOptions
+func OpenRouterTextOptionsAsModelOptions(v *OpenRouterTextOptions) ModelOptions {
+	return ModelOptions{
+		OpenRouterTextOptions: v,
 	}
 }
 
@@ -580,6 +588,23 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.OpenAiThinkingOptions = nil
 	}
 
+	// try to unmarshal data into OpenRouterTextOptions
+	err = newStrictDecoder(data).Decode(&dst.OpenRouterTextOptions)
+	if err == nil {
+		jsonOpenRouterTextOptions, _ := json.Marshal(dst.OpenRouterTextOptions)
+		if string(jsonOpenRouterTextOptions) == "{}" { // empty struct
+			dst.OpenRouterTextOptions = nil
+		} else {
+			if err = validator.Validate(dst.OpenRouterTextOptions); err != nil {
+				dst.OpenRouterTextOptions = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.OpenRouterTextOptions = nil
+	}
+
 	// try to unmarshal data into TextFallbackOptions
 	err = newStrictDecoder(data).Decode(&dst.TextFallbackOptions)
 	if err == nil {
@@ -721,6 +746,7 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.OpenAiGptImageOptions = nil
 		dst.OpenAiTextOptions = nil
 		dst.OpenAiThinkingOptions = nil
+		dst.OpenRouterTextOptions = nil
 		dst.TextFallbackOptions = nil
 		dst.TwelvelabsPegasusOptions = nil
 		dst.VertexAIClaudeOptions = nil
@@ -817,6 +843,10 @@ func (src ModelOptions) MarshalJSON() ([]byte, error) {
 
 	if src.OpenAiThinkingOptions != nil {
 		return json.Marshal(&src.OpenAiThinkingOptions)
+	}
+
+	if src.OpenRouterTextOptions != nil {
+		return json.Marshal(&src.OpenRouterTextOptions)
 	}
 
 	if src.TextFallbackOptions != nil {
@@ -935,6 +965,10 @@ func (obj *ModelOptions) GetActualInstance() interface{} {
 		return obj.OpenAiThinkingOptions
 	}
 
+	if obj.OpenRouterTextOptions != nil {
+		return obj.OpenRouterTextOptions
+	}
+
 	if obj.TextFallbackOptions != nil {
 		return obj.TextFallbackOptions
 	}
@@ -1047,6 +1081,10 @@ func (obj ModelOptions) GetActualInstanceValue() interface{} {
 
 	if obj.OpenAiThinkingOptions != nil {
 		return *obj.OpenAiThinkingOptions
+	}
+
+	if obj.OpenRouterTextOptions != nil {
+		return *obj.OpenRouterTextOptions
 	}
 
 	if obj.TextFallbackOptions != nil {

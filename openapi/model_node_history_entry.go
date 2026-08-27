@@ -21,20 +21,21 @@ var _ MappedNullable = &NodeHistoryEntry{}
 
 // NodeHistoryEntry struct for NodeHistoryEntry
 type NodeHistoryEntry struct {
-	Id                 *string                `json:"id,omitempty"`
-	Node               string                 `json:"node"`
-	Attempt            *float32               `json:"attempt,omitempty"`
-	EnteredAt          time.Time              `json:"entered_at"`
-	ExitedAt           *time.Time             `json:"exited_at,omitempty"`
-	Status             string                 `json:"status"`
-	ContextDiff        map[string]interface{} `json:"context_diff,omitempty"`
-	DataRef            *string                `json:"data_ref,omitempty"`
-	Sequence           *float32               `json:"sequence,omitempty"`
-	ChildRunId         *string                `json:"child_run_id,omitempty"`
-	ChildWorkflowId    *string                `json:"child_workflow_id,omitempty"`
-	ChildWorkflowRunId *string                `json:"child_workflow_run_id,omitempty"`
-	Artifacts          []string               `json:"artifacts,omitempty"`
-	LogRef             *string                `json:"log_ref,omitempty"`
+	Id                   *string                `json:"id,omitempty"`
+	Node                 string                 `json:"node"`
+	Attempt              *float32               `json:"attempt,omitempty"`
+	EnteredAt            time.Time              `json:"entered_at"`
+	ExitedAt             *time.Time             `json:"exited_at,omitempty"`
+	Status               string                 `json:"status"`
+	ContextDiff          map[string]interface{} `json:"context_diff,omitempty"`
+	DataRef              *string                `json:"data_ref,omitempty"`
+	Sequence             *float32               `json:"sequence,omitempty"`
+	ChildRunId           *string                `json:"child_run_id,omitempty"`
+	ChildWorkflowId      *string                `json:"child_workflow_id,omitempty"`
+	ChildWorkflowRunId   *string                `json:"child_workflow_run_id,omitempty"`
+	Artifacts            []string               `json:"artifacts,omitempty"`
+	LogRef               *string                `json:"log_ref,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _NodeHistoryEntry NodeHistoryEntry
@@ -227,9 +228,9 @@ func (o *NodeHistoryEntry) SetStatus(v string) {
 	o.Status = v
 }
 
-// GetContextDiff returns the ContextDiff field value if set, zero value otherwise.
+// GetContextDiff returns the ContextDiff field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *NodeHistoryEntry) GetContextDiff() map[string]interface{} {
-	if o == nil || IsNil(o.ContextDiff) {
+	if o == nil {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -238,6 +239,7 @@ func (o *NodeHistoryEntry) GetContextDiff() map[string]interface{} {
 
 // GetContextDiffOk returns a tuple with the ContextDiff field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *NodeHistoryEntry) GetContextDiffOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.ContextDiff) {
 		return map[string]interface{}{}, false
@@ -505,7 +507,7 @@ func (o NodeHistoryEntry) ToMap() (map[string]interface{}, error) {
 		toSerialize["exited_at"] = o.ExitedAt
 	}
 	toSerialize["status"] = o.Status
-	if !IsNil(o.ContextDiff) {
+	if o.ContextDiff != nil {
 		toSerialize["context_diff"] = o.ContextDiff
 	}
 	if !IsNil(o.DataRef) {
@@ -529,6 +531,11 @@ func (o NodeHistoryEntry) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.LogRef) {
 		toSerialize["log_ref"] = o.LogRef
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -565,6 +572,26 @@ func (o *NodeHistoryEntry) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = NodeHistoryEntry(varNodeHistoryEntry)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "node")
+		delete(additionalProperties, "attempt")
+		delete(additionalProperties, "entered_at")
+		delete(additionalProperties, "exited_at")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "context_diff")
+		delete(additionalProperties, "data_ref")
+		delete(additionalProperties, "sequence")
+		delete(additionalProperties, "child_run_id")
+		delete(additionalProperties, "child_workflow_id")
+		delete(additionalProperties, "child_workflow_run_id")
+		delete(additionalProperties, "artifacts")
+		delete(additionalProperties, "log_ref")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }
