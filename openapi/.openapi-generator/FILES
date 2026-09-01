@@ -716,6 +716,10 @@ model_post_agent_run_update_payload.go
 model_post_agent_run_update_response.go
 model_preview_view_experience_request.go
 model_principal_identity.go
+model_process_agent_execution_policy.go
+model_process_agent_phase_reset.go
+model_process_agent_tool_input_contains.go
+model_process_agent_tool_phase.go
 model_process_context_definition.go
 model_process_context_response.go
 model_process_definition.go

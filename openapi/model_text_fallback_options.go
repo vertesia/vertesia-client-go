@@ -22,6 +22,7 @@ var _ MappedNullable = &TextFallbackOptions{}
 type TextFallbackOptions struct {
 	OptionId         string   `json:"_option_id"`
 	MaxTokens        *float32 `json:"max_tokens,omitempty"`
+	ToolChoice       *string  `json:"tool_choice,omitempty"`
 	Temperature      *float32 `json:"temperature,omitempty"`
 	TopP             *float32 `json:"top_p,omitempty"`
 	TopK             *float32 `json:"top_k,omitempty"`
@@ -105,6 +106,38 @@ func (o *TextFallbackOptions) HasMaxTokens() bool {
 // SetMaxTokens gets a reference to the given float32 and assigns it to the MaxTokens field.
 func (o *TextFallbackOptions) SetMaxTokens(v float32) {
 	o.MaxTokens = &v
+}
+
+// GetToolChoice returns the ToolChoice field value if set, zero value otherwise.
+func (o *TextFallbackOptions) GetToolChoice() string {
+	if o == nil || IsNil(o.ToolChoice) {
+		var ret string
+		return ret
+	}
+	return *o.ToolChoice
+}
+
+// GetToolChoiceOk returns a tuple with the ToolChoice field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TextFallbackOptions) GetToolChoiceOk() (*string, bool) {
+	if o == nil || IsNil(o.ToolChoice) {
+		return nil, false
+	}
+	return o.ToolChoice, true
+}
+
+// HasToolChoice returns a boolean if a field has been set.
+func (o *TextFallbackOptions) HasToolChoice() bool {
+	if o != nil && !IsNil(o.ToolChoice) {
+		return true
+	}
+
+	return false
+}
+
+// SetToolChoice gets a reference to the given string and assigns it to the ToolChoice field.
+func (o *TextFallbackOptions) SetToolChoice(v string) {
+	o.ToolChoice = &v
 }
 
 // GetTemperature returns the Temperature field value if set, zero value otherwise.
@@ -344,6 +377,9 @@ func (o TextFallbackOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize["_option_id"] = o.OptionId
 	if !IsNil(o.MaxTokens) {
 		toSerialize["max_tokens"] = o.MaxTokens
+	}
+	if !IsNil(o.ToolChoice) {
+		toSerialize["tool_choice"] = o.ToolChoice
 	}
 	if !IsNil(o.Temperature) {
 		toSerialize["temperature"] = o.Temperature

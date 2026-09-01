@@ -60,6 +60,8 @@ type AsyncConversationExecutionPayload struct {
 	InitialToolCalls []InitialToolCall `json:"initial_tool_calls,omitempty"`
 	// Hard denylist of tool names for this conversation. Excluded tools are never exposed to the model and are refused at execution time, even when a skill or tool refresh would otherwise unlock them. Takes precedence over tool_names, initial_skills, and skill-based tool activation.
 	ExcludedTools []string `json:"excluded_tools,omitempty"`
+	// Process-authored successful-tool phases enforced by this child conversation. Ordinary conversation callers should leave this unset.
+	AgentPolicy *ProcessAgentExecutionPolicy `json:"agent_policy,omitempty"`
 	// The maximum number of iterations in case of a conversation. If <=0 the default of 20 will be used.
 	MaxIterations *float32 `json:"max_iterations,omitempty"`
 	// Whether the conversation should be interactive or not
@@ -891,6 +893,38 @@ func (o *AsyncConversationExecutionPayload) SetExcludedTools(v []string) {
 	o.ExcludedTools = v
 }
 
+// GetAgentPolicy returns the AgentPolicy field value if set, zero value otherwise.
+func (o *AsyncConversationExecutionPayload) GetAgentPolicy() ProcessAgentExecutionPolicy {
+	if o == nil || IsNil(o.AgentPolicy) {
+		var ret ProcessAgentExecutionPolicy
+		return ret
+	}
+	return *o.AgentPolicy
+}
+
+// GetAgentPolicyOk returns a tuple with the AgentPolicy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AsyncConversationExecutionPayload) GetAgentPolicyOk() (*ProcessAgentExecutionPolicy, bool) {
+	if o == nil || IsNil(o.AgentPolicy) {
+		return nil, false
+	}
+	return o.AgentPolicy, true
+}
+
+// HasAgentPolicy returns a boolean if a field has been set.
+func (o *AsyncConversationExecutionPayload) HasAgentPolicy() bool {
+	if o != nil && !IsNil(o.AgentPolicy) {
+		return true
+	}
+
+	return false
+}
+
+// SetAgentPolicy gets a reference to the given ProcessAgentExecutionPolicy and assigns it to the AgentPolicy field.
+func (o *AsyncConversationExecutionPayload) SetAgentPolicy(v ProcessAgentExecutionPolicy) {
+	o.AgentPolicy = &v
+}
+
 // GetMaxIterations returns the MaxIterations field value if set, zero value otherwise.
 func (o *AsyncConversationExecutionPayload) GetMaxIterations() float32 {
 	if o == nil || IsNil(o.MaxIterations) {
@@ -1641,6 +1675,9 @@ func (o AsyncConversationExecutionPayload) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.ExcludedTools) {
 		toSerialize["excluded_tools"] = o.ExcludedTools
 	}
+	if !IsNil(o.AgentPolicy) {
+		toSerialize["agent_policy"] = o.AgentPolicy
+	}
 	if !IsNil(o.MaxIterations) {
 		toSerialize["max_iterations"] = o.MaxIterations
 	}
@@ -1772,6 +1809,7 @@ func (o *AsyncConversationExecutionPayload) UnmarshalJSON(data []byte) (err erro
 		delete(additionalProperties, "initial_skills")
 		delete(additionalProperties, "initial_tool_calls")
 		delete(additionalProperties, "excluded_tools")
+		delete(additionalProperties, "agent_policy")
 		delete(additionalProperties, "max_iterations")
 		delete(additionalProperties, "interactive")
 		delete(additionalProperties, "user_channels")

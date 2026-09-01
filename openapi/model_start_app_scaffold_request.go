@@ -25,6 +25,8 @@ type StartAppScaffoldRequest struct {
 	Title       *string             `json:"title,omitempty"`
 	Description *string             `json:"description,omitempty"`
 	Modules     []AppScaffoldModule `json:"modules,omitempty"`
+	// Optional Vertesia SDK version or package track for this scaffold. Overrides the deployment default.
+	AppgenPackageSpec *string `json:"appgen_package_spec,omitempty" validate:"regexp=^(?:latest|dev|dev-[0-9]+\\\\.[0-9]+|snapshot-[0-9a-f]{7}|[0-9]+\\\\.[0-9]+\\\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\\\+[0-9A-Za-z.-]+)?)$"`
 	// Start an initial app version build after the source has been pushed. Defaults to true.
 	CreateVersion *bool `json:"create_version,omitempty"`
 }
@@ -169,6 +171,38 @@ func (o *StartAppScaffoldRequest) SetModules(v []AppScaffoldModule) {
 	o.Modules = v
 }
 
+// GetAppgenPackageSpec returns the AppgenPackageSpec field value if set, zero value otherwise.
+func (o *StartAppScaffoldRequest) GetAppgenPackageSpec() string {
+	if o == nil || IsNil(o.AppgenPackageSpec) {
+		var ret string
+		return ret
+	}
+	return *o.AppgenPackageSpec
+}
+
+// GetAppgenPackageSpecOk returns a tuple with the AppgenPackageSpec field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StartAppScaffoldRequest) GetAppgenPackageSpecOk() (*string, bool) {
+	if o == nil || IsNil(o.AppgenPackageSpec) {
+		return nil, false
+	}
+	return o.AppgenPackageSpec, true
+}
+
+// HasAppgenPackageSpec returns a boolean if a field has been set.
+func (o *StartAppScaffoldRequest) HasAppgenPackageSpec() bool {
+	if o != nil && !IsNil(o.AppgenPackageSpec) {
+		return true
+	}
+
+	return false
+}
+
+// SetAppgenPackageSpec gets a reference to the given string and assigns it to the AppgenPackageSpec field.
+func (o *StartAppScaffoldRequest) SetAppgenPackageSpec(v string) {
+	o.AppgenPackageSpec = &v
+}
+
 // GetCreateVersion returns the CreateVersion field value if set, zero value otherwise.
 func (o *StartAppScaffoldRequest) GetCreateVersion() bool {
 	if o == nil || IsNil(o.CreateVersion) {
@@ -220,6 +254,9 @@ func (o StartAppScaffoldRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Modules) {
 		toSerialize["modules"] = o.Modules
+	}
+	if !IsNil(o.AppgenPackageSpec) {
+		toSerialize["appgen_package_spec"] = o.AppgenPackageSpec
 	}
 	if !IsNil(o.CreateVersion) {
 		toSerialize["create_version"] = o.CreateVersion

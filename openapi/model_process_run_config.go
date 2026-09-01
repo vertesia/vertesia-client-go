@@ -19,7 +19,11 @@ var _ MappedNullable = &ProcessRunConfig{}
 
 // ProcessRunConfig struct for ProcessRunConfig
 type ProcessRunConfig struct {
-	Model *string `json:"model,omitempty"`
+	// Execution environment id used by Process LLM nodes and the supervisor.
+	Environment *string `json:"environment,omitempty"`
+	Model       *string `json:"model,omitempty"`
+	// Validated model options applied to Process LLM nodes and the supervisor.
+	ModelOptions *ModelOptions `json:"model_options,omitempty"`
 	// Free-form message from the user when starting a run. Passed to the orchestrator LLM in supervised mode; stored on the run regardless so programmatic runs retain the intent that triggered them.
 	UserMessage              *string                                   `json:"user_message,omitempty"`
 	ProcessWorkstreamMonitor *ProcessRunConfigProcessWorkstreamMonitor `json:"process_workstream_monitor,omitempty"`
@@ -43,6 +47,38 @@ func NewProcessRunConfig() *ProcessRunConfig {
 func NewProcessRunConfigWithDefaults() *ProcessRunConfig {
 	this := ProcessRunConfig{}
 	return &this
+}
+
+// GetEnvironment returns the Environment field value if set, zero value otherwise.
+func (o *ProcessRunConfig) GetEnvironment() string {
+	if o == nil || IsNil(o.Environment) {
+		var ret string
+		return ret
+	}
+	return *o.Environment
+}
+
+// GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessRunConfig) GetEnvironmentOk() (*string, bool) {
+	if o == nil || IsNil(o.Environment) {
+		return nil, false
+	}
+	return o.Environment, true
+}
+
+// HasEnvironment returns a boolean if a field has been set.
+func (o *ProcessRunConfig) HasEnvironment() bool {
+	if o != nil && !IsNil(o.Environment) {
+		return true
+	}
+
+	return false
+}
+
+// SetEnvironment gets a reference to the given string and assigns it to the Environment field.
+func (o *ProcessRunConfig) SetEnvironment(v string) {
+	o.Environment = &v
 }
 
 // GetModel returns the Model field value if set, zero value otherwise.
@@ -75,6 +111,38 @@ func (o *ProcessRunConfig) HasModel() bool {
 // SetModel gets a reference to the given string and assigns it to the Model field.
 func (o *ProcessRunConfig) SetModel(v string) {
 	o.Model = &v
+}
+
+// GetModelOptions returns the ModelOptions field value if set, zero value otherwise.
+func (o *ProcessRunConfig) GetModelOptions() ModelOptions {
+	if o == nil || IsNil(o.ModelOptions) {
+		var ret ModelOptions
+		return ret
+	}
+	return *o.ModelOptions
+}
+
+// GetModelOptionsOk returns a tuple with the ModelOptions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessRunConfig) GetModelOptionsOk() (*ModelOptions, bool) {
+	if o == nil || IsNil(o.ModelOptions) {
+		return nil, false
+	}
+	return o.ModelOptions, true
+}
+
+// HasModelOptions returns a boolean if a field has been set.
+func (o *ProcessRunConfig) HasModelOptions() bool {
+	if o != nil && !IsNil(o.ModelOptions) {
+		return true
+	}
+
+	return false
+}
+
+// SetModelOptions gets a reference to the given ModelOptions and assigns it to the ModelOptions field.
+func (o *ProcessRunConfig) SetModelOptions(v ModelOptions) {
+	o.ModelOptions = &v
 }
 
 // GetUserMessage returns the UserMessage field value if set, zero value otherwise.
@@ -151,8 +219,14 @@ func (o ProcessRunConfig) MarshalJSON() ([]byte, error) {
 
 func (o ProcessRunConfig) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Environment) {
+		toSerialize["environment"] = o.Environment
+	}
 	if !IsNil(o.Model) {
 		toSerialize["model"] = o.Model
+	}
+	if !IsNil(o.ModelOptions) {
+		toSerialize["model_options"] = o.ModelOptions
 	}
 	if !IsNil(o.UserMessage) {
 		toSerialize["user_message"] = o.UserMessage
@@ -182,7 +256,9 @@ func (o *ProcessRunConfig) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "environment")
 		delete(additionalProperties, "model")
+		delete(additionalProperties, "model_options")
 		delete(additionalProperties, "user_message")
 		delete(additionalProperties, "process_workstream_monitor")
 		o.AdditionalProperties = additionalProperties

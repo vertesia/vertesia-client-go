@@ -21,6 +21,7 @@ var _ MappedNullable = &OpenRouterTextOptions{}
 // OpenRouterTextOptions struct for OpenRouterTextOptions
 type OpenRouterTextOptions struct {
 	MaxTokens        *float32         `json:"max_tokens,omitempty"`
+	ToolChoice       *string          `json:"tool_choice,omitempty"`
 	Effort           *ReasoningEffort `json:"effort,omitempty"`
 	ReasoningEffort  *ReasoningEffort `json:"reasoning_effort,omitempty"`
 	Temperature      *float32         `json:"temperature,omitempty"`
@@ -94,6 +95,38 @@ func (o *OpenRouterTextOptions) HasMaxTokens() bool {
 // SetMaxTokens gets a reference to the given float32 and assigns it to the MaxTokens field.
 func (o *OpenRouterTextOptions) SetMaxTokens(v float32) {
 	o.MaxTokens = &v
+}
+
+// GetToolChoice returns the ToolChoice field value if set, zero value otherwise.
+func (o *OpenRouterTextOptions) GetToolChoice() string {
+	if o == nil || IsNil(o.ToolChoice) {
+		var ret string
+		return ret
+	}
+	return *o.ToolChoice
+}
+
+// GetToolChoiceOk returns a tuple with the ToolChoice field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenRouterTextOptions) GetToolChoiceOk() (*string, bool) {
+	if o == nil || IsNil(o.ToolChoice) {
+		return nil, false
+	}
+	return o.ToolChoice, true
+}
+
+// HasToolChoice returns a boolean if a field has been set.
+func (o *OpenRouterTextOptions) HasToolChoice() bool {
+	if o != nil && !IsNil(o.ToolChoice) {
+		return true
+	}
+
+	return false
+}
+
+// SetToolChoice gets a reference to the given string and assigns it to the ToolChoice field.
+func (o *OpenRouterTextOptions) SetToolChoice(v string) {
+	o.ToolChoice = &v
 }
 
 // GetEffort returns the Effort field value if set, zero value otherwise.
@@ -740,6 +773,9 @@ func (o OpenRouterTextOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.MaxTokens) {
 		toSerialize["max_tokens"] = o.MaxTokens
+	}
+	if !IsNil(o.ToolChoice) {
+		toSerialize["tool_choice"] = o.ToolChoice
 	}
 	if !IsNil(o.Effort) {
 		toSerialize["effort"] = o.Effort

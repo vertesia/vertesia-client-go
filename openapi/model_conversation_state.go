@@ -32,7 +32,7 @@ type ConversationState struct {
 	ToolApprovalMode *AgentToolApprovalMode `json:"tool_approval_mode,omitempty"`
 	// Run-scoped, exact-target grants created by \"allow this action for this run\".
 	ToolApprovalGrants map[string]ToolApprovalGrant `json:"tool_approval_grants,omitempty"`
-	// Buffered tool results held while approval denial pauses until the next user message.
+	// Buffered tool results held across an interactive pause until the next user message.
 	PendingToolApprovalResults *PendingToolApprovalResults `json:"pending_tool_approval_results,omitempty"`
 	// Compact, redacted latest user intent for reviewer-style system interactions.
 	LatestUserMessage *string `json:"latest_user_message,omitempty"`

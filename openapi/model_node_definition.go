@@ -36,9 +36,11 @@ type NodeDefinition struct {
 	ResultSchema *JSONSchema            `json:"result_schema,omitempty"`
 	Prompt       *string                `json:"prompt,omitempty"`
 	Input        map[string]interface{} `json:"input,omitempty"`
-	Config       map[string]interface{} `json:"config,omitempty"`
-	Title        *string                `json:"title,omitempty"`
-	Description  *string                `json:"description,omitempty"`
+	// Whether interaction and custom-agent nodes receive the complete process context in addition to resolved input. Defaults to true; set false for input-only specialist prompts.
+	InheritContext *bool                  `json:"inherit_context,omitempty"`
+	Config         map[string]interface{} `json:"config,omitempty"`
+	Title          *string                `json:"title,omitempty"`
+	Description    *string                `json:"description,omitempty"`
 	// End-user-facing explanation of what this node does. Authored by the process designer (often an LLM) in plain language — one or two sentences — and rendered in run observability so a human reading the run can understand why this node exists without reading the config. Distinct from `description`, which is developer-facing.
 	HumanDescription *string                `json:"human_description,omitempty"`
 	Writes           []string               `json:"writes,omitempty"`
@@ -46,6 +48,12 @@ type NodeDefinition struct {
 	MaxRetries       *float32               `json:"max_retries,omitempty"`
 	Transitions      []TransitionDefinition `json:"transitions,omitempty"`
 	Tools            []string               `json:"tools,omitempty"`
+	// Builtin system skills activated before the agent node's first model turn.
+	InitialSkills []string `json:"initial_skills,omitempty"`
+	// Execution-time tool denylist for the agent node's child conversation.
+	ExcludedTools []string `json:"excluded_tools,omitempty"`
+	// Declarative successful-tool phases and completion behavior for this agent node. The Process owns this policy; the child conversation enforces it generically.
+	AgentPolicy *ProcessAgentExecutionPolicy `json:"agent_policy,omitempty"`
 	// Model id override for this node. If unset, falls back to the process run's `config.model`, then to the project's default. Useful when a specific node needs heavier reasoning (e.g. Opus for legal flagging) while the rest of the process uses a cheaper default.
 	Model                *string                       `json:"model,omitempty"`
 	Task                 *HumanTaskDefinition          `json:"task,omitempty"`
@@ -491,6 +499,38 @@ func (o *NodeDefinition) SetInput(v map[string]interface{}) {
 	o.Input = v
 }
 
+// GetInheritContext returns the InheritContext field value if set, zero value otherwise.
+func (o *NodeDefinition) GetInheritContext() bool {
+	if o == nil || IsNil(o.InheritContext) {
+		var ret bool
+		return ret
+	}
+	return *o.InheritContext
+}
+
+// GetInheritContextOk returns a tuple with the InheritContext field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDefinition) GetInheritContextOk() (*bool, bool) {
+	if o == nil || IsNil(o.InheritContext) {
+		return nil, false
+	}
+	return o.InheritContext, true
+}
+
+// HasInheritContext returns a boolean if a field has been set.
+func (o *NodeDefinition) HasInheritContext() bool {
+	if o != nil && !IsNil(o.InheritContext) {
+		return true
+	}
+
+	return false
+}
+
+// SetInheritContext gets a reference to the given bool and assigns it to the InheritContext field.
+func (o *NodeDefinition) SetInheritContext(v bool) {
+	o.InheritContext = &v
+}
+
 // GetConfig returns the Config field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *NodeDefinition) GetConfig() map[string]interface{} {
 	if o == nil {
@@ -778,6 +818,102 @@ func (o *NodeDefinition) HasTools() bool {
 // SetTools gets a reference to the given []string and assigns it to the Tools field.
 func (o *NodeDefinition) SetTools(v []string) {
 	o.Tools = v
+}
+
+// GetInitialSkills returns the InitialSkills field value if set, zero value otherwise.
+func (o *NodeDefinition) GetInitialSkills() []string {
+	if o == nil || IsNil(o.InitialSkills) {
+		var ret []string
+		return ret
+	}
+	return o.InitialSkills
+}
+
+// GetInitialSkillsOk returns a tuple with the InitialSkills field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDefinition) GetInitialSkillsOk() ([]string, bool) {
+	if o == nil || IsNil(o.InitialSkills) {
+		return nil, false
+	}
+	return o.InitialSkills, true
+}
+
+// HasInitialSkills returns a boolean if a field has been set.
+func (o *NodeDefinition) HasInitialSkills() bool {
+	if o != nil && !IsNil(o.InitialSkills) {
+		return true
+	}
+
+	return false
+}
+
+// SetInitialSkills gets a reference to the given []string and assigns it to the InitialSkills field.
+func (o *NodeDefinition) SetInitialSkills(v []string) {
+	o.InitialSkills = v
+}
+
+// GetExcludedTools returns the ExcludedTools field value if set, zero value otherwise.
+func (o *NodeDefinition) GetExcludedTools() []string {
+	if o == nil || IsNil(o.ExcludedTools) {
+		var ret []string
+		return ret
+	}
+	return o.ExcludedTools
+}
+
+// GetExcludedToolsOk returns a tuple with the ExcludedTools field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDefinition) GetExcludedToolsOk() ([]string, bool) {
+	if o == nil || IsNil(o.ExcludedTools) {
+		return nil, false
+	}
+	return o.ExcludedTools, true
+}
+
+// HasExcludedTools returns a boolean if a field has been set.
+func (o *NodeDefinition) HasExcludedTools() bool {
+	if o != nil && !IsNil(o.ExcludedTools) {
+		return true
+	}
+
+	return false
+}
+
+// SetExcludedTools gets a reference to the given []string and assigns it to the ExcludedTools field.
+func (o *NodeDefinition) SetExcludedTools(v []string) {
+	o.ExcludedTools = v
+}
+
+// GetAgentPolicy returns the AgentPolicy field value if set, zero value otherwise.
+func (o *NodeDefinition) GetAgentPolicy() ProcessAgentExecutionPolicy {
+	if o == nil || IsNil(o.AgentPolicy) {
+		var ret ProcessAgentExecutionPolicy
+		return ret
+	}
+	return *o.AgentPolicy
+}
+
+// GetAgentPolicyOk returns a tuple with the AgentPolicy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDefinition) GetAgentPolicyOk() (*ProcessAgentExecutionPolicy, bool) {
+	if o == nil || IsNil(o.AgentPolicy) {
+		return nil, false
+	}
+	return o.AgentPolicy, true
+}
+
+// HasAgentPolicy returns a boolean if a field has been set.
+func (o *NodeDefinition) HasAgentPolicy() bool {
+	if o != nil && !IsNil(o.AgentPolicy) {
+		return true
+	}
+
+	return false
+}
+
+// SetAgentPolicy gets a reference to the given ProcessAgentExecutionPolicy and assigns it to the AgentPolicy field.
+func (o *NodeDefinition) SetAgentPolicy(v ProcessAgentExecutionPolicy) {
+	o.AgentPolicy = &v
 }
 
 // GetModel returns the Model field value if set, zero value otherwise.
@@ -1211,6 +1347,9 @@ func (o NodeDefinition) ToMap() (map[string]interface{}, error) {
 	if o.Input != nil {
 		toSerialize["input"] = o.Input
 	}
+	if !IsNil(o.InheritContext) {
+		toSerialize["inherit_context"] = o.InheritContext
+	}
 	if o.Config != nil {
 		toSerialize["config"] = o.Config
 	}
@@ -1237,6 +1376,15 @@ func (o NodeDefinition) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Tools) {
 		toSerialize["tools"] = o.Tools
+	}
+	if !IsNil(o.InitialSkills) {
+		toSerialize["initial_skills"] = o.InitialSkills
+	}
+	if !IsNil(o.ExcludedTools) {
+		toSerialize["excluded_tools"] = o.ExcludedTools
+	}
+	if !IsNil(o.AgentPolicy) {
+		toSerialize["agent_policy"] = o.AgentPolicy
 	}
 	if !IsNil(o.Model) {
 		toSerialize["model"] = o.Model
@@ -1330,6 +1478,7 @@ func (o *NodeDefinition) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "result_schema")
 		delete(additionalProperties, "prompt")
 		delete(additionalProperties, "input")
+		delete(additionalProperties, "inherit_context")
 		delete(additionalProperties, "config")
 		delete(additionalProperties, "title")
 		delete(additionalProperties, "description")
@@ -1339,6 +1488,9 @@ func (o *NodeDefinition) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "max_retries")
 		delete(additionalProperties, "transitions")
 		delete(additionalProperties, "tools")
+		delete(additionalProperties, "initial_skills")
+		delete(additionalProperties, "excluded_tools")
+		delete(additionalProperties, "agent_policy")
 		delete(additionalProperties, "model")
 		delete(additionalProperties, "task")
 		delete(additionalProperties, "foreach")

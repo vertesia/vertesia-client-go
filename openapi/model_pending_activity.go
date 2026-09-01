@@ -20,12 +20,13 @@ var _ MappedNullable = &PendingActivity{}
 
 // PendingActivity struct for PendingActivity
 type PendingActivity struct {
-	ActivityId      *string        `json:"activityId,omitempty"`
-	ActivityType    *string        `json:"activityType,omitempty"`
-	Attempt         float32        `json:"attempt"`
-	MaximumAttempts float32        `json:"maximumAttempts"`
-	LastFailure     *string        `json:"lastFailure,omitempty"`
-	LastStartedTime NullableString `json:"lastStartedTime"`
+	ActivityId        *string        `json:"activityId,omitempty"`
+	ActivityType      *string        `json:"activityType,omitempty"`
+	Attempt           float32        `json:"attempt"`
+	MaximumAttempts   float32        `json:"maximumAttempts"`
+	LastFailure       *string        `json:"lastFailure,omitempty"`
+	LastStartedTime   NullableString `json:"lastStartedTime"`
+	LastHeartbeatTime NullableString `json:"lastHeartbeatTime,omitempty"`
 }
 
 type _PendingActivity PendingActivity
@@ -220,6 +221,49 @@ func (o *PendingActivity) SetLastStartedTime(v string) {
 	o.LastStartedTime.Set(&v)
 }
 
+// GetLastHeartbeatTime returns the LastHeartbeatTime field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *PendingActivity) GetLastHeartbeatTime() string {
+	if o == nil || IsNil(o.LastHeartbeatTime.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.LastHeartbeatTime.Get()
+}
+
+// GetLastHeartbeatTimeOk returns a tuple with the LastHeartbeatTime field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *PendingActivity) GetLastHeartbeatTimeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.LastHeartbeatTime.Get(), o.LastHeartbeatTime.IsSet()
+}
+
+// HasLastHeartbeatTime returns a boolean if a field has been set.
+func (o *PendingActivity) HasLastHeartbeatTime() bool {
+	if o != nil && o.LastHeartbeatTime.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetLastHeartbeatTime gets a reference to the given NullableString and assigns it to the LastHeartbeatTime field.
+func (o *PendingActivity) SetLastHeartbeatTime(v string) {
+	o.LastHeartbeatTime.Set(&v)
+}
+
+// SetLastHeartbeatTimeNil sets the value for LastHeartbeatTime to be an explicit nil
+func (o *PendingActivity) SetLastHeartbeatTimeNil() {
+	o.LastHeartbeatTime.Set(nil)
+}
+
+// UnsetLastHeartbeatTime ensures that no value is present for LastHeartbeatTime, not even an explicit nil
+func (o *PendingActivity) UnsetLastHeartbeatTime() {
+	o.LastHeartbeatTime.Unset()
+}
+
 func (o PendingActivity) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -242,6 +286,9 @@ func (o PendingActivity) ToMap() (map[string]interface{}, error) {
 		toSerialize["lastFailure"] = o.LastFailure
 	}
 	toSerialize["lastStartedTime"] = o.LastStartedTime.Get()
+	if o.LastHeartbeatTime.IsSet() {
+		toSerialize["lastHeartbeatTime"] = o.LastHeartbeatTime.Get()
+	}
 	return toSerialize, nil
 }
 
