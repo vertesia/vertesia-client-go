@@ -20,10 +20,13 @@ var _ MappedNullable = &EmbeddingsApiRequest{}
 
 // EmbeddingsApiRequest struct for EmbeddingsApiRequest
 type EmbeddingsApiRequest struct {
-	Inputs     []EmbeddingsApiInput `json:"inputs"`
-	Model      *string              `json:"model,omitempty"`
-	TaskType   *EmbeddingTaskType   `json:"task_type,omitempty"`
-	Dimensions *float32             `json:"dimensions,omitempty"`
+	Inputs []EmbeddingsApiInput `json:"inputs"`
+	// Logical project embedding type. This distinguishes properties embeddings from text inputs when the server resolves an omitted model from project settings.
+	EmbeddingType *SupportedEmbeddingTypes `json:"embedding_type,omitempty"`
+	// Explicit model override intended for validating a configuration before it is saved. Normal callers should omit this field and provide embedding_type so the project model is resolved.
+	Model      *string            `json:"model,omitempty"`
+	TaskType   *EmbeddingTaskType `json:"task_type,omitempty"`
+	Dimensions *float32           `json:"dimensions,omitempty"`
 }
 
 type _EmbeddingsApiRequest EmbeddingsApiRequest
@@ -68,6 +71,38 @@ func (o *EmbeddingsApiRequest) GetInputsOk() ([]EmbeddingsApiInput, bool) {
 // SetInputs sets field value
 func (o *EmbeddingsApiRequest) SetInputs(v []EmbeddingsApiInput) {
 	o.Inputs = v
+}
+
+// GetEmbeddingType returns the EmbeddingType field value if set, zero value otherwise.
+func (o *EmbeddingsApiRequest) GetEmbeddingType() SupportedEmbeddingTypes {
+	if o == nil || IsNil(o.EmbeddingType) {
+		var ret SupportedEmbeddingTypes
+		return ret
+	}
+	return *o.EmbeddingType
+}
+
+// GetEmbeddingTypeOk returns a tuple with the EmbeddingType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EmbeddingsApiRequest) GetEmbeddingTypeOk() (*SupportedEmbeddingTypes, bool) {
+	if o == nil || IsNil(o.EmbeddingType) {
+		return nil, false
+	}
+	return o.EmbeddingType, true
+}
+
+// HasEmbeddingType returns a boolean if a field has been set.
+func (o *EmbeddingsApiRequest) HasEmbeddingType() bool {
+	if o != nil && !IsNil(o.EmbeddingType) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmbeddingType gets a reference to the given SupportedEmbeddingTypes and assigns it to the EmbeddingType field.
+func (o *EmbeddingsApiRequest) SetEmbeddingType(v SupportedEmbeddingTypes) {
+	o.EmbeddingType = &v
 }
 
 // GetModel returns the Model field value if set, zero value otherwise.
@@ -177,6 +212,9 @@ func (o EmbeddingsApiRequest) MarshalJSON() ([]byte, error) {
 func (o EmbeddingsApiRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["inputs"] = o.Inputs
+	if !IsNil(o.EmbeddingType) {
+		toSerialize["embedding_type"] = o.EmbeddingType
+	}
 	if !IsNil(o.Model) {
 		toSerialize["model"] = o.Model
 	}
