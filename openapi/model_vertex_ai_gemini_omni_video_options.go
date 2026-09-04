@@ -24,6 +24,7 @@ type VertexAIGeminiOmniVideoOptions struct {
 	Task            *string `json:"task,omitempty"`
 	AspectRatio     *string `json:"aspect_ratio,omitempty"`
 	DurationSeconds *int32  `json:"duration_seconds,omitempty"`
+	Resolution      *string `json:"resolution,omitempty"`
 }
 
 type _VertexAIGeminiOmniVideoOptions VertexAIGeminiOmniVideoOptions
@@ -166,6 +167,38 @@ func (o *VertexAIGeminiOmniVideoOptions) SetDurationSeconds(v int32) {
 	o.DurationSeconds = &v
 }
 
+// GetResolution returns the Resolution field value if set, zero value otherwise.
+func (o *VertexAIGeminiOmniVideoOptions) GetResolution() string {
+	if o == nil || IsNil(o.Resolution) {
+		var ret string
+		return ret
+	}
+	return *o.Resolution
+}
+
+// GetResolutionOk returns a tuple with the Resolution field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VertexAIGeminiOmniVideoOptions) GetResolutionOk() (*string, bool) {
+	if o == nil || IsNil(o.Resolution) {
+		return nil, false
+	}
+	return o.Resolution, true
+}
+
+// HasResolution returns a boolean if a field has been set.
+func (o *VertexAIGeminiOmniVideoOptions) HasResolution() bool {
+	if o != nil && !IsNil(o.Resolution) {
+		return true
+	}
+
+	return false
+}
+
+// SetResolution gets a reference to the given string and assigns it to the Resolution field.
+func (o *VertexAIGeminiOmniVideoOptions) SetResolution(v string) {
+	o.Resolution = &v
+}
+
 func (o VertexAIGeminiOmniVideoOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -185,6 +218,9 @@ func (o VertexAIGeminiOmniVideoOptions) ToMap() (map[string]interface{}, error) 
 	}
 	if !IsNil(o.DurationSeconds) {
 		toSerialize["duration_seconds"] = o.DurationSeconds
+	}
+	if !IsNil(o.Resolution) {
+		toSerialize["resolution"] = o.Resolution
 	}
 	return toSerialize, nil
 }
