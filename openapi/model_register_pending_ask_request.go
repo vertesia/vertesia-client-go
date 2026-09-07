@@ -27,6 +27,7 @@ type RegisterPendingAskRequest struct {
 	TimeoutHours *float32      `json:"timeoutHours,omitempty"`
 	UserChannels []UserChannel `json:"userChannels"`
 	TaskFields   []TaskField   `json:"taskFields,omitempty"`
+	RequestId    *string       `json:"requestId,omitempty"`
 }
 
 type _RegisterPendingAskRequest RegisterPendingAskRequest
@@ -237,6 +238,38 @@ func (o *RegisterPendingAskRequest) SetTaskFields(v []TaskField) {
 	o.TaskFields = v
 }
 
+// GetRequestId returns the RequestId field value if set, zero value otherwise.
+func (o *RegisterPendingAskRequest) GetRequestId() string {
+	if o == nil || IsNil(o.RequestId) {
+		var ret string
+		return ret
+	}
+	return *o.RequestId
+}
+
+// GetRequestIdOk returns a tuple with the RequestId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RegisterPendingAskRequest) GetRequestIdOk() (*string, bool) {
+	if o == nil || IsNil(o.RequestId) {
+		return nil, false
+	}
+	return o.RequestId, true
+}
+
+// HasRequestId returns a boolean if a field has been set.
+func (o *RegisterPendingAskRequest) HasRequestId() bool {
+	if o != nil && !IsNil(o.RequestId) {
+		return true
+	}
+
+	return false
+}
+
+// SetRequestId gets a reference to the given string and assigns it to the RequestId field.
+func (o *RegisterPendingAskRequest) SetRequestId(v string) {
+	o.RequestId = &v
+}
+
 func (o RegisterPendingAskRequest) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -257,6 +290,9 @@ func (o RegisterPendingAskRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize["userChannels"] = o.UserChannels
 	if !IsNil(o.TaskFields) {
 		toSerialize["taskFields"] = o.TaskFields
+	}
+	if !IsNil(o.RequestId) {
+		toSerialize["requestId"] = o.RequestId
 	}
 	return toSerialize, nil
 }
