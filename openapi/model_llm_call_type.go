@@ -25,6 +25,7 @@ const (
 	LLMCALLTYPE_RESUME_USER              LlmCallType = "resume_user"
 	LLMCALLTYPE_CHECKPOINT               LlmCallType = "checkpoint"
 	LLMCALLTYPE_NESTED_INTERACTION       LlmCallType = "nested_interaction"
+	LLMCALLTYPE_BACKGROUND               LlmCallType = "background"
 	LLMCALLTYPE_UNKNOWN_DEFAULT_OPEN_API LlmCallType = "unknown_default_open_api"
 )
 
@@ -35,6 +36,7 @@ var AllowedLlmCallTypeEnumValues = []LlmCallType{
 	"resume_user",
 	"checkpoint",
 	"nested_interaction",
+	"background",
 	"unknown_default_open_api",
 }
 
