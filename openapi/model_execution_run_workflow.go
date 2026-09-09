@@ -20,6 +20,8 @@ var _ MappedNullable = &ExecutionRunWorkflow{}
 
 // ExecutionRunWorkflow struct for ExecutionRunWorkflow
 type ExecutionRunWorkflow struct {
+	// Root agent run owning this inference, including inference performed by child workstreams.
+	AgentRunId *string `json:"agent_run_id,omitempty"`
 	// Stable identifier pairing an interaction rate-limit admission with its completion feedback.
 	RateLimitId *string `json:"rate_limit_id,omitempty"`
 	// The Temporal Workflow Run ID related to this Interaction Run.  A Run ID is a globally unique, platform-level identifier for a Workflow Execution.  Deprecated: For agent runs, use the Agent Runs API (`/api/v1/agents`) instead. The AgentRun object provides a stable ID that survives workflow restarts. This field is only relevant for legacy non-agent interaction executions.
@@ -51,6 +53,38 @@ func NewExecutionRunWorkflow(runId string, workflowId string) *ExecutionRunWorkf
 func NewExecutionRunWorkflowWithDefaults() *ExecutionRunWorkflow {
 	this := ExecutionRunWorkflow{}
 	return &this
+}
+
+// GetAgentRunId returns the AgentRunId field value if set, zero value otherwise.
+func (o *ExecutionRunWorkflow) GetAgentRunId() string {
+	if o == nil || IsNil(o.AgentRunId) {
+		var ret string
+		return ret
+	}
+	return *o.AgentRunId
+}
+
+// GetAgentRunIdOk returns a tuple with the AgentRunId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExecutionRunWorkflow) GetAgentRunIdOk() (*string, bool) {
+	if o == nil || IsNil(o.AgentRunId) {
+		return nil, false
+	}
+	return o.AgentRunId, true
+}
+
+// HasAgentRunId returns a boolean if a field has been set.
+func (o *ExecutionRunWorkflow) HasAgentRunId() bool {
+	if o != nil && !IsNil(o.AgentRunId) {
+		return true
+	}
+
+	return false
+}
+
+// SetAgentRunId gets a reference to the given string and assigns it to the AgentRunId field.
+func (o *ExecutionRunWorkflow) SetAgentRunId(v string) {
+	o.AgentRunId = &v
 }
 
 // GetRateLimitId returns the RateLimitId field value if set, zero value otherwise.
@@ -181,6 +215,9 @@ func (o ExecutionRunWorkflow) MarshalJSON() ([]byte, error) {
 
 func (o ExecutionRunWorkflow) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.AgentRunId) {
+		toSerialize["agent_run_id"] = o.AgentRunId
+	}
 	if !IsNil(o.RateLimitId) {
 		toSerialize["rate_limit_id"] = o.RateLimitId
 	}
