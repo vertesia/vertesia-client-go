@@ -20,8 +20,11 @@ var _ MappedNullable = &AgentTokenRequest{}
 
 // AgentTokenRequest Agent token for a service account to act as agent on behalf of a user.  Two trust paths are supported:  - `user_access_token`: a live signed Vertesia token. STS verifies the user context from that token. - `workload_id_token`: a workload acts on behalf of a user. It implies that a full verification   will be performed based on the workload identity.
 type AgentTokenRequest struct {
-	Type     string  `json:"type"`
-	Audience *string `json:"audience,omitempty"`
+	Type                 string  `json:"type"`
+	DelegationGrantId    *string `json:"delegation_grant_id,omitempty"`
+	DelegationPolicyHash *string `json:"delegation_policy_hash,omitempty"`
+	ContinuationToken    *string `json:"continuation_token,omitempty"`
+	Audience             *string `json:"audience,omitempty"`
 	// Signing algorithm - defaults to ES256. Use RS256 for Azure AD compatibility.
 	Algorithm *SigningAlgorithm `json:"algorithm,omitempty"`
 	AccountId string            `json:"account_id"`
@@ -76,6 +79,102 @@ func (o *AgentTokenRequest) GetTypeOk() (*string, bool) {
 // SetType sets field value
 func (o *AgentTokenRequest) SetType(v string) {
 	o.Type = v
+}
+
+// GetDelegationGrantId returns the DelegationGrantId field value if set, zero value otherwise.
+func (o *AgentTokenRequest) GetDelegationGrantId() string {
+	if o == nil || IsNil(o.DelegationGrantId) {
+		var ret string
+		return ret
+	}
+	return *o.DelegationGrantId
+}
+
+// GetDelegationGrantIdOk returns a tuple with the DelegationGrantId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentTokenRequest) GetDelegationGrantIdOk() (*string, bool) {
+	if o == nil || IsNil(o.DelegationGrantId) {
+		return nil, false
+	}
+	return o.DelegationGrantId, true
+}
+
+// HasDelegationGrantId returns a boolean if a field has been set.
+func (o *AgentTokenRequest) HasDelegationGrantId() bool {
+	if o != nil && !IsNil(o.DelegationGrantId) {
+		return true
+	}
+
+	return false
+}
+
+// SetDelegationGrantId gets a reference to the given string and assigns it to the DelegationGrantId field.
+func (o *AgentTokenRequest) SetDelegationGrantId(v string) {
+	o.DelegationGrantId = &v
+}
+
+// GetDelegationPolicyHash returns the DelegationPolicyHash field value if set, zero value otherwise.
+func (o *AgentTokenRequest) GetDelegationPolicyHash() string {
+	if o == nil || IsNil(o.DelegationPolicyHash) {
+		var ret string
+		return ret
+	}
+	return *o.DelegationPolicyHash
+}
+
+// GetDelegationPolicyHashOk returns a tuple with the DelegationPolicyHash field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentTokenRequest) GetDelegationPolicyHashOk() (*string, bool) {
+	if o == nil || IsNil(o.DelegationPolicyHash) {
+		return nil, false
+	}
+	return o.DelegationPolicyHash, true
+}
+
+// HasDelegationPolicyHash returns a boolean if a field has been set.
+func (o *AgentTokenRequest) HasDelegationPolicyHash() bool {
+	if o != nil && !IsNil(o.DelegationPolicyHash) {
+		return true
+	}
+
+	return false
+}
+
+// SetDelegationPolicyHash gets a reference to the given string and assigns it to the DelegationPolicyHash field.
+func (o *AgentTokenRequest) SetDelegationPolicyHash(v string) {
+	o.DelegationPolicyHash = &v
+}
+
+// GetContinuationToken returns the ContinuationToken field value if set, zero value otherwise.
+func (o *AgentTokenRequest) GetContinuationToken() string {
+	if o == nil || IsNil(o.ContinuationToken) {
+		var ret string
+		return ret
+	}
+	return *o.ContinuationToken
+}
+
+// GetContinuationTokenOk returns a tuple with the ContinuationToken field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentTokenRequest) GetContinuationTokenOk() (*string, bool) {
+	if o == nil || IsNil(o.ContinuationToken) {
+		return nil, false
+	}
+	return o.ContinuationToken, true
+}
+
+// HasContinuationToken returns a boolean if a field has been set.
+func (o *AgentTokenRequest) HasContinuationToken() bool {
+	if o != nil && !IsNil(o.ContinuationToken) {
+		return true
+	}
+
+	return false
+}
+
+// SetContinuationToken gets a reference to the given string and assigns it to the ContinuationToken field.
+func (o *AgentTokenRequest) SetContinuationToken(v string) {
+	o.ContinuationToken = &v
 }
 
 // GetAudience returns the Audience field value if set, zero value otherwise.
@@ -257,6 +356,15 @@ func (o AgentTokenRequest) MarshalJSON() ([]byte, error) {
 func (o AgentTokenRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["type"] = o.Type
+	if !IsNil(o.DelegationGrantId) {
+		toSerialize["delegation_grant_id"] = o.DelegationGrantId
+	}
+	if !IsNil(o.DelegationPolicyHash) {
+		toSerialize["delegation_policy_hash"] = o.DelegationPolicyHash
+	}
+	if !IsNil(o.ContinuationToken) {
+		toSerialize["continuation_token"] = o.ContinuationToken
+	}
 	if !IsNil(o.Audience) {
 		toSerialize["audience"] = o.Audience
 	}

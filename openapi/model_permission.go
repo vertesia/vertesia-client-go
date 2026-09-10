@@ -20,6 +20,7 @@ type Permission string
 
 // List of Permission
 const (
+	PERMISSION_SCHEDULE_DELEGATE        Permission = "schedule:delegate"
 	PERMISSION_INTERACTION_READ         Permission = "interaction:read"
 	PERMISSION_INTERACTION_WRITE        Permission = "interaction:write"
 	PERMISSION_INTERACTION_DELETE       Permission = "interaction:delete"
@@ -63,6 +64,7 @@ const (
 
 // All allowed values of Permission enum
 var AllowedPermissionEnumValues = []Permission{
+	"schedule:delegate",
 	"interaction:read",
 	"interaction:write",
 	"interaction:delete",

@@ -12,6 +12,7 @@ api_content_object_types.go
 api_content_query.go
 api_costs.go
 api_data.go
+api_delegation_grants.go
 api_email.go
 api_environments.go
 api_event_ingest_channels.go
@@ -340,6 +341,7 @@ model_create_content_object_type_payload.go
 model_create_dashboard_payload.go
 model_create_dashboard_snapshot_payload.go
 model_create_data_store_payload.go
+model_create_delegation_grant_payload.go
 model_create_email_route_request.go
 model_create_email_route_response.go
 model_create_event_ingest_channel_payload.go
@@ -409,6 +411,7 @@ model_data_table.go
 model_data_table_for_ai.go
 model_data_table_semantic_type.go
 model_data_table_summary.go
+model_delegation_grant.go
 model_delete_app_version_response.go
 model_delete_by_id_result.go
 model_delete_content_object_export_response.go
