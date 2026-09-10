@@ -20,6 +20,8 @@ var _ MappedNullable = &AgentTask{}
 
 // AgentTask Agent task information for workflow history UI representation. This is separate from the analytics AgentEvent types. Consistent with WorkflowTask naming convention.  Currently represents tool calls, but designed to be extensible for other task types (LLM calls, checkpoints, etc.)
 type AgentTask struct {
+	// Stable observability row identity across refreshes.
+	HistoryId *string `json:"history_id,omitempty"`
 	// Type discriminator for future task types
 	TaskType string `json:"taskType"`
 	// Tool-specific fields
@@ -79,6 +81,38 @@ func NewAgentTask(taskType string, toolName string, scheduledAt NullableString, 
 func NewAgentTaskWithDefaults() *AgentTask {
 	this := AgentTask{}
 	return &this
+}
+
+// GetHistoryId returns the HistoryId field value if set, zero value otherwise.
+func (o *AgentTask) GetHistoryId() string {
+	if o == nil || IsNil(o.HistoryId) {
+		var ret string
+		return ret
+	}
+	return *o.HistoryId
+}
+
+// GetHistoryIdOk returns a tuple with the HistoryId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentTask) GetHistoryIdOk() (*string, bool) {
+	if o == nil || IsNil(o.HistoryId) {
+		return nil, false
+	}
+	return o.HistoryId, true
+}
+
+// HasHistoryId returns a boolean if a field has been set.
+func (o *AgentTask) HasHistoryId() bool {
+	if o != nil && !IsNil(o.HistoryId) {
+		return true
+	}
+
+	return false
+}
+
+// SetHistoryId gets a reference to the given string and assigns it to the HistoryId field.
+func (o *AgentTask) SetHistoryId(v string) {
+	o.HistoryId = &v
 }
 
 // GetTaskType returns the TaskType field value
@@ -721,6 +755,9 @@ func (o AgentTask) MarshalJSON() ([]byte, error) {
 
 func (o AgentTask) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.HistoryId) {
+		toSerialize["history_id"] = o.HistoryId
+	}
 	toSerialize["taskType"] = o.TaskType
 	toSerialize["toolName"] = o.ToolName
 	if !IsNil(o.ToolUseId) {
@@ -820,6 +857,7 @@ func (o *AgentTask) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "history_id")
 		delete(additionalProperties, "taskType")
 		delete(additionalProperties, "toolName")
 		delete(additionalProperties, "toolUseId")

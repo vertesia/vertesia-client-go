@@ -20,7 +20,11 @@ var _ MappedNullable = &WorkflowHistoryOneOf2{}
 
 // WorkflowHistoryOneOf2 struct for WorkflowHistoryOneOf2
 type WorkflowHistoryOneOf2 struct {
-	Type       string      `json:"type"`
+	Type string `json:"type"`
+	// Snapshot replaces all history; delta replaces returned rows by history_id and retains other rows.
+	Mode *string `json:"mode,omitempty"`
+	// Pass as from on the next refresh with the same options. Absence disables incremental refresh.
+	NextFrom   *string     `json:"next_from,omitempty"`
 	AgentTasks []AgentTask `json:"agentTasks"`
 }
 
@@ -69,6 +73,70 @@ func (o *WorkflowHistoryOneOf2) SetType(v string) {
 	o.Type = v
 }
 
+// GetMode returns the Mode field value if set, zero value otherwise.
+func (o *WorkflowHistoryOneOf2) GetMode() string {
+	if o == nil || IsNil(o.Mode) {
+		var ret string
+		return ret
+	}
+	return *o.Mode
+}
+
+// GetModeOk returns a tuple with the Mode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *WorkflowHistoryOneOf2) GetModeOk() (*string, bool) {
+	if o == nil || IsNil(o.Mode) {
+		return nil, false
+	}
+	return o.Mode, true
+}
+
+// HasMode returns a boolean if a field has been set.
+func (o *WorkflowHistoryOneOf2) HasMode() bool {
+	if o != nil && !IsNil(o.Mode) {
+		return true
+	}
+
+	return false
+}
+
+// SetMode gets a reference to the given string and assigns it to the Mode field.
+func (o *WorkflowHistoryOneOf2) SetMode(v string) {
+	o.Mode = &v
+}
+
+// GetNextFrom returns the NextFrom field value if set, zero value otherwise.
+func (o *WorkflowHistoryOneOf2) GetNextFrom() string {
+	if o == nil || IsNil(o.NextFrom) {
+		var ret string
+		return ret
+	}
+	return *o.NextFrom
+}
+
+// GetNextFromOk returns a tuple with the NextFrom field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *WorkflowHistoryOneOf2) GetNextFromOk() (*string, bool) {
+	if o == nil || IsNil(o.NextFrom) {
+		return nil, false
+	}
+	return o.NextFrom, true
+}
+
+// HasNextFrom returns a boolean if a field has been set.
+func (o *WorkflowHistoryOneOf2) HasNextFrom() bool {
+	if o != nil && !IsNil(o.NextFrom) {
+		return true
+	}
+
+	return false
+}
+
+// SetNextFrom gets a reference to the given string and assigns it to the NextFrom field.
+func (o *WorkflowHistoryOneOf2) SetNextFrom(v string) {
+	o.NextFrom = &v
+}
+
 // GetAgentTasks returns the AgentTasks field value
 func (o *WorkflowHistoryOneOf2) GetAgentTasks() []AgentTask {
 	if o == nil {
@@ -104,6 +172,12 @@ func (o WorkflowHistoryOneOf2) MarshalJSON() ([]byte, error) {
 func (o WorkflowHistoryOneOf2) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["type"] = o.Type
+	if !IsNil(o.Mode) {
+		toSerialize["mode"] = o.Mode
+	}
+	if !IsNil(o.NextFrom) {
+		toSerialize["next_from"] = o.NextFrom
+	}
 	toSerialize["agentTasks"] = o.AgentTasks
 	return toSerialize, nil
 }

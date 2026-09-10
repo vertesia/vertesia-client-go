@@ -1200,7 +1200,26 @@ type ApiGetAgentRunChildDetailsRequest struct {
 	ApiService      *AgentRunsAPIService
 	agentRunId      string
 	childWorkflowId string
+	from            *string
+	includeHistory  *bool
+	hydratePayloads *bool
 	xApiVersion     *string
+}
+
+// Opaque history cursor from next_from; requires include_history. Invalid or expired cursors return a snapshot.
+func (r ApiGetAgentRunChildDetailsRequest) From(from string) ApiGetAgentRunChildDetailsRequest {
+	r.from = &from
+	return r
+}
+
+func (r ApiGetAgentRunChildDetailsRequest) IncludeHistory(includeHistory bool) ApiGetAgentRunChildDetailsRequest {
+	r.includeHistory = &includeHistory
+	return r
+}
+
+func (r ApiGetAgentRunChildDetailsRequest) HydratePayloads(hydratePayloads bool) ApiGetAgentRunChildDetailsRequest {
+	r.hydratePayloads = &hydratePayloads
+	return r
 }
 
 // Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
@@ -1258,6 +1277,15 @@ func (a *AgentRunsAPIService) GetAgentRunChildDetailsExecute(r ApiGetAgentRunChi
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.from != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "from", r.from, "form", "")
+	}
+	if r.includeHistory != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "include_history", r.includeHistory, "form", "")
+	}
+	if r.hydratePayloads != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "hydrate_payloads", r.hydratePayloads, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -1340,9 +1368,16 @@ type ApiGetAgentRunDetailsRequest struct {
 	ctx             context.Context
 	ApiService      *AgentRunsAPIService
 	agentRunId      string
+	from            *string
 	includeHistory  *bool
 	hydratePayloads *bool
 	xApiVersion     *string
+}
+
+// Opaque history cursor from next_from; requires include_history. Invalid or expired cursors return a snapshot.
+func (r ApiGetAgentRunDetailsRequest) From(from string) ApiGetAgentRunDetailsRequest {
+	r.from = &from
+	return r
 }
 
 func (r ApiGetAgentRunDetailsRequest) IncludeHistory(includeHistory bool) ApiGetAgentRunDetailsRequest {
@@ -1407,6 +1442,9 @@ func (a *AgentRunsAPIService) GetAgentRunDetailsExecute(r ApiGetAgentRunDetailsR
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.from != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "from", r.from, "form", "")
+	}
 	if r.includeHistory != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "include_history", r.includeHistory, "form", "")
 	}
