@@ -20,6 +20,8 @@ var _ MappedNullable = &ImportDataPayload{}
 
 // ImportDataPayload Payload for importing data into tables.
 type ImportDataPayload struct {
+	// Optional client-generated Mongo ObjectId for idempotent retries. Generate once before submitting, then reuse with identical input. New IDs must be less than 24 hours old; existing jobs are returned without executing again. Poll GET /data/:storeId/import/:importId after a timeout.
+	ImportId *string `json:"import_id,omitempty" validate:"regexp=^[0-9a-f]{24}$"`
 	// Map of table name to data specification
 	Tables map[string]ImportTableData `json:"tables"`
 	// Import mode
@@ -48,6 +50,38 @@ func NewImportDataPayload(tables map[string]ImportTableData, mode string, messag
 func NewImportDataPayloadWithDefaults() *ImportDataPayload {
 	this := ImportDataPayload{}
 	return &this
+}
+
+// GetImportId returns the ImportId field value if set, zero value otherwise.
+func (o *ImportDataPayload) GetImportId() string {
+	if o == nil || IsNil(o.ImportId) {
+		var ret string
+		return ret
+	}
+	return *o.ImportId
+}
+
+// GetImportIdOk returns a tuple with the ImportId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ImportDataPayload) GetImportIdOk() (*string, bool) {
+	if o == nil || IsNil(o.ImportId) {
+		return nil, false
+	}
+	return o.ImportId, true
+}
+
+// HasImportId returns a boolean if a field has been set.
+func (o *ImportDataPayload) HasImportId() bool {
+	if o != nil && !IsNil(o.ImportId) {
+		return true
+	}
+
+	return false
+}
+
+// SetImportId gets a reference to the given string and assigns it to the ImportId field.
+func (o *ImportDataPayload) SetImportId(v string) {
+	o.ImportId = &v
 }
 
 // GetTables returns the Tables field value
@@ -132,6 +166,9 @@ func (o ImportDataPayload) MarshalJSON() ([]byte, error) {
 
 func (o ImportDataPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.ImportId) {
+		toSerialize["import_id"] = o.ImportId
+	}
 	toSerialize["tables"] = o.Tables
 	toSerialize["mode"] = o.Mode
 	toSerialize["message"] = o.Message
