@@ -2233,24 +2233,28 @@ func (a *AgentRunsAPIService) ListAgentRunUpdatesExecute(r ApiListAgentRunUpdate
 }
 
 type ApiListAgentRunsRequest struct {
-	ctx         context.Context
-	ApiService  *AgentRunsAPIService
-	id          *string
-	status      *[]string
-	interaction *string
-	startedBy   *string
-	since       *time.Time
-	until       *time.Time
-	limit       *float32
-	offset      *float32
-	cursor      *string
-	scheduleId  *string
-	type_       *string
-	runType     *[]string
-	runKind     *string
-	sort        *string
-	order       *string
-	xApiVersion *string
+	ctx                context.Context
+	ApiService         *AgentRunsAPIService
+	id                 *string
+	status             *[]string
+	interaction        *string
+	startedBy          *string
+	since              *time.Time
+	until              *time.Time
+	limit              *float32
+	offset             *float32
+	cursor             *string
+	scheduleId         *string
+	type_              *string
+	runType            *[]string
+	runKind            *string
+	sort               *string
+	order              *string
+	evaluationSeverity *[]string
+	evaluationFlag     *[]string
+	feedbackRating     *string
+	contradicted       *bool
+	xApiVersion        *string
 }
 
 // Filter by agent run ID
@@ -2340,6 +2344,30 @@ func (r ApiListAgentRunsRequest) Sort(sort string) ApiListAgentRunsRequest {
 // Sort order
 func (r ApiListAgentRunsRequest) Order(order string) ApiListAgentRunsRequest {
 	r.order = &order
+	return r
+}
+
+// Filter by evaluation severity; &#x60;unrated&#x60; selects runs without an evaluation
+func (r ApiListAgentRunsRequest) EvaluationSeverity(evaluationSeverity []string) ApiListAgentRunsRequest {
+	r.evaluationSeverity = &evaluationSeverity
+	return r
+}
+
+// Filter by evaluation flag (any of)
+func (r ApiListAgentRunsRequest) EvaluationFlag(evaluationFlag []string) ApiListAgentRunsRequest {
+	r.evaluationFlag = &evaluationFlag
+	return r
+}
+
+// Filter by last feedback rating
+func (r ApiListAgentRunsRequest) FeedbackRating(feedbackRating string) ApiListAgentRunsRequest {
+	r.feedbackRating = &feedbackRating
+	return r
+}
+
+// Only runs whose feedback or judge contradicts the detectors
+func (r ApiListAgentRunsRequest) Contradicted(contradicted bool) ApiListAgentRunsRequest {
+	r.contradicted = &contradicted
 	return r
 }
 
@@ -2452,6 +2480,34 @@ func (a *AgentRunsAPIService) ListAgentRunsExecute(r ApiListAgentRunsRequest) (*
 	}
 	if r.order != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "order", r.order, "form", "")
+	}
+	if r.evaluationSeverity != nil {
+		t := *r.evaluationSeverity
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "evaluation_severity", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "evaluation_severity", t, "form", "multi")
+		}
+	}
+	if r.evaluationFlag != nil {
+		t := *r.evaluationFlag
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "evaluation_flag", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "evaluation_flag", t, "form", "multi")
+		}
+	}
+	if r.feedbackRating != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "feedback_rating", r.feedbackRating, "form", "")
+	}
+	if r.contradicted != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "contradicted", r.contradicted, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2762,6 +2818,154 @@ func (a *AgentRunsAPIService) QueryAgentRunExecute(r ApiQueryAgentRunRequest) (i
 	if r.xApiVersion != nil {
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiRecordAgentRunFeedbackRequest struct {
+	ctx                     context.Context
+	ApiService              *AgentRunsAPIService
+	agentRunId              string
+	agentRunFeedbackPayload *AgentRunFeedbackPayload
+	xApiVersion             *string
+}
+
+func (r ApiRecordAgentRunFeedbackRequest) AgentRunFeedbackPayload(agentRunFeedbackPayload AgentRunFeedbackPayload) ApiRecordAgentRunFeedbackRequest {
+	r.agentRunFeedbackPayload = &agentRunFeedbackPayload
+	return r
+}
+
+// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiRecordAgentRunFeedbackRequest) XApiVersion(xApiVersion string) ApiRecordAgentRunFeedbackRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiRecordAgentRunFeedbackRequest) Execute() (*AgentRunFeedbackResponse, *http.Response, error) {
+	return r.ApiService.RecordAgentRunFeedbackExecute(r)
+}
+
+/*
+RecordAgentRunFeedback Rate an agent run
+
+Records a thumbs up/down, an optional reason code and an optional comment against an agent run. One active rating per user and scope; a new rating replaces the previous one and a retried `feedback_id` is idempotent. The comment stays in the project; only its presence is exported.
+
+**Required permissions:** Any of `agent_run:read`, `workflow:run`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param agentRunId
+	@return ApiRecordAgentRunFeedbackRequest
+*/
+func (a *AgentRunsAPIService) RecordAgentRunFeedback(ctx context.Context, agentRunId string) ApiRecordAgentRunFeedbackRequest {
+	return ApiRecordAgentRunFeedbackRequest{
+		ApiService: a,
+		ctx:        ctx,
+		agentRunId: agentRunId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return AgentRunFeedbackResponse
+func (a *AgentRunsAPIService) RecordAgentRunFeedbackExecute(r ApiRecordAgentRunFeedbackRequest) (*AgentRunFeedbackResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *AgentRunFeedbackResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AgentRunsAPIService.RecordAgentRunFeedback")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/agents/{agentRunId}/feedback"
+	localVarPath = strings.Replace(localVarPath, "{"+"agentRunId"+"}", url.PathEscape(parameterValueToString(r.agentRunId, "agentRunId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.agentRunFeedbackPayload == nil {
+		return localVarReturnValue, nil, reportError("agentRunFeedbackPayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	// body params
+	localVarPostBody = r.agentRunFeedbackPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

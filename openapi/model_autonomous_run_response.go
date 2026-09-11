@@ -116,6 +116,10 @@ type AutonomousRunResponse struct {
 	GenerateLessons *bool `json:"generate_lessons,omitempty"`
 	// Lessons learned from the conversation (extracted at completion)
 	LessonsLearned []string `json:"lessons_learned,omitempty"`
+	// Evaluation summary of the run.
+	Evaluation *AgentRunEvaluation `json:"evaluation,omitempty"`
+	// Retained user ratings on the run.
+	Feedback []AgentRunFeedbackEntry `json:"feedback,omitempty"`
 	// When the last successful archive completed
 	ArchivedAt *time.Time `json:"archived_at,omitempty"`
 	// Archive format version (for forward compatibility)
@@ -1601,6 +1605,70 @@ func (o *AutonomousRunResponse) SetLessonsLearned(v []string) {
 	o.LessonsLearned = v
 }
 
+// GetEvaluation returns the Evaluation field value if set, zero value otherwise.
+func (o *AutonomousRunResponse) GetEvaluation() AgentRunEvaluation {
+	if o == nil || IsNil(o.Evaluation) {
+		var ret AgentRunEvaluation
+		return ret
+	}
+	return *o.Evaluation
+}
+
+// GetEvaluationOk returns a tuple with the Evaluation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AutonomousRunResponse) GetEvaluationOk() (*AgentRunEvaluation, bool) {
+	if o == nil || IsNil(o.Evaluation) {
+		return nil, false
+	}
+	return o.Evaluation, true
+}
+
+// HasEvaluation returns a boolean if a field has been set.
+func (o *AutonomousRunResponse) HasEvaluation() bool {
+	if o != nil && !IsNil(o.Evaluation) {
+		return true
+	}
+
+	return false
+}
+
+// SetEvaluation gets a reference to the given AgentRunEvaluation and assigns it to the Evaluation field.
+func (o *AutonomousRunResponse) SetEvaluation(v AgentRunEvaluation) {
+	o.Evaluation = &v
+}
+
+// GetFeedback returns the Feedback field value if set, zero value otherwise.
+func (o *AutonomousRunResponse) GetFeedback() []AgentRunFeedbackEntry {
+	if o == nil || IsNil(o.Feedback) {
+		var ret []AgentRunFeedbackEntry
+		return ret
+	}
+	return o.Feedback
+}
+
+// GetFeedbackOk returns a tuple with the Feedback field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AutonomousRunResponse) GetFeedbackOk() ([]AgentRunFeedbackEntry, bool) {
+	if o == nil || IsNil(o.Feedback) {
+		return nil, false
+	}
+	return o.Feedback, true
+}
+
+// HasFeedback returns a boolean if a field has been set.
+func (o *AutonomousRunResponse) HasFeedback() bool {
+	if o != nil && !IsNil(o.Feedback) {
+		return true
+	}
+
+	return false
+}
+
+// SetFeedback gets a reference to the given []AgentRunFeedbackEntry and assigns it to the Feedback field.
+func (o *AutonomousRunResponse) SetFeedback(v []AgentRunFeedbackEntry) {
+	o.Feedback = v
+}
+
 // GetArchivedAt returns the ArchivedAt field value if set, zero value otherwise.
 func (o *AutonomousRunResponse) GetArchivedAt() time.Time {
 	if o == nil || IsNil(o.ArchivedAt) {
@@ -1859,6 +1927,12 @@ func (o AutonomousRunResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.LessonsLearned) {
 		toSerialize["lessons_learned"] = o.LessonsLearned
 	}
+	if !IsNil(o.Evaluation) {
+		toSerialize["evaluation"] = o.Evaluation
+	}
+	if !IsNil(o.Feedback) {
+		toSerialize["feedback"] = o.Feedback
+	}
 	if !IsNil(o.ArchivedAt) {
 		toSerialize["archived_at"] = o.ArchivedAt
 	}
@@ -1973,6 +2047,8 @@ func (o *AutonomousRunResponse) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "generate_topic")
 		delete(additionalProperties, "generate_lessons")
 		delete(additionalProperties, "lessons_learned")
+		delete(additionalProperties, "evaluation")
+		delete(additionalProperties, "feedback")
 		delete(additionalProperties, "archived_at")
 		delete(additionalProperties, "archive_version")
 		delete(additionalProperties, "last_archive_error")
