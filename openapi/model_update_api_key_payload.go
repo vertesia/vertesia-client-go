@@ -22,6 +22,8 @@ type UpdateApiKeyPayload struct {
 	Name    *string      `json:"name,omitempty"`
 	Role    *SystemRoles `json:"role,omitempty"`
 	Enabled *bool        `json:"enabled,omitempty"`
+	// Organization-wide SCIM provisioning credential. Only account administrators may create or manage these keys. May be enabled by account administrators on existing keys; disable or delete to revoke access.
+	ScimProvisioning *bool `json:"scim_provisioning,omitempty"`
 	// Custom properties for dynamic permission matching (PrincipalSet / $principal. conditions)
 	Properties map[string]interface{} `json:"properties,omitempty"`
 	// BLP clearance level — the maximum document sensitivity the key can access
@@ -146,6 +148,38 @@ func (o *UpdateApiKeyPayload) SetEnabled(v bool) {
 	o.Enabled = &v
 }
 
+// GetScimProvisioning returns the ScimProvisioning field value if set, zero value otherwise.
+func (o *UpdateApiKeyPayload) GetScimProvisioning() bool {
+	if o == nil || IsNil(o.ScimProvisioning) {
+		var ret bool
+		return ret
+	}
+	return *o.ScimProvisioning
+}
+
+// GetScimProvisioningOk returns a tuple with the ScimProvisioning field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateApiKeyPayload) GetScimProvisioningOk() (*bool, bool) {
+	if o == nil || IsNil(o.ScimProvisioning) {
+		return nil, false
+	}
+	return o.ScimProvisioning, true
+}
+
+// HasScimProvisioning returns a boolean if a field has been set.
+func (o *UpdateApiKeyPayload) HasScimProvisioning() bool {
+	if o != nil && !IsNil(o.ScimProvisioning) {
+		return true
+	}
+
+	return false
+}
+
+// SetScimProvisioning gets a reference to the given bool and assigns it to the ScimProvisioning field.
+func (o *UpdateApiKeyPayload) SetScimProvisioning(v bool) {
+	o.ScimProvisioning = &v
+}
+
 // GetProperties returns the Properties field value if set, zero value otherwise.
 func (o *UpdateApiKeyPayload) GetProperties() map[string]interface{} {
 	if o == nil || IsNil(o.Properties) {
@@ -261,6 +295,9 @@ func (o UpdateApiKeyPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Enabled) {
 		toSerialize["enabled"] = o.Enabled
 	}
+	if !IsNil(o.ScimProvisioning) {
+		toSerialize["scim_provisioning"] = o.ScimProvisioning
+	}
 	if !IsNil(o.Properties) {
 		toSerialize["properties"] = o.Properties
 	}
@@ -295,6 +332,7 @@ func (o *UpdateApiKeyPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "role")
 		delete(additionalProperties, "enabled")
+		delete(additionalProperties, "scim_provisioning")
 		delete(additionalProperties, "properties")
 		delete(additionalProperties, "clearance")
 		delete(additionalProperties, "compartments")
