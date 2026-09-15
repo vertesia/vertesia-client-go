@@ -36,6 +36,8 @@ type CompositeAppMenuNavItem struct {
 	Description NullableString `json:"description,omitempty"`
 	// When true, this item is excluded from the Composite App dashboard cards
 	HideFromDashboard *bool `json:"hideFromDashboard,omitempty"`
+	// When true, this item navigates to the App Portal form of the URL (`/apps/<appName><route>`) instead of the Composite App form (`/app/<appName><route>`), so the app is opened standalone rather than inside the Composite App shell.
+	OpenInAppPortal *bool `json:"openInAppPortal,omitempty"`
 	// Optional access control settings for this nav item
 	Permissions *CompositeAppNavItemPermissions `json:"permissions,omitempty"`
 	// Ordered child nav-items
@@ -314,6 +316,38 @@ func (o *CompositeAppMenuNavItem) SetHideFromDashboard(v bool) {
 	o.HideFromDashboard = &v
 }
 
+// GetOpenInAppPortal returns the OpenInAppPortal field value if set, zero value otherwise.
+func (o *CompositeAppMenuNavItem) GetOpenInAppPortal() bool {
+	if o == nil || IsNil(o.OpenInAppPortal) {
+		var ret bool
+		return ret
+	}
+	return *o.OpenInAppPortal
+}
+
+// GetOpenInAppPortalOk returns a tuple with the OpenInAppPortal field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CompositeAppMenuNavItem) GetOpenInAppPortalOk() (*bool, bool) {
+	if o == nil || IsNil(o.OpenInAppPortal) {
+		return nil, false
+	}
+	return o.OpenInAppPortal, true
+}
+
+// HasOpenInAppPortal returns a boolean if a field has been set.
+func (o *CompositeAppMenuNavItem) HasOpenInAppPortal() bool {
+	if o != nil && !IsNil(o.OpenInAppPortal) {
+		return true
+	}
+
+	return false
+}
+
+// SetOpenInAppPortal gets a reference to the given bool and assigns it to the OpenInAppPortal field.
+func (o *CompositeAppMenuNavItem) SetOpenInAppPortal(v bool) {
+	o.OpenInAppPortal = &v
+}
+
 // GetPermissions returns the Permissions field value if set, zero value otherwise.
 func (o *CompositeAppMenuNavItem) GetPermissions() CompositeAppNavItemPermissions {
 	if o == nil || IsNil(o.Permissions) {
@@ -407,6 +441,9 @@ func (o CompositeAppMenuNavItem) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.HideFromDashboard) {
 		toSerialize["hideFromDashboard"] = o.HideFromDashboard
+	}
+	if !IsNil(o.OpenInAppPortal) {
+		toSerialize["openInAppPortal"] = o.OpenInAppPortal
 	}
 	if !IsNil(o.Permissions) {
 		toSerialize["permissions"] = o.Permissions
