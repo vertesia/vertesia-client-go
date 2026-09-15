@@ -18,7 +18,7 @@ import (
 // checks if the AgentRunFeedbackCounts type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &AgentRunFeedbackCounts{}
 
-// AgentRunFeedbackCounts Ratings over the retained feedback entries.
+// AgentRunFeedbackCounts Ratings over the retained feedback entries, one vote per rater: a user who rated the run and one of its answers counts once, by their latest rating.
 type AgentRunFeedbackCounts struct {
 	Up             int32                       `json:"up"`
 	Down           int32                       `json:"down"`
