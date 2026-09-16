@@ -18,7 +18,7 @@ import (
 // checks if the ProjectSearchPropertyMapping type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ProjectSearchPropertyMapping{}
 
-// ProjectSearchPropertyMapping Explicit search mapping for one content-object property.  Changing a mapping requires a full reindex. Existing Elasticsearch fields cannot change type in place.
+// ProjectSearchPropertyMapping Explicit search mapping for one content-object property.  Changing a mapping requires a full reindex. Existing Elasticsearch fields cannot change type in place. A `nested` mapping accepts no scalar options; declare its searchable child fields as separate mappings below its path.
 type ProjectSearchPropertyMapping struct {
 	Type ProjectSearchPropertyType `json:"type"`
 	// Elasticsearch date format. Valid only when type is `date`.
