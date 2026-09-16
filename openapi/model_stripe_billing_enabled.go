@@ -22,7 +22,8 @@ var _ MappedNullable = &StripeBillingEnabled{}
 type StripeBillingEnabled struct {
 	Status        string `json:"status"`
 	BillingMethod string `json:"billing_method"`
-	PortalUrl     string `json:"portal_url"`
+	// Interactive billing portal URL; null for account API keys.
+	PortalUrl NullableString `json:"portal_url"`
 }
 
 type _StripeBillingEnabled StripeBillingEnabled
@@ -31,7 +32,7 @@ type _StripeBillingEnabled StripeBillingEnabled
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewStripeBillingEnabled(status string, billingMethod string, portalUrl string) *StripeBillingEnabled {
+func NewStripeBillingEnabled(status string, billingMethod string, portalUrl NullableString) *StripeBillingEnabled {
 	this := StripeBillingEnabled{}
 	this.Status = status
 	this.BillingMethod = billingMethod
@@ -96,27 +97,29 @@ func (o *StripeBillingEnabled) SetBillingMethod(v string) {
 }
 
 // GetPortalUrl returns the PortalUrl field value
+// If the value is explicit nil, the zero value for string will be returned
 func (o *StripeBillingEnabled) GetPortalUrl() string {
-	if o == nil {
+	if o == nil || o.PortalUrl.Get() == nil {
 		var ret string
 		return ret
 	}
 
-	return o.PortalUrl
+	return *o.PortalUrl.Get()
 }
 
 // GetPortalUrlOk returns a tuple with the PortalUrl field value
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *StripeBillingEnabled) GetPortalUrlOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return &o.PortalUrl, true
+	return o.PortalUrl.Get(), o.PortalUrl.IsSet()
 }
 
 // SetPortalUrl sets field value
 func (o *StripeBillingEnabled) SetPortalUrl(v string) {
-	o.PortalUrl = v
+	o.PortalUrl.Set(&v)
 }
 
 func (o StripeBillingEnabled) MarshalJSON() ([]byte, error) {
@@ -131,7 +134,7 @@ func (o StripeBillingEnabled) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["status"] = o.Status
 	toSerialize["billing_method"] = o.BillingMethod
-	toSerialize["portal_url"] = o.PortalUrl
+	toSerialize["portal_url"] = o.PortalUrl.Get()
 	return toSerialize, nil
 }
 

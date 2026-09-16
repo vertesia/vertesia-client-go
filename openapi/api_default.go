@@ -19,174 +19,39 @@ import (
 	"strings"
 )
 
-// UsersAPIService UsersAPI service
-type UsersAPIService service
+// DefaultAPIService DefaultAPI service
+type DefaultAPIService service
 
-type ApiDeleteUserRequest struct {
-	ctx         context.Context
-	ApiService  *UsersAPIService
-	userId      string
-	xApiVersion *string
+type ApiCreateAccountApiKeyRequest struct {
+	ctx                        context.Context
+	ApiService                 *DefaultAPIService
+	createAccountApiKeyPayload *CreateAccountApiKeyPayload
+	xApiVersion                *string
+}
+
+func (r ApiCreateAccountApiKeyRequest) CreateAccountApiKeyPayload(createAccountApiKeyPayload CreateAccountApiKeyPayload) ApiCreateAccountApiKeyRequest {
+	r.createAccountApiKeyPayload = &createAccountApiKeyPayload
+	return r
 }
 
 // Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiDeleteUserRequest) XApiVersion(xApiVersion string) ApiDeleteUserRequest {
+func (r ApiCreateAccountApiKeyRequest) XApiVersion(xApiVersion string) ApiCreateAccountApiKeyRequest {
 	r.xApiVersion = &xApiVersion
 	return r
 }
 
-func (r ApiDeleteUserRequest) Execute() (*DeleteByIdResult, *http.Response, error) {
-	return r.ApiService.DeleteUserExecute(r)
+func (r ApiCreateAccountApiKeyRequest) Execute() (*AccountApiKeyWithValue, *http.Response, error) {
+	return r.ApiService.CreateAccountApiKeyExecute(r)
 }
 
 /*
-DeleteUser Delete a user
-
-Deletes a user from the current account. Account admins cannot delete their own user account through this endpoint.
-
-**Required permissions:** `account:admin`
+CreateAccountApiKey Create an account API key
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param userId
-	@return ApiDeleteUserRequest
+	@return ApiCreateAccountApiKeyRequest
 */
-func (a *UsersAPIService) DeleteUser(ctx context.Context, userId string) ApiDeleteUserRequest {
-	return ApiDeleteUserRequest{
-		ApiService: a,
-		ctx:        ctx,
-		userId:     userId,
-	}
-}
-
-// Execute executes the request
-//
-//	@return DeleteByIdResult
-func (a *UsersAPIService) DeleteUserExecute(r ApiDeleteUserRequest) (*DeleteByIdResult, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodDelete
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *DeleteByIdResult
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.DeleteUser")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/iam/users/{userId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"userId"+"}", url.PathEscape(parameterValueToString(r.userId, "userId")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiGetCurrentUserIdentityRequest struct {
-	ctx         context.Context
-	ApiService  *UsersAPIService
-	xApiVersion *string
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiGetCurrentUserIdentityRequest) XApiVersion(xApiVersion string) ApiGetCurrentUserIdentityRequest {
-	r.xApiVersion = &xApiVersion
-	return r
-}
-
-func (r ApiGetCurrentUserIdentityRequest) Execute() (*PrincipalIdentity, *http.Response, error) {
-	return r.ApiService.GetCurrentUserIdentityExecute(r)
-}
-
-/*
-GetCurrentUserIdentity Retrieve the current user's identity
-
-Returns the current user id plus the merged ABAC principal context (clearance, compartments, email, tags, properties). Conceptually an OIDC-style userinfo / identity-token endpoint: takes no parameters, derives the subject from a user or OAuth access token, and rejects principals without an underlying user (API keys, service accounts) with 400. Use this client-side to preview how PrincipalSet rules will evaluate for the signed-in user.
-
-**Required permissions:** `account:member`
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiGetCurrentUserIdentityRequest
-*/
-func (a *UsersAPIService) GetCurrentUserIdentity(ctx context.Context) ApiGetCurrentUserIdentityRequest {
-	return ApiGetCurrentUserIdentityRequest{
+func (a *DefaultAPIService) CreateAccountApiKey(ctx context.Context) ApiCreateAccountApiKeyRequest {
+	return ApiCreateAccountApiKeyRequest{
 		ApiService: a,
 		ctx:        ctx,
 	}
@@ -194,307 +59,27 @@ func (a *UsersAPIService) GetCurrentUserIdentity(ctx context.Context) ApiGetCurr
 
 // Execute executes the request
 //
-//	@return PrincipalIdentity
-func (a *UsersAPIService) GetCurrentUserIdentityExecute(r ApiGetCurrentUserIdentityRequest) (*PrincipalIdentity, *http.Response, error) {
+//	@return AccountApiKeyWithValue
+func (a *DefaultAPIService) CreateAccountApiKeyExecute(r ApiCreateAccountApiKeyRequest) (*AccountApiKeyWithValue, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodGet
+		localVarHTTPMethod  = http.MethodPost
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *PrincipalIdentity
+		localVarReturnValue *AccountApiKeyWithValue
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.GetCurrentUserIdentity")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DefaultAPIService.CreateAccountApiKey")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/iam/users/identity"
+	localVarPath := localBasePath + "/account/apikeys"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiGetUserRequest struct {
-	ctx         context.Context
-	ApiService  *UsersAPIService
-	userId      string
-	xApiVersion *string
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiGetUserRequest) XApiVersion(xApiVersion string) ApiGetUserRequest {
-	r.xApiVersion = &xApiVersion
-	return r
-}
-
-func (r ApiGetUserRequest) Execute() (*User, *http.Response, error) {
-	return r.ApiService.GetUserExecute(r)
-}
-
-/*
-GetUser Retrieve a user
-
-Retrieves a user by ID when the user belongs to the current account or is the caller.
-
-**Required permissions:** Any of `account:member`, `account:user:read`
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param userId
-	@return ApiGetUserRequest
-*/
-func (a *UsersAPIService) GetUser(ctx context.Context, userId string) ApiGetUserRequest {
-	return ApiGetUserRequest{
-		ApiService: a,
-		ctx:        ctx,
-		userId:     userId,
-	}
-}
-
-// Execute executes the request
-//
-//	@return User
-func (a *UsersAPIService) GetUserExecute(r ApiGetUserRequest) (*User, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *User
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.GetUser")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/iam/users/{userId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"userId"+"}", url.PathEscape(parameterValueToString(r.userId, "userId")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return localVarReturnValue, nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarReturnValue, localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
-			var v ErrorResponse
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-			newErr.model = v
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-	if err != nil {
-		newErr := &GenericOpenAPIError{
-			body:  localVarBody,
-			error: err.Error(),
-		}
-		return localVarReturnValue, localVarHTTPResponse, newErr
-	}
-
-	return localVarReturnValue, localVarHTTPResponse, nil
-}
-
-type ApiUpdateUserRequest struct {
-	ctx               context.Context
-	ApiService        *UsersAPIService
-	userId            string
-	updateUserPayload *UpdateUserPayload
-	xApiVersion       *string
-}
-
-func (r ApiUpdateUserRequest) UpdateUserPayload(updateUserPayload UpdateUserPayload) ApiUpdateUserRequest {
-	r.updateUserPayload = &updateUserPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateUserRequest) XApiVersion(xApiVersion string) ApiUpdateUserRequest {
-	r.xApiVersion = &xApiVersion
-	return r
-}
-
-func (r ApiUpdateUserRequest) Execute() (*User, *http.Response, error) {
-	return r.ApiService.UpdateUserExecute(r)
-}
-
-/*
-UpdateUser Update a user
-
-Updates profile fields for the caller or an administrator. Only account-role administrators may change authorization attributes (properties, clearance, or compartments).
-
-**Required permissions:** Any of `account:member`, `account:user:manage`
-
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param userId
-	@return ApiUpdateUserRequest
-*/
-func (a *UsersAPIService) UpdateUser(ctx context.Context, userId string) ApiUpdateUserRequest {
-	return ApiUpdateUserRequest{
-		ApiService: a,
-		ctx:        ctx,
-		userId:     userId,
-	}
-}
-
-// Execute executes the request
-//
-//	@return User
-func (a *UsersAPIService) UpdateUserExecute(r ApiUpdateUserRequest) (*User, *http.Response, error) {
-	var (
-		localVarHTTPMethod  = http.MethodPut
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue *User
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.UpdateUser")
-	if err != nil {
-		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/iam/users/{userId}"
-	localVarPath = strings.Replace(localVarPath, "{"+"userId"+"}", url.PathEscape(parameterValueToString(r.userId, "userId")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-	if r.updateUserPayload == nil {
-		return localVarReturnValue, nil, reportError("updateUserPayload is required and must be specified")
+	if r.createAccountApiKeyPayload == nil {
+		return localVarReturnValue, nil, reportError("createAccountApiKeyPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -518,7 +103,546 @@ func (a *UsersAPIService) UpdateUserExecute(r ApiUpdateUserRequest) (*User, *htt
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	// body params
-	localVarPostBody = r.updateUserPayload
+	localVarPostBody = r.createAccountApiKeyPayload
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiDeleteAccountApiKeyRequest struct {
+	ctx         context.Context
+	ApiService  *DefaultAPIService
+	keyId       string
+	xApiVersion *string
+}
+
+// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiDeleteAccountApiKeyRequest) XApiVersion(xApiVersion string) ApiDeleteAccountApiKeyRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiDeleteAccountApiKeyRequest) Execute() (*DeleteOperationResult, *http.Response, error) {
+	return r.ApiService.DeleteAccountApiKeyExecute(r)
+}
+
+/*
+DeleteAccountApiKey Delete an account API key
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param keyId
+	@return ApiDeleteAccountApiKeyRequest
+*/
+func (a *DefaultAPIService) DeleteAccountApiKey(ctx context.Context, keyId string) ApiDeleteAccountApiKeyRequest {
+	return ApiDeleteAccountApiKeyRequest{
+		ApiService: a,
+		ctx:        ctx,
+		keyId:      keyId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return DeleteOperationResult
+func (a *DefaultAPIService) DeleteAccountApiKeyExecute(r ApiDeleteAccountApiKeyRequest) (*DeleteOperationResult, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DeleteOperationResult
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DefaultAPIService.DeleteAccountApiKey")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/account/apikeys/{keyId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"keyId"+"}", url.PathEscape(parameterValueToString(r.keyId, "keyId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetAccountApiKeyRequest struct {
+	ctx         context.Context
+	ApiService  *DefaultAPIService
+	keyId       string
+	xApiVersion *string
+}
+
+// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiGetAccountApiKeyRequest) XApiVersion(xApiVersion string) ApiGetAccountApiKeyRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiGetAccountApiKeyRequest) Execute() (*AccountApiKey, *http.Response, error) {
+	return r.ApiService.GetAccountApiKeyExecute(r)
+}
+
+/*
+GetAccountApiKey Get account API key metadata
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param keyId
+	@return ApiGetAccountApiKeyRequest
+*/
+func (a *DefaultAPIService) GetAccountApiKey(ctx context.Context, keyId string) ApiGetAccountApiKeyRequest {
+	return ApiGetAccountApiKeyRequest{
+		ApiService: a,
+		ctx:        ctx,
+		keyId:      keyId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return AccountApiKey
+func (a *DefaultAPIService) GetAccountApiKeyExecute(r ApiGetAccountApiKeyRequest) (*AccountApiKey, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *AccountApiKey
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DefaultAPIService.GetAccountApiKey")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/account/apikeys/{keyId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"keyId"+"}", url.PathEscape(parameterValueToString(r.keyId, "keyId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListAccountApiKeysRequest struct {
+	ctx         context.Context
+	ApiService  *DefaultAPIService
+	xApiVersion *string
+}
+
+// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListAccountApiKeysRequest) XApiVersion(xApiVersion string) ApiListAccountApiKeysRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiListAccountApiKeysRequest) Execute() ([]AccountApiKey, *http.Response, error) {
+	return r.ApiService.ListAccountApiKeysExecute(r)
+}
+
+/*
+ListAccountApiKeys List account API keys
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListAccountApiKeysRequest
+*/
+func (a *DefaultAPIService) ListAccountApiKeys(ctx context.Context) ApiListAccountApiKeysRequest {
+	return ApiListAccountApiKeysRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return []AccountApiKey
+func (a *DefaultAPIService) ListAccountApiKeysExecute(r ApiListAccountApiKeysRequest) ([]AccountApiKey, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []AccountApiKey
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DefaultAPIService.ListAccountApiKeys")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/account/apikeys"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpdateAccountApiKeyRequest struct {
+	ctx                        context.Context
+	ApiService                 *DefaultAPIService
+	keyId                      string
+	updateAccountApiKeyPayload *UpdateAccountApiKeyPayload
+	xApiVersion                *string
+}
+
+func (r ApiUpdateAccountApiKeyRequest) UpdateAccountApiKeyPayload(updateAccountApiKeyPayload UpdateAccountApiKeyPayload) ApiUpdateAccountApiKeyRequest {
+	r.updateAccountApiKeyPayload = &updateAccountApiKeyPayload
+	return r
+}
+
+// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateAccountApiKeyRequest) XApiVersion(xApiVersion string) ApiUpdateAccountApiKeyRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiUpdateAccountApiKeyRequest) Execute() (*AccountApiKey, *http.Response, error) {
+	return r.ApiService.UpdateAccountApiKeyExecute(r)
+}
+
+/*
+UpdateAccountApiKey Update an account API key
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param keyId
+	@return ApiUpdateAccountApiKeyRequest
+*/
+func (a *DefaultAPIService) UpdateAccountApiKey(ctx context.Context, keyId string) ApiUpdateAccountApiKeyRequest {
+	return ApiUpdateAccountApiKeyRequest{
+		ApiService: a,
+		ctx:        ctx,
+		keyId:      keyId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return AccountApiKey
+func (a *DefaultAPIService) UpdateAccountApiKeyExecute(r ApiUpdateAccountApiKeyRequest) (*AccountApiKey, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *AccountApiKey
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DefaultAPIService.UpdateAccountApiKey")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/account/apikeys/{keyId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"keyId"+"}", url.PathEscape(parameterValueToString(r.keyId, "keyId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.updateAccountApiKeyPayload == nil {
+		return localVarReturnValue, nil, reportError("updateAccountApiKeyPayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.xApiVersion != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	}
+	// body params
+	localVarPostBody = r.updateAccountApiKeyPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

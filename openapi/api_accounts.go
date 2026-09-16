@@ -594,7 +594,7 @@ GetCurrentAccount Retrieve the current account
 
 Retrieves the current authenticated account.
 
-**Required permissions:** `account:member`
+**Required permissions:** Any of `account:member`, `account:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiGetCurrentAccountRequest
@@ -727,7 +727,7 @@ GetStripeBillingStatus Get Stripe billing status
 
 Returns Stripe billing portal availability and status for the current account.
 
-**Required permissions:** `account:billing`
+**Required permissions:** Any of `account:billing`, `account:billing:status_read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiGetStripeBillingStatusRequest
@@ -993,7 +993,7 @@ ListAccountMembers List account members
 
 Lists members who have access to the current account or its projects.
 
-**Required permissions:** `account:member`
+**Required permissions:** Any of `account:member`, `account:user:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListAccountMembersRequest
@@ -1126,7 +1126,7 @@ ListAccountProjects List account projects
 
 Lists projects in the current account.
 
-**Required permissions:** `account:member`
+**Required permissions:** Any of `account:member`, `account:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListAccountProjectsRequest

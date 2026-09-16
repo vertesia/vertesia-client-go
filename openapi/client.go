@@ -74,6 +74,8 @@ type APIClient struct {
 
 	DataAPI *DataAPIService
 
+	DefaultAPI *DefaultAPIService
+
 	DelegationGrantsAPI *DelegationGrantsAPIService
 
 	EmailAPI *EmailAPIService
@@ -166,6 +168,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.ContentQueryAPI = (*ContentQueryAPIService)(&c.common)
 	c.CostsAPI = (*CostsAPIService)(&c.common)
 	c.DataAPI = (*DataAPIService)(&c.common)
+	c.DefaultAPI = (*DefaultAPIService)(&c.common)
 	c.DelegationGrantsAPI = (*DelegationGrantsAPIService)(&c.common)
 	c.EmailAPI = (*EmailAPIService)(&c.common)
 	c.EnvironmentsAPI = (*EnvironmentsAPIService)(&c.common)

@@ -12,6 +12,7 @@ api_content_object_types.go
 api_content_query.go
 api_costs.go
 api_data.go
+api_default.go
 api_delegation_grants.go
 api_email.go
 api_environments.go
@@ -50,6 +51,8 @@ model_access_control_entry.go
 model_access_control_principal_type.go
 model_access_control_resource_type.go
 model_account.go
+model_account_api_key.go
+model_account_api_key_with_value.go
 model_account_billing.go
 model_account_onboarding.go
 model_account_projects_response.go
@@ -344,6 +347,7 @@ model_cost_run_price_response.go
 model_cost_summary.go
 model_cost_time_series_point.go
 model_count_result.go
+model_create_account_api_key_payload.go
 model_create_agent_run_payload.go
 model_create_api_key_payload.go
 model_create_collection_payload.go
@@ -994,6 +998,7 @@ model_transition_trigger.go
 model_turn_evaluation_flag.go
 model_turn_terminal_type.go
 model_twelvelabs_pegasus_options.go
+model_update_account_api_key_payload.go
 model_update_account_payload.go
 model_update_agent_artifact_content_payload.go
 model_update_agent_artifact_content_response.go

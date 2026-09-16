@@ -46,7 +46,7 @@ AddUserGroupMember Add a user to a group
 
 Adds a user to a user group.
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `account:group:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param groupId
@@ -191,7 +191,7 @@ CreateUserGroup Create a user group
 
 Creates a new user group in the current account. Pass `allowed_projects` to restrict the group to specific projects (empty/absent = org-wide).
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `account:group:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiCreateUserGroupRequest
@@ -330,7 +330,7 @@ GetUserGroup Retrieve a user group
 
 Retrieves a user group by ID.
 
-**Required permissions:** `account:read`
+**Required permissions:** Any of `account:read`, `account:group:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param groupId
@@ -467,7 +467,7 @@ ListUserGroupMembers List user group members
 
 Lists members of a user group.
 
-**Required permissions:** `account:read`
+**Required permissions:** Any of `account:read`, `account:group:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param groupId
@@ -633,7 +633,7 @@ ListUserGroups List user groups
 
 Lists user groups in the current account. Pass `project` to return only groups usable in that project (org-wide groups plus groups restricted to it).
 
-**Required permissions:** `account:read`
+**Required permissions:** Any of `account:read`, `account:group:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListUserGroupsRequest
@@ -791,7 +791,7 @@ RemoveUserGroupMember Remove a user from a group
 
 Removes a user from a user group.
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `account:group:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param groupId
@@ -930,7 +930,7 @@ SyncMembersUserGroup Sync the members group
 
 Synchronizes the built-in members group with current account membership.
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `account:group:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiSyncMembersUserGroupRequest
@@ -1070,7 +1070,7 @@ UpdateUserGroup Update a user group
 
 Updates a user group by ID.
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `account:group:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param groupId

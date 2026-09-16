@@ -49,7 +49,7 @@ CreateAccessControlEntry Create an access control entry
 
 Creates a new access control entry for an account, project, or application resource.
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `account:membership:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiCreateAccessControlEntryRequest
@@ -188,7 +188,7 @@ DeleteAccessControlEntry Delete an access control entry
 
 Deletes an access control entry by ID.
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `account:membership:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param aceId
@@ -325,7 +325,7 @@ GetAccessControlEntry Retrieve an access control entry
 
 Retrieves an access control entry by ID.
 
-**Required permissions:** `account:read`
+**Required permissions:** Any of `account:read`, `account:membership:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param aceId
@@ -461,7 +461,7 @@ ListAccessControlEntries List access control entries
 
 Lists access control entries visible in the current account and project context.
 
-**Required permissions:** `account:read`
+**Required permissions:** Any of `account:read`, `account:membership:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListAccessControlEntriesRequest
@@ -734,7 +734,7 @@ UpdateAccessControlEntry Update an access control entry
 
 Updates an access control entry by ID.
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `account:membership:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param aceId
