@@ -15,7 +15,7 @@ import (
 	"fmt"
 )
 
-// ProjectSearchPropertyType Elasticsearch field types that may be explicitly assigned to content-object properties. Paths are relative to the object's `properties` field.
+// ProjectSearchPropertyType Elasticsearch field types that may be explicitly assigned to content-object properties. Declare nested object-array paths with type `nested` and their children as separate dotted paths. Paths are relative to the object's `properties` field.
 type ProjectSearchPropertyType string
 
 // List of ProjectSearchPropertyType
@@ -27,6 +27,7 @@ const (
 	PROJECTSEARCHPROPERTYTYPE_DOUBLE                   ProjectSearchPropertyType = "double"
 	PROJECTSEARCHPROPERTYTYPE_DATE                     ProjectSearchPropertyType = "date"
 	PROJECTSEARCHPROPERTYTYPE_GEO_POINT                ProjectSearchPropertyType = "geo_point"
+	PROJECTSEARCHPROPERTYTYPE_NESTED                   ProjectSearchPropertyType = "nested"
 	PROJECTSEARCHPROPERTYTYPE_UNKNOWN_DEFAULT_OPEN_API ProjectSearchPropertyType = "unknown_default_open_api"
 )
 
@@ -39,6 +40,7 @@ var AllowedProjectSearchPropertyTypeEnumValues = []ProjectSearchPropertyType{
 	"double",
 	"date",
 	"geo_point",
+	"nested",
 	"unknown_default_open_api",
 }
 
