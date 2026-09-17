@@ -2491,7 +2491,7 @@ func (r ApiImportDataStoreDataRequest) Execute() (*ImportJob, *http.Response, er
 /*
 ImportDataStoreData Import data into a data store
 
-Starts an atomic multi-table import job and returns the import job record.
+Starts an atomic multi-table import. Background-enabled deployments return 202 after durable acceptance; poll the original import ID until completed or failed.
 
 **Required permissions:** `content:write`
 
