@@ -22,6 +22,7 @@ type SystemRoles string
 const (
 	SYSTEMROLES_OWNER                    SystemRoles = "owner"
 	SYSTEMROLES_ADMIN                    SystemRoles = "admin"
+	SYSTEMROLES_APP_ADMIN                SystemRoles = "app_admin"
 	SYSTEMROLES_MANAGER                  SystemRoles = "manager"
 	SYSTEMROLES_DEVELOPER                SystemRoles = "developer"
 	SYSTEMROLES_APPLICATION              SystemRoles = "application"
@@ -43,6 +44,7 @@ const (
 var AllowedSystemRolesEnumValues = []SystemRoles{
 	"owner",
 	"admin",
+	"app_admin",
 	"manager",
 	"developer",
 	"application",
