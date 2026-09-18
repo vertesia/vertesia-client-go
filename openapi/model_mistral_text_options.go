@@ -12,7 +12,6 @@ package openapi
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the MistralTextOptions type satisfies the MappedNullable interface at compile time
@@ -20,7 +19,7 @@ var _ MappedNullable = &MistralTextOptions{}
 
 // MistralTextOptions struct for MistralTextOptions
 type MistralTextOptions struct {
-	OptionId          string   `json:"_option_id"`
+	OptionId          *string  `json:"_option_id,omitempty"`
 	MaxTokens         *float32 `json:"max_tokens,omitempty"`
 	Temperature       *float32 `json:"temperature,omitempty"`
 	TopP              *float32 `json:"top_p,omitempty"`
@@ -36,15 +35,12 @@ type MistralTextOptions struct {
 	IncludeThoughts   *bool    `json:"include_thoughts,omitempty"`
 }
 
-type _MistralTextOptions MistralTextOptions
-
 // NewMistralTextOptions instantiates a new MistralTextOptions object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewMistralTextOptions(optionId string) *MistralTextOptions {
+func NewMistralTextOptions() *MistralTextOptions {
 	this := MistralTextOptions{}
-	this.OptionId = optionId
 	return &this
 }
 
@@ -56,28 +52,36 @@ func NewMistralTextOptionsWithDefaults() *MistralTextOptions {
 	return &this
 }
 
-// GetOptionId returns the OptionId field value
+// GetOptionId returns the OptionId field value if set, zero value otherwise.
 func (o *MistralTextOptions) GetOptionId() string {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		var ret string
 		return ret
 	}
-
-	return o.OptionId
+	return *o.OptionId
 }
 
-// GetOptionIdOk returns a tuple with the OptionId field value
+// GetOptionIdOk returns a tuple with the OptionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *MistralTextOptions) GetOptionIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		return nil, false
 	}
-	return &o.OptionId, true
+	return o.OptionId, true
 }
 
-// SetOptionId sets field value
+// HasOptionId returns a boolean if a field has been set.
+func (o *MistralTextOptions) HasOptionId() bool {
+	if o != nil && !IsNil(o.OptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionId gets a reference to the given string and assigns it to the OptionId field.
 func (o *MistralTextOptions) SetOptionId(v string) {
-	o.OptionId = v
+	o.OptionId = &v
 }
 
 // GetMaxTokens returns the MaxTokens field value if set, zero value otherwise.
@@ -506,7 +510,9 @@ func (o MistralTextOptions) MarshalJSON() ([]byte, error) {
 
 func (o MistralTextOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["_option_id"] = o.OptionId
+	if !IsNil(o.OptionId) {
+		toSerialize["_option_id"] = o.OptionId
+	}
 	if !IsNil(o.MaxTokens) {
 		toSerialize["max_tokens"] = o.MaxTokens
 	}
@@ -547,41 +553,6 @@ func (o MistralTextOptions) ToMap() (map[string]interface{}, error) {
 		toSerialize["include_thoughts"] = o.IncludeThoughts
 	}
 	return toSerialize, nil
-}
-
-func (o *MistralTextOptions) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"_option_id",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varMistralTextOptions := _MistralTextOptions{}
-
-	err = json.Unmarshal(data, &varMistralTextOptions)
-
-	if err != nil {
-		return err
-	}
-
-	*o = MistralTextOptions(varMistralTextOptions)
-
-	return err
 }
 
 type NullableMistralTextOptions struct {

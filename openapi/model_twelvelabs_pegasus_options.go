@@ -12,7 +12,6 @@ package openapi
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the TwelvelabsPegasusOptions type satisfies the MappedNullable interface at compile time
@@ -20,22 +19,19 @@ var _ MappedNullable = &TwelvelabsPegasusOptions{}
 
 // TwelvelabsPegasusOptions struct for TwelvelabsPegasusOptions
 type TwelvelabsPegasusOptions struct {
-	OptionId    string   `json:"_option_id"`
+	OptionId    *string  `json:"_option_id,omitempty"`
 	Temperature *float32 `json:"temperature,omitempty"`
 	MaxTokens   *float32 `json:"max_tokens,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
 	ServiceTier *string `json:"service_tier,omitempty"`
 }
 
-type _TwelvelabsPegasusOptions TwelvelabsPegasusOptions
-
 // NewTwelvelabsPegasusOptions instantiates a new TwelvelabsPegasusOptions object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewTwelvelabsPegasusOptions(optionId string) *TwelvelabsPegasusOptions {
+func NewTwelvelabsPegasusOptions() *TwelvelabsPegasusOptions {
 	this := TwelvelabsPegasusOptions{}
-	this.OptionId = optionId
 	return &this
 }
 
@@ -47,28 +43,36 @@ func NewTwelvelabsPegasusOptionsWithDefaults() *TwelvelabsPegasusOptions {
 	return &this
 }
 
-// GetOptionId returns the OptionId field value
+// GetOptionId returns the OptionId field value if set, zero value otherwise.
 func (o *TwelvelabsPegasusOptions) GetOptionId() string {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		var ret string
 		return ret
 	}
-
-	return o.OptionId
+	return *o.OptionId
 }
 
-// GetOptionIdOk returns a tuple with the OptionId field value
+// GetOptionIdOk returns a tuple with the OptionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *TwelvelabsPegasusOptions) GetOptionIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		return nil, false
 	}
-	return &o.OptionId, true
+	return o.OptionId, true
 }
 
-// SetOptionId sets field value
+// HasOptionId returns a boolean if a field has been set.
+func (o *TwelvelabsPegasusOptions) HasOptionId() bool {
+	if o != nil && !IsNil(o.OptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionId gets a reference to the given string and assigns it to the OptionId field.
 func (o *TwelvelabsPegasusOptions) SetOptionId(v string) {
-	o.OptionId = v
+	o.OptionId = &v
 }
 
 // GetTemperature returns the Temperature field value if set, zero value otherwise.
@@ -177,7 +181,9 @@ func (o TwelvelabsPegasusOptions) MarshalJSON() ([]byte, error) {
 
 func (o TwelvelabsPegasusOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["_option_id"] = o.OptionId
+	if !IsNil(o.OptionId) {
+		toSerialize["_option_id"] = o.OptionId
+	}
 	if !IsNil(o.Temperature) {
 		toSerialize["temperature"] = o.Temperature
 	}
@@ -188,41 +194,6 @@ func (o TwelvelabsPegasusOptions) ToMap() (map[string]interface{}, error) {
 		toSerialize["service_tier"] = o.ServiceTier
 	}
 	return toSerialize, nil
-}
-
-func (o *TwelvelabsPegasusOptions) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"_option_id",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varTwelvelabsPegasusOptions := _TwelvelabsPegasusOptions{}
-
-	err = json.Unmarshal(data, &varTwelvelabsPegasusOptions)
-
-	if err != nil {
-		return err
-	}
-
-	*o = TwelvelabsPegasusOptions(varTwelvelabsPegasusOptions)
-
-	return err
 }
 
 type NullableTwelvelabsPegasusOptions struct {

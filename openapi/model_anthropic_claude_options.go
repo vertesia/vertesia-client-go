@@ -14,45 +14,43 @@ import (
 	"encoding/json"
 )
 
-// checks if the BedrockClaudeOptions type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &BedrockClaudeOptions{}
+// checks if the AnthropicClaudeOptions type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &AnthropicClaudeOptions{}
 
-// BedrockClaudeOptions struct for BedrockClaudeOptions
-type BedrockClaudeOptions struct {
+// AnthropicClaudeOptions struct for AnthropicClaudeOptions
+type AnthropicClaudeOptions struct {
 	OptionId             *string  `json:"_option_id,omitempty"`
 	MaxTokens            *float32 `json:"max_tokens,omitempty"`
 	Temperature          *float32 `json:"temperature,omitempty"`
 	TopP                 *float32 `json:"top_p,omitempty"`
-	StopSequence         []string `json:"stop_sequence,omitempty"`
 	TopK                 *float32 `json:"top_k,omitempty"`
+	StopSequence         []string `json:"stop_sequence,omitempty"`
+	Effort               *string  `json:"effort,omitempty"`
 	ThinkingBudgetTokens *float32 `json:"thinking_budget_tokens,omitempty"`
 	IncludeThoughts      *bool    `json:"include_thoughts,omitempty"`
-	Effort               *string  `json:"effort,omitempty"`
 	CacheEnabled         *bool    `json:"cache_enabled,omitempty"`
 	CacheTtl             *string  `json:"cache_ttl,omitempty"`
-	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
-	ServiceTier *string `json:"service_tier,omitempty"`
 }
 
-// NewBedrockClaudeOptions instantiates a new BedrockClaudeOptions object
+// NewAnthropicClaudeOptions instantiates a new AnthropicClaudeOptions object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBedrockClaudeOptions() *BedrockClaudeOptions {
-	this := BedrockClaudeOptions{}
+func NewAnthropicClaudeOptions() *AnthropicClaudeOptions {
+	this := AnthropicClaudeOptions{}
 	return &this
 }
 
-// NewBedrockClaudeOptionsWithDefaults instantiates a new BedrockClaudeOptions object
+// NewAnthropicClaudeOptionsWithDefaults instantiates a new AnthropicClaudeOptions object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewBedrockClaudeOptionsWithDefaults() *BedrockClaudeOptions {
-	this := BedrockClaudeOptions{}
+func NewAnthropicClaudeOptionsWithDefaults() *AnthropicClaudeOptions {
+	this := AnthropicClaudeOptions{}
 	return &this
 }
 
 // GetOptionId returns the OptionId field value if set, zero value otherwise.
-func (o *BedrockClaudeOptions) GetOptionId() string {
+func (o *AnthropicClaudeOptions) GetOptionId() string {
 	if o == nil || IsNil(o.OptionId) {
 		var ret string
 		return ret
@@ -62,7 +60,7 @@ func (o *BedrockClaudeOptions) GetOptionId() string {
 
 // GetOptionIdOk returns a tuple with the OptionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *BedrockClaudeOptions) GetOptionIdOk() (*string, bool) {
+func (o *AnthropicClaudeOptions) GetOptionIdOk() (*string, bool) {
 	if o == nil || IsNil(o.OptionId) {
 		return nil, false
 	}
@@ -70,7 +68,7 @@ func (o *BedrockClaudeOptions) GetOptionIdOk() (*string, bool) {
 }
 
 // HasOptionId returns a boolean if a field has been set.
-func (o *BedrockClaudeOptions) HasOptionId() bool {
+func (o *AnthropicClaudeOptions) HasOptionId() bool {
 	if o != nil && !IsNil(o.OptionId) {
 		return true
 	}
@@ -79,12 +77,12 @@ func (o *BedrockClaudeOptions) HasOptionId() bool {
 }
 
 // SetOptionId gets a reference to the given string and assigns it to the OptionId field.
-func (o *BedrockClaudeOptions) SetOptionId(v string) {
+func (o *AnthropicClaudeOptions) SetOptionId(v string) {
 	o.OptionId = &v
 }
 
 // GetMaxTokens returns the MaxTokens field value if set, zero value otherwise.
-func (o *BedrockClaudeOptions) GetMaxTokens() float32 {
+func (o *AnthropicClaudeOptions) GetMaxTokens() float32 {
 	if o == nil || IsNil(o.MaxTokens) {
 		var ret float32
 		return ret
@@ -94,7 +92,7 @@ func (o *BedrockClaudeOptions) GetMaxTokens() float32 {
 
 // GetMaxTokensOk returns a tuple with the MaxTokens field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *BedrockClaudeOptions) GetMaxTokensOk() (*float32, bool) {
+func (o *AnthropicClaudeOptions) GetMaxTokensOk() (*float32, bool) {
 	if o == nil || IsNil(o.MaxTokens) {
 		return nil, false
 	}
@@ -102,7 +100,7 @@ func (o *BedrockClaudeOptions) GetMaxTokensOk() (*float32, bool) {
 }
 
 // HasMaxTokens returns a boolean if a field has been set.
-func (o *BedrockClaudeOptions) HasMaxTokens() bool {
+func (o *AnthropicClaudeOptions) HasMaxTokens() bool {
 	if o != nil && !IsNil(o.MaxTokens) {
 		return true
 	}
@@ -111,12 +109,12 @@ func (o *BedrockClaudeOptions) HasMaxTokens() bool {
 }
 
 // SetMaxTokens gets a reference to the given float32 and assigns it to the MaxTokens field.
-func (o *BedrockClaudeOptions) SetMaxTokens(v float32) {
+func (o *AnthropicClaudeOptions) SetMaxTokens(v float32) {
 	o.MaxTokens = &v
 }
 
 // GetTemperature returns the Temperature field value if set, zero value otherwise.
-func (o *BedrockClaudeOptions) GetTemperature() float32 {
+func (o *AnthropicClaudeOptions) GetTemperature() float32 {
 	if o == nil || IsNil(o.Temperature) {
 		var ret float32
 		return ret
@@ -126,7 +124,7 @@ func (o *BedrockClaudeOptions) GetTemperature() float32 {
 
 // GetTemperatureOk returns a tuple with the Temperature field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *BedrockClaudeOptions) GetTemperatureOk() (*float32, bool) {
+func (o *AnthropicClaudeOptions) GetTemperatureOk() (*float32, bool) {
 	if o == nil || IsNil(o.Temperature) {
 		return nil, false
 	}
@@ -134,7 +132,7 @@ func (o *BedrockClaudeOptions) GetTemperatureOk() (*float32, bool) {
 }
 
 // HasTemperature returns a boolean if a field has been set.
-func (o *BedrockClaudeOptions) HasTemperature() bool {
+func (o *AnthropicClaudeOptions) HasTemperature() bool {
 	if o != nil && !IsNil(o.Temperature) {
 		return true
 	}
@@ -143,12 +141,12 @@ func (o *BedrockClaudeOptions) HasTemperature() bool {
 }
 
 // SetTemperature gets a reference to the given float32 and assigns it to the Temperature field.
-func (o *BedrockClaudeOptions) SetTemperature(v float32) {
+func (o *AnthropicClaudeOptions) SetTemperature(v float32) {
 	o.Temperature = &v
 }
 
 // GetTopP returns the TopP field value if set, zero value otherwise.
-func (o *BedrockClaudeOptions) GetTopP() float32 {
+func (o *AnthropicClaudeOptions) GetTopP() float32 {
 	if o == nil || IsNil(o.TopP) {
 		var ret float32
 		return ret
@@ -158,7 +156,7 @@ func (o *BedrockClaudeOptions) GetTopP() float32 {
 
 // GetTopPOk returns a tuple with the TopP field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *BedrockClaudeOptions) GetTopPOk() (*float32, bool) {
+func (o *AnthropicClaudeOptions) GetTopPOk() (*float32, bool) {
 	if o == nil || IsNil(o.TopP) {
 		return nil, false
 	}
@@ -166,7 +164,7 @@ func (o *BedrockClaudeOptions) GetTopPOk() (*float32, bool) {
 }
 
 // HasTopP returns a boolean if a field has been set.
-func (o *BedrockClaudeOptions) HasTopP() bool {
+func (o *AnthropicClaudeOptions) HasTopP() bool {
 	if o != nil && !IsNil(o.TopP) {
 		return true
 	}
@@ -175,44 +173,12 @@ func (o *BedrockClaudeOptions) HasTopP() bool {
 }
 
 // SetTopP gets a reference to the given float32 and assigns it to the TopP field.
-func (o *BedrockClaudeOptions) SetTopP(v float32) {
+func (o *AnthropicClaudeOptions) SetTopP(v float32) {
 	o.TopP = &v
 }
 
-// GetStopSequence returns the StopSequence field value if set, zero value otherwise.
-func (o *BedrockClaudeOptions) GetStopSequence() []string {
-	if o == nil || IsNil(o.StopSequence) {
-		var ret []string
-		return ret
-	}
-	return o.StopSequence
-}
-
-// GetStopSequenceOk returns a tuple with the StopSequence field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *BedrockClaudeOptions) GetStopSequenceOk() ([]string, bool) {
-	if o == nil || IsNil(o.StopSequence) {
-		return nil, false
-	}
-	return o.StopSequence, true
-}
-
-// HasStopSequence returns a boolean if a field has been set.
-func (o *BedrockClaudeOptions) HasStopSequence() bool {
-	if o != nil && !IsNil(o.StopSequence) {
-		return true
-	}
-
-	return false
-}
-
-// SetStopSequence gets a reference to the given []string and assigns it to the StopSequence field.
-func (o *BedrockClaudeOptions) SetStopSequence(v []string) {
-	o.StopSequence = v
-}
-
 // GetTopK returns the TopK field value if set, zero value otherwise.
-func (o *BedrockClaudeOptions) GetTopK() float32 {
+func (o *AnthropicClaudeOptions) GetTopK() float32 {
 	if o == nil || IsNil(o.TopK) {
 		var ret float32
 		return ret
@@ -222,7 +188,7 @@ func (o *BedrockClaudeOptions) GetTopK() float32 {
 
 // GetTopKOk returns a tuple with the TopK field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *BedrockClaudeOptions) GetTopKOk() (*float32, bool) {
+func (o *AnthropicClaudeOptions) GetTopKOk() (*float32, bool) {
 	if o == nil || IsNil(o.TopK) {
 		return nil, false
 	}
@@ -230,7 +196,7 @@ func (o *BedrockClaudeOptions) GetTopKOk() (*float32, bool) {
 }
 
 // HasTopK returns a boolean if a field has been set.
-func (o *BedrockClaudeOptions) HasTopK() bool {
+func (o *AnthropicClaudeOptions) HasTopK() bool {
 	if o != nil && !IsNil(o.TopK) {
 		return true
 	}
@@ -239,76 +205,44 @@ func (o *BedrockClaudeOptions) HasTopK() bool {
 }
 
 // SetTopK gets a reference to the given float32 and assigns it to the TopK field.
-func (o *BedrockClaudeOptions) SetTopK(v float32) {
+func (o *AnthropicClaudeOptions) SetTopK(v float32) {
 	o.TopK = &v
 }
 
-// GetThinkingBudgetTokens returns the ThinkingBudgetTokens field value if set, zero value otherwise.
-func (o *BedrockClaudeOptions) GetThinkingBudgetTokens() float32 {
-	if o == nil || IsNil(o.ThinkingBudgetTokens) {
-		var ret float32
+// GetStopSequence returns the StopSequence field value if set, zero value otherwise.
+func (o *AnthropicClaudeOptions) GetStopSequence() []string {
+	if o == nil || IsNil(o.StopSequence) {
+		var ret []string
 		return ret
 	}
-	return *o.ThinkingBudgetTokens
+	return o.StopSequence
 }
 
-// GetThinkingBudgetTokensOk returns a tuple with the ThinkingBudgetTokens field value if set, nil otherwise
+// GetStopSequenceOk returns a tuple with the StopSequence field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *BedrockClaudeOptions) GetThinkingBudgetTokensOk() (*float32, bool) {
-	if o == nil || IsNil(o.ThinkingBudgetTokens) {
+func (o *AnthropicClaudeOptions) GetStopSequenceOk() ([]string, bool) {
+	if o == nil || IsNil(o.StopSequence) {
 		return nil, false
 	}
-	return o.ThinkingBudgetTokens, true
+	return o.StopSequence, true
 }
 
-// HasThinkingBudgetTokens returns a boolean if a field has been set.
-func (o *BedrockClaudeOptions) HasThinkingBudgetTokens() bool {
-	if o != nil && !IsNil(o.ThinkingBudgetTokens) {
+// HasStopSequence returns a boolean if a field has been set.
+func (o *AnthropicClaudeOptions) HasStopSequence() bool {
+	if o != nil && !IsNil(o.StopSequence) {
 		return true
 	}
 
 	return false
 }
 
-// SetThinkingBudgetTokens gets a reference to the given float32 and assigns it to the ThinkingBudgetTokens field.
-func (o *BedrockClaudeOptions) SetThinkingBudgetTokens(v float32) {
-	o.ThinkingBudgetTokens = &v
-}
-
-// GetIncludeThoughts returns the IncludeThoughts field value if set, zero value otherwise.
-func (o *BedrockClaudeOptions) GetIncludeThoughts() bool {
-	if o == nil || IsNil(o.IncludeThoughts) {
-		var ret bool
-		return ret
-	}
-	return *o.IncludeThoughts
-}
-
-// GetIncludeThoughtsOk returns a tuple with the IncludeThoughts field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *BedrockClaudeOptions) GetIncludeThoughtsOk() (*bool, bool) {
-	if o == nil || IsNil(o.IncludeThoughts) {
-		return nil, false
-	}
-	return o.IncludeThoughts, true
-}
-
-// HasIncludeThoughts returns a boolean if a field has been set.
-func (o *BedrockClaudeOptions) HasIncludeThoughts() bool {
-	if o != nil && !IsNil(o.IncludeThoughts) {
-		return true
-	}
-
-	return false
-}
-
-// SetIncludeThoughts gets a reference to the given bool and assigns it to the IncludeThoughts field.
-func (o *BedrockClaudeOptions) SetIncludeThoughts(v bool) {
-	o.IncludeThoughts = &v
+// SetStopSequence gets a reference to the given []string and assigns it to the StopSequence field.
+func (o *AnthropicClaudeOptions) SetStopSequence(v []string) {
+	o.StopSequence = v
 }
 
 // GetEffort returns the Effort field value if set, zero value otherwise.
-func (o *BedrockClaudeOptions) GetEffort() string {
+func (o *AnthropicClaudeOptions) GetEffort() string {
 	if o == nil || IsNil(o.Effort) {
 		var ret string
 		return ret
@@ -318,7 +252,7 @@ func (o *BedrockClaudeOptions) GetEffort() string {
 
 // GetEffortOk returns a tuple with the Effort field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *BedrockClaudeOptions) GetEffortOk() (*string, bool) {
+func (o *AnthropicClaudeOptions) GetEffortOk() (*string, bool) {
 	if o == nil || IsNil(o.Effort) {
 		return nil, false
 	}
@@ -326,7 +260,7 @@ func (o *BedrockClaudeOptions) GetEffortOk() (*string, bool) {
 }
 
 // HasEffort returns a boolean if a field has been set.
-func (o *BedrockClaudeOptions) HasEffort() bool {
+func (o *AnthropicClaudeOptions) HasEffort() bool {
 	if o != nil && !IsNil(o.Effort) {
 		return true
 	}
@@ -335,12 +269,76 @@ func (o *BedrockClaudeOptions) HasEffort() bool {
 }
 
 // SetEffort gets a reference to the given string and assigns it to the Effort field.
-func (o *BedrockClaudeOptions) SetEffort(v string) {
+func (o *AnthropicClaudeOptions) SetEffort(v string) {
 	o.Effort = &v
 }
 
+// GetThinkingBudgetTokens returns the ThinkingBudgetTokens field value if set, zero value otherwise.
+func (o *AnthropicClaudeOptions) GetThinkingBudgetTokens() float32 {
+	if o == nil || IsNil(o.ThinkingBudgetTokens) {
+		var ret float32
+		return ret
+	}
+	return *o.ThinkingBudgetTokens
+}
+
+// GetThinkingBudgetTokensOk returns a tuple with the ThinkingBudgetTokens field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AnthropicClaudeOptions) GetThinkingBudgetTokensOk() (*float32, bool) {
+	if o == nil || IsNil(o.ThinkingBudgetTokens) {
+		return nil, false
+	}
+	return o.ThinkingBudgetTokens, true
+}
+
+// HasThinkingBudgetTokens returns a boolean if a field has been set.
+func (o *AnthropicClaudeOptions) HasThinkingBudgetTokens() bool {
+	if o != nil && !IsNil(o.ThinkingBudgetTokens) {
+		return true
+	}
+
+	return false
+}
+
+// SetThinkingBudgetTokens gets a reference to the given float32 and assigns it to the ThinkingBudgetTokens field.
+func (o *AnthropicClaudeOptions) SetThinkingBudgetTokens(v float32) {
+	o.ThinkingBudgetTokens = &v
+}
+
+// GetIncludeThoughts returns the IncludeThoughts field value if set, zero value otherwise.
+func (o *AnthropicClaudeOptions) GetIncludeThoughts() bool {
+	if o == nil || IsNil(o.IncludeThoughts) {
+		var ret bool
+		return ret
+	}
+	return *o.IncludeThoughts
+}
+
+// GetIncludeThoughtsOk returns a tuple with the IncludeThoughts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AnthropicClaudeOptions) GetIncludeThoughtsOk() (*bool, bool) {
+	if o == nil || IsNil(o.IncludeThoughts) {
+		return nil, false
+	}
+	return o.IncludeThoughts, true
+}
+
+// HasIncludeThoughts returns a boolean if a field has been set.
+func (o *AnthropicClaudeOptions) HasIncludeThoughts() bool {
+	if o != nil && !IsNil(o.IncludeThoughts) {
+		return true
+	}
+
+	return false
+}
+
+// SetIncludeThoughts gets a reference to the given bool and assigns it to the IncludeThoughts field.
+func (o *AnthropicClaudeOptions) SetIncludeThoughts(v bool) {
+	o.IncludeThoughts = &v
+}
+
 // GetCacheEnabled returns the CacheEnabled field value if set, zero value otherwise.
-func (o *BedrockClaudeOptions) GetCacheEnabled() bool {
+func (o *AnthropicClaudeOptions) GetCacheEnabled() bool {
 	if o == nil || IsNil(o.CacheEnabled) {
 		var ret bool
 		return ret
@@ -350,7 +348,7 @@ func (o *BedrockClaudeOptions) GetCacheEnabled() bool {
 
 // GetCacheEnabledOk returns a tuple with the CacheEnabled field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *BedrockClaudeOptions) GetCacheEnabledOk() (*bool, bool) {
+func (o *AnthropicClaudeOptions) GetCacheEnabledOk() (*bool, bool) {
 	if o == nil || IsNil(o.CacheEnabled) {
 		return nil, false
 	}
@@ -358,7 +356,7 @@ func (o *BedrockClaudeOptions) GetCacheEnabledOk() (*bool, bool) {
 }
 
 // HasCacheEnabled returns a boolean if a field has been set.
-func (o *BedrockClaudeOptions) HasCacheEnabled() bool {
+func (o *AnthropicClaudeOptions) HasCacheEnabled() bool {
 	if o != nil && !IsNil(o.CacheEnabled) {
 		return true
 	}
@@ -367,12 +365,12 @@ func (o *BedrockClaudeOptions) HasCacheEnabled() bool {
 }
 
 // SetCacheEnabled gets a reference to the given bool and assigns it to the CacheEnabled field.
-func (o *BedrockClaudeOptions) SetCacheEnabled(v bool) {
+func (o *AnthropicClaudeOptions) SetCacheEnabled(v bool) {
 	o.CacheEnabled = &v
 }
 
 // GetCacheTtl returns the CacheTtl field value if set, zero value otherwise.
-func (o *BedrockClaudeOptions) GetCacheTtl() string {
+func (o *AnthropicClaudeOptions) GetCacheTtl() string {
 	if o == nil || IsNil(o.CacheTtl) {
 		var ret string
 		return ret
@@ -382,7 +380,7 @@ func (o *BedrockClaudeOptions) GetCacheTtl() string {
 
 // GetCacheTtlOk returns a tuple with the CacheTtl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *BedrockClaudeOptions) GetCacheTtlOk() (*string, bool) {
+func (o *AnthropicClaudeOptions) GetCacheTtlOk() (*string, bool) {
 	if o == nil || IsNil(o.CacheTtl) {
 		return nil, false
 	}
@@ -390,7 +388,7 @@ func (o *BedrockClaudeOptions) GetCacheTtlOk() (*string, bool) {
 }
 
 // HasCacheTtl returns a boolean if a field has been set.
-func (o *BedrockClaudeOptions) HasCacheTtl() bool {
+func (o *AnthropicClaudeOptions) HasCacheTtl() bool {
 	if o != nil && !IsNil(o.CacheTtl) {
 		return true
 	}
@@ -399,43 +397,11 @@ func (o *BedrockClaudeOptions) HasCacheTtl() bool {
 }
 
 // SetCacheTtl gets a reference to the given string and assigns it to the CacheTtl field.
-func (o *BedrockClaudeOptions) SetCacheTtl(v string) {
+func (o *AnthropicClaudeOptions) SetCacheTtl(v string) {
 	o.CacheTtl = &v
 }
 
-// GetServiceTier returns the ServiceTier field value if set, zero value otherwise.
-func (o *BedrockClaudeOptions) GetServiceTier() string {
-	if o == nil || IsNil(o.ServiceTier) {
-		var ret string
-		return ret
-	}
-	return *o.ServiceTier
-}
-
-// GetServiceTierOk returns a tuple with the ServiceTier field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *BedrockClaudeOptions) GetServiceTierOk() (*string, bool) {
-	if o == nil || IsNil(o.ServiceTier) {
-		return nil, false
-	}
-	return o.ServiceTier, true
-}
-
-// HasServiceTier returns a boolean if a field has been set.
-func (o *BedrockClaudeOptions) HasServiceTier() bool {
-	if o != nil && !IsNil(o.ServiceTier) {
-		return true
-	}
-
-	return false
-}
-
-// SetServiceTier gets a reference to the given string and assigns it to the ServiceTier field.
-func (o *BedrockClaudeOptions) SetServiceTier(v string) {
-	o.ServiceTier = &v
-}
-
-func (o BedrockClaudeOptions) MarshalJSON() ([]byte, error) {
+func (o AnthropicClaudeOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -443,7 +409,7 @@ func (o BedrockClaudeOptions) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o BedrockClaudeOptions) ToMap() (map[string]interface{}, error) {
+func (o AnthropicClaudeOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.OptionId) {
 		toSerialize["_option_id"] = o.OptionId
@@ -457,11 +423,14 @@ func (o BedrockClaudeOptions) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.TopP) {
 		toSerialize["top_p"] = o.TopP
 	}
+	if !IsNil(o.TopK) {
+		toSerialize["top_k"] = o.TopK
+	}
 	if !IsNil(o.StopSequence) {
 		toSerialize["stop_sequence"] = o.StopSequence
 	}
-	if !IsNil(o.TopK) {
-		toSerialize["top_k"] = o.TopK
+	if !IsNil(o.Effort) {
+		toSerialize["effort"] = o.Effort
 	}
 	if !IsNil(o.ThinkingBudgetTokens) {
 		toSerialize["thinking_budget_tokens"] = o.ThinkingBudgetTokens
@@ -469,53 +438,47 @@ func (o BedrockClaudeOptions) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.IncludeThoughts) {
 		toSerialize["include_thoughts"] = o.IncludeThoughts
 	}
-	if !IsNil(o.Effort) {
-		toSerialize["effort"] = o.Effort
-	}
 	if !IsNil(o.CacheEnabled) {
 		toSerialize["cache_enabled"] = o.CacheEnabled
 	}
 	if !IsNil(o.CacheTtl) {
 		toSerialize["cache_ttl"] = o.CacheTtl
 	}
-	if !IsNil(o.ServiceTier) {
-		toSerialize["service_tier"] = o.ServiceTier
-	}
 	return toSerialize, nil
 }
 
-type NullableBedrockClaudeOptions struct {
-	value *BedrockClaudeOptions
+type NullableAnthropicClaudeOptions struct {
+	value *AnthropicClaudeOptions
 	isSet bool
 }
 
-func (v NullableBedrockClaudeOptions) Get() *BedrockClaudeOptions {
+func (v NullableAnthropicClaudeOptions) Get() *AnthropicClaudeOptions {
 	return v.value
 }
 
-func (v *NullableBedrockClaudeOptions) Set(val *BedrockClaudeOptions) {
+func (v *NullableAnthropicClaudeOptions) Set(val *AnthropicClaudeOptions) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableBedrockClaudeOptions) IsSet() bool {
+func (v NullableAnthropicClaudeOptions) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableBedrockClaudeOptions) Unset() {
+func (v *NullableAnthropicClaudeOptions) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableBedrockClaudeOptions(val *BedrockClaudeOptions) *NullableBedrockClaudeOptions {
-	return &NullableBedrockClaudeOptions{value: val, isSet: true}
+func NewNullableAnthropicClaudeOptions(val *AnthropicClaudeOptions) *NullableAnthropicClaudeOptions {
+	return &NullableAnthropicClaudeOptions{value: val, isSet: true}
 }
 
-func (v NullableBedrockClaudeOptions) MarshalJSON() ([]byte, error) {
+func (v NullableAnthropicClaudeOptions) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableBedrockClaudeOptions) UnmarshalJSON(src []byte) error {
+func (v *NullableAnthropicClaudeOptions) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

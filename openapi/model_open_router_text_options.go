@@ -12,7 +12,6 @@ package openapi
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the OpenRouterTextOptions type satisfies the MappedNullable interface at compile time
@@ -33,7 +32,7 @@ type OpenRouterTextOptions struct {
 	IncludeThoughts  *bool            `json:"include_thoughts,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
 	ServiceTier               *string  `json:"service_tier,omitempty"`
-	OptionId                  string   `json:"_option_id"`
+	OptionId                  *string  `json:"_option_id,omitempty"`
 	ProviderSort              *string  `json:"provider_sort,omitempty"`
 	ProviderOrder             []string `json:"provider_order,omitempty"`
 	ProviderOnly              []string `json:"provider_only,omitempty"`
@@ -45,15 +44,12 @@ type OpenRouterTextOptions struct {
 	ProviderQuantizations     []string `json:"provider_quantizations,omitempty"`
 }
 
-type _OpenRouterTextOptions OpenRouterTextOptions
-
 // NewOpenRouterTextOptions instantiates a new OpenRouterTextOptions object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewOpenRouterTextOptions(optionId string) *OpenRouterTextOptions {
+func NewOpenRouterTextOptions() *OpenRouterTextOptions {
 	this := OpenRouterTextOptions{}
-	this.OptionId = optionId
 	return &this
 }
 
@@ -449,28 +445,36 @@ func (o *OpenRouterTextOptions) SetServiceTier(v string) {
 	o.ServiceTier = &v
 }
 
-// GetOptionId returns the OptionId field value
+// GetOptionId returns the OptionId field value if set, zero value otherwise.
 func (o *OpenRouterTextOptions) GetOptionId() string {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		var ret string
 		return ret
 	}
-
-	return o.OptionId
+	return *o.OptionId
 }
 
-// GetOptionIdOk returns a tuple with the OptionId field value
+// GetOptionIdOk returns a tuple with the OptionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *OpenRouterTextOptions) GetOptionIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		return nil, false
 	}
-	return &o.OptionId, true
+	return o.OptionId, true
 }
 
-// SetOptionId sets field value
+// HasOptionId returns a boolean if a field has been set.
+func (o *OpenRouterTextOptions) HasOptionId() bool {
+	if o != nil && !IsNil(o.OptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionId gets a reference to the given string and assigns it to the OptionId field.
 func (o *OpenRouterTextOptions) SetOptionId(v string) {
-	o.OptionId = v
+	o.OptionId = &v
 }
 
 // GetProviderSort returns the ProviderSort field value if set, zero value otherwise.
@@ -807,7 +811,9 @@ func (o OpenRouterTextOptions) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ServiceTier) {
 		toSerialize["service_tier"] = o.ServiceTier
 	}
-	toSerialize["_option_id"] = o.OptionId
+	if !IsNil(o.OptionId) {
+		toSerialize["_option_id"] = o.OptionId
+	}
 	if !IsNil(o.ProviderSort) {
 		toSerialize["provider_sort"] = o.ProviderSort
 	}
@@ -836,41 +842,6 @@ func (o OpenRouterTextOptions) ToMap() (map[string]interface{}, error) {
 		toSerialize["provider_quantizations"] = o.ProviderQuantizations
 	}
 	return toSerialize, nil
-}
-
-func (o *OpenRouterTextOptions) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"_option_id",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varOpenRouterTextOptions := _OpenRouterTextOptions{}
-
-	err = json.Unmarshal(data, &varOpenRouterTextOptions)
-
-	if err != nil {
-		return err
-	}
-
-	*o = OpenRouterTextOptions(varOpenRouterTextOptions)
-
-	return err
 }
 
 type NullableOpenRouterTextOptions struct {

@@ -12,7 +12,6 @@ package openapi
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the ImagenOptions type satisfies the MappedNullable interface at compile time
@@ -20,7 +19,7 @@ var _ MappedNullable = &ImagenOptions{}
 
 // ImagenOptions struct for ImagenOptions
 type ImagenOptions struct {
-	OptionId                string          `json:"_option_id"`
+	OptionId                *string         `json:"_option_id,omitempty"`
 	NumberOfImages          *float32        `json:"number_of_images,omitempty"`
 	Seed                    *float32        `json:"seed,omitempty"`
 	PersonGeneration        *string         `json:"person_generation,omitempty"`
@@ -41,15 +40,12 @@ type ImagenOptions struct {
 	SubjectType             *string         `json:"subjectType,omitempty"`
 }
 
-type _ImagenOptions ImagenOptions
-
 // NewImagenOptions instantiates a new ImagenOptions object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewImagenOptions(optionId string) *ImagenOptions {
+func NewImagenOptions() *ImagenOptions {
 	this := ImagenOptions{}
-	this.OptionId = optionId
 	return &this
 }
 
@@ -61,28 +57,36 @@ func NewImagenOptionsWithDefaults() *ImagenOptions {
 	return &this
 }
 
-// GetOptionId returns the OptionId field value
+// GetOptionId returns the OptionId field value if set, zero value otherwise.
 func (o *ImagenOptions) GetOptionId() string {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		var ret string
 		return ret
 	}
-
-	return o.OptionId
+	return *o.OptionId
 }
 
-// GetOptionIdOk returns a tuple with the OptionId field value
+// GetOptionIdOk returns a tuple with the OptionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ImagenOptions) GetOptionIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		return nil, false
 	}
-	return &o.OptionId, true
+	return o.OptionId, true
 }
 
-// SetOptionId sets field value
+// HasOptionId returns a boolean if a field has been set.
+func (o *ImagenOptions) HasOptionId() bool {
+	if o != nil && !IsNil(o.OptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionId gets a reference to the given string and assigns it to the OptionId field.
 func (o *ImagenOptions) SetOptionId(v string) {
-	o.OptionId = v
+	o.OptionId = &v
 }
 
 // GetNumberOfImages returns the NumberOfImages field value if set, zero value otherwise.
@@ -671,7 +675,9 @@ func (o ImagenOptions) MarshalJSON() ([]byte, error) {
 
 func (o ImagenOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["_option_id"] = o.OptionId
+	if !IsNil(o.OptionId) {
+		toSerialize["_option_id"] = o.OptionId
+	}
 	if !IsNil(o.NumberOfImages) {
 		toSerialize["number_of_images"] = o.NumberOfImages
 	}
@@ -727,41 +733,6 @@ func (o ImagenOptions) ToMap() (map[string]interface{}, error) {
 		toSerialize["subjectType"] = o.SubjectType
 	}
 	return toSerialize, nil
-}
-
-func (o *ImagenOptions) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"_option_id",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varImagenOptions := _ImagenOptions{}
-
-	err = json.Unmarshal(data, &varImagenOptions)
-
-	if err != nil {
-		return err
-	}
-
-	*o = ImagenOptions(varImagenOptions)
-
-	return err
 }
 
 type NullableImagenOptions struct {

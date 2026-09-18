@@ -20,7 +20,7 @@ var _ MappedNullable = &NovaCanvasOptions{}
 
 // NovaCanvasOptions struct for NovaCanvasOptions
 type NovaCanvasOptions struct {
-	OptionId           string   `json:"_option_id"`
+	OptionId           *string  `json:"_option_id,omitempty"`
 	TaskType           string   `json:"taskType"`
 	Width              *float32 `json:"width,omitempty"`
 	Height             *float32 `json:"height,omitempty"`
@@ -41,9 +41,8 @@ type _NovaCanvasOptions NovaCanvasOptions
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewNovaCanvasOptions(optionId string, taskType string) *NovaCanvasOptions {
+func NewNovaCanvasOptions(taskType string) *NovaCanvasOptions {
 	this := NovaCanvasOptions{}
-	this.OptionId = optionId
 	this.TaskType = taskType
 	return &this
 }
@@ -56,28 +55,36 @@ func NewNovaCanvasOptionsWithDefaults() *NovaCanvasOptions {
 	return &this
 }
 
-// GetOptionId returns the OptionId field value
+// GetOptionId returns the OptionId field value if set, zero value otherwise.
 func (o *NovaCanvasOptions) GetOptionId() string {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		var ret string
 		return ret
 	}
-
-	return o.OptionId
+	return *o.OptionId
 }
 
-// GetOptionIdOk returns a tuple with the OptionId field value
+// GetOptionIdOk returns a tuple with the OptionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NovaCanvasOptions) GetOptionIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		return nil, false
 	}
-	return &o.OptionId, true
+	return o.OptionId, true
 }
 
-// SetOptionId sets field value
+// HasOptionId returns a boolean if a field has been set.
+func (o *NovaCanvasOptions) HasOptionId() bool {
+	if o != nil && !IsNil(o.OptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionId gets a reference to the given string and assigns it to the OptionId field.
 func (o *NovaCanvasOptions) SetOptionId(v string) {
-	o.OptionId = v
+	o.OptionId = &v
 }
 
 // GetTaskType returns the TaskType field value
@@ -466,7 +473,9 @@ func (o NovaCanvasOptions) MarshalJSON() ([]byte, error) {
 
 func (o NovaCanvasOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["_option_id"] = o.OptionId
+	if !IsNil(o.OptionId) {
+		toSerialize["_option_id"] = o.OptionId
+	}
 	toSerialize["taskType"] = o.TaskType
 	if !IsNil(o.Width) {
 		toSerialize["width"] = o.Width
@@ -509,7 +518,6 @@ func (o *NovaCanvasOptions) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"_option_id",
 		"taskType",
 	}
 

@@ -12,7 +12,6 @@ package openapi
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the OpenAiDalleOptions type satisfies the MappedNullable interface at compile time
@@ -20,7 +19,7 @@ var _ MappedNullable = &OpenAiDalleOptions{}
 
 // OpenAiDalleOptions struct for OpenAiDalleOptions
 type OpenAiDalleOptions struct {
-	OptionId       string   `json:"_option_id"`
+	OptionId       *string  `json:"_option_id,omitempty"`
 	Size           *string  `json:"size,omitempty"`
 	ImageQuality   *string  `json:"image_quality,omitempty"`
 	Style          *string  `json:"style,omitempty"`
@@ -28,15 +27,12 @@ type OpenAiDalleOptions struct {
 	N              *float32 `json:"n,omitempty"`
 }
 
-type _OpenAiDalleOptions OpenAiDalleOptions
-
 // NewOpenAiDalleOptions instantiates a new OpenAiDalleOptions object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewOpenAiDalleOptions(optionId string) *OpenAiDalleOptions {
+func NewOpenAiDalleOptions() *OpenAiDalleOptions {
 	this := OpenAiDalleOptions{}
-	this.OptionId = optionId
 	return &this
 }
 
@@ -48,28 +44,36 @@ func NewOpenAiDalleOptionsWithDefaults() *OpenAiDalleOptions {
 	return &this
 }
 
-// GetOptionId returns the OptionId field value
+// GetOptionId returns the OptionId field value if set, zero value otherwise.
 func (o *OpenAiDalleOptions) GetOptionId() string {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		var ret string
 		return ret
 	}
-
-	return o.OptionId
+	return *o.OptionId
 }
 
-// GetOptionIdOk returns a tuple with the OptionId field value
+// GetOptionIdOk returns a tuple with the OptionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *OpenAiDalleOptions) GetOptionIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		return nil, false
 	}
-	return &o.OptionId, true
+	return o.OptionId, true
 }
 
-// SetOptionId sets field value
+// HasOptionId returns a boolean if a field has been set.
+func (o *OpenAiDalleOptions) HasOptionId() bool {
+	if o != nil && !IsNil(o.OptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionId gets a reference to the given string and assigns it to the OptionId field.
 func (o *OpenAiDalleOptions) SetOptionId(v string) {
-	o.OptionId = v
+	o.OptionId = &v
 }
 
 // GetSize returns the Size field value if set, zero value otherwise.
@@ -242,7 +246,9 @@ func (o OpenAiDalleOptions) MarshalJSON() ([]byte, error) {
 
 func (o OpenAiDalleOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["_option_id"] = o.OptionId
+	if !IsNil(o.OptionId) {
+		toSerialize["_option_id"] = o.OptionId
+	}
 	if !IsNil(o.Size) {
 		toSerialize["size"] = o.Size
 	}
@@ -259,41 +265,6 @@ func (o OpenAiDalleOptions) ToMap() (map[string]interface{}, error) {
 		toSerialize["n"] = o.N
 	}
 	return toSerialize, nil
-}
-
-func (o *OpenAiDalleOptions) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"_option_id",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varOpenAiDalleOptions := _OpenAiDalleOptions{}
-
-	err = json.Unmarshal(data, &varOpenAiDalleOptions)
-
-	if err != nil {
-		return err
-	}
-
-	*o = OpenAiDalleOptions(varOpenAiDalleOptions)
-
-	return err
 }
 
 type NullableOpenAiDalleOptions struct {

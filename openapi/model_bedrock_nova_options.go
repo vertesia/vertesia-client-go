@@ -12,7 +12,6 @@ package openapi
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the BedrockNovaOptions type satisfies the MappedNullable interface at compile time
@@ -20,25 +19,23 @@ var _ MappedNullable = &BedrockNovaOptions{}
 
 // BedrockNovaOptions struct for BedrockNovaOptions
 type BedrockNovaOptions struct {
-	OptionId        string   `json:"_option_id"`
+	OptionId        *string  `json:"_option_id,omitempty"`
 	MaxTokens       *float32 `json:"max_tokens,omitempty"`
 	Temperature     *float32 `json:"temperature,omitempty"`
 	TopP            *float32 `json:"top_p,omitempty"`
+	TopK            *float32 `json:"top_k,omitempty"`
 	StopSequence    []string `json:"stop_sequence,omitempty"`
 	IncludeThoughts *bool    `json:"include_thoughts,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
 	ServiceTier *string `json:"service_tier,omitempty"`
 }
 
-type _BedrockNovaOptions BedrockNovaOptions
-
 // NewBedrockNovaOptions instantiates a new BedrockNovaOptions object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBedrockNovaOptions(optionId string) *BedrockNovaOptions {
+func NewBedrockNovaOptions() *BedrockNovaOptions {
 	this := BedrockNovaOptions{}
-	this.OptionId = optionId
 	return &this
 }
 
@@ -50,28 +47,36 @@ func NewBedrockNovaOptionsWithDefaults() *BedrockNovaOptions {
 	return &this
 }
 
-// GetOptionId returns the OptionId field value
+// GetOptionId returns the OptionId field value if set, zero value otherwise.
 func (o *BedrockNovaOptions) GetOptionId() string {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		var ret string
 		return ret
 	}
-
-	return o.OptionId
+	return *o.OptionId
 }
 
-// GetOptionIdOk returns a tuple with the OptionId field value
+// GetOptionIdOk returns a tuple with the OptionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BedrockNovaOptions) GetOptionIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		return nil, false
 	}
-	return &o.OptionId, true
+	return o.OptionId, true
 }
 
-// SetOptionId sets field value
+// HasOptionId returns a boolean if a field has been set.
+func (o *BedrockNovaOptions) HasOptionId() bool {
+	if o != nil && !IsNil(o.OptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionId gets a reference to the given string and assigns it to the OptionId field.
 func (o *BedrockNovaOptions) SetOptionId(v string) {
-	o.OptionId = v
+	o.OptionId = &v
 }
 
 // GetMaxTokens returns the MaxTokens field value if set, zero value otherwise.
@@ -168,6 +173,38 @@ func (o *BedrockNovaOptions) HasTopP() bool {
 // SetTopP gets a reference to the given float32 and assigns it to the TopP field.
 func (o *BedrockNovaOptions) SetTopP(v float32) {
 	o.TopP = &v
+}
+
+// GetTopK returns the TopK field value if set, zero value otherwise.
+func (o *BedrockNovaOptions) GetTopK() float32 {
+	if o == nil || IsNil(o.TopK) {
+		var ret float32
+		return ret
+	}
+	return *o.TopK
+}
+
+// GetTopKOk returns a tuple with the TopK field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BedrockNovaOptions) GetTopKOk() (*float32, bool) {
+	if o == nil || IsNil(o.TopK) {
+		return nil, false
+	}
+	return o.TopK, true
+}
+
+// HasTopK returns a boolean if a field has been set.
+func (o *BedrockNovaOptions) HasTopK() bool {
+	if o != nil && !IsNil(o.TopK) {
+		return true
+	}
+
+	return false
+}
+
+// SetTopK gets a reference to the given float32 and assigns it to the TopK field.
+func (o *BedrockNovaOptions) SetTopK(v float32) {
+	o.TopK = &v
 }
 
 // GetStopSequence returns the StopSequence field value if set, zero value otherwise.
@@ -276,7 +313,9 @@ func (o BedrockNovaOptions) MarshalJSON() ([]byte, error) {
 
 func (o BedrockNovaOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["_option_id"] = o.OptionId
+	if !IsNil(o.OptionId) {
+		toSerialize["_option_id"] = o.OptionId
+	}
 	if !IsNil(o.MaxTokens) {
 		toSerialize["max_tokens"] = o.MaxTokens
 	}
@@ -285,6 +324,9 @@ func (o BedrockNovaOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.TopP) {
 		toSerialize["top_p"] = o.TopP
+	}
+	if !IsNil(o.TopK) {
+		toSerialize["top_k"] = o.TopK
 	}
 	if !IsNil(o.StopSequence) {
 		toSerialize["stop_sequence"] = o.StopSequence
@@ -296,41 +338,6 @@ func (o BedrockNovaOptions) ToMap() (map[string]interface{}, error) {
 		toSerialize["service_tier"] = o.ServiceTier
 	}
 	return toSerialize, nil
-}
-
-func (o *BedrockNovaOptions) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"_option_id",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varBedrockNovaOptions := _BedrockNovaOptions{}
-
-	err = json.Unmarshal(data, &varBedrockNovaOptions)
-
-	if err != nil {
-		return err
-	}
-
-	*o = BedrockNovaOptions(varBedrockNovaOptions)
-
-	return err
 }
 
 type NullableBedrockNovaOptions struct {
