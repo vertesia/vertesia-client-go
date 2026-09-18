@@ -199,3 +199,7 @@ Releases are created from git tags. The release workflow runs tests against the
 preview environment, verifies the tag matches the OpenAPI spec `info.version`
 and generator `packageVersion`, creates an annotated tag, and publishes a GitHub
 Release.
+
+### Generated API version headers
+
+Generated request validation uses the configured `x-api-version` default when no per-request version is set. Explicit request versions take precedence; a raw client with neither still rejects the missing version. Default headers are added only when the request does not already contain the header.
