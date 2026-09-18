@@ -12,7 +12,6 @@ package openapi
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the VertexAIGrokOptions type satisfies the MappedNullable interface at compile time
@@ -20,22 +19,21 @@ var _ MappedNullable = &VertexAIGrokOptions{}
 
 // VertexAIGrokOptions struct for VertexAIGrokOptions
 type VertexAIGrokOptions struct {
-	OptionId     string   `json:"_option_id"`
+	OptionId     *string  `json:"_option_id,omitempty"`
 	MaxTokens    *float32 `json:"max_tokens,omitempty"`
 	Temperature  *float32 `json:"temperature,omitempty"`
 	TopP         *float32 `json:"top_p,omitempty"`
 	StopSequence []string `json:"stop_sequence,omitempty"`
+	// AdditionalProperties preserves unknown fields across read-edit-save.
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
-
-type _VertexAIGrokOptions VertexAIGrokOptions
 
 // NewVertexAIGrokOptions instantiates a new VertexAIGrokOptions object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewVertexAIGrokOptions(optionId string) *VertexAIGrokOptions {
+func NewVertexAIGrokOptions() *VertexAIGrokOptions {
 	this := VertexAIGrokOptions{}
-	this.OptionId = optionId
 	return &this
 }
 
@@ -47,28 +45,36 @@ func NewVertexAIGrokOptionsWithDefaults() *VertexAIGrokOptions {
 	return &this
 }
 
-// GetOptionId returns the OptionId field value
+// GetOptionId returns the OptionId field value if set, zero value otherwise.
 func (o *VertexAIGrokOptions) GetOptionId() string {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		var ret string
 		return ret
 	}
-
-	return o.OptionId
+	return *o.OptionId
 }
 
-// GetOptionIdOk returns a tuple with the OptionId field value
+// GetOptionIdOk returns a tuple with the OptionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *VertexAIGrokOptions) GetOptionIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		return nil, false
 	}
-	return &o.OptionId, true
+	return o.OptionId, true
 }
 
-// SetOptionId sets field value
+// HasOptionId returns a boolean if a field has been set.
+func (o *VertexAIGrokOptions) HasOptionId() bool {
+	if o != nil && !IsNil(o.OptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionId gets a reference to the given string and assigns it to the OptionId field.
 func (o *VertexAIGrokOptions) SetOptionId(v string) {
-	o.OptionId = v
+	o.OptionId = &v
 }
 
 // GetMaxTokens returns the MaxTokens field value if set, zero value otherwise.
@@ -209,7 +215,16 @@ func (o VertexAIGrokOptions) MarshalJSON() ([]byte, error) {
 
 func (o VertexAIGrokOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["_option_id"] = o.OptionId
+	// Typed fields retain precedence, including when cleared.
+	for key, value := range o.AdditionalProperties {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence"}) {
+			toSerialize[key] = value
+		}
+	}
+
+	if !IsNil(o.OptionId) {
+		toSerialize["_option_id"] = o.OptionId
+	}
 	if !IsNil(o.MaxTokens) {
 		toSerialize["max_tokens"] = o.MaxTokens
 	}
@@ -223,41 +238,6 @@ func (o VertexAIGrokOptions) ToMap() (map[string]interface{}, error) {
 		toSerialize["stop_sequence"] = o.StopSequence
 	}
 	return toSerialize, nil
-}
-
-func (o *VertexAIGrokOptions) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"_option_id",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varVertexAIGrokOptions := _VertexAIGrokOptions{}
-
-	err = json.Unmarshal(data, &varVertexAIGrokOptions)
-
-	if err != nil {
-		return err
-	}
-
-	*o = VertexAIGrokOptions(varVertexAIGrokOptions)
-
-	return err
 }
 
 type NullableVertexAIGrokOptions struct {
@@ -294,4 +274,34 @@ func (v NullableVertexAIGrokOptions) MarshalJSON() ([]byte, error) {
 func (v *NullableVertexAIGrokOptions) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
+}
+
+func (o *VertexAIGrokOptions) unmarshalKnownJSON(data []byte) error {
+	type plain VertexAIGrokOptions
+	return json.Unmarshal(data, (*plain)(o))
+}
+
+func (o *VertexAIGrokOptions) UnmarshalJSON(data []byte) error {
+	*o = VertexAIGrokOptions{}
+	var decoded VertexAIGrokOptions
+	if err := decoded.unmarshalKnownJSON(data); err != nil {
+		return err
+	}
+	var extra map[string]json.RawMessage
+	if err := json.Unmarshal(data, &extra); err != nil {
+		return err
+	}
+	for key := range extra {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence"}) {
+			delete(extra, key)
+		}
+	}
+	if len(extra) > 0 {
+		decoded.AdditionalProperties = make(map[string]interface{}, len(extra))
+		for key, value := range extra {
+			decoded.AdditionalProperties[key] = value
+		}
+	}
+	*o = decoded
+	return nil
 }

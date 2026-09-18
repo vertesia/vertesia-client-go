@@ -12,7 +12,6 @@ package openapi
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the VertexAIGeminiOmniVideoOptions type satisfies the MappedNullable interface at compile time
@@ -20,22 +19,21 @@ var _ MappedNullable = &VertexAIGeminiOmniVideoOptions{}
 
 // VertexAIGeminiOmniVideoOptions struct for VertexAIGeminiOmniVideoOptions
 type VertexAIGeminiOmniVideoOptions struct {
-	OptionId        string  `json:"_option_id"`
+	OptionId        *string `json:"_option_id,omitempty"`
 	Task            *string `json:"task,omitempty"`
 	AspectRatio     *string `json:"aspect_ratio,omitempty"`
 	DurationSeconds *int32  `json:"duration_seconds,omitempty"`
 	Resolution      *string `json:"resolution,omitempty"`
+	// AdditionalProperties preserves unknown fields across read-edit-save.
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
-
-type _VertexAIGeminiOmniVideoOptions VertexAIGeminiOmniVideoOptions
 
 // NewVertexAIGeminiOmniVideoOptions instantiates a new VertexAIGeminiOmniVideoOptions object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewVertexAIGeminiOmniVideoOptions(optionId string) *VertexAIGeminiOmniVideoOptions {
+func NewVertexAIGeminiOmniVideoOptions() *VertexAIGeminiOmniVideoOptions {
 	this := VertexAIGeminiOmniVideoOptions{}
-	this.OptionId = optionId
 	return &this
 }
 
@@ -47,28 +45,36 @@ func NewVertexAIGeminiOmniVideoOptionsWithDefaults() *VertexAIGeminiOmniVideoOpt
 	return &this
 }
 
-// GetOptionId returns the OptionId field value
+// GetOptionId returns the OptionId field value if set, zero value otherwise.
 func (o *VertexAIGeminiOmniVideoOptions) GetOptionId() string {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		var ret string
 		return ret
 	}
-
-	return o.OptionId
+	return *o.OptionId
 }
 
-// GetOptionIdOk returns a tuple with the OptionId field value
+// GetOptionIdOk returns a tuple with the OptionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *VertexAIGeminiOmniVideoOptions) GetOptionIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		return nil, false
 	}
-	return &o.OptionId, true
+	return o.OptionId, true
 }
 
-// SetOptionId sets field value
+// HasOptionId returns a boolean if a field has been set.
+func (o *VertexAIGeminiOmniVideoOptions) HasOptionId() bool {
+	if o != nil && !IsNil(o.OptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionId gets a reference to the given string and assigns it to the OptionId field.
 func (o *VertexAIGeminiOmniVideoOptions) SetOptionId(v string) {
-	o.OptionId = v
+	o.OptionId = &v
 }
 
 // GetTask returns the Task field value if set, zero value otherwise.
@@ -209,7 +215,16 @@ func (o VertexAIGeminiOmniVideoOptions) MarshalJSON() ([]byte, error) {
 
 func (o VertexAIGeminiOmniVideoOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["_option_id"] = o.OptionId
+	// Typed fields retain precedence, including when cleared.
+	for key, value := range o.AdditionalProperties {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "task", "aspect_ratio", "duration_seconds", "resolution"}) {
+			toSerialize[key] = value
+		}
+	}
+
+	if !IsNil(o.OptionId) {
+		toSerialize["_option_id"] = o.OptionId
+	}
 	if !IsNil(o.Task) {
 		toSerialize["task"] = o.Task
 	}
@@ -223,41 +238,6 @@ func (o VertexAIGeminiOmniVideoOptions) ToMap() (map[string]interface{}, error) 
 		toSerialize["resolution"] = o.Resolution
 	}
 	return toSerialize, nil
-}
-
-func (o *VertexAIGeminiOmniVideoOptions) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"_option_id",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varVertexAIGeminiOmniVideoOptions := _VertexAIGeminiOmniVideoOptions{}
-
-	err = json.Unmarshal(data, &varVertexAIGeminiOmniVideoOptions)
-
-	if err != nil {
-		return err
-	}
-
-	*o = VertexAIGeminiOmniVideoOptions(varVertexAIGeminiOmniVideoOptions)
-
-	return err
 }
 
 type NullableVertexAIGeminiOmniVideoOptions struct {
@@ -294,4 +274,34 @@ func (v NullableVertexAIGeminiOmniVideoOptions) MarshalJSON() ([]byte, error) {
 func (v *NullableVertexAIGeminiOmniVideoOptions) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
+}
+
+func (o *VertexAIGeminiOmniVideoOptions) unmarshalKnownJSON(data []byte) error {
+	type plain VertexAIGeminiOmniVideoOptions
+	return json.Unmarshal(data, (*plain)(o))
+}
+
+func (o *VertexAIGeminiOmniVideoOptions) UnmarshalJSON(data []byte) error {
+	*o = VertexAIGeminiOmniVideoOptions{}
+	var decoded VertexAIGeminiOmniVideoOptions
+	if err := decoded.unmarshalKnownJSON(data); err != nil {
+		return err
+	}
+	var extra map[string]json.RawMessage
+	if err := json.Unmarshal(data, &extra); err != nil {
+		return err
+	}
+	for key := range extra {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "task", "aspect_ratio", "duration_seconds", "resolution"}) {
+			delete(extra, key)
+		}
+	}
+	if len(extra) > 0 {
+		decoded.AdditionalProperties = make(map[string]interface{}, len(extra))
+		for key, value := range extra {
+			decoded.AdditionalProperties[key] = value
+		}
+	}
+	*o = decoded
+	return nil
 }

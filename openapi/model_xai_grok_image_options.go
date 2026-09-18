@@ -12,7 +12,6 @@ package openapi
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the XAIGrokImageOptions type satisfies the MappedNullable interface at compile time
@@ -20,23 +19,22 @@ var _ MappedNullable = &XAIGrokImageOptions{}
 
 // XAIGrokImageOptions struct for XAIGrokImageOptions
 type XAIGrokImageOptions struct {
-	OptionId       string  `json:"_option_id"`
+	OptionId       *string `json:"_option_id,omitempty"`
 	AspectRatio    *string `json:"aspect_ratio,omitempty"`
 	Resolution     *string `json:"resolution,omitempty"`
 	Quality        *string `json:"quality,omitempty"`
 	ResponseFormat *string `json:"response_format,omitempty"`
 	N              *int32  `json:"n,omitempty"`
+	// AdditionalProperties preserves unknown fields across read-edit-save.
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
-
-type _XAIGrokImageOptions XAIGrokImageOptions
 
 // NewXAIGrokImageOptions instantiates a new XAIGrokImageOptions object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewXAIGrokImageOptions(optionId string) *XAIGrokImageOptions {
+func NewXAIGrokImageOptions() *XAIGrokImageOptions {
 	this := XAIGrokImageOptions{}
-	this.OptionId = optionId
 	return &this
 }
 
@@ -48,28 +46,36 @@ func NewXAIGrokImageOptionsWithDefaults() *XAIGrokImageOptions {
 	return &this
 }
 
-// GetOptionId returns the OptionId field value
+// GetOptionId returns the OptionId field value if set, zero value otherwise.
 func (o *XAIGrokImageOptions) GetOptionId() string {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		var ret string
 		return ret
 	}
-
-	return o.OptionId
+	return *o.OptionId
 }
 
-// GetOptionIdOk returns a tuple with the OptionId field value
+// GetOptionIdOk returns a tuple with the OptionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *XAIGrokImageOptions) GetOptionIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		return nil, false
 	}
-	return &o.OptionId, true
+	return o.OptionId, true
 }
 
-// SetOptionId sets field value
+// HasOptionId returns a boolean if a field has been set.
+func (o *XAIGrokImageOptions) HasOptionId() bool {
+	if o != nil && !IsNil(o.OptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionId gets a reference to the given string and assigns it to the OptionId field.
 func (o *XAIGrokImageOptions) SetOptionId(v string) {
-	o.OptionId = v
+	o.OptionId = &v
 }
 
 // GetAspectRatio returns the AspectRatio field value if set, zero value otherwise.
@@ -242,7 +248,16 @@ func (o XAIGrokImageOptions) MarshalJSON() ([]byte, error) {
 
 func (o XAIGrokImageOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["_option_id"] = o.OptionId
+	// Typed fields retain precedence, including when cleared.
+	for key, value := range o.AdditionalProperties {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "aspect_ratio", "resolution", "quality", "response_format", "n"}) {
+			toSerialize[key] = value
+		}
+	}
+
+	if !IsNil(o.OptionId) {
+		toSerialize["_option_id"] = o.OptionId
+	}
 	if !IsNil(o.AspectRatio) {
 		toSerialize["aspect_ratio"] = o.AspectRatio
 	}
@@ -259,41 +274,6 @@ func (o XAIGrokImageOptions) ToMap() (map[string]interface{}, error) {
 		toSerialize["n"] = o.N
 	}
 	return toSerialize, nil
-}
-
-func (o *XAIGrokImageOptions) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"_option_id",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varXAIGrokImageOptions := _XAIGrokImageOptions{}
-
-	err = json.Unmarshal(data, &varXAIGrokImageOptions)
-
-	if err != nil {
-		return err
-	}
-
-	*o = XAIGrokImageOptions(varXAIGrokImageOptions)
-
-	return err
 }
 
 type NullableXAIGrokImageOptions struct {
@@ -330,4 +310,34 @@ func (v NullableXAIGrokImageOptions) MarshalJSON() ([]byte, error) {
 func (v *NullableXAIGrokImageOptions) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
+}
+
+func (o *XAIGrokImageOptions) unmarshalKnownJSON(data []byte) error {
+	type plain XAIGrokImageOptions
+	return json.Unmarshal(data, (*plain)(o))
+}
+
+func (o *XAIGrokImageOptions) UnmarshalJSON(data []byte) error {
+	*o = XAIGrokImageOptions{}
+	var decoded XAIGrokImageOptions
+	if err := decoded.unmarshalKnownJSON(data); err != nil {
+		return err
+	}
+	var extra map[string]json.RawMessage
+	if err := json.Unmarshal(data, &extra); err != nil {
+		return err
+	}
+	for key := range extra {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "aspect_ratio", "resolution", "quality", "response_format", "n"}) {
+			delete(extra, key)
+		}
+	}
+	if len(extra) > 0 {
+		decoded.AdditionalProperties = make(map[string]interface{}, len(extra))
+		for key, value := range extra {
+			decoded.AdditionalProperties[key] = value
+		}
+	}
+	*o = decoded
+	return nil
 }

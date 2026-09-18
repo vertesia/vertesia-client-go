@@ -102,6 +102,7 @@ model_alter_table_operation_one_of_3.go
 model_alter_table_payload.go
 model_analytics_axis.go
 model_answer_process_task_payload.go
+model_anthropic_claude_options.go
 model_api_key.go
 model_api_key_read_response.go
 model_api_key_token_request.go

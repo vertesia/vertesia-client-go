@@ -12,7 +12,6 @@ package openapi
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the BedrockConverseOptions type satisfies the MappedNullable interface at compile time
@@ -20,7 +19,7 @@ var _ MappedNullable = &BedrockConverseOptions{}
 
 // BedrockConverseOptions struct for BedrockConverseOptions
 type BedrockConverseOptions struct {
-	OptionId        string   `json:"_option_id"`
+	OptionId        *string  `json:"_option_id,omitempty"`
 	MaxTokens       *float32 `json:"max_tokens,omitempty"`
 	Temperature     *float32 `json:"temperature,omitempty"`
 	TopP            *float32 `json:"top_p,omitempty"`
@@ -28,17 +27,16 @@ type BedrockConverseOptions struct {
 	IncludeThoughts *bool    `json:"include_thoughts,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
 	ServiceTier *string `json:"service_tier,omitempty"`
+	// AdditionalProperties preserves unknown fields across read-edit-save.
+	AdditionalProperties map[string]interface{} `json:"-"`
 }
-
-type _BedrockConverseOptions BedrockConverseOptions
 
 // NewBedrockConverseOptions instantiates a new BedrockConverseOptions object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBedrockConverseOptions(optionId string) *BedrockConverseOptions {
+func NewBedrockConverseOptions() *BedrockConverseOptions {
 	this := BedrockConverseOptions{}
-	this.OptionId = optionId
 	return &this
 }
 
@@ -50,28 +48,36 @@ func NewBedrockConverseOptionsWithDefaults() *BedrockConverseOptions {
 	return &this
 }
 
-// GetOptionId returns the OptionId field value
+// GetOptionId returns the OptionId field value if set, zero value otherwise.
 func (o *BedrockConverseOptions) GetOptionId() string {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		var ret string
 		return ret
 	}
-
-	return o.OptionId
+	return *o.OptionId
 }
 
-// GetOptionIdOk returns a tuple with the OptionId field value
+// GetOptionIdOk returns a tuple with the OptionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BedrockConverseOptions) GetOptionIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.OptionId) {
 		return nil, false
 	}
-	return &o.OptionId, true
+	return o.OptionId, true
 }
 
-// SetOptionId sets field value
+// HasOptionId returns a boolean if a field has been set.
+func (o *BedrockConverseOptions) HasOptionId() bool {
+	if o != nil && !IsNil(o.OptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOptionId gets a reference to the given string and assigns it to the OptionId field.
 func (o *BedrockConverseOptions) SetOptionId(v string) {
-	o.OptionId = v
+	o.OptionId = &v
 }
 
 // GetMaxTokens returns the MaxTokens field value if set, zero value otherwise.
@@ -276,7 +282,16 @@ func (o BedrockConverseOptions) MarshalJSON() ([]byte, error) {
 
 func (o BedrockConverseOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["_option_id"] = o.OptionId
+	// Typed fields retain precedence, including when cleared.
+	for key, value := range o.AdditionalProperties {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "include_thoughts", "service_tier"}) {
+			toSerialize[key] = value
+		}
+	}
+
+	if !IsNil(o.OptionId) {
+		toSerialize["_option_id"] = o.OptionId
+	}
 	if !IsNil(o.MaxTokens) {
 		toSerialize["max_tokens"] = o.MaxTokens
 	}
@@ -296,41 +311,6 @@ func (o BedrockConverseOptions) ToMap() (map[string]interface{}, error) {
 		toSerialize["service_tier"] = o.ServiceTier
 	}
 	return toSerialize, nil
-}
-
-func (o *BedrockConverseOptions) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"_option_id",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varBedrockConverseOptions := _BedrockConverseOptions{}
-
-	err = json.Unmarshal(data, &varBedrockConverseOptions)
-
-	if err != nil {
-		return err
-	}
-
-	*o = BedrockConverseOptions(varBedrockConverseOptions)
-
-	return err
 }
 
 type NullableBedrockConverseOptions struct {
@@ -367,4 +347,34 @@ func (v NullableBedrockConverseOptions) MarshalJSON() ([]byte, error) {
 func (v *NullableBedrockConverseOptions) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
+}
+
+func (o *BedrockConverseOptions) unmarshalKnownJSON(data []byte) error {
+	type plain BedrockConverseOptions
+	return json.Unmarshal(data, (*plain)(o))
+}
+
+func (o *BedrockConverseOptions) UnmarshalJSON(data []byte) error {
+	*o = BedrockConverseOptions{}
+	var decoded BedrockConverseOptions
+	if err := decoded.unmarshalKnownJSON(data); err != nil {
+		return err
+	}
+	var extra map[string]json.RawMessage
+	if err := json.Unmarshal(data, &extra); err != nil {
+		return err
+	}
+	for key := range extra {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "include_thoughts", "service_tier"}) {
+			delete(extra, key)
+		}
+	}
+	if len(extra) > 0 {
+		decoded.AdditionalProperties = make(map[string]interface{}, len(extra))
+		for key, value := range extra {
+			decoded.AdditionalProperties[key] = value
+		}
+	}
+	*o = decoded
+	return nil
 }
