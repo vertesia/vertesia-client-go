@@ -199,7 +199,26 @@ Releases are created from git tags. The release workflow runs tests against the
 preview environment, verifies the tag matches the OpenAPI spec `info.version`
 and generator `packageVersion`, creates an annotated tag, and publishes a GitHub
 Release.
-
 ### Generated API version headers
 
 Generated request validation uses the configured `x-api-version` default when no per-request version is set. Explicit request versions take precedence; a raw client with neither still rejects the missing version. Default headers are added only when the request does not already contain the header.
+### Model option decoding
+
+The generation patch dispatches `ModelOptions` using each schema branch's literal
+`_option_id` (supporting both the older required-ID `oneOf` and optional-ID `anyOf`) and delegates recognized IDs to the generated subtype. Missing or unknown
+IDs are preserved in `ModelOptions.Raw` as `json.RawMessage`; they can be inspected
+through `GetActualInstance()` / `GetActualInstanceValue()` and serialized without
+losing fields or guessing a provider. JSON `null` is preserved too. Malformed JSON,
+non-object values other than `null`, non-string IDs, and invalid known-subtype field
+types still produce errors. Reusing a destination clears its previous typed/raw value.
+Known subtypes retain unknown top-level fields in `AdditionalProperties`, using
+`json.RawMessage` values to preserve nested JSON and numeric precision. These fields
+survive typed edits, extraction/rewrapping, and `ToMap()`/JSON serialization. Typed
+fields take precedence, including when cleared; remove an extension by deleting its
+map entry. Decoding a new payload resets both typed fields and extensions.
+This response-decoding tolerance does not relax server request validation.
+The patch runs with `go run` using only the Go standard library. It locates generated
+declarations with `go/parser` and `go/ast`, applies targeted source edits, and formats
+the output with `go/format`. Other unions' validation remains unchanged. Run
+`go test ./...` to exercise the patch against every registered model option family
+ without modifying generated files.
