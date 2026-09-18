@@ -1466,11 +1466,25 @@ type ApiRecalculateProjectEmbeddingsRequest struct {
 	ApiService  *CommandsAPIService
 	type_       string
 	xApiVersion *string
+	mode        *string
+	force       *bool
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiRecalculateProjectEmbeddingsRequest) XApiVersion(xApiVersion string) ApiRecalculateProjectEmbeddingsRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+// Force synchronous per-object recalculation. When omitted, batch inference is used when supported.
+func (r ApiRecalculateProjectEmbeddingsRequest) Mode(mode string) ApiRecalculateProjectEmbeddingsRequest {
+	r.mode = &mode
+	return r
+}
+
+// Recalculate all eligible objects, including current embeddings. Token limits still apply; existing renditions are reused.
+func (r ApiRecalculateProjectEmbeddingsRequest) Force(force bool) ApiRecalculateProjectEmbeddingsRequest {
+	r.force = &force
 	return r
 }
 
@@ -1481,7 +1495,7 @@ func (r ApiRecalculateProjectEmbeddingsRequest) Execute() (*GenericCommandRespon
 /*
 RecalculateProjectEmbeddings Recalculate embeddings
 
-Queues recalculation workflows for objects that are missing or have stale embeddings for the selected embedding type.
+Queues recalculation for missing or outdated embeddings, or all eligible objects with force=true. Uses batch inference when supported unless mode=sync is specified. Token limits still apply and existing renditions are reused.
 
 **Required permissions:** `project:admin`
 
@@ -1530,6 +1544,12 @@ func (a *CommandsAPIService) RecalculateProjectEmbeddingsExecute(r ApiRecalculat
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	if r.mode != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "mode", r.mode, "form", "")
+	}
+	if r.force != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "force", r.force, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

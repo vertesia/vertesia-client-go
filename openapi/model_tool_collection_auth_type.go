@@ -15,11 +15,12 @@ import (
 	"fmt"
 )
 
-// ToolCollectionAuthType Authentication type for tool collections. - 'oauth': the runtime resolves a per-user or per-project OAuth access token - 'api_key': a static key held in the project's secret store is sent as the RFC 6750 bearer token (`Authorization: Bearer <key>`)
+// ToolCollectionAuthType Authentication type for tool collections. - 'none': connect directly without credentials for MCP collections; does not disable authentication for Vertesia SDK collections - 'oauth': the runtime resolves a per-user or per-project OAuth access token - 'api_key': a static key held in the project's secret store is sent as the RFC 6750 bearer token (`Authorization: Bearer <key>`) - 'other' or omitted: use the legacy provider connection-details flow for MCP collections
 type ToolCollectionAuthType string
 
 // List of ToolCollectionAuthType
 const (
+	TOOLCOLLECTIONAUTHTYPE_NONE                     ToolCollectionAuthType = "none"
 	TOOLCOLLECTIONAUTHTYPE_OAUTH                    ToolCollectionAuthType = "oauth"
 	TOOLCOLLECTIONAUTHTYPE_API_KEY                  ToolCollectionAuthType = "api_key"
 	TOOLCOLLECTIONAUTHTYPE_OTHER                    ToolCollectionAuthType = "other"
@@ -28,6 +29,7 @@ const (
 
 // All allowed values of ToolCollectionAuthType enum
 var AllowedToolCollectionAuthTypeEnumValues = []ToolCollectionAuthType{
+	"none",
 	"oauth",
 	"api_key",
 	"other",

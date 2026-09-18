@@ -463,6 +463,7 @@ model_elasticsearch_backend.go
 model_email_channel.go
 model_email_route_response.go
 model_embedding.go
+model_embedding_batch_run_summary.go
 model_embedding_output.go
 model_embedding_result_item.go
 model_embedding_task_type.go
