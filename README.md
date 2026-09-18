@@ -203,8 +203,13 @@ Release.
 ### Model option decoding
 
 The generation patch dispatches `ModelOptions` using the specification's `_option_id`
-mapping and delegates field decoding to the generated subtype. It rejects missing
-or unknown IDs and clears previous branches when a destination is reused. The
-patch requires Python 3, preserves permissive decoding of future response fields,
-and leaves other unions' validation unchanged. Run `go test ./...` to exercise the
-patch against every registered model option family without modifying generated files.
+mapping and delegates recognized IDs to the generated subtype. Missing or unknown
+IDs are preserved in `ModelOptions.Raw` as `json.RawMessage`; they can be inspected
+through `GetActualInstance()` / `GetActualInstanceValue()` and serialized without
+losing fields or guessing a provider. JSON `null` is preserved too. Malformed JSON,
+non-object values other than `null`, non-string IDs, and invalid known-subtype field
+types still produce errors. Reusing a destination clears its previous typed/raw value.
+This response-decoding tolerance does not relax server request validation.
+The patch requires Python 3 and leaves other unions' validation unchanged. Run
+`go test ./...` to exercise the patch against every registered model option family
+without modifying generated files.

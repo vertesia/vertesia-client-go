@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate ModelOptions dispatch from the spec; keep generated branch validators."""
+"""Decode known ModelOptions by discriminator; preserve legacy/future payloads."""
 import json
 from pathlib import Path
 import re
@@ -17,6 +17,14 @@ struct = re.search(r"type ModelOptions struct \{(.*?)\n\}", source, re.S)
 if not struct:
     raise ValueError("Generated ModelOptions struct not found")
 fields = dict(re.findall(r"^\s*(\w+)\s+\*(\w+)\s*$", struct[1], re.M))
+if not re.search(r"^\s*Raw\s+json.RawMessage\b", struct[1], re.M):
+    source = source.replace(
+        "type ModelOptions struct {",
+        'type ModelOptions struct {\n'
+        '\t// Raw preserves options with a missing or unknown discriminator without guessing a subtype.\n'
+        '\tRaw json.RawMessage `json:"-"`',
+        1,
+    )
 lines = [
     "func (dst *ModelOptions) UnmarshalJSON(data []byte) error {",
     "\t*dst = ModelOptions{}",
@@ -39,15 +47,42 @@ for value, ref in mapping.items():
     ])
 lines.extend([
     "\tdefault:",
-    '\t\treturn fmt.Errorf("unknown or missing ModelOptions discriminator: %q", tag.ID)',
+    "\t\treturn dst.Raw.UnmarshalJSON(data)",
     "\t}",
     "}",
 ])
-source, count = re.subn(
-    r"func \(dst \*ModelOptions\) UnmarshalJSON\(data \[\]byte\) error \{.*?\n\}",
-    lambda _: "\n".join(lines), source, flags=re.S,
-)
-if count != 1:
-    raise ValueError("Expected exactly one ModelOptions decoder")
-source = source.replace('\n\t"gopkg.in/validator.v2"', "")
+
+def replace_method(name, body):
+    global source
+    source, count = re.subn(
+        r"func \((?:dst \*|src |obj \*?)ModelOptions\) " + name + r"\([^\n]*\{.*?\n\}",
+        lambda _: "\n".join(body), source, flags=re.S,
+    )
+    if count != 1:
+        raise ValueError(f"Expected exactly one ModelOptions {name} method")
+
+
+replace_method("UnmarshalJSON", lines)
+# Preserve generated branch precedence, including when callers set a typed branch
+# after reading an unrecognized payload. Raw is only used when no typed branch is set.
+for name, receiver, returns, expression, fallback in [
+    ("MarshalJSON", "src ModelOptions", "([]byte, error)", "json.Marshal(src.{field})", "json.Marshal(src.Raw)"),
+    ("GetActualInstance", "obj *ModelOptions", "interface{}", "obj.{field}", "obj.Raw"),
+    ("GetActualInstanceValue", "obj ModelOptions", "interface{}", "*obj.{field}", "obj.Raw"),
+]:
+    variable = receiver.split()[0]
+    body = [f"func ({receiver}) {name}() {returns} {{"]
+    if name == "GetActualInstance":
+        body.append("\tif obj == nil { return nil }")
+    for field in fields:
+        body.extend([
+            f"\tif {variable}.{field} != nil {{",
+            f"\t\treturn {expression.format(field=field)}",
+            "\t}",
+        ])
+    if name != "MarshalJSON":
+        body.append(f"\tif {variable}.Raw == nil {{ return nil }}")
+    body.extend([f"\treturn {fallback}", "}"])
+    replace_method(name, body)
+source = source.replace('\n\t"gopkg.in/validator.v2"', "").replace('\n\t"fmt"', "")
 model_path.write_text(source)
