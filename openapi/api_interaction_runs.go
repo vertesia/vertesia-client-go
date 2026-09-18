@@ -26,18 +26,18 @@ type InteractionRunsAPIService service
 type ApiCreateRunRequest struct {
 	ctx              context.Context
 	ApiService       *InteractionRunsAPIService
-	runCreatePayload *RunCreatePayload
 	xApiVersion      *string
+	runCreatePayload *RunCreatePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateRunRequest) XApiVersion(xApiVersion string) ApiCreateRunRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateRunRequest) RunCreatePayload(runCreatePayload RunCreatePayload) ApiCreateRunRequest {
 	r.runCreatePayload = &runCreatePayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateRunRequest) XApiVersion(xApiVersion string) ApiCreateRunRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -83,6 +83,16 @@ func (a *InteractionRunsAPIService) CreateRunExecute(r ApiCreateRunRequest) (*In
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.runCreatePayload == nil {
 		return localVarReturnValue, nil, reportError("runCreatePayload is required and must be specified")
 	}
@@ -104,9 +114,7 @@ func (a *InteractionRunsAPIService) CreateRunExecute(r ApiCreateRunRequest) (*In
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.runCreatePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -174,7 +182,7 @@ type ApiDeleteRunRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeleteRunRequest) XApiVersion(xApiVersion string) ApiDeleteRunRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -225,6 +233,16 @@ func (a *InteractionRunsAPIService) DeleteRunExecute(r ApiDeleteRunRequest) (*De
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -243,9 +261,7 @@ func (a *InteractionRunsAPIService) DeleteRunExecute(r ApiDeleteRunRequest) (*De
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -311,7 +327,7 @@ type ApiGetRunRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetRunRequest) XApiVersion(xApiVersion string) ApiGetRunRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -362,6 +378,16 @@ func (a *InteractionRunsAPIService) GetRunExecute(r ApiGetRunRequest) (*Executio
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -380,9 +406,7 @@ func (a *InteractionRunsAPIService) GetRunExecute(r ApiGetRunRequest) (*Executio
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -444,6 +468,7 @@ func (a *InteractionRunsAPIService) GetRunExecute(r ApiGetRunRequest) (*Executio
 type ApiListRunsRequest struct {
 	ctx            context.Context
 	ApiService     *InteractionRunsAPIService
+	xApiVersion    *string
 	limit          *int32
 	offset         *int32
 	interaction    *[]string
@@ -455,7 +480,12 @@ type ApiListRunsRequest struct {
 	isRoot         *bool
 	workflowRunIds *[]string
 	workflowIds    *[]string
-	xApiVersion    *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListRunsRequest) XApiVersion(xApiVersion string) ApiListRunsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 // Maximum number of runs to return.
@@ -524,12 +554,6 @@ func (r ApiListRunsRequest) WorkflowIds(workflowIds []string) ApiListRunsRequest
 	return r
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiListRunsRequest) XApiVersion(xApiVersion string) ApiListRunsRequest {
-	r.xApiVersion = &xApiVersion
-	return r
-}
-
 func (r ApiListRunsRequest) Execute() ([]ExecutionRunRef, *http.Response, error) {
 	return r.ApiService.ListRunsExecute(r)
 }
@@ -572,6 +596,16 @@ func (a *InteractionRunsAPIService) ListRunsExecute(r ApiListRunsRequest) ([]Exe
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "form", "")
@@ -687,9 +721,7 @@ func (a *InteractionRunsAPIService) ListRunsExecute(r ApiListRunsRequest) ([]Exe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -751,18 +783,18 @@ func (a *InteractionRunsAPIService) ListRunsExecute(r ApiListRunsRequest) ([]Exe
 type ApiSearchRunsRequest struct {
 	ctx              context.Context
 	ApiService       *InteractionRunsAPIService
-	runSearchPayload *RunSearchPayload
 	xApiVersion      *string
+	runSearchPayload *RunSearchPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiSearchRunsRequest) XApiVersion(xApiVersion string) ApiSearchRunsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiSearchRunsRequest) RunSearchPayload(runSearchPayload RunSearchPayload) ApiSearchRunsRequest {
 	r.runSearchPayload = &runSearchPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiSearchRunsRequest) XApiVersion(xApiVersion string) ApiSearchRunsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -808,6 +840,16 @@ func (a *InteractionRunsAPIService) SearchRunsExecute(r ApiSearchRunsRequest) ([
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.runSearchPayload == nil {
 		return localVarReturnValue, nil, reportError("runSearchPayload is required and must be specified")
 	}
@@ -829,9 +871,7 @@ func (a *InteractionRunsAPIService) SearchRunsExecute(r ApiSearchRunsRequest) ([
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.runSearchPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -893,16 +933,9 @@ func (a *InteractionRunsAPIService) SearchRunsExecute(r ApiSearchRunsRequest) ([
 }
 
 type ApiStreamRunRequest struct {
-	ctx         context.Context
-	ApiService  *InteractionRunsAPIService
-	runId       string
-	xApiVersion *string
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiStreamRunRequest) XApiVersion(xApiVersion string) ApiStreamRunRequest {
-	r.xApiVersion = &xApiVersion
-	return r
+	ctx        context.Context
+	ApiService *InteractionRunsAPIService
+	runId      string
 }
 
 func (r ApiStreamRunRequest) Execute() (string, *http.Response, error) {
@@ -912,7 +945,7 @@ func (r ApiStreamRunRequest) Execute() (string, *http.Response, error) {
 /*
 StreamRun Stream a run
 
-Opens a Server-Sent Events stream for an existing run. The stream is authenticated with the `access_token` query parameter and emits execution chunks and completion events as the run progresses.
+Opens a Server-Sent Events stream for an existing run. The stream is authenticated with the `access_token` query parameter and emits execution chunks and completion events as the run progresses. No x-api-version header is required because native EventSource cannot send custom headers.
 
 **Required permissions:** `run:read`
 
@@ -967,9 +1000,6 @@ func (a *InteractionRunsAPIService) StreamRunExecute(r ApiStreamRunRequest) (str
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
@@ -1033,18 +1063,18 @@ type ApiUpdateRunRequest struct {
 	ctx                       context.Context
 	ApiService                *InteractionRunsAPIService
 	runId                     string
-	updateExecutionRunPayload *UpdateExecutionRunPayload
 	xApiVersion               *string
+	updateExecutionRunPayload *UpdateExecutionRunPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateRunRequest) XApiVersion(xApiVersion string) ApiUpdateRunRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateRunRequest) UpdateExecutionRunPayload(updateExecutionRunPayload UpdateExecutionRunPayload) ApiUpdateRunRequest {
 	r.updateExecutionRunPayload = &updateExecutionRunPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateRunRequest) XApiVersion(xApiVersion string) ApiUpdateRunRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1093,6 +1123,16 @@ func (a *InteractionRunsAPIService) UpdateRunExecute(r ApiUpdateRunRequest) (*Ex
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.updateExecutionRunPayload == nil {
 		return localVarReturnValue, nil, reportError("updateExecutionRunPayload is required and must be specified")
 	}
@@ -1114,9 +1154,7 @@ func (a *InteractionRunsAPIService) UpdateRunExecute(r ApiUpdateRunRequest) (*Ex
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.updateExecutionRunPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

@@ -29,7 +29,7 @@ type ApiAcceptAccountInviteRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiAcceptAccountInviteRequest) XApiVersion(xApiVersion string) ApiAcceptAccountInviteRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -80,6 +80,16 @@ func (a *AccountsAPIService) AcceptAccountInviteExecute(r ApiAcceptAccountInvite
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -98,9 +108,7 @@ func (a *AccountsAPIService) AcceptAccountInviteExecute(r ApiAcceptAccountInvite
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -162,18 +170,18 @@ func (a *AccountsAPIService) AcceptAccountInviteExecute(r ApiAcceptAccountInvite
 type ApiCreateAccountInviteRequest struct {
 	ctx                      context.Context
 	ApiService               *AccountsAPIService
-	inviteUserRequestPayload *InviteUserRequestPayload
 	xApiVersion              *string
+	inviteUserRequestPayload *InviteUserRequestPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateAccountInviteRequest) XApiVersion(xApiVersion string) ApiCreateAccountInviteRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateAccountInviteRequest) InviteUserRequestPayload(inviteUserRequestPayload InviteUserRequestPayload) ApiCreateAccountInviteRequest {
 	r.inviteUserRequestPayload = &inviteUserRequestPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateAccountInviteRequest) XApiVersion(xApiVersion string) ApiCreateAccountInviteRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -219,6 +227,16 @@ func (a *AccountsAPIService) CreateAccountInviteExecute(r ApiCreateAccountInvite
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.inviteUserRequestPayload == nil {
 		return localVarReturnValue, nil, reportError("inviteUserRequestPayload is required and must be specified")
 	}
@@ -240,9 +258,7 @@ func (a *AccountsAPIService) CreateAccountInviteExecute(r ApiCreateAccountInvite
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.inviteUserRequestPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -310,7 +326,7 @@ type ApiDeclineAccountInviteRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeclineAccountInviteRequest) XApiVersion(xApiVersion string) ApiDeclineAccountInviteRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -361,6 +377,16 @@ func (a *AccountsAPIService) DeclineAccountInviteExecute(r ApiDeclineAccountInvi
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -379,9 +405,7 @@ func (a *AccountsAPIService) DeclineAccountInviteExecute(r ApiDeclineAccountInvi
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -446,7 +470,7 @@ type ApiGetAccountOnboardingProgressRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetAccountOnboardingProgressRequest) XApiVersion(xApiVersion string) ApiGetAccountOnboardingProgressRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -494,6 +518,16 @@ func (a *AccountsAPIService) GetAccountOnboardingProgressExecute(r ApiGetAccount
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -512,9 +546,7 @@ func (a *AccountsAPIService) GetAccountOnboardingProgressExecute(r ApiGetAccount
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -579,7 +611,7 @@ type ApiGetCurrentAccountRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetCurrentAccountRequest) XApiVersion(xApiVersion string) ApiGetCurrentAccountRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -627,6 +659,16 @@ func (a *AccountsAPIService) GetCurrentAccountExecute(r ApiGetCurrentAccountRequ
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -645,9 +687,7 @@ func (a *AccountsAPIService) GetCurrentAccountExecute(r ApiGetCurrentAccountRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -712,7 +752,7 @@ type ApiGetStripeBillingStatusRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetStripeBillingStatusRequest) XApiVersion(xApiVersion string) ApiGetStripeBillingStatusRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -760,6 +800,16 @@ func (a *AccountsAPIService) GetStripeBillingStatusExecute(r ApiGetStripeBilling
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -778,9 +828,7 @@ func (a *AccountsAPIService) GetStripeBillingStatusExecute(r ApiGetStripeBilling
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -845,7 +893,7 @@ type ApiListAccountInvitesRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListAccountInvitesRequest) XApiVersion(xApiVersion string) ApiListAccountInvitesRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -893,6 +941,16 @@ func (a *AccountsAPIService) ListAccountInvitesExecute(r ApiListAccountInvitesRe
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -911,9 +969,7 @@ func (a *AccountsAPIService) ListAccountInvitesExecute(r ApiListAccountInvitesRe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -978,7 +1034,7 @@ type ApiListAccountMembersRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListAccountMembersRequest) XApiVersion(xApiVersion string) ApiListAccountMembersRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1026,6 +1082,16 @@ func (a *AccountsAPIService) ListAccountMembersExecute(r ApiListAccountMembersRe
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1044,9 +1110,7 @@ func (a *AccountsAPIService) ListAccountMembersExecute(r ApiListAccountMembersRe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1111,7 +1175,7 @@ type ApiListAccountProjectsRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListAccountProjectsRequest) XApiVersion(xApiVersion string) ApiListAccountProjectsRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1159,6 +1223,16 @@ func (a *AccountsAPIService) ListAccountProjectsExecute(r ApiListAccountProjects
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1177,9 +1251,7 @@ func (a *AccountsAPIService) ListAccountProjectsExecute(r ApiListAccountProjects
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1244,7 +1316,7 @@ type ApiListProjectInvitesRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListProjectInvitesRequest) XApiVersion(xApiVersion string) ApiListProjectInvitesRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1292,6 +1364,16 @@ func (a *AccountsAPIService) ListProjectInvitesExecute(r ApiListProjectInvitesRe
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1310,9 +1392,7 @@ func (a *AccountsAPIService) ListProjectInvitesExecute(r ApiListProjectInvitesRe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1377,7 +1457,7 @@ type ApiListUserInvitesRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListUserInvitesRequest) XApiVersion(xApiVersion string) ApiListUserInvitesRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1425,6 +1505,16 @@ func (a *AccountsAPIService) ListUserInvitesExecute(r ApiListUserInvitesRequest)
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1443,9 +1533,7 @@ func (a *AccountsAPIService) ListUserInvitesExecute(r ApiListUserInvitesRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1507,18 +1595,18 @@ func (a *AccountsAPIService) ListUserInvitesExecute(r ApiListUserInvitesRequest)
 type ApiUpdateCurrentAccountRequest struct {
 	ctx                  context.Context
 	ApiService           *AccountsAPIService
-	updateAccountPayload *UpdateAccountPayload
 	xApiVersion          *string
+	updateAccountPayload *UpdateAccountPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateCurrentAccountRequest) XApiVersion(xApiVersion string) ApiUpdateCurrentAccountRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateCurrentAccountRequest) UpdateAccountPayload(updateAccountPayload UpdateAccountPayload) ApiUpdateCurrentAccountRequest {
 	r.updateAccountPayload = &updateAccountPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateCurrentAccountRequest) XApiVersion(xApiVersion string) ApiUpdateCurrentAccountRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1564,6 +1652,16 @@ func (a *AccountsAPIService) UpdateCurrentAccountExecute(r ApiUpdateCurrentAccou
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.updateAccountPayload == nil {
 		return localVarReturnValue, nil, reportError("updateAccountPayload is required and must be specified")
 	}
@@ -1585,9 +1683,7 @@ func (a *AccountsAPIService) UpdateCurrentAccountExecute(r ApiUpdateCurrentAccou
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.updateAccountPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

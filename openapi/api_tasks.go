@@ -30,7 +30,7 @@ type ApiCancelTaskRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiCancelTaskRequest) XApiVersion(xApiVersion string) ApiCancelTaskRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -81,6 +81,16 @@ func (a *TasksAPIService) CancelTaskExecute(r ApiCancelTaskRequest) (*Task, *htt
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -99,9 +109,7 @@ func (a *TasksAPIService) CancelTaskExecute(r ApiCancelTaskRequest) (*Task, *htt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -164,18 +172,18 @@ type ApiCompleteTaskRequest struct {
 	ctx                 context.Context
 	ApiService          *TasksAPIService
 	taskId              string
-	completeTaskPayload *CompleteTaskPayload
 	xApiVersion         *string
+	completeTaskPayload *CompleteTaskPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCompleteTaskRequest) XApiVersion(xApiVersion string) ApiCompleteTaskRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCompleteTaskRequest) CompleteTaskPayload(completeTaskPayload CompleteTaskPayload) ApiCompleteTaskRequest {
 	r.completeTaskPayload = &completeTaskPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCompleteTaskRequest) XApiVersion(xApiVersion string) ApiCompleteTaskRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -222,6 +230,16 @@ func (a *TasksAPIService) CompleteTaskExecute(r ApiCompleteTaskRequest) (*Task, 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.completeTaskPayload == nil {
 		return localVarReturnValue, nil, reportError("completeTaskPayload is required and must be specified")
 	}
@@ -243,9 +261,7 @@ func (a *TasksAPIService) CompleteTaskExecute(r ApiCompleteTaskRequest) (*Task, 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.completeTaskPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -309,18 +325,18 @@ func (a *TasksAPIService) CompleteTaskExecute(r ApiCompleteTaskRequest) (*Task, 
 type ApiCreateTaskRequest struct {
 	ctx               context.Context
 	ApiService        *TasksAPIService
-	createTaskPayload *CreateTaskPayload
 	xApiVersion       *string
+	createTaskPayload *CreateTaskPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateTaskRequest) XApiVersion(xApiVersion string) ApiCreateTaskRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateTaskRequest) CreateTaskPayload(createTaskPayload CreateTaskPayload) ApiCreateTaskRequest {
 	r.createTaskPayload = &createTaskPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateTaskRequest) XApiVersion(xApiVersion string) ApiCreateTaskRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -364,6 +380,16 @@ func (a *TasksAPIService) CreateTaskExecute(r ApiCreateTaskRequest) (*Task, *htt
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.createTaskPayload == nil {
 		return localVarReturnValue, nil, reportError("createTaskPayload is required and must be specified")
 	}
@@ -385,9 +411,7 @@ func (a *TasksAPIService) CreateTaskExecute(r ApiCreateTaskRequest) (*Task, *htt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.createTaskPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -455,7 +479,7 @@ type ApiDeleteTaskRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeleteTaskRequest) XApiVersion(xApiVersion string) ApiDeleteTaskRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -506,6 +530,16 @@ func (a *TasksAPIService) DeleteTaskExecute(r ApiDeleteTaskRequest) (*DeleteCoun
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -524,9 +558,7 @@ func (a *TasksAPIService) DeleteTaskExecute(r ApiDeleteTaskRequest) (*DeleteCoun
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -592,7 +624,7 @@ type ApiGetTaskRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetTaskRequest) XApiVersion(xApiVersion string) ApiGetTaskRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -641,6 +673,16 @@ func (a *TasksAPIService) GetTaskExecute(r ApiGetTaskRequest) (*Task, *http.Resp
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -659,9 +701,7 @@ func (a *TasksAPIService) GetTaskExecute(r ApiGetTaskRequest) (*Task, *http.Resp
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -723,13 +763,19 @@ func (a *TasksAPIService) GetTaskExecute(r ApiGetTaskRequest) (*Task, *http.Resp
 type ApiListTasksRequest struct {
 	ctx         context.Context
 	ApiService  *TasksAPIService
+	xApiVersion *string
 	status      *[]string
 	assignee    *string
 	runId       *string
 	sourceType  *string
 	limit       *float32
 	offset      *float32
-	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListTasksRequest) XApiVersion(xApiVersion string) ApiListTasksRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiListTasksRequest) Status(status []string) ApiListTasksRequest {
@@ -759,12 +805,6 @@ func (r ApiListTasksRequest) Limit(limit float32) ApiListTasksRequest {
 
 func (r ApiListTasksRequest) Offset(offset float32) ApiListTasksRequest {
 	r.offset = &offset
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiListTasksRequest) XApiVersion(xApiVersion string) ApiListTasksRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -808,6 +848,16 @@ func (a *TasksAPIService) ListTasksExecute(r ApiListTasksRequest) ([]Task, *http
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.status != nil {
 		t := *r.status
@@ -852,9 +902,7 @@ func (a *TasksAPIService) ListTasksExecute(r ApiListTasksRequest) ([]Task, *http
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -917,18 +965,18 @@ type ApiUpdateTaskRequest struct {
 	ctx               context.Context
 	ApiService        *TasksAPIService
 	taskId            string
-	updateTaskPayload *UpdateTaskPayload
 	xApiVersion       *string
+	updateTaskPayload *UpdateTaskPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateTaskRequest) XApiVersion(xApiVersion string) ApiUpdateTaskRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateTaskRequest) UpdateTaskPayload(updateTaskPayload UpdateTaskPayload) ApiUpdateTaskRequest {
 	r.updateTaskPayload = &updateTaskPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateTaskRequest) XApiVersion(xApiVersion string) ApiUpdateTaskRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -977,6 +1025,16 @@ func (a *TasksAPIService) UpdateTaskExecute(r ApiUpdateTaskRequest) (*Task, *htt
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.updateTaskPayload == nil {
 		return localVarReturnValue, nil, reportError("updateTaskPayload is required and must be specified")
 	}
@@ -998,9 +1056,7 @@ func (a *TasksAPIService) UpdateTaskExecute(r ApiUpdateTaskRequest) (*Task, *htt
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.updateTaskPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

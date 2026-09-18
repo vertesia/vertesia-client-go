@@ -26,18 +26,18 @@ type PromptTemplatesAPIService service
 type ApiComputePromptFacetsRequest struct {
 	ctx                       context.Context
 	ApiService                *PromptTemplatesAPIService
-	computePromptFacetPayload *ComputePromptFacetPayload
 	xApiVersion               *string
+	computePromptFacetPayload *ComputePromptFacetPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiComputePromptFacetsRequest) XApiVersion(xApiVersion string) ApiComputePromptFacetsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiComputePromptFacetsRequest) ComputePromptFacetPayload(computePromptFacetPayload ComputePromptFacetPayload) ApiComputePromptFacetsRequest {
 	r.computePromptFacetPayload = &computePromptFacetPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiComputePromptFacetsRequest) XApiVersion(xApiVersion string) ApiComputePromptFacetsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -83,6 +83,16 @@ func (a *PromptTemplatesAPIService) ComputePromptFacetsExecute(r ApiComputePromp
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.computePromptFacetPayload == nil {
 		return localVarReturnValue, nil, reportError("computePromptFacetPayload is required and must be specified")
 	}
@@ -104,9 +114,7 @@ func (a *PromptTemplatesAPIService) ComputePromptFacetsExecute(r ApiComputePromp
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.computePromptFacetPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -170,18 +178,18 @@ func (a *PromptTemplatesAPIService) ComputePromptFacetsExecute(r ApiComputePromp
 type ApiCreatePromptRequest struct {
 	ctx                         context.Context
 	ApiService                  *PromptTemplatesAPIService
-	promptTemplateCreatePayload *PromptTemplateCreatePayload
 	xApiVersion                 *string
+	promptTemplateCreatePayload *PromptTemplateCreatePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreatePromptRequest) XApiVersion(xApiVersion string) ApiCreatePromptRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreatePromptRequest) PromptTemplateCreatePayload(promptTemplateCreatePayload PromptTemplateCreatePayload) ApiCreatePromptRequest {
 	r.promptTemplateCreatePayload = &promptTemplateCreatePayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreatePromptRequest) XApiVersion(xApiVersion string) ApiCreatePromptRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -227,6 +235,16 @@ func (a *PromptTemplatesAPIService) CreatePromptExecute(r ApiCreatePromptRequest
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.promptTemplateCreatePayload == nil {
 		return localVarReturnValue, nil, reportError("promptTemplateCreatePayload is required and must be specified")
 	}
@@ -248,9 +266,7 @@ func (a *PromptTemplatesAPIService) CreatePromptExecute(r ApiCreatePromptRequest
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.promptTemplateCreatePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -318,7 +334,7 @@ type ApiDeletePromptRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeletePromptRequest) XApiVersion(xApiVersion string) ApiDeletePromptRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -369,6 +385,16 @@ func (a *PromptTemplatesAPIService) DeletePromptExecute(r ApiDeletePromptRequest
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -387,9 +413,7 @@ func (a *PromptTemplatesAPIService) DeletePromptExecute(r ApiDeletePromptRequest
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -456,7 +480,7 @@ type ApiForkPromptRequest struct {
 	promptTemplateForkPayload *PromptTemplateForkPayload
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiForkPromptRequest) XApiVersion(xApiVersion string) ApiForkPromptRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -512,6 +536,16 @@ func (a *PromptTemplatesAPIService) ForkPromptExecute(r ApiForkPromptRequest) (*
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -530,9 +564,7 @@ func (a *PromptTemplatesAPIService) ForkPromptExecute(r ApiForkPromptRequest) (*
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.promptTemplateForkPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -600,7 +632,7 @@ type ApiGetPromptRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetPromptRequest) XApiVersion(xApiVersion string) ApiGetPromptRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -649,6 +681,16 @@ func (a *PromptTemplatesAPIService) GetPromptExecute(r ApiGetPromptRequest) (*Pr
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -667,9 +709,7 @@ func (a *PromptTemplatesAPIService) GetPromptExecute(r ApiGetPromptRequest) (*Pr
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -735,7 +775,7 @@ type ApiListPromptForksRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListPromptForksRequest) XApiVersion(xApiVersion string) ApiListPromptForksRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -784,6 +824,16 @@ func (a *PromptTemplatesAPIService) ListPromptForksExecute(r ApiListPromptForksR
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -802,9 +852,7 @@ func (a *PromptTemplatesAPIService) ListPromptForksExecute(r ApiListPromptForksR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -870,7 +918,7 @@ type ApiListPromptInteractionsRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListPromptInteractionsRequest) XApiVersion(xApiVersion string) ApiListPromptInteractionsRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -921,6 +969,16 @@ func (a *PromptTemplatesAPIService) ListPromptInteractionsExecute(r ApiListPromp
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -939,9 +997,7 @@ func (a *PromptTemplatesAPIService) ListPromptInteractionsExecute(r ApiListPromp
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1007,7 +1063,7 @@ type ApiListPromptVersionsRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListPromptVersionsRequest) XApiVersion(xApiVersion string) ApiListPromptVersionsRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1058,6 +1114,16 @@ func (a *PromptTemplatesAPIService) ListPromptVersionsExecute(r ApiListPromptVer
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1076,9 +1142,7 @@ func (a *PromptTemplatesAPIService) ListPromptVersionsExecute(r ApiListPromptVer
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1140,6 +1204,7 @@ func (a *PromptTemplatesAPIService) ListPromptVersionsExecute(r ApiListPromptVer
 type ApiListPromptsRequest struct {
 	ctx               context.Context
 	ApiService        *PromptTemplatesAPIService
+	xApiVersion       *string
 	name              *string
 	status            *[]string
 	limit             *float32
@@ -1147,7 +1212,12 @@ type ApiListPromptsRequest struct {
 	role              *string
 	tags              *[]string
 	matchInteractions *bool
-	xApiVersion       *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListPromptsRequest) XApiVersion(xApiVersion string) ApiListPromptsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 // Case-insensitive substring match on the prompt name.
@@ -1189,12 +1259,6 @@ func (r ApiListPromptsRequest) Tags(tags []string) ApiListPromptsRequest {
 // Accepted and ignored. It used to attach the interactions referencing each prompt, in a shape no response component ever declared; nothing consumed it.
 func (r ApiListPromptsRequest) MatchInteractions(matchInteractions bool) ApiListPromptsRequest {
 	r.matchInteractions = &matchInteractions
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiListPromptsRequest) XApiVersion(xApiVersion string) ApiListPromptsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1240,6 +1304,16 @@ func (a *PromptTemplatesAPIService) ListPromptsExecute(r ApiListPromptsRequest) 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.name != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
@@ -1295,9 +1369,7 @@ func (a *PromptTemplatesAPIService) ListPromptsExecute(r ApiListPromptsRequest) 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1360,18 +1432,18 @@ type ApiRenderPromptRequest struct {
 	ctx         context.Context
 	ApiService  *PromptTemplatesAPIService
 	ptId        string
-	requestBody *map[string]interface{}
 	xApiVersion *string
+	requestBody *map[string]interface{}
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiRenderPromptRequest) XApiVersion(xApiVersion string) ApiRenderPromptRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiRenderPromptRequest) RequestBody(requestBody map[string]interface{}) ApiRenderPromptRequest {
 	r.requestBody = &requestBody
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiRenderPromptRequest) XApiVersion(xApiVersion string) ApiRenderPromptRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1420,6 +1492,16 @@ func (a *PromptTemplatesAPIService) RenderPromptExecute(r ApiRenderPromptRequest
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.requestBody == nil {
 		return localVarReturnValue, nil, reportError("requestBody is required and must be specified")
 	}
@@ -1441,9 +1523,7 @@ func (a *PromptTemplatesAPIService) RenderPromptExecute(r ApiRenderPromptRequest
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.requestBody
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -1508,18 +1588,18 @@ type ApiUpdatePromptRequest struct {
 	ctx                         context.Context
 	ApiService                  *PromptTemplatesAPIService
 	ptId                        string
-	promptTemplateUpdatePayload *PromptTemplateUpdatePayload
 	xApiVersion                 *string
+	promptTemplateUpdatePayload *PromptTemplateUpdatePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdatePromptRequest) XApiVersion(xApiVersion string) ApiUpdatePromptRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdatePromptRequest) PromptTemplateUpdatePayload(promptTemplateUpdatePayload PromptTemplateUpdatePayload) ApiUpdatePromptRequest {
 	r.promptTemplateUpdatePayload = &promptTemplateUpdatePayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdatePromptRequest) XApiVersion(xApiVersion string) ApiUpdatePromptRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1568,6 +1648,16 @@ func (a *PromptTemplatesAPIService) UpdatePromptExecute(r ApiUpdatePromptRequest
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.promptTemplateUpdatePayload == nil {
 		return localVarReturnValue, nil, reportError("promptTemplateUpdatePayload is required and must be specified")
 	}
@@ -1589,9 +1679,7 @@ func (a *PromptTemplatesAPIService) UpdatePromptExecute(r ApiUpdatePromptRequest
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.promptTemplateUpdatePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

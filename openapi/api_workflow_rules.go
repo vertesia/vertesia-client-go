@@ -25,18 +25,18 @@ type WorkflowRulesAPIService service
 type ApiCreateWorkflowRuleRequest struct {
 	ctx                       context.Context
 	ApiService                *WorkflowRulesAPIService
-	createWorkflowRulePayload *CreateWorkflowRulePayload
 	xApiVersion               *string
+	createWorkflowRulePayload *CreateWorkflowRulePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateWorkflowRuleRequest) XApiVersion(xApiVersion string) ApiCreateWorkflowRuleRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateWorkflowRuleRequest) CreateWorkflowRulePayload(createWorkflowRulePayload CreateWorkflowRulePayload) ApiCreateWorkflowRuleRequest {
 	r.createWorkflowRulePayload = &createWorkflowRulePayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateWorkflowRuleRequest) XApiVersion(xApiVersion string) ApiCreateWorkflowRuleRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -82,6 +82,16 @@ func (a *WorkflowRulesAPIService) CreateWorkflowRuleExecute(r ApiCreateWorkflowR
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.createWorkflowRulePayload == nil {
 		return localVarReturnValue, nil, reportError("createWorkflowRulePayload is required and must be specified")
 	}
@@ -103,9 +113,7 @@ func (a *WorkflowRulesAPIService) CreateWorkflowRuleExecute(r ApiCreateWorkflowR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.createWorkflowRulePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -173,7 +181,7 @@ type ApiDeleteWorkflowRuleRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeleteWorkflowRuleRequest) XApiVersion(xApiVersion string) ApiDeleteWorkflowRuleRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -224,6 +232,16 @@ func (a *WorkflowRulesAPIService) DeleteWorkflowRuleExecute(r ApiDeleteWorkflowR
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -242,9 +260,7 @@ func (a *WorkflowRulesAPIService) DeleteWorkflowRuleExecute(r ApiDeleteWorkflowR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -310,7 +326,7 @@ type ApiGetWorkflowRuleRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetWorkflowRuleRequest) XApiVersion(xApiVersion string) ApiGetWorkflowRuleRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -361,6 +377,16 @@ func (a *WorkflowRulesAPIService) GetWorkflowRuleExecute(r ApiGetWorkflowRuleReq
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -379,9 +405,7 @@ func (a *WorkflowRulesAPIService) GetWorkflowRuleExecute(r ApiGetWorkflowRuleReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -446,7 +470,7 @@ type ApiListWorkflowRulesRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListWorkflowRulesRequest) XApiVersion(xApiVersion string) ApiListWorkflowRulesRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -494,6 +518,16 @@ func (a *WorkflowRulesAPIService) ListWorkflowRulesExecute(r ApiListWorkflowRule
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -512,9 +546,7 @@ func (a *WorkflowRulesAPIService) ListWorkflowRulesExecute(r ApiListWorkflowRule
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -577,18 +609,18 @@ type ApiUpdateWorkflowRuleRequest struct {
 	ctx                       context.Context
 	ApiService                *WorkflowRulesAPIService
 	ruleId                    string
-	updateWorkflowRulePayload *UpdateWorkflowRulePayload
 	xApiVersion               *string
+	updateWorkflowRulePayload *UpdateWorkflowRulePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateWorkflowRuleRequest) XApiVersion(xApiVersion string) ApiUpdateWorkflowRuleRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateWorkflowRuleRequest) UpdateWorkflowRulePayload(updateWorkflowRulePayload UpdateWorkflowRulePayload) ApiUpdateWorkflowRuleRequest {
 	r.updateWorkflowRulePayload = &updateWorkflowRulePayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateWorkflowRuleRequest) XApiVersion(xApiVersion string) ApiUpdateWorkflowRuleRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -637,6 +669,16 @@ func (a *WorkflowRulesAPIService) UpdateWorkflowRuleExecute(r ApiUpdateWorkflowR
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.updateWorkflowRulePayload == nil {
 		return localVarReturnValue, nil, reportError("updateWorkflowRulePayload is required and must be specified")
 	}
@@ -658,9 +700,7 @@ func (a *WorkflowRulesAPIService) UpdateWorkflowRuleExecute(r ApiUpdateWorkflowR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.updateWorkflowRulePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

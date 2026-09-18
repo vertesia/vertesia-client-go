@@ -25,18 +25,18 @@ type AuditTrailAPIService service
 type ApiAggregateAuditTrailEventsRequest struct {
 	ctx                   context.Context
 	ApiService            *AuditTrailAPIService
-	auditAggregationQuery *AuditAggregationQuery
 	xApiVersion           *string
+	auditAggregationQuery *AuditAggregationQuery
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiAggregateAuditTrailEventsRequest) XApiVersion(xApiVersion string) ApiAggregateAuditTrailEventsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiAggregateAuditTrailEventsRequest) AuditAggregationQuery(auditAggregationQuery AuditAggregationQuery) ApiAggregateAuditTrailEventsRequest {
 	r.auditAggregationQuery = &auditAggregationQuery
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiAggregateAuditTrailEventsRequest) XApiVersion(xApiVersion string) ApiAggregateAuditTrailEventsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -82,6 +82,16 @@ func (a *AuditTrailAPIService) AggregateAuditTrailEventsExecute(r ApiAggregateAu
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.auditAggregationQuery == nil {
 		return localVarReturnValue, nil, reportError("auditAggregationQuery is required and must be specified")
 	}
@@ -103,9 +113,7 @@ func (a *AuditTrailAPIService) AggregateAuditTrailEventsExecute(r ApiAggregateAu
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.auditAggregationQuery
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -169,6 +177,7 @@ func (a *AuditTrailAPIService) AggregateAuditTrailEventsExecute(r ApiAggregateAu
 type ApiListAuditTrailEventsRequest struct {
 	ctx                   context.Context
 	ApiService            *AuditTrailAPIService
+	xApiVersion           *string
 	actions               *[]AuditAction
 	resourceTypes         *[]string
 	resourceId            *string
@@ -181,7 +190,12 @@ type ApiListAuditTrailEventsRequest struct {
 	to                    *string
 	limit                 *float32
 	offset                *float32
-	xApiVersion           *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListAuditTrailEventsRequest) XApiVersion(xApiVersion string) ApiListAuditTrailEventsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 // Filter by action types
@@ -256,12 +270,6 @@ func (r ApiListAuditTrailEventsRequest) Offset(offset float32) ApiListAuditTrail
 	return r
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiListAuditTrailEventsRequest) XApiVersion(xApiVersion string) ApiListAuditTrailEventsRequest {
-	r.xApiVersion = &xApiVersion
-	return r
-}
-
 func (r ApiListAuditTrailEventsRequest) Execute() (*AuditTrailResponse, *http.Response, error) {
 	return r.ApiService.ListAuditTrailEventsExecute(r)
 }
@@ -304,6 +312,16 @@ func (a *AuditTrailAPIService) ListAuditTrailEventsExecute(r ApiListAuditTrailEv
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.actions != nil {
 		t := *r.actions
@@ -374,9 +392,7 @@ func (a *AuditTrailAPIService) ListAuditTrailEventsExecute(r ApiListAuditTrailEv
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

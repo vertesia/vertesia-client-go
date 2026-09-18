@@ -25,18 +25,18 @@ type EventsAPIService service
 type ApiCancelEventDeliveryIntentsRequest struct {
 	ctx                               context.Context
 	ApiService                        *EventsAPIService
-	cancelEventDeliveryIntentsPayload *CancelEventDeliveryIntentsPayload
 	xApiVersion                       *string
+	cancelEventDeliveryIntentsPayload *CancelEventDeliveryIntentsPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCancelEventDeliveryIntentsRequest) XApiVersion(xApiVersion string) ApiCancelEventDeliveryIntentsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCancelEventDeliveryIntentsRequest) CancelEventDeliveryIntentsPayload(cancelEventDeliveryIntentsPayload CancelEventDeliveryIntentsPayload) ApiCancelEventDeliveryIntentsRequest {
 	r.cancelEventDeliveryIntentsPayload = &cancelEventDeliveryIntentsPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCancelEventDeliveryIntentsRequest) XApiVersion(xApiVersion string) ApiCancelEventDeliveryIntentsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -82,6 +82,16 @@ func (a *EventsAPIService) CancelEventDeliveryIntentsExecute(r ApiCancelEventDel
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.cancelEventDeliveryIntentsPayload == nil {
 		return localVarReturnValue, nil, reportError("cancelEventDeliveryIntentsPayload is required and must be specified")
 	}
@@ -103,9 +113,7 @@ func (a *EventsAPIService) CancelEventDeliveryIntentsExecute(r ApiCancelEventDel
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.cancelEventDeliveryIntentsPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -169,18 +177,18 @@ func (a *EventsAPIService) CancelEventDeliveryIntentsExecute(r ApiCancelEventDel
 type ApiGetEventDeliveryQueueSummaryRequest struct {
 	ctx                              context.Context
 	ApiService                       *EventsAPIService
-	eventDeliveryQueueSummaryPayload *EventDeliveryQueueSummaryPayload
 	xApiVersion                      *string
+	eventDeliveryQueueSummaryPayload *EventDeliveryQueueSummaryPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiGetEventDeliveryQueueSummaryRequest) XApiVersion(xApiVersion string) ApiGetEventDeliveryQueueSummaryRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiGetEventDeliveryQueueSummaryRequest) EventDeliveryQueueSummaryPayload(eventDeliveryQueueSummaryPayload EventDeliveryQueueSummaryPayload) ApiGetEventDeliveryQueueSummaryRequest {
 	r.eventDeliveryQueueSummaryPayload = &eventDeliveryQueueSummaryPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiGetEventDeliveryQueueSummaryRequest) XApiVersion(xApiVersion string) ApiGetEventDeliveryQueueSummaryRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -226,6 +234,16 @@ func (a *EventsAPIService) GetEventDeliveryQueueSummaryExecute(r ApiGetEventDeli
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.eventDeliveryQueueSummaryPayload == nil {
 		return localVarReturnValue, nil, reportError("eventDeliveryQueueSummaryPayload is required and must be specified")
 	}
@@ -247,9 +265,7 @@ func (a *EventsAPIService) GetEventDeliveryQueueSummaryExecute(r ApiGetEventDeli
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.eventDeliveryQueueSummaryPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -313,18 +329,18 @@ func (a *EventsAPIService) GetEventDeliveryQueueSummaryExecute(r ApiGetEventDeli
 type ApiSearchEventDeliveriesRequest struct {
 	ctx                        context.Context
 	ApiService                 *EventsAPIService
-	listEventDeliveriesPayload *ListEventDeliveriesPayload
 	xApiVersion                *string
+	listEventDeliveriesPayload *ListEventDeliveriesPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiSearchEventDeliveriesRequest) XApiVersion(xApiVersion string) ApiSearchEventDeliveriesRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiSearchEventDeliveriesRequest) ListEventDeliveriesPayload(listEventDeliveriesPayload ListEventDeliveriesPayload) ApiSearchEventDeliveriesRequest {
 	r.listEventDeliveriesPayload = &listEventDeliveriesPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiSearchEventDeliveriesRequest) XApiVersion(xApiVersion string) ApiSearchEventDeliveriesRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -370,6 +386,16 @@ func (a *EventsAPIService) SearchEventDeliveriesExecute(r ApiSearchEventDeliveri
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.listEventDeliveriesPayload == nil {
 		return localVarReturnValue, nil, reportError("listEventDeliveriesPayload is required and must be specified")
 	}
@@ -391,9 +417,7 @@ func (a *EventsAPIService) SearchEventDeliveriesExecute(r ApiSearchEventDeliveri
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.listEventDeliveriesPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -468,7 +492,6 @@ type ApiStreamEventDeliveriesRequest struct {
 	sinceCreatedAt *string
 	includeEvent   *bool
 	pollIntervalMs *float32
-	xApiVersion    *string
 }
 
 func (r ApiStreamEventDeliveriesRequest) Limit(limit float32) ApiStreamEventDeliveriesRequest {
@@ -523,12 +546,6 @@ func (r ApiStreamEventDeliveriesRequest) IncludeEvent(includeEvent bool) ApiStre
 
 func (r ApiStreamEventDeliveriesRequest) PollIntervalMs(pollIntervalMs float32) ApiStreamEventDeliveriesRequest {
 	r.pollIntervalMs = &pollIntervalMs
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiStreamEventDeliveriesRequest) XApiVersion(xApiVersion string) ApiStreamEventDeliveriesRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -656,9 +673,6 @@ func (a *EventsAPIService) StreamEventDeliveriesExecute(r ApiStreamEventDeliveri
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {

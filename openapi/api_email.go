@@ -25,18 +25,18 @@ type EmailAPIService service
 type ApiCreateEmailRouteRequest struct {
 	ctx                     context.Context
 	ApiService              *EmailAPIService
-	createEmailRouteRequest *CreateEmailRouteRequest
 	xApiVersion             *string
+	createEmailRouteRequest *CreateEmailRouteRequest
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateEmailRouteRequest) XApiVersion(xApiVersion string) ApiCreateEmailRouteRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateEmailRouteRequest) CreateEmailRouteRequest(createEmailRouteRequest CreateEmailRouteRequest) ApiCreateEmailRouteRequest {
 	r.createEmailRouteRequest = &createEmailRouteRequest
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateEmailRouteRequest) XApiVersion(xApiVersion string) ApiCreateEmailRouteRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -86,6 +86,16 @@ func (a *EmailAPIService) CreateEmailRouteExecute(r ApiCreateEmailRouteRequest) 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.createEmailRouteRequest == nil {
 		return localVarReturnValue, nil, reportError("createEmailRouteRequest is required and must be specified")
 	}
@@ -107,9 +117,7 @@ func (a *EmailAPIService) CreateEmailRouteExecute(r ApiCreateEmailRouteRequest) 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.createEmailRouteRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -174,18 +182,18 @@ type ApiForwardEmailToWorkflowRequest struct {
 	ctx                 context.Context
 	ApiService          *EmailAPIService
 	key                 string
-	forwardEmailRequest *ForwardEmailRequest
 	xApiVersion         *string
+	forwardEmailRequest *ForwardEmailRequest
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiForwardEmailToWorkflowRequest) XApiVersion(xApiVersion string) ApiForwardEmailToWorkflowRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiForwardEmailToWorkflowRequest) ForwardEmailRequest(forwardEmailRequest ForwardEmailRequest) ApiForwardEmailToWorkflowRequest {
 	r.forwardEmailRequest = &forwardEmailRequest
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiForwardEmailToWorkflowRequest) XApiVersion(xApiVersion string) ApiForwardEmailToWorkflowRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -238,6 +246,16 @@ func (a *EmailAPIService) ForwardEmailToWorkflowExecute(r ApiForwardEmailToWorkf
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.forwardEmailRequest == nil {
 		return localVarReturnValue, nil, reportError("forwardEmailRequest is required and must be specified")
 	}
@@ -259,9 +277,7 @@ func (a *EmailAPIService) ForwardEmailToWorkflowExecute(r ApiForwardEmailToWorkf
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.forwardEmailRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -329,7 +345,7 @@ type ApiGetEmailRouteRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetEmailRouteRequest) XApiVersion(xApiVersion string) ApiGetEmailRouteRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -380,6 +396,16 @@ func (a *EmailAPIService) GetEmailRouteExecute(r ApiGetEmailRouteRequest) (*Emai
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -398,9 +424,7 @@ func (a *EmailAPIService) GetEmailRouteExecute(r ApiGetEmailRouteRequest) (*Emai
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -462,18 +486,18 @@ func (a *EmailAPIService) GetEmailRouteExecute(r ApiGetEmailRouteRequest) (*Emai
 type ApiSendAgentEmailRequest struct {
 	ctx              context.Context
 	ApiService       *EmailAPIService
-	sendEmailRequest *SendEmailRequest
 	xApiVersion      *string
+	sendEmailRequest *SendEmailRequest
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiSendAgentEmailRequest) XApiVersion(xApiVersion string) ApiSendAgentEmailRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiSendAgentEmailRequest) SendEmailRequest(sendEmailRequest SendEmailRequest) ApiSendAgentEmailRequest {
 	r.sendEmailRequest = &sendEmailRequest
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiSendAgentEmailRequest) XApiVersion(xApiVersion string) ApiSendAgentEmailRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -521,6 +545,16 @@ func (a *EmailAPIService) SendAgentEmailExecute(r ApiSendAgentEmailRequest) (*Se
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.sendEmailRequest == nil {
 		return localVarReturnValue, nil, reportError("sendEmailRequest is required and must be specified")
 	}
@@ -542,9 +576,7 @@ func (a *EmailAPIService) SendAgentEmailExecute(r ApiSendAgentEmailRequest) (*Se
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.sendEmailRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -609,18 +641,18 @@ type ApiUpdateEmailRouteRequest struct {
 	ctx                     context.Context
 	ApiService              *EmailAPIService
 	key                     string
-	updateEmailRouteRequest *UpdateEmailRouteRequest
 	xApiVersion             *string
+	updateEmailRouteRequest *UpdateEmailRouteRequest
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateEmailRouteRequest) XApiVersion(xApiVersion string) ApiUpdateEmailRouteRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateEmailRouteRequest) UpdateEmailRouteRequest(updateEmailRouteRequest UpdateEmailRouteRequest) ApiUpdateEmailRouteRequest {
 	r.updateEmailRouteRequest = &updateEmailRouteRequest
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateEmailRouteRequest) XApiVersion(xApiVersion string) ApiUpdateEmailRouteRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -669,6 +701,16 @@ func (a *EmailAPIService) UpdateEmailRouteExecute(r ApiUpdateEmailRouteRequest) 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.updateEmailRouteRequest == nil {
 		return localVarReturnValue, nil, reportError("updateEmailRouteRequest is required and must be specified")
 	}
@@ -690,9 +732,7 @@ func (a *EmailAPIService) UpdateEmailRouteExecute(r ApiUpdateEmailRouteRequest) 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.updateEmailRouteRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

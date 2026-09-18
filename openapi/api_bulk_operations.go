@@ -24,18 +24,18 @@ type BulkOperationsAPIService service
 type ApiRunBulkContentOperationRequest struct {
 	ctx                  context.Context
 	ApiService           *BulkOperationsAPIService
-	bulkOperationPayload *BulkOperationPayload
 	xApiVersion          *string
+	bulkOperationPayload *BulkOperationPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiRunBulkContentOperationRequest) XApiVersion(xApiVersion string) ApiRunBulkContentOperationRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiRunBulkContentOperationRequest) BulkOperationPayload(bulkOperationPayload BulkOperationPayload) ApiRunBulkContentOperationRequest {
 	r.bulkOperationPayload = &bulkOperationPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiRunBulkContentOperationRequest) XApiVersion(xApiVersion string) ApiRunBulkContentOperationRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -81,6 +81,16 @@ func (a *BulkOperationsAPIService) RunBulkContentOperationExecute(r ApiRunBulkCo
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.bulkOperationPayload == nil {
 		return localVarReturnValue, nil, reportError("bulkOperationPayload is required and must be specified")
 	}
@@ -102,9 +112,7 @@ func (a *BulkOperationsAPIService) RunBulkContentOperationExecute(r ApiRunBulkCo
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.bulkOperationPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

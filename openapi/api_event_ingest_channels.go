@@ -25,18 +25,18 @@ type EventIngestChannelsAPIService service
 type ApiCreateEventIngestChannelRequest struct {
 	ctx                             context.Context
 	ApiService                      *EventIngestChannelsAPIService
-	createEventIngestChannelPayload *CreateEventIngestChannelPayload
 	xApiVersion                     *string
+	createEventIngestChannelPayload *CreateEventIngestChannelPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateEventIngestChannelRequest) XApiVersion(xApiVersion string) ApiCreateEventIngestChannelRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateEventIngestChannelRequest) CreateEventIngestChannelPayload(createEventIngestChannelPayload CreateEventIngestChannelPayload) ApiCreateEventIngestChannelRequest {
 	r.createEventIngestChannelPayload = &createEventIngestChannelPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateEventIngestChannelRequest) XApiVersion(xApiVersion string) ApiCreateEventIngestChannelRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -82,6 +82,16 @@ func (a *EventIngestChannelsAPIService) CreateEventIngestChannelExecute(r ApiCre
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.createEventIngestChannelPayload == nil {
 		return localVarReturnValue, nil, reportError("createEventIngestChannelPayload is required and must be specified")
 	}
@@ -103,9 +113,7 @@ func (a *EventIngestChannelsAPIService) CreateEventIngestChannelExecute(r ApiCre
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.createEventIngestChannelPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -173,7 +181,7 @@ type ApiDeleteEventIngestChannelRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeleteEventIngestChannelRequest) XApiVersion(xApiVersion string) ApiDeleteEventIngestChannelRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -222,6 +230,16 @@ func (a *EventIngestChannelsAPIService) DeleteEventIngestChannelExecute(r ApiDel
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -240,9 +258,7 @@ func (a *EventIngestChannelsAPIService) DeleteEventIngestChannelExecute(r ApiDel
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -308,7 +324,7 @@ type ApiGetEventIngestChannelRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetEventIngestChannelRequest) XApiVersion(xApiVersion string) ApiGetEventIngestChannelRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -357,6 +373,16 @@ func (a *EventIngestChannelsAPIService) GetEventIngestChannelExecute(r ApiGetEve
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -375,9 +401,7 @@ func (a *EventIngestChannelsAPIService) GetEventIngestChannelExecute(r ApiGetEve
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -442,7 +466,7 @@ type ApiListEventIngestChannelsRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListEventIngestChannelsRequest) XApiVersion(xApiVersion string) ApiListEventIngestChannelsRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -488,6 +512,16 @@ func (a *EventIngestChannelsAPIService) ListEventIngestChannelsExecute(r ApiList
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -506,9 +540,7 @@ func (a *EventIngestChannelsAPIService) ListEventIngestChannelsExecute(r ApiList
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -571,18 +603,18 @@ type ApiUpdateEventIngestChannelRequest struct {
 	ctx                             context.Context
 	ApiService                      *EventIngestChannelsAPIService
 	channelId                       string
-	updateEventIngestChannelPayload *UpdateEventIngestChannelPayload
 	xApiVersion                     *string
+	updateEventIngestChannelPayload *UpdateEventIngestChannelPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateEventIngestChannelRequest) XApiVersion(xApiVersion string) ApiUpdateEventIngestChannelRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateEventIngestChannelRequest) UpdateEventIngestChannelPayload(updateEventIngestChannelPayload UpdateEventIngestChannelPayload) ApiUpdateEventIngestChannelRequest {
 	r.updateEventIngestChannelPayload = &updateEventIngestChannelPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateEventIngestChannelRequest) XApiVersion(xApiVersion string) ApiUpdateEventIngestChannelRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -631,6 +663,16 @@ func (a *EventIngestChannelsAPIService) UpdateEventIngestChannelExecute(r ApiUpd
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.updateEventIngestChannelPayload == nil {
 		return localVarReturnValue, nil, reportError("updateEventIngestChannelPayload is required and must be specified")
 	}
@@ -652,9 +694,7 @@ func (a *EventIngestChannelsAPIService) UpdateEventIngestChannelExecute(r ApiUpd
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.updateEventIngestChannelPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

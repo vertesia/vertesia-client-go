@@ -24,12 +24,18 @@ type CostsAPIService service
 type ApiExportCostDataRequest struct {
 	ctx         context.Context
 	ApiService  *CostsAPIService
+	xApiVersion *string
 	from        *GetModelPricesFromParameter
 	to          *GetModelPricesToParameter
 	scope       *string
 	projectId   *string
 	workflowId  *string
-	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiExportCostDataRequest) XApiVersion(xApiVersion string) ApiExportCostDataRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 // Start time (ISO string or epoch ms)
@@ -59,12 +65,6 @@ func (r ApiExportCostDataRequest) ProjectId(projectId string) ApiExportCostDataR
 // Filter by workflow / agent run ID
 func (r ApiExportCostDataRequest) WorkflowId(workflowId string) ApiExportCostDataRequest {
 	r.workflowId = &workflowId
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiExportCostDataRequest) XApiVersion(xApiVersion string) ApiExportCostDataRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -110,6 +110,16 @@ func (a *CostsAPIService) ExportCostDataExecute(r ApiExportCostDataRequest) (str
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.from != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "from", r.from, "form", "")
@@ -143,9 +153,7 @@ func (a *CostsAPIService) ExportCostDataExecute(r ApiExportCostDataRequest) (str
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -207,18 +215,18 @@ func (a *CostsAPIService) ExportCostDataExecute(r ApiExportCostDataRequest) (str
 type ApiGetCostAnalyticsRequest struct {
 	ctx                context.Context
 	ApiService         *CostsAPIService
-	costAnalyticsQuery *CostAnalyticsQuery
 	xApiVersion        *string
+	costAnalyticsQuery *CostAnalyticsQuery
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiGetCostAnalyticsRequest) XApiVersion(xApiVersion string) ApiGetCostAnalyticsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiGetCostAnalyticsRequest) CostAnalyticsQuery(costAnalyticsQuery CostAnalyticsQuery) ApiGetCostAnalyticsRequest {
 	r.costAnalyticsQuery = &costAnalyticsQuery
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiGetCostAnalyticsRequest) XApiVersion(xApiVersion string) ApiGetCostAnalyticsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -264,6 +272,16 @@ func (a *CostsAPIService) GetCostAnalyticsExecute(r ApiGetCostAnalyticsRequest) 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.costAnalyticsQuery == nil {
 		return localVarReturnValue, nil, reportError("costAnalyticsQuery is required and must be specified")
 	}
@@ -285,9 +303,7 @@ func (a *CostsAPIService) GetCostAnalyticsExecute(r ApiGetCostAnalyticsRequest) 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.costAnalyticsQuery
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -351,9 +367,15 @@ func (a *CostsAPIService) GetCostAnalyticsExecute(r ApiGetCostAnalyticsRequest) 
 type ApiGetModelPricesRequest struct {
 	ctx         context.Context
 	ApiService  *CostsAPIService
+	xApiVersion *string
 	from        *GetModelPricesFromParameter
 	to          *GetModelPricesToParameter
-	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiGetModelPricesRequest) XApiVersion(xApiVersion string) ApiGetModelPricesRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 // Start time (ISO string or epoch ms)
@@ -365,12 +387,6 @@ func (r ApiGetModelPricesRequest) From(from GetModelPricesFromParameter) ApiGetM
 // End time (ISO string or epoch ms)
 func (r ApiGetModelPricesRequest) To(to GetModelPricesToParameter) ApiGetModelPricesRequest {
 	r.to = &to
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiGetModelPricesRequest) XApiVersion(xApiVersion string) ApiGetModelPricesRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -416,6 +432,16 @@ func (a *CostsAPIService) GetModelPricesExecute(r ApiGetModelPricesRequest) (*Mo
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.from != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "from", r.from, "form", "")
@@ -440,9 +466,7 @@ func (a *CostsAPIService) GetModelPricesExecute(r ApiGetModelPricesRequest) (*Mo
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -504,18 +528,18 @@ func (a *CostsAPIService) GetModelPricesExecute(r ApiGetModelPricesRequest) (*Mo
 type ApiGetRunPriceRequest struct {
 	ctx               context.Context
 	ApiService        *CostsAPIService
-	costRunPriceQuery *CostRunPriceQuery
 	xApiVersion       *string
+	costRunPriceQuery *CostRunPriceQuery
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiGetRunPriceRequest) XApiVersion(xApiVersion string) ApiGetRunPriceRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiGetRunPriceRequest) CostRunPriceQuery(costRunPriceQuery CostRunPriceQuery) ApiGetRunPriceRequest {
 	r.costRunPriceQuery = &costRunPriceQuery
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiGetRunPriceRequest) XApiVersion(xApiVersion string) ApiGetRunPriceRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -561,6 +585,16 @@ func (a *CostsAPIService) GetRunPriceExecute(r ApiGetRunPriceRequest) (*CostRunP
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.costRunPriceQuery == nil {
 		return localVarReturnValue, nil, reportError("costRunPriceQuery is required and must be specified")
 	}
@@ -582,9 +616,7 @@ func (a *CostsAPIService) GetRunPriceExecute(r ApiGetRunPriceRequest) (*CostRunP
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.costRunPriceQuery
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

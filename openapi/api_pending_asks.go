@@ -29,7 +29,7 @@ type ApiGetPendingAskRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetPendingAskRequest) XApiVersion(xApiVersion string) ApiGetPendingAskRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -80,6 +80,16 @@ func (a *PendingAsksAPIService) GetPendingAskExecute(r ApiGetPendingAskRequest) 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -98,9 +108,7 @@ func (a *PendingAsksAPIService) GetPendingAskExecute(r ApiGetPendingAskRequest) 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -165,7 +173,7 @@ type ApiListPendingAsksRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListPendingAsksRequest) XApiVersion(xApiVersion string) ApiListPendingAsksRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -213,6 +221,16 @@ func (a *PendingAsksAPIService) ListPendingAsksExecute(r ApiListPendingAsksReque
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -231,9 +249,7 @@ func (a *PendingAsksAPIService) ListPendingAsksExecute(r ApiListPendingAsksReque
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -295,18 +311,18 @@ func (a *PendingAsksAPIService) ListPendingAsksExecute(r ApiListPendingAsksReque
 type ApiRegisterPendingAskRequest struct {
 	ctx                       context.Context
 	ApiService                *PendingAsksAPIService
-	registerPendingAskRequest *RegisterPendingAskRequest
 	xApiVersion               *string
+	registerPendingAskRequest *RegisterPendingAskRequest
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiRegisterPendingAskRequest) XApiVersion(xApiVersion string) ApiRegisterPendingAskRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiRegisterPendingAskRequest) RegisterPendingAskRequest(registerPendingAskRequest RegisterPendingAskRequest) ApiRegisterPendingAskRequest {
 	r.registerPendingAskRequest = &registerPendingAskRequest
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiRegisterPendingAskRequest) XApiVersion(xApiVersion string) ApiRegisterPendingAskRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -353,6 +369,16 @@ func (a *PendingAsksAPIService) RegisterPendingAskExecute(r ApiRegisterPendingAs
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.registerPendingAskRequest == nil {
 		return localVarReturnValue, nil, reportError("registerPendingAskRequest is required and must be specified")
 	}
@@ -374,9 +400,7 @@ func (a *PendingAsksAPIService) RegisterPendingAskExecute(r ApiRegisterPendingAs
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.registerPendingAskRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -441,18 +465,18 @@ type ApiResolvePendingAskRequest struct {
 	ctx                      context.Context
 	ApiService               *PendingAsksAPIService
 	askId                    string
-	resolvePendingAskRequest *ResolvePendingAskRequest
 	xApiVersion              *string
+	resolvePendingAskRequest *ResolvePendingAskRequest
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiResolvePendingAskRequest) XApiVersion(xApiVersion string) ApiResolvePendingAskRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiResolvePendingAskRequest) ResolvePendingAskRequest(resolvePendingAskRequest ResolvePendingAskRequest) ApiResolvePendingAskRequest {
 	r.resolvePendingAskRequest = &resolvePendingAskRequest
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiResolvePendingAskRequest) XApiVersion(xApiVersion string) ApiResolvePendingAskRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -501,6 +525,16 @@ func (a *PendingAsksAPIService) ResolvePendingAskExecute(r ApiResolvePendingAskR
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.resolvePendingAskRequest == nil {
 		return localVarReturnValue, nil, reportError("resolvePendingAskRequest is required and must be specified")
 	}
@@ -522,9 +556,7 @@ func (a *PendingAsksAPIService) ResolvePendingAskExecute(r ApiResolvePendingAskR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.resolvePendingAskRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

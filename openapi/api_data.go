@@ -26,18 +26,18 @@ type ApiArchiveDashboardsBulkRequest struct {
 	ctx         context.Context
 	ApiService  *DataAPIService
 	storeId     string
-	requestBody *map[string][]string
 	xApiVersion *string
+	requestBody *map[string][]string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiArchiveDashboardsBulkRequest) XApiVersion(xApiVersion string) ApiArchiveDashboardsBulkRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiArchiveDashboardsBulkRequest) RequestBody(requestBody map[string][]string) ApiArchiveDashboardsBulkRequest {
 	r.requestBody = &requestBody
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiArchiveDashboardsBulkRequest) XApiVersion(xApiVersion string) ApiArchiveDashboardsBulkRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -86,6 +86,16 @@ func (a *DataAPIService) ArchiveDashboardsBulkExecute(r ApiArchiveDashboardsBulk
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.requestBody == nil {
 		return localVarReturnValue, nil, reportError("requestBody is required and must be specified")
 	}
@@ -107,9 +117,7 @@ func (a *DataAPIService) ArchiveDashboardsBulkExecute(r ApiArchiveDashboardsBulk
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.requestBody
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -174,18 +182,18 @@ type ApiCreateDashboardRequest struct {
 	ctx                    context.Context
 	ApiService             *DataAPIService
 	storeId                string
-	createDashboardPayload *CreateDashboardPayload
 	xApiVersion            *string
+	createDashboardPayload *CreateDashboardPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateDashboardRequest) XApiVersion(xApiVersion string) ApiCreateDashboardRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateDashboardRequest) CreateDashboardPayload(createDashboardPayload CreateDashboardPayload) ApiCreateDashboardRequest {
 	r.createDashboardPayload = &createDashboardPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateDashboardRequest) XApiVersion(xApiVersion string) ApiCreateDashboardRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -234,6 +242,16 @@ func (a *DataAPIService) CreateDashboardExecute(r ApiCreateDashboardRequest) (*D
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.createDashboardPayload == nil {
 		return localVarReturnValue, nil, reportError("createDashboardPayload is required and must be specified")
 	}
@@ -255,9 +273,7 @@ func (a *DataAPIService) CreateDashboardExecute(r ApiCreateDashboardRequest) (*D
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.createDashboardPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -323,18 +339,18 @@ type ApiCreateDashboardSnapshotRequest struct {
 	ApiService                     *DataAPIService
 	storeId                        string
 	dashboardId                    string
-	createDashboardSnapshotPayload *CreateDashboardSnapshotPayload
 	xApiVersion                    *string
+	createDashboardSnapshotPayload *CreateDashboardSnapshotPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateDashboardSnapshotRequest) XApiVersion(xApiVersion string) ApiCreateDashboardSnapshotRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateDashboardSnapshotRequest) CreateDashboardSnapshotPayload(createDashboardSnapshotPayload CreateDashboardSnapshotPayload) ApiCreateDashboardSnapshotRequest {
 	r.createDashboardSnapshotPayload = &createDashboardSnapshotPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateDashboardSnapshotRequest) XApiVersion(xApiVersion string) ApiCreateDashboardSnapshotRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -386,6 +402,16 @@ func (a *DataAPIService) CreateDashboardSnapshotExecute(r ApiCreateDashboardSnap
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.createDashboardSnapshotPayload == nil {
 		return localVarReturnValue, nil, reportError("createDashboardSnapshotPayload is required and must be specified")
 	}
@@ -407,9 +433,7 @@ func (a *DataAPIService) CreateDashboardSnapshotExecute(r ApiCreateDashboardSnap
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.createDashboardSnapshotPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -473,18 +497,18 @@ func (a *DataAPIService) CreateDashboardSnapshotExecute(r ApiCreateDashboardSnap
 type ApiCreateDataStoreRequest struct {
 	ctx                    context.Context
 	ApiService             *DataAPIService
-	createDataStorePayload *CreateDataStorePayload
 	xApiVersion            *string
+	createDataStorePayload *CreateDataStorePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateDataStoreRequest) XApiVersion(xApiVersion string) ApiCreateDataStoreRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateDataStoreRequest) CreateDataStorePayload(createDataStorePayload CreateDataStorePayload) ApiCreateDataStoreRequest {
 	r.createDataStorePayload = &createDataStorePayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateDataStoreRequest) XApiVersion(xApiVersion string) ApiCreateDataStoreRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -530,6 +554,16 @@ func (a *DataAPIService) CreateDataStoreExecute(r ApiCreateDataStoreRequest) (*D
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.createDataStorePayload == nil {
 		return localVarReturnValue, nil, reportError("createDataStorePayload is required and must be specified")
 	}
@@ -551,9 +585,7 @@ func (a *DataAPIService) CreateDataStoreExecute(r ApiCreateDataStoreRequest) (*D
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.createDataStorePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -621,7 +653,7 @@ type ApiCreateDataStoreDownloadUrlRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiCreateDataStoreDownloadUrlRequest) XApiVersion(xApiVersion string) ApiCreateDataStoreDownloadUrlRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -672,6 +704,16 @@ func (a *DataAPIService) CreateDataStoreDownloadUrlExecute(r ApiCreateDataStoreD
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -690,9 +732,7 @@ func (a *DataAPIService) CreateDataStoreDownloadUrlExecute(r ApiCreateDataStoreD
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -755,18 +795,18 @@ type ApiCreateDataStoreSnapshotRequest struct {
 	ctx                   context.Context
 	ApiService            *DataAPIService
 	storeId               string
-	createSnapshotPayload *CreateSnapshotPayload
 	xApiVersion           *string
+	createSnapshotPayload *CreateSnapshotPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateDataStoreSnapshotRequest) XApiVersion(xApiVersion string) ApiCreateDataStoreSnapshotRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateDataStoreSnapshotRequest) CreateSnapshotPayload(createSnapshotPayload CreateSnapshotPayload) ApiCreateDataStoreSnapshotRequest {
 	r.createSnapshotPayload = &createSnapshotPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateDataStoreSnapshotRequest) XApiVersion(xApiVersion string) ApiCreateDataStoreSnapshotRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -815,6 +855,16 @@ func (a *DataAPIService) CreateDataStoreSnapshotExecute(r ApiCreateDataStoreSnap
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.createSnapshotPayload == nil {
 		return localVarReturnValue, nil, reportError("createSnapshotPayload is required and must be specified")
 	}
@@ -836,9 +886,7 @@ func (a *DataAPIService) CreateDataStoreSnapshotExecute(r ApiCreateDataStoreSnap
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.createSnapshotPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -903,18 +951,18 @@ type ApiCreateDataStoreTablesRequest struct {
 	ctx                 context.Context
 	ApiService          *DataAPIService
 	storeId             string
-	createTablesPayload *CreateTablesPayload
 	xApiVersion         *string
+	createTablesPayload *CreateTablesPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateDataStoreTablesRequest) XApiVersion(xApiVersion string) ApiCreateDataStoreTablesRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateDataStoreTablesRequest) CreateTablesPayload(createTablesPayload CreateTablesPayload) ApiCreateDataStoreTablesRequest {
 	r.createTablesPayload = &createTablesPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateDataStoreTablesRequest) XApiVersion(xApiVersion string) ApiCreateDataStoreTablesRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -963,6 +1011,16 @@ func (a *DataAPIService) CreateDataStoreTablesExecute(r ApiCreateDataStoreTables
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.createTablesPayload == nil {
 		return localVarReturnValue, nil, reportError("createTablesPayload is required and must be specified")
 	}
@@ -984,9 +1042,7 @@ func (a *DataAPIService) CreateDataStoreTablesExecute(r ApiCreateDataStoreTables
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.createTablesPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -1055,7 +1111,7 @@ type ApiDeleteDashboardRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeleteDashboardRequest) XApiVersion(xApiVersion string) ApiDeleteDashboardRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1109,6 +1165,16 @@ func (a *DataAPIService) DeleteDashboardExecute(r ApiDeleteDashboardRequest) (*D
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1127,9 +1193,7 @@ func (a *DataAPIService) DeleteDashboardExecute(r ApiDeleteDashboardRequest) (*D
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1192,18 +1256,18 @@ type ApiDeleteDashboardsBulkRequest struct {
 	ctx         context.Context
 	ApiService  *DataAPIService
 	storeId     string
-	requestBody *map[string][]string
 	xApiVersion *string
+	requestBody *map[string][]string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiDeleteDashboardsBulkRequest) XApiVersion(xApiVersion string) ApiDeleteDashboardsBulkRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiDeleteDashboardsBulkRequest) RequestBody(requestBody map[string][]string) ApiDeleteDashboardsBulkRequest {
 	r.requestBody = &requestBody
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiDeleteDashboardsBulkRequest) XApiVersion(xApiVersion string) ApiDeleteDashboardsBulkRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1252,6 +1316,16 @@ func (a *DataAPIService) DeleteDashboardsBulkExecute(r ApiDeleteDashboardsBulkRe
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.requestBody == nil {
 		return localVarReturnValue, nil, reportError("requestBody is required and must be specified")
 	}
@@ -1273,9 +1347,7 @@ func (a *DataAPIService) DeleteDashboardsBulkExecute(r ApiDeleteDashboardsBulkRe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.requestBody
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -1343,7 +1415,7 @@ type ApiDeleteDataStoreRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeleteDataStoreRequest) XApiVersion(xApiVersion string) ApiDeleteDataStoreRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1394,6 +1466,16 @@ func (a *DataAPIService) DeleteDataStoreExecute(r ApiDeleteDataStoreRequest) (*D
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1412,9 +1494,7 @@ func (a *DataAPIService) DeleteDataStoreExecute(r ApiDeleteDataStoreRequest) (*D
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1481,7 +1561,7 @@ type ApiDeleteDataStoreTableRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeleteDataStoreTableRequest) XApiVersion(xApiVersion string) ApiDeleteDataStoreTableRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1535,6 +1615,16 @@ func (a *DataAPIService) DeleteDataStoreTableExecute(r ApiDeleteDataStoreTableRe
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1553,9 +1643,7 @@ func (a *DataAPIService) DeleteDataStoreTableExecute(r ApiDeleteDataStoreTableRe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1622,7 +1710,7 @@ type ApiGetDashboardRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetDashboardRequest) XApiVersion(xApiVersion string) ApiGetDashboardRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1676,6 +1764,16 @@ func (a *DataAPIService) GetDashboardExecute(r ApiGetDashboardRequest) (*Dashboa
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1694,9 +1792,7 @@ func (a *DataAPIService) GetDashboardExecute(r ApiGetDashboardRequest) (*Dashboa
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1764,7 +1860,7 @@ type ApiGetDashboardVersionRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetDashboardVersionRequest) XApiVersion(xApiVersion string) ApiGetDashboardVersionRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1821,6 +1917,16 @@ func (a *DataAPIService) GetDashboardVersionExecute(r ApiGetDashboardVersionRequ
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1839,9 +1945,7 @@ func (a *DataAPIService) GetDashboardVersionExecute(r ApiGetDashboardVersionRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1907,7 +2011,7 @@ type ApiGetDataStoreRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetDataStoreRequest) XApiVersion(xApiVersion string) ApiGetDataStoreRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1958,6 +2062,16 @@ func (a *DataAPIService) GetDataStoreExecute(r ApiGetDataStoreRequest) (*DataSto
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1976,9 +2090,7 @@ func (a *DataAPIService) GetDataStoreExecute(r ApiGetDataStoreRequest) (*DataSto
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2045,7 +2157,7 @@ type ApiGetDataStoreImportStatusRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetDataStoreImportStatusRequest) XApiVersion(xApiVersion string) ApiGetDataStoreImportStatusRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -2099,6 +2211,16 @@ func (a *DataAPIService) GetDataStoreImportStatusExecute(r ApiGetDataStoreImport
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2117,9 +2239,7 @@ func (a *DataAPIService) GetDataStoreImportStatusExecute(r ApiGetDataStoreImport
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2185,7 +2305,7 @@ type ApiGetDataStoreSchemaRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetDataStoreSchemaRequest) XApiVersion(xApiVersion string) ApiGetDataStoreSchemaRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -2236,6 +2356,16 @@ func (a *DataAPIService) GetDataStoreSchemaExecute(r ApiGetDataStoreSchemaReques
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2254,9 +2384,7 @@ func (a *DataAPIService) GetDataStoreSchemaExecute(r ApiGetDataStoreSchemaReques
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2320,18 +2448,18 @@ type ApiGetDataStoreTableRequest struct {
 	ApiService  *DataAPIService
 	storeId     string
 	tableName   string
-	sample      *bool
 	xApiVersion *string
+	sample      *bool
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiGetDataStoreTableRequest) XApiVersion(xApiVersion string) ApiGetDataStoreTableRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiGetDataStoreTableRequest) Sample(sample bool) ApiGetDataStoreTableRequest {
 	r.sample = &sample
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiGetDataStoreTableRequest) XApiVersion(xApiVersion string) ApiGetDataStoreTableRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -2383,6 +2511,16 @@ func (a *DataAPIService) GetDataStoreTableExecute(r ApiGetDataStoreTableRequest)
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.sample != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "sample", r.sample, "form", "")
@@ -2404,9 +2542,7 @@ func (a *DataAPIService) GetDataStoreTableExecute(r ApiGetDataStoreTableRequest)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2469,18 +2605,18 @@ type ApiImportDataStoreDataRequest struct {
 	ctx               context.Context
 	ApiService        *DataAPIService
 	storeId           string
-	importDataPayload *ImportDataPayload
 	xApiVersion       *string
+	importDataPayload *ImportDataPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiImportDataStoreDataRequest) XApiVersion(xApiVersion string) ApiImportDataStoreDataRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiImportDataStoreDataRequest) ImportDataPayload(importDataPayload ImportDataPayload) ApiImportDataStoreDataRequest {
 	r.importDataPayload = &importDataPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiImportDataStoreDataRequest) XApiVersion(xApiVersion string) ApiImportDataStoreDataRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -2529,6 +2665,16 @@ func (a *DataAPIService) ImportDataStoreDataExecute(r ApiImportDataStoreDataRequ
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.importDataPayload == nil {
 		return localVarReturnValue, nil, reportError("importDataPayload is required and must be specified")
 	}
@@ -2550,9 +2696,7 @@ func (a *DataAPIService) ImportDataStoreDataExecute(r ApiImportDataStoreDataRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.importDataPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -2621,7 +2765,7 @@ type ApiListDashboardVersionsRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListDashboardVersionsRequest) XApiVersion(xApiVersion string) ApiListDashboardVersionsRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -2675,6 +2819,16 @@ func (a *DataAPIService) ListDashboardVersionsExecute(r ApiListDashboardVersions
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2693,9 +2847,7 @@ func (a *DataAPIService) ListDashboardVersionsExecute(r ApiListDashboardVersions
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2761,7 +2913,7 @@ type ApiListDashboardsRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListDashboardsRequest) XApiVersion(xApiVersion string) ApiListDashboardsRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -2812,6 +2964,16 @@ func (a *DataAPIService) ListDashboardsExecute(r ApiListDashboardsRequest) ([]Da
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2830,9 +2992,7 @@ func (a *DataAPIService) ListDashboardsExecute(r ApiListDashboardsRequest) ([]Da
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2898,7 +3058,7 @@ type ApiListDataStoreSchemaHistoryRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListDataStoreSchemaHistoryRequest) XApiVersion(xApiVersion string) ApiListDataStoreSchemaHistoryRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -2949,6 +3109,16 @@ func (a *DataAPIService) ListDataStoreSchemaHistoryExecute(r ApiListDataStoreSch
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -2967,9 +3137,7 @@ func (a *DataAPIService) ListDataStoreSchemaHistoryExecute(r ApiListDataStoreSch
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -3035,7 +3203,7 @@ type ApiListDataStoreTablesRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListDataStoreTablesRequest) XApiVersion(xApiVersion string) ApiListDataStoreTablesRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -3086,6 +3254,16 @@ func (a *DataAPIService) ListDataStoreTablesExecute(r ApiListDataStoreTablesRequ
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3104,9 +3282,7 @@ func (a *DataAPIService) ListDataStoreTablesExecute(r ApiListDataStoreTablesRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -3169,9 +3345,15 @@ type ApiListDataStoreVersionsRequest struct {
 	ctx           context.Context
 	ApiService    *DataAPIService
 	storeId       string
+	xApiVersion   *string
 	limit         *float32
 	snapshotsOnly *bool
-	xApiVersion   *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListDataStoreVersionsRequest) XApiVersion(xApiVersion string) ApiListDataStoreVersionsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiListDataStoreVersionsRequest) Limit(limit float32) ApiListDataStoreVersionsRequest {
@@ -3181,12 +3363,6 @@ func (r ApiListDataStoreVersionsRequest) Limit(limit float32) ApiListDataStoreVe
 
 func (r ApiListDataStoreVersionsRequest) SnapshotsOnly(snapshotsOnly bool) ApiListDataStoreVersionsRequest {
 	r.snapshotsOnly = &snapshotsOnly
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiListDataStoreVersionsRequest) XApiVersion(xApiVersion string) ApiListDataStoreVersionsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -3235,6 +3411,16 @@ func (a *DataAPIService) ListDataStoreVersionsExecute(r ApiListDataStoreVersions
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "form", "")
@@ -3259,9 +3445,7 @@ func (a *DataAPIService) ListDataStoreVersionsExecute(r ApiListDataStoreVersions
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -3326,7 +3510,7 @@ type ApiListDataStoresRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListDataStoresRequest) XApiVersion(xApiVersion string) ApiListDataStoresRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -3374,6 +3558,16 @@ func (a *DataAPIService) ListDataStoresExecute(r ApiListDataStoresRequest) ([]Da
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -3392,9 +3586,7 @@ func (a *DataAPIService) ListDataStoresExecute(r ApiListDataStoresRequest) ([]Da
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -3457,18 +3649,18 @@ type ApiMutateDataStoreRowsRequest struct {
 	ctx                        context.Context
 	ApiService                 *DataAPIService
 	storeId                    string
-	dataStoreMutateRowsPayload *DataStoreMutateRowsPayload
 	xApiVersion                *string
+	dataStoreMutateRowsPayload *DataStoreMutateRowsPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiMutateDataStoreRowsRequest) XApiVersion(xApiVersion string) ApiMutateDataStoreRowsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiMutateDataStoreRowsRequest) DataStoreMutateRowsPayload(dataStoreMutateRowsPayload DataStoreMutateRowsPayload) ApiMutateDataStoreRowsRequest {
 	r.dataStoreMutateRowsPayload = &dataStoreMutateRowsPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiMutateDataStoreRowsRequest) XApiVersion(xApiVersion string) ApiMutateDataStoreRowsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -3517,6 +3709,16 @@ func (a *DataAPIService) MutateDataStoreRowsExecute(r ApiMutateDataStoreRowsRequ
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.dataStoreMutateRowsPayload == nil {
 		return localVarReturnValue, nil, reportError("dataStoreMutateRowsPayload is required and must be specified")
 	}
@@ -3538,9 +3740,7 @@ func (a *DataAPIService) MutateDataStoreRowsExecute(r ApiMutateDataStoreRowsRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.dataStoreMutateRowsPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -3607,18 +3807,18 @@ type ApiPromoteDashboardVersionRequest struct {
 	storeId                        string
 	dashboardId                    string
 	versionId                      string
-	promoteDashboardVersionPayload *PromoteDashboardVersionPayload
 	xApiVersion                    *string
+	promoteDashboardVersionPayload *PromoteDashboardVersionPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiPromoteDashboardVersionRequest) XApiVersion(xApiVersion string) ApiPromoteDashboardVersionRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiPromoteDashboardVersionRequest) PromoteDashboardVersionPayload(promoteDashboardVersionPayload PromoteDashboardVersionPayload) ApiPromoteDashboardVersionRequest {
 	r.promoteDashboardVersionPayload = &promoteDashboardVersionPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiPromoteDashboardVersionRequest) XApiVersion(xApiVersion string) ApiPromoteDashboardVersionRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -3673,6 +3873,16 @@ func (a *DataAPIService) PromoteDashboardVersionExecute(r ApiPromoteDashboardVer
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.promoteDashboardVersionPayload == nil {
 		return localVarReturnValue, nil, reportError("promoteDashboardVersionPayload is required and must be specified")
 	}
@@ -3694,9 +3904,7 @@ func (a *DataAPIService) PromoteDashboardVersionExecute(r ApiPromoteDashboardVer
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.promoteDashboardVersionPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -3761,18 +3969,18 @@ type ApiQueryDataStoreRequest struct {
 	ctx          context.Context
 	ApiService   *DataAPIService
 	storeId      string
-	queryPayload *QueryPayload
 	xApiVersion  *string
+	queryPayload *QueryPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiQueryDataStoreRequest) XApiVersion(xApiVersion string) ApiQueryDataStoreRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiQueryDataStoreRequest) QueryPayload(queryPayload QueryPayload) ApiQueryDataStoreRequest {
 	r.queryPayload = &queryPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiQueryDataStoreRequest) XApiVersion(xApiVersion string) ApiQueryDataStoreRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -3821,6 +4029,16 @@ func (a *DataAPIService) QueryDataStoreExecute(r ApiQueryDataStoreRequest) (*Que
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.queryPayload == nil {
 		return localVarReturnValue, nil, reportError("queryPayload is required and must be specified")
 	}
@@ -3842,9 +4060,7 @@ func (a *DataAPIService) QueryDataStoreExecute(r ApiQueryDataStoreRequest) (*Que
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.queryPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -3909,18 +4125,18 @@ type ApiQueryDataStoreBatchRequest struct {
 	ctx               context.Context
 	ApiService        *DataAPIService
 	storeId           string
-	batchQueryPayload *BatchQueryPayload
 	xApiVersion       *string
+	batchQueryPayload *BatchQueryPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiQueryDataStoreBatchRequest) XApiVersion(xApiVersion string) ApiQueryDataStoreBatchRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiQueryDataStoreBatchRequest) BatchQueryPayload(batchQueryPayload BatchQueryPayload) ApiQueryDataStoreBatchRequest {
 	r.batchQueryPayload = &batchQueryPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiQueryDataStoreBatchRequest) XApiVersion(xApiVersion string) ApiQueryDataStoreBatchRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -3969,6 +4185,16 @@ func (a *DataAPIService) QueryDataStoreBatchExecute(r ApiQueryDataStoreBatchRequ
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.batchQueryPayload == nil {
 		return localVarReturnValue, nil, reportError("batchQueryPayload is required and must be specified")
 	}
@@ -3990,9 +4216,7 @@ func (a *DataAPIService) QueryDataStoreBatchExecute(r ApiQueryDataStoreBatchRequ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.batchQueryPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -4058,18 +4282,18 @@ type ApiQueryDataStoreVersionRequest struct {
 	ApiService   *DataAPIService
 	storeId      string
 	versionId    string
-	queryPayload *QueryPayload
 	xApiVersion  *string
+	queryPayload *QueryPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiQueryDataStoreVersionRequest) XApiVersion(xApiVersion string) ApiQueryDataStoreVersionRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiQueryDataStoreVersionRequest) QueryPayload(queryPayload QueryPayload) ApiQueryDataStoreVersionRequest {
 	r.queryPayload = &queryPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiQueryDataStoreVersionRequest) XApiVersion(xApiVersion string) ApiQueryDataStoreVersionRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -4121,6 +4345,16 @@ func (a *DataAPIService) QueryDataStoreVersionExecute(r ApiQueryDataStoreVersion
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.queryPayload == nil {
 		return localVarReturnValue, nil, reportError("queryPayload is required and must be specified")
 	}
@@ -4142,9 +4376,7 @@ func (a *DataAPIService) QueryDataStoreVersionExecute(r ApiQueryDataStoreVersion
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.queryPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -4213,7 +4445,7 @@ type ApiRollbackDataStoreVersionRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiRollbackDataStoreVersionRequest) XApiVersion(xApiVersion string) ApiRollbackDataStoreVersionRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -4267,6 +4499,16 @@ func (a *DataAPIService) RollbackDataStoreVersionExecute(r ApiRollbackDataStoreV
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -4285,9 +4527,7 @@ func (a *DataAPIService) RollbackDataStoreVersionExecute(r ApiRollbackDataStoreV
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -4351,18 +4591,18 @@ type ApiSetDashboardVersioningRequest struct {
 	ApiService                 *DataAPIService
 	storeId                    string
 	dashboardId                string
-	dashboardVersioningPayload *DashboardVersioningPayload
 	xApiVersion                *string
+	dashboardVersioningPayload *DashboardVersioningPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiSetDashboardVersioningRequest) XApiVersion(xApiVersion string) ApiSetDashboardVersioningRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiSetDashboardVersioningRequest) DashboardVersioningPayload(dashboardVersioningPayload DashboardVersioningPayload) ApiSetDashboardVersioningRequest {
 	r.dashboardVersioningPayload = &dashboardVersioningPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiSetDashboardVersioningRequest) XApiVersion(xApiVersion string) ApiSetDashboardVersioningRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -4414,6 +4654,16 @@ func (a *DataAPIService) SetDashboardVersioningExecute(r ApiSetDashboardVersioni
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.dashboardVersioningPayload == nil {
 		return localVarReturnValue, nil, reportError("dashboardVersioningPayload is required and must be specified")
 	}
@@ -4435,9 +4685,7 @@ func (a *DataAPIService) SetDashboardVersioningExecute(r ApiSetDashboardVersioni
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.dashboardVersioningPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -4503,18 +4751,18 @@ type ApiUpdateDashboardRequest struct {
 	ApiService             *DataAPIService
 	storeId                string
 	dashboardId            string
-	updateDashboardPayload *UpdateDashboardPayload
 	xApiVersion            *string
+	updateDashboardPayload *UpdateDashboardPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateDashboardRequest) XApiVersion(xApiVersion string) ApiUpdateDashboardRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateDashboardRequest) UpdateDashboardPayload(updateDashboardPayload UpdateDashboardPayload) ApiUpdateDashboardRequest {
 	r.updateDashboardPayload = &updateDashboardPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateDashboardRequest) XApiVersion(xApiVersion string) ApiUpdateDashboardRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -4566,6 +4814,16 @@ func (a *DataAPIService) UpdateDashboardExecute(r ApiUpdateDashboardRequest) (*D
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.updateDashboardPayload == nil {
 		return localVarReturnValue, nil, reportError("updateDashboardPayload is required and must be specified")
 	}
@@ -4587,9 +4845,7 @@ func (a *DataAPIService) UpdateDashboardExecute(r ApiUpdateDashboardRequest) (*D
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.updateDashboardPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -4654,18 +4910,18 @@ type ApiUpdateDataStoreSchemaRequest struct {
 	ctx                 context.Context
 	ApiService          *DataAPIService
 	storeId             string
-	updateSchemaPayload *UpdateSchemaPayload
 	xApiVersion         *string
+	updateSchemaPayload *UpdateSchemaPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateDataStoreSchemaRequest) XApiVersion(xApiVersion string) ApiUpdateDataStoreSchemaRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateDataStoreSchemaRequest) UpdateSchemaPayload(updateSchemaPayload UpdateSchemaPayload) ApiUpdateDataStoreSchemaRequest {
 	r.updateSchemaPayload = &updateSchemaPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateDataStoreSchemaRequest) XApiVersion(xApiVersion string) ApiUpdateDataStoreSchemaRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -4714,6 +4970,16 @@ func (a *DataAPIService) UpdateDataStoreSchemaExecute(r ApiUpdateDataStoreSchema
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.updateSchemaPayload == nil {
 		return localVarReturnValue, nil, reportError("updateSchemaPayload is required and must be specified")
 	}
@@ -4735,9 +5001,7 @@ func (a *DataAPIService) UpdateDataStoreSchemaExecute(r ApiUpdateDataStoreSchema
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.updateSchemaPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -4803,18 +5067,18 @@ type ApiUpdateDataStoreTableRequest struct {
 	ApiService        *DataAPIService
 	storeId           string
 	tableName         string
-	alterTablePayload *AlterTablePayload
 	xApiVersion       *string
+	alterTablePayload *AlterTablePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateDataStoreTableRequest) XApiVersion(xApiVersion string) ApiUpdateDataStoreTableRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateDataStoreTableRequest) AlterTablePayload(alterTablePayload AlterTablePayload) ApiUpdateDataStoreTableRequest {
 	r.alterTablePayload = &alterTablePayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateDataStoreTableRequest) XApiVersion(xApiVersion string) ApiUpdateDataStoreTableRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -4866,6 +5130,16 @@ func (a *DataAPIService) UpdateDataStoreTableExecute(r ApiUpdateDataStoreTableRe
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.alterTablePayload == nil {
 		return localVarReturnValue, nil, reportError("alterTablePayload is required and must be specified")
 	}
@@ -4887,9 +5161,7 @@ func (a *DataAPIService) UpdateDataStoreTableExecute(r ApiUpdateDataStoreTableRe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.alterTablePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -4954,18 +5226,18 @@ type ApiValidateDataStoreQueriesRequest struct {
 	ctx                    context.Context
 	ApiService             *DataAPIService
 	storeId                string
-	queryValidationPayload *QueryValidationPayload
 	xApiVersion            *string
+	queryValidationPayload *QueryValidationPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiValidateDataStoreQueriesRequest) XApiVersion(xApiVersion string) ApiValidateDataStoreQueriesRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiValidateDataStoreQueriesRequest) QueryValidationPayload(queryValidationPayload QueryValidationPayload) ApiValidateDataStoreQueriesRequest {
 	r.queryValidationPayload = &queryValidationPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiValidateDataStoreQueriesRequest) XApiVersion(xApiVersion string) ApiValidateDataStoreQueriesRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -5014,6 +5286,16 @@ func (a *DataAPIService) ValidateDataStoreQueriesExecute(r ApiValidateDataStoreQ
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.queryValidationPayload == nil {
 		return localVarReturnValue, nil, reportError("queryValidationPayload is required and must be specified")
 	}
@@ -5035,9 +5317,7 @@ func (a *DataAPIService) ValidateDataStoreQueriesExecute(r ApiValidateDataStoreQ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.queryValidationPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

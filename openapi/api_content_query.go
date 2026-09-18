@@ -24,18 +24,18 @@ type ContentQueryAPIService service
 type ApiExecuteContentQueryRequest struct {
 	ctx                 context.Context
 	ApiService          *ContentQueryAPIService
-	contentQueryPayload *ContentQueryPayload
 	xApiVersion         *string
+	contentQueryPayload *ContentQueryPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiExecuteContentQueryRequest) XApiVersion(xApiVersion string) ApiExecuteContentQueryRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiExecuteContentQueryRequest) ContentQueryPayload(contentQueryPayload ContentQueryPayload) ApiExecuteContentQueryRequest {
 	r.contentQueryPayload = &contentQueryPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiExecuteContentQueryRequest) XApiVersion(xApiVersion string) ApiExecuteContentQueryRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -85,6 +85,16 @@ func (a *ContentQueryAPIService) ExecuteContentQueryExecute(r ApiExecuteContentQ
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.contentQueryPayload == nil {
 		return localVarReturnValue, nil, reportError("contentQueryPayload is required and must be specified")
 	}
@@ -106,9 +116,7 @@ func (a *ContentQueryAPIService) ExecuteContentQueryExecute(r ApiExecuteContentQ
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.contentQueryPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

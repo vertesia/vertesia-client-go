@@ -25,9 +25,15 @@ type SecretsAPIService service
 type ApiCreateSecretRequest struct {
 	ctx                 context.Context
 	ApiService          *SecretsAPIService
+	xApiVersion         *string
 	createSecretRequest *CreateSecretRequest
 	projectId           *string
-	xApiVersion         *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateSecretRequest) XApiVersion(xApiVersion string) ApiCreateSecretRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateSecretRequest) CreateSecretRequest(createSecretRequest CreateSecretRequest) ApiCreateSecretRequest {
@@ -38,12 +44,6 @@ func (r ApiCreateSecretRequest) CreateSecretRequest(createSecretRequest CreateSe
 // Project scope for top-level secret APIs. Must match the authenticated project context.
 func (r ApiCreateSecretRequest) ProjectId(projectId string) ApiCreateSecretRequest {
 	r.projectId = &projectId
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateSecretRequest) XApiVersion(xApiVersion string) ApiCreateSecretRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -89,6 +89,16 @@ func (a *SecretsAPIService) CreateSecretExecute(r ApiCreateSecretRequest) (*Secr
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.createSecretRequest == nil {
 		return localVarReturnValue, nil, reportError("createSecretRequest is required and must be specified")
 	}
@@ -113,9 +123,7 @@ func (a *SecretsAPIService) CreateSecretExecute(r ApiCreateSecretRequest) (*Secr
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.createSecretRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -180,9 +188,15 @@ type ApiDeleteSecretRequest struct {
 	ctx         context.Context
 	ApiService  *SecretsAPIService
 	secretId    string
+	xApiVersion *string
 	projectId   *string
 	kind        *string
-	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiDeleteSecretRequest) XApiVersion(xApiVersion string) ApiDeleteSecretRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 // Project scope for top-level secret APIs. Must match the authenticated project context.
@@ -193,12 +207,6 @@ func (r ApiDeleteSecretRequest) ProjectId(projectId string) ApiDeleteSecretReque
 
 func (r ApiDeleteSecretRequest) Kind(kind string) ApiDeleteSecretRequest {
 	r.kind = &kind
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiDeleteSecretRequest) XApiVersion(xApiVersion string) ApiDeleteSecretRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -247,6 +255,16 @@ func (a *SecretsAPIService) DeleteSecretExecute(r ApiDeleteSecretRequest) (*Dele
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.projectId != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "project_id", r.projectId, "form", "")
@@ -271,9 +289,7 @@ func (a *SecretsAPIService) DeleteSecretExecute(r ApiDeleteSecretRequest) (*Dele
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -336,9 +352,15 @@ type ApiFillWebsiteCredentialRequest struct {
 	ctx                          context.Context
 	ApiService                   *SecretsAPIService
 	secretId                     string
+	xApiVersion                  *string
 	websiteCredentialFillRequest *WebsiteCredentialFillRequest
 	projectId                    *string
-	xApiVersion                  *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiFillWebsiteCredentialRequest) XApiVersion(xApiVersion string) ApiFillWebsiteCredentialRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiFillWebsiteCredentialRequest) WebsiteCredentialFillRequest(websiteCredentialFillRequest WebsiteCredentialFillRequest) ApiFillWebsiteCredentialRequest {
@@ -349,12 +371,6 @@ func (r ApiFillWebsiteCredentialRequest) WebsiteCredentialFillRequest(websiteCre
 // Project scope for top-level secret APIs. Must match the authenticated project context.
 func (r ApiFillWebsiteCredentialRequest) ProjectId(projectId string) ApiFillWebsiteCredentialRequest {
 	r.projectId = &projectId
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiFillWebsiteCredentialRequest) XApiVersion(xApiVersion string) ApiFillWebsiteCredentialRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -401,6 +417,16 @@ func (a *SecretsAPIService) FillWebsiteCredentialExecute(r ApiFillWebsiteCredent
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.websiteCredentialFillRequest == nil {
 		return localVarReturnValue, nil, reportError("websiteCredentialFillRequest is required and must be specified")
 	}
@@ -425,9 +451,7 @@ func (a *SecretsAPIService) FillWebsiteCredentialExecute(r ApiFillWebsiteCredent
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.websiteCredentialFillRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -492,9 +516,15 @@ type ApiGetSecretRequest struct {
 	ctx         context.Context
 	ApiService  *SecretsAPIService
 	secretId    string
+	xApiVersion *string
 	projectId   *string
 	kind        *string
-	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiGetSecretRequest) XApiVersion(xApiVersion string) ApiGetSecretRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 // Project scope for top-level secret APIs. Must match the authenticated project context.
@@ -505,12 +535,6 @@ func (r ApiGetSecretRequest) ProjectId(projectId string) ApiGetSecretRequest {
 
 func (r ApiGetSecretRequest) Kind(kind string) ApiGetSecretRequest {
 	r.kind = &kind
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiGetSecretRequest) XApiVersion(xApiVersion string) ApiGetSecretRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -557,6 +581,16 @@ func (a *SecretsAPIService) GetSecretExecute(r ApiGetSecretRequest) (*SecretReco
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.projectId != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "project_id", r.projectId, "form", "")
@@ -581,9 +615,7 @@ func (a *SecretsAPIService) GetSecretExecute(r ApiGetSecretRequest) (*SecretReco
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -645,11 +677,17 @@ func (a *SecretsAPIService) GetSecretExecute(r ApiGetSecretRequest) (*SecretReco
 type ApiListSecretsRequest struct {
 	ctx         context.Context
 	ApiService  *SecretsAPIService
+	xApiVersion *string
 	projectId   *string
 	kind        *string
 	host        *string
 	enabled     *bool
-	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListSecretsRequest) XApiVersion(xApiVersion string) ApiListSecretsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 // Project scope for top-level secret APIs. Must match the authenticated project context.
@@ -670,12 +708,6 @@ func (r ApiListSecretsRequest) Host(host string) ApiListSecretsRequest {
 
 func (r ApiListSecretsRequest) Enabled(enabled bool) ApiListSecretsRequest {
 	r.enabled = &enabled
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiListSecretsRequest) XApiVersion(xApiVersion string) ApiListSecretsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -719,6 +751,16 @@ func (a *SecretsAPIService) ListSecretsExecute(r ApiListSecretsRequest) (*ListSe
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.projectId != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "project_id", r.projectId, "form", "")
@@ -749,9 +791,7 @@ func (a *SecretsAPIService) ListSecretsExecute(r ApiListSecretsRequest) (*ListSe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -814,10 +854,16 @@ type ApiUpdateSecretRequest struct {
 	ctx                 context.Context
 	ApiService          *SecretsAPIService
 	secretId            string
+	xApiVersion         *string
 	updateSecretRequest *UpdateSecretRequest
 	projectId           *string
 	kind                *string
-	xApiVersion         *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateSecretRequest) XApiVersion(xApiVersion string) ApiUpdateSecretRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateSecretRequest) UpdateSecretRequest(updateSecretRequest UpdateSecretRequest) ApiUpdateSecretRequest {
@@ -833,12 +879,6 @@ func (r ApiUpdateSecretRequest) ProjectId(projectId string) ApiUpdateSecretReque
 
 func (r ApiUpdateSecretRequest) Kind(kind string) ApiUpdateSecretRequest {
 	r.kind = &kind
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateSecretRequest) XApiVersion(xApiVersion string) ApiUpdateSecretRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -887,6 +927,16 @@ func (a *SecretsAPIService) UpdateSecretExecute(r ApiUpdateSecretRequest) (*Secr
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.updateSecretRequest == nil {
 		return localVarReturnValue, nil, reportError("updateSecretRequest is required and must be specified")
 	}
@@ -914,9 +964,7 @@ func (a *SecretsAPIService) UpdateSecretExecute(r ApiUpdateSecretRequest) (*Secr
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.updateSecretRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

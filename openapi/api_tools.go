@@ -27,18 +27,18 @@ type ApiInspectProjectToolRequest struct {
 	ctx         context.Context
 	ApiService  *ToolsAPIService
 	toolName    string
-	context     *string
 	xApiVersion *string
+	context     *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiInspectProjectToolRequest) XApiVersion(xApiVersion string) ApiInspectProjectToolRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiInspectProjectToolRequest) Context(context string) ApiInspectProjectToolRequest {
 	r.context = &context
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiInspectProjectToolRequest) XApiVersion(xApiVersion string) ApiInspectProjectToolRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -85,6 +85,16 @@ func (a *ToolsAPIService) InspectProjectToolExecute(r ApiInspectProjectToolReque
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.context != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "context", r.context, "form", "")
@@ -106,9 +116,7 @@ func (a *ToolsAPIService) InspectProjectToolExecute(r ApiInspectProjectToolReque
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -170,10 +178,16 @@ func (a *ToolsAPIService) InspectProjectToolExecute(r ApiInspectProjectToolReque
 type ApiListAgentToolsRequest struct {
 	ctx         context.Context
 	ApiService  *ToolsAPIService
+	xApiVersion *string
 	context     *string
 	sources     *[]string
 	exclude     *[]string
-	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListAgentToolsRequest) XApiVersion(xApiVersion string) ApiListAgentToolsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiListAgentToolsRequest) Context(context string) ApiListAgentToolsRequest {
@@ -190,12 +204,6 @@ func (r ApiListAgentToolsRequest) Sources(sources []string) ApiListAgentToolsReq
 // Drop these sources from the result (and skip their fetch). Applied after &#x60;sources&#x60;.
 func (r ApiListAgentToolsRequest) Exclude(exclude []string) ApiListAgentToolsRequest {
 	r.exclude = &exclude
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiListAgentToolsRequest) XApiVersion(xApiVersion string) ApiListAgentToolsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -241,6 +249,16 @@ func (a *ToolsAPIService) ListAgentToolsExecute(r ApiListAgentToolsRequest) ([]A
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.context != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "context", r.context, "form", "")
@@ -284,9 +302,7 @@ func (a *ToolsAPIService) ListAgentToolsExecute(r ApiListAgentToolsRequest) ([]A
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -348,18 +364,18 @@ func (a *ToolsAPIService) ListAgentToolsExecute(r ApiListAgentToolsRequest) ([]A
 type ApiValidateAgentToolNamesRequest struct {
 	ctx                      context.Context
 	ApiService               *ToolsAPIService
-	validateToolNamesPayload *ValidateToolNamesPayload
 	xApiVersion              *string
+	validateToolNamesPayload *ValidateToolNamesPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiValidateAgentToolNamesRequest) XApiVersion(xApiVersion string) ApiValidateAgentToolNamesRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiValidateAgentToolNamesRequest) ValidateToolNamesPayload(validateToolNamesPayload ValidateToolNamesPayload) ApiValidateAgentToolNamesRequest {
 	r.validateToolNamesPayload = &validateToolNamesPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiValidateAgentToolNamesRequest) XApiVersion(xApiVersion string) ApiValidateAgentToolNamesRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -405,6 +421,16 @@ func (a *ToolsAPIService) ValidateAgentToolNamesExecute(r ApiValidateAgentToolNa
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.validateToolNamesPayload == nil {
 		return localVarReturnValue, nil, reportError("validateToolNamesPayload is required and must be specified")
 	}
@@ -426,9 +452,7 @@ func (a *ToolsAPIService) ValidateAgentToolNamesExecute(r ApiValidateAgentToolNa
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.validateToolNamesPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

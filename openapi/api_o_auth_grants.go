@@ -25,18 +25,18 @@ type OAuthGrantsAPIService service
 type ApiBulkRevokeOAuthGrantsRequest struct {
 	ctx                          context.Context
 	ApiService                   *OAuthGrantsAPIService
-	bulkRevokeOAuthGrantsPayload *BulkRevokeOAuthGrantsPayload
 	xApiVersion                  *string
+	bulkRevokeOAuthGrantsPayload *BulkRevokeOAuthGrantsPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiBulkRevokeOAuthGrantsRequest) XApiVersion(xApiVersion string) ApiBulkRevokeOAuthGrantsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiBulkRevokeOAuthGrantsRequest) BulkRevokeOAuthGrantsPayload(bulkRevokeOAuthGrantsPayload BulkRevokeOAuthGrantsPayload) ApiBulkRevokeOAuthGrantsRequest {
 	r.bulkRevokeOAuthGrantsPayload = &bulkRevokeOAuthGrantsPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiBulkRevokeOAuthGrantsRequest) XApiVersion(xApiVersion string) ApiBulkRevokeOAuthGrantsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -82,6 +82,16 @@ func (a *OAuthGrantsAPIService) BulkRevokeOAuthGrantsExecute(r ApiBulkRevokeOAut
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.bulkRevokeOAuthGrantsPayload == nil {
 		return localVarReturnValue, nil, reportError("bulkRevokeOAuthGrantsPayload is required and must be specified")
 	}
@@ -103,9 +113,7 @@ func (a *OAuthGrantsAPIService) BulkRevokeOAuthGrantsExecute(r ApiBulkRevokeOAut
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.bulkRevokeOAuthGrantsPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -173,7 +181,7 @@ type ApiGetOAuthGrantRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetOAuthGrantRequest) XApiVersion(xApiVersion string) ApiGetOAuthGrantRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -224,6 +232,16 @@ func (a *OAuthGrantsAPIService) GetOAuthGrantExecute(r ApiGetOAuthGrantRequest) 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -242,9 +260,7 @@ func (a *OAuthGrantsAPIService) GetOAuthGrantExecute(r ApiGetOAuthGrantRequest) 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -306,6 +322,7 @@ func (a *OAuthGrantsAPIService) GetOAuthGrantExecute(r ApiGetOAuthGrantRequest) 
 type ApiListOAuthGrantsRequest struct {
 	ctx         context.Context
 	ApiService  *OAuthGrantsAPIService
+	xApiVersion *string
 	accountId   *string
 	projectId   *string
 	userId      *string
@@ -316,7 +333,12 @@ type ApiListOAuthGrantsRequest struct {
 	offset      *float32
 	sortBy      *string
 	sortOrder   *string
-	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListOAuthGrantsRequest) XApiVersion(xApiVersion string) ApiListOAuthGrantsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiListOAuthGrantsRequest) AccountId(accountId string) ApiListOAuthGrantsRequest {
@@ -369,12 +391,6 @@ func (r ApiListOAuthGrantsRequest) SortOrder(sortOrder string) ApiListOAuthGrant
 	return r
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiListOAuthGrantsRequest) XApiVersion(xApiVersion string) ApiListOAuthGrantsRequest {
-	r.xApiVersion = &xApiVersion
-	return r
-}
-
 func (r ApiListOAuthGrantsRequest) Execute() (*OAuthGrantListResponse, *http.Response, error) {
 	return r.ApiService.ListOAuthGrantsExecute(r)
 }
@@ -417,6 +433,16 @@ func (a *OAuthGrantsAPIService) ListOAuthGrantsExecute(r ApiListOAuthGrantsReque
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.accountId != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "account_id", r.accountId, "form", "")
@@ -465,9 +491,7 @@ func (a *OAuthGrantsAPIService) ListOAuthGrantsExecute(r ApiListOAuthGrantsReque
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -530,18 +554,18 @@ type ApiRevokeOAuthGrantRequest struct {
 	ctx            context.Context
 	ApiService     *OAuthGrantsAPIService
 	grantId        string
-	includeConsent *bool
 	xApiVersion    *string
+	includeConsent *bool
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiRevokeOAuthGrantRequest) XApiVersion(xApiVersion string) ApiRevokeOAuthGrantRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiRevokeOAuthGrantRequest) IncludeConsent(includeConsent bool) ApiRevokeOAuthGrantRequest {
 	r.includeConsent = &includeConsent
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiRevokeOAuthGrantRequest) XApiVersion(xApiVersion string) ApiRevokeOAuthGrantRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -590,6 +614,16 @@ func (a *OAuthGrantsAPIService) RevokeOAuthGrantExecute(r ApiRevokeOAuthGrantReq
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.includeConsent != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "include_consent", r.includeConsent, "form", "")
@@ -611,9 +645,7 @@ func (a *OAuthGrantsAPIService) RevokeOAuthGrantExecute(r ApiRevokeOAuthGrantReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

@@ -26,18 +26,18 @@ type ApiComputeCollectionMembersFacetsRequest struct {
 	ctx                       context.Context
 	ApiService                *CollectionsAPIService
 	collectionId              string
-	computeObjectFacetPayload *ComputeObjectFacetPayload
 	xApiVersion               *string
+	computeObjectFacetPayload *ComputeObjectFacetPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiComputeCollectionMembersFacetsRequest) XApiVersion(xApiVersion string) ApiComputeCollectionMembersFacetsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiComputeCollectionMembersFacetsRequest) ComputeObjectFacetPayload(computeObjectFacetPayload ComputeObjectFacetPayload) ApiComputeCollectionMembersFacetsRequest {
 	r.computeObjectFacetPayload = &computeObjectFacetPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiComputeCollectionMembersFacetsRequest) XApiVersion(xApiVersion string) ApiComputeCollectionMembersFacetsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -86,6 +86,16 @@ func (a *CollectionsAPIService) ComputeCollectionMembersFacetsExecute(r ApiCompu
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.computeObjectFacetPayload == nil {
 		return localVarReturnValue, nil, reportError("computeObjectFacetPayload is required and must be specified")
 	}
@@ -107,9 +117,7 @@ func (a *CollectionsAPIService) ComputeCollectionMembersFacetsExecute(r ApiCompu
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.computeObjectFacetPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -173,18 +181,18 @@ func (a *CollectionsAPIService) ComputeCollectionMembersFacetsExecute(r ApiCompu
 type ApiComputeCollectionsFacetsRequest struct {
 	ctx                           context.Context
 	ApiService                    *CollectionsAPIService
-	computeCollectionFacetPayload *ComputeCollectionFacetPayload
 	xApiVersion                   *string
+	computeCollectionFacetPayload *ComputeCollectionFacetPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiComputeCollectionsFacetsRequest) XApiVersion(xApiVersion string) ApiComputeCollectionsFacetsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiComputeCollectionsFacetsRequest) ComputeCollectionFacetPayload(computeCollectionFacetPayload ComputeCollectionFacetPayload) ApiComputeCollectionsFacetsRequest {
 	r.computeCollectionFacetPayload = &computeCollectionFacetPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiComputeCollectionsFacetsRequest) XApiVersion(xApiVersion string) ApiComputeCollectionsFacetsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -230,6 +238,16 @@ func (a *CollectionsAPIService) ComputeCollectionsFacetsExecute(r ApiComputeColl
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.computeCollectionFacetPayload == nil {
 		return localVarReturnValue, nil, reportError("computeCollectionFacetPayload is required and must be specified")
 	}
@@ -251,9 +269,7 @@ func (a *CollectionsAPIService) ComputeCollectionsFacetsExecute(r ApiComputeColl
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.computeCollectionFacetPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -317,18 +333,18 @@ func (a *CollectionsAPIService) ComputeCollectionsFacetsExecute(r ApiComputeColl
 type ApiCreateCollectionRequest struct {
 	ctx                     context.Context
 	ApiService              *CollectionsAPIService
-	createCollectionPayload *CreateCollectionPayload
 	xApiVersion             *string
+	createCollectionPayload *CreateCollectionPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateCollectionRequest) XApiVersion(xApiVersion string) ApiCreateCollectionRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateCollectionRequest) CreateCollectionPayload(createCollectionPayload CreateCollectionPayload) ApiCreateCollectionRequest {
 	r.createCollectionPayload = &createCollectionPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateCollectionRequest) XApiVersion(xApiVersion string) ApiCreateCollectionRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -374,6 +390,16 @@ func (a *CollectionsAPIService) CreateCollectionExecute(r ApiCreateCollectionReq
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.createCollectionPayload == nil {
 		return localVarReturnValue, nil, reportError("createCollectionPayload is required and must be specified")
 	}
@@ -395,9 +421,7 @@ func (a *CollectionsAPIService) CreateCollectionExecute(r ApiCreateCollectionReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.createCollectionPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -465,7 +489,7 @@ type ApiDeleteCollectionRequest struct {
 	xApiVersion  *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeleteCollectionRequest) XApiVersion(xApiVersion string) ApiDeleteCollectionRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -516,6 +540,16 @@ func (a *CollectionsAPIService) DeleteCollectionExecute(r ApiDeleteCollectionReq
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -534,9 +568,7 @@ func (a *CollectionsAPIService) DeleteCollectionExecute(r ApiDeleteCollectionReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -602,7 +634,7 @@ type ApiGetCollectionRequest struct {
 	xApiVersion  *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetCollectionRequest) XApiVersion(xApiVersion string) ApiGetCollectionRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -651,6 +683,16 @@ func (a *CollectionsAPIService) GetCollectionExecute(r ApiGetCollectionRequest) 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -669,9 +711,7 @@ func (a *CollectionsAPIService) GetCollectionExecute(r ApiGetCollectionRequest) 
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -734,11 +774,17 @@ type ApiListCollectionMembersRequest struct {
 	ctx          context.Context
 	ApiService   *CollectionsAPIService
 	collectionId string
+	xApiVersion  *string
 	status       *string
 	type_        *string
 	limit        *float32
 	offset       *float32
-	xApiVersion  *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListCollectionMembersRequest) XApiVersion(xApiVersion string) ApiListCollectionMembersRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiListCollectionMembersRequest) Status(status string) ApiListCollectionMembersRequest {
@@ -758,12 +804,6 @@ func (r ApiListCollectionMembersRequest) Limit(limit float32) ApiListCollectionM
 
 func (r ApiListCollectionMembersRequest) Offset(offset float32) ApiListCollectionMembersRequest {
 	r.offset = &offset
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiListCollectionMembersRequest) XApiVersion(xApiVersion string) ApiListCollectionMembersRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -812,6 +852,16 @@ func (a *CollectionsAPIService) ListCollectionMembersExecute(r ApiListCollection
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.status != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "status", r.status, "form", "")
@@ -842,9 +892,7 @@ func (a *CollectionsAPIService) ListCollectionMembersExecute(r ApiListCollection
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -910,7 +958,7 @@ type ApiPropagateCollectionPermissionsRequest struct {
 	xApiVersion  *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiPropagateCollectionPermissionsRequest) XApiVersion(xApiVersion string) ApiPropagateCollectionPermissionsRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -961,6 +1009,16 @@ func (a *CollectionsAPIService) PropagateCollectionPermissionsExecute(r ApiPropa
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -979,9 +1037,7 @@ func (a *CollectionsAPIService) PropagateCollectionPermissionsExecute(r ApiPropa
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1047,7 +1103,7 @@ type ApiPropagateCollectionSharedPropertiesRequest struct {
 	xApiVersion  *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiPropagateCollectionSharedPropertiesRequest) XApiVersion(xApiVersion string) ApiPropagateCollectionSharedPropertiesRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1098,6 +1154,16 @@ func (a *CollectionsAPIService) PropagateCollectionSharedPropertiesExecute(r Api
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1116,9 +1182,7 @@ func (a *CollectionsAPIService) PropagateCollectionSharedPropertiesExecute(r Api
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1181,18 +1245,18 @@ type ApiSearchCollectionChildrenRequest struct {
 	ctx                          context.Context
 	ApiService                   *CollectionsAPIService
 	collectionId                 string
-	complexCollectionSearchQuery *ComplexCollectionSearchQuery
 	xApiVersion                  *string
+	complexCollectionSearchQuery *ComplexCollectionSearchQuery
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiSearchCollectionChildrenRequest) XApiVersion(xApiVersion string) ApiSearchCollectionChildrenRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiSearchCollectionChildrenRequest) ComplexCollectionSearchQuery(complexCollectionSearchQuery ComplexCollectionSearchQuery) ApiSearchCollectionChildrenRequest {
 	r.complexCollectionSearchQuery = &complexCollectionSearchQuery
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiSearchCollectionChildrenRequest) XApiVersion(xApiVersion string) ApiSearchCollectionChildrenRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1241,6 +1305,16 @@ func (a *CollectionsAPIService) SearchCollectionChildrenExecute(r ApiSearchColle
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.complexCollectionSearchQuery == nil {
 		return localVarReturnValue, nil, reportError("complexCollectionSearchQuery is required and must be specified")
 	}
@@ -1262,9 +1336,7 @@ func (a *CollectionsAPIService) SearchCollectionChildrenExecute(r ApiSearchColle
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.complexCollectionSearchQuery
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -1329,18 +1401,18 @@ type ApiSearchCollectionMembersRequest struct {
 	ctx                  context.Context
 	ApiService           *CollectionsAPIService
 	collectionId         string
-	complexSearchPayload *ComplexSearchPayload
 	xApiVersion          *string
+	complexSearchPayload *ComplexSearchPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiSearchCollectionMembersRequest) XApiVersion(xApiVersion string) ApiSearchCollectionMembersRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiSearchCollectionMembersRequest) ComplexSearchPayload(complexSearchPayload ComplexSearchPayload) ApiSearchCollectionMembersRequest {
 	r.complexSearchPayload = &complexSearchPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiSearchCollectionMembersRequest) XApiVersion(xApiVersion string) ApiSearchCollectionMembersRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1389,6 +1461,16 @@ func (a *CollectionsAPIService) SearchCollectionMembersExecute(r ApiSearchCollec
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.complexSearchPayload == nil {
 		return localVarReturnValue, nil, reportError("complexSearchPayload is required and must be specified")
 	}
@@ -1410,9 +1492,7 @@ func (a *CollectionsAPIService) SearchCollectionMembersExecute(r ApiSearchCollec
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.complexSearchPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -1476,18 +1556,18 @@ func (a *CollectionsAPIService) SearchCollectionMembersExecute(r ApiSearchCollec
 type ApiSearchCollectionsRequest struct {
 	ctx                          context.Context
 	ApiService                   *CollectionsAPIService
-	complexCollectionSearchQuery *ComplexCollectionSearchQuery
 	xApiVersion                  *string
+	complexCollectionSearchQuery *ComplexCollectionSearchQuery
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiSearchCollectionsRequest) XApiVersion(xApiVersion string) ApiSearchCollectionsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiSearchCollectionsRequest) ComplexCollectionSearchQuery(complexCollectionSearchQuery ComplexCollectionSearchQuery) ApiSearchCollectionsRequest {
 	r.complexCollectionSearchQuery = &complexCollectionSearchQuery
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiSearchCollectionsRequest) XApiVersion(xApiVersion string) ApiSearchCollectionsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1533,6 +1613,16 @@ func (a *CollectionsAPIService) SearchCollectionsExecute(r ApiSearchCollectionsR
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.complexCollectionSearchQuery == nil {
 		return localVarReturnValue, nil, reportError("complexCollectionSearchQuery is required and must be specified")
 	}
@@ -1554,9 +1644,7 @@ func (a *CollectionsAPIService) SearchCollectionsExecute(r ApiSearchCollectionsR
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.complexCollectionSearchQuery
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -1621,18 +1709,18 @@ type ApiUpdateCollectionRequest struct {
 	ctx                     context.Context
 	ApiService              *CollectionsAPIService
 	collectionId            string
-	updateCollectionPayload *UpdateCollectionPayload
 	xApiVersion             *string
+	updateCollectionPayload *UpdateCollectionPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateCollectionRequest) XApiVersion(xApiVersion string) ApiUpdateCollectionRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateCollectionRequest) UpdateCollectionPayload(updateCollectionPayload UpdateCollectionPayload) ApiUpdateCollectionRequest {
 	r.updateCollectionPayload = &updateCollectionPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateCollectionRequest) XApiVersion(xApiVersion string) ApiUpdateCollectionRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1681,6 +1769,16 @@ func (a *CollectionsAPIService) UpdateCollectionExecute(r ApiUpdateCollectionReq
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.updateCollectionPayload == nil {
 		return localVarReturnValue, nil, reportError("updateCollectionPayload is required and must be specified")
 	}
@@ -1702,9 +1800,7 @@ func (a *CollectionsAPIService) UpdateCollectionExecute(r ApiUpdateCollectionReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.updateCollectionPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -1769,18 +1865,18 @@ type ApiUpdateCollectionChildrenRequest struct {
 	ctx                             context.Context
 	ApiService                      *CollectionsAPIService
 	collectionId                    string
-	collectionChildrenUpdatePayload *CollectionChildrenUpdatePayload
 	xApiVersion                     *string
+	collectionChildrenUpdatePayload *CollectionChildrenUpdatePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateCollectionChildrenRequest) XApiVersion(xApiVersion string) ApiUpdateCollectionChildrenRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateCollectionChildrenRequest) CollectionChildrenUpdatePayload(collectionChildrenUpdatePayload CollectionChildrenUpdatePayload) ApiUpdateCollectionChildrenRequest {
 	r.collectionChildrenUpdatePayload = &collectionChildrenUpdatePayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateCollectionChildrenRequest) XApiVersion(xApiVersion string) ApiUpdateCollectionChildrenRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1829,6 +1925,16 @@ func (a *CollectionsAPIService) UpdateCollectionChildrenExecute(r ApiUpdateColle
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.collectionChildrenUpdatePayload == nil {
 		return localVarReturnValue, nil, reportError("collectionChildrenUpdatePayload is required and must be specified")
 	}
@@ -1850,9 +1956,7 @@ func (a *CollectionsAPIService) UpdateCollectionChildrenExecute(r ApiUpdateColle
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.collectionChildrenUpdatePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -1917,18 +2021,18 @@ type ApiUpdateCollectionMembersRequest struct {
 	ctx                            context.Context
 	ApiService                     *CollectionsAPIService
 	collectionId                   string
-	collectionMembersUpdatePayload *CollectionMembersUpdatePayload
 	xApiVersion                    *string
+	collectionMembersUpdatePayload *CollectionMembersUpdatePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateCollectionMembersRequest) XApiVersion(xApiVersion string) ApiUpdateCollectionMembersRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateCollectionMembersRequest) CollectionMembersUpdatePayload(collectionMembersUpdatePayload CollectionMembersUpdatePayload) ApiUpdateCollectionMembersRequest {
 	r.collectionMembersUpdatePayload = &collectionMembersUpdatePayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateCollectionMembersRequest) XApiVersion(xApiVersion string) ApiUpdateCollectionMembersRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1977,6 +2081,16 @@ func (a *CollectionsAPIService) UpdateCollectionMembersExecute(r ApiUpdateCollec
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.collectionMembersUpdatePayload == nil {
 		return localVarReturnValue, nil, reportError("collectionMembersUpdatePayload is required and must be specified")
 	}
@@ -1998,9 +2112,7 @@ func (a *CollectionsAPIService) UpdateCollectionMembersExecute(r ApiUpdateCollec
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.collectionMembersUpdatePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -2065,18 +2177,18 @@ type ApiUpdateCollectionPermissionsRequest struct {
 	ctx          context.Context
 	ApiService   *CollectionsAPIService
 	collectionId string
-	requestBody  *map[string][]string
 	xApiVersion  *string
+	requestBody  *map[string][]string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateCollectionPermissionsRequest) XApiVersion(xApiVersion string) ApiUpdateCollectionPermissionsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateCollectionPermissionsRequest) RequestBody(requestBody map[string][]string) ApiUpdateCollectionPermissionsRequest {
 	r.requestBody = &requestBody
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateCollectionPermissionsRequest) XApiVersion(xApiVersion string) ApiUpdateCollectionPermissionsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -2125,6 +2237,16 @@ func (a *CollectionsAPIService) UpdateCollectionPermissionsExecute(r ApiUpdateCo
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.requestBody == nil {
 		return localVarReturnValue, nil, reportError("requestBody is required and must be specified")
 	}
@@ -2146,9 +2268,7 @@ func (a *CollectionsAPIService) UpdateCollectionPermissionsExecute(r ApiUpdateCo
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.requestBody
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)

@@ -30,7 +30,7 @@ type ApiCancelProcessTestRunRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiCancelProcessTestRunRequest) XApiVersion(xApiVersion string) ApiCancelProcessTestRunRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -82,6 +82,16 @@ func (a *ProcessesAPIService) CancelProcessTestRunExecute(r ApiCancelProcessTest
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -100,9 +110,7 @@ func (a *ProcessesAPIService) CancelProcessTestRunExecute(r ApiCancelProcessTest
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -168,7 +176,7 @@ type ApiCancelProcessTestRunByIdRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiCancelProcessTestRunByIdRequest) XApiVersion(xApiVersion string) ApiCancelProcessTestRunByIdRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -217,6 +225,16 @@ func (a *ProcessesAPIService) CancelProcessTestRunByIdExecute(r ApiCancelProcess
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -235,9 +253,7 @@ func (a *ProcessesAPIService) CancelProcessTestRunByIdExecute(r ApiCancelProcess
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -299,18 +315,18 @@ func (a *ProcessesAPIService) CancelProcessTestRunByIdExecute(r ApiCancelProcess
 type ApiCreateProcessDefinitionRequest struct {
 	ctx                            context.Context
 	ApiService                     *ProcessesAPIService
-	createProcessDefinitionPayload *CreateProcessDefinitionPayload
 	xApiVersion                    *string
+	createProcessDefinitionPayload *CreateProcessDefinitionPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateProcessDefinitionRequest) XApiVersion(xApiVersion string) ApiCreateProcessDefinitionRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateProcessDefinitionRequest) CreateProcessDefinitionPayload(createProcessDefinitionPayload CreateProcessDefinitionPayload) ApiCreateProcessDefinitionRequest {
 	r.createProcessDefinitionPayload = &createProcessDefinitionPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateProcessDefinitionRequest) XApiVersion(xApiVersion string) ApiCreateProcessDefinitionRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -356,6 +372,16 @@ func (a *ProcessesAPIService) CreateProcessDefinitionExecute(r ApiCreateProcessD
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.createProcessDefinitionPayload == nil {
 		return localVarReturnValue, nil, reportError("createProcessDefinitionPayload is required and must be specified")
 	}
@@ -377,9 +403,7 @@ func (a *ProcessesAPIService) CreateProcessDefinitionExecute(r ApiCreateProcessD
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.createProcessDefinitionPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -444,18 +468,18 @@ type ApiCreateProcessTestSuiteRequest struct {
 	ctx                           context.Context
 	ApiService                    *ProcessesAPIService
 	processId                     string
-	createProcessTestSuitePayload *CreateProcessTestSuitePayload
 	xApiVersion                   *string
+	createProcessTestSuitePayload *CreateProcessTestSuitePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateProcessTestSuiteRequest) XApiVersion(xApiVersion string) ApiCreateProcessTestSuiteRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiCreateProcessTestSuiteRequest) CreateProcessTestSuitePayload(createProcessTestSuitePayload CreateProcessTestSuitePayload) ApiCreateProcessTestSuiteRequest {
 	r.createProcessTestSuitePayload = &createProcessTestSuitePayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiCreateProcessTestSuiteRequest) XApiVersion(xApiVersion string) ApiCreateProcessTestSuiteRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -502,6 +526,16 @@ func (a *ProcessesAPIService) CreateProcessTestSuiteExecute(r ApiCreateProcessTe
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.createProcessTestSuitePayload == nil {
 		return localVarReturnValue, nil, reportError("createProcessTestSuitePayload is required and must be specified")
 	}
@@ -523,9 +557,7 @@ func (a *ProcessesAPIService) CreateProcessTestSuiteExecute(r ApiCreateProcessTe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.createProcessTestSuitePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -593,7 +625,7 @@ type ApiDeleteProcessDefinitionRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeleteProcessDefinitionRequest) XApiVersion(xApiVersion string) ApiDeleteProcessDefinitionRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -644,6 +676,16 @@ func (a *ProcessesAPIService) DeleteProcessDefinitionExecute(r ApiDeleteProcessD
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -662,9 +704,7 @@ func (a *ProcessesAPIService) DeleteProcessDefinitionExecute(r ApiDeleteProcessD
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -730,7 +770,7 @@ type ApiDeleteProcessTestRunRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeleteProcessTestRunRequest) XApiVersion(xApiVersion string) ApiDeleteProcessTestRunRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -781,6 +821,16 @@ func (a *ProcessesAPIService) DeleteProcessTestRunExecute(r ApiDeleteProcessTest
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -799,9 +849,7 @@ func (a *ProcessesAPIService) DeleteProcessTestRunExecute(r ApiDeleteProcessTest
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -868,7 +916,7 @@ type ApiDeleteProcessTestSuiteRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeleteProcessTestSuiteRequest) XApiVersion(xApiVersion string) ApiDeleteProcessTestSuiteRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -920,6 +968,16 @@ func (a *ProcessesAPIService) DeleteProcessTestSuiteExecute(r ApiDeleteProcessTe
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -938,9 +996,7 @@ func (a *ProcessesAPIService) DeleteProcessTestSuiteExecute(r ApiDeleteProcessTe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1006,7 +1062,7 @@ type ApiGetProcessDefinitionRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetProcessDefinitionRequest) XApiVersion(xApiVersion string) ApiGetProcessDefinitionRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1057,6 +1113,16 @@ func (a *ProcessesAPIService) GetProcessDefinitionExecute(r ApiGetProcessDefinit
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1075,9 +1141,7 @@ func (a *ProcessesAPIService) GetProcessDefinitionExecute(r ApiGetProcessDefinit
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1144,7 +1208,7 @@ type ApiGetProcessTestRunRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetProcessTestRunRequest) XApiVersion(xApiVersion string) ApiGetProcessTestRunRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1196,6 +1260,16 @@ func (a *ProcessesAPIService) GetProcessTestRunExecute(r ApiGetProcessTestRunReq
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1214,9 +1288,7 @@ func (a *ProcessesAPIService) GetProcessTestRunExecute(r ApiGetProcessTestRunReq
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1282,7 +1354,7 @@ type ApiGetProcessTestRunByIdRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetProcessTestRunByIdRequest) XApiVersion(xApiVersion string) ApiGetProcessTestRunByIdRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1333,6 +1405,16 @@ func (a *ProcessesAPIService) GetProcessTestRunByIdExecute(r ApiGetProcessTestRu
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1351,9 +1433,7 @@ func (a *ProcessesAPIService) GetProcessTestRunByIdExecute(r ApiGetProcessTestRu
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1419,7 +1499,7 @@ type ApiListProcessDefinitionVersionsRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListProcessDefinitionVersionsRequest) XApiVersion(xApiVersion string) ApiListProcessDefinitionVersionsRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1470,6 +1550,16 @@ func (a *ProcessesAPIService) ListProcessDefinitionVersionsExecute(r ApiListProc
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1488,9 +1578,7 @@ func (a *ProcessesAPIService) ListProcessDefinitionVersionsExecute(r ApiListProc
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1552,12 +1640,18 @@ func (a *ProcessesAPIService) ListProcessDefinitionVersionsExecute(r ApiListProc
 type ApiListProcessDefinitionsRequest struct {
 	ctx         context.Context
 	ApiService  *ProcessesAPIService
+	xApiVersion *string
 	status      *string
 	process     *string
 	limit       *float32
 	offset      *float32
 	allVersions *bool
-	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListProcessDefinitionsRequest) XApiVersion(xApiVersion string) ApiListProcessDefinitionsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiListProcessDefinitionsRequest) Status(status string) ApiListProcessDefinitionsRequest {
@@ -1582,12 +1676,6 @@ func (r ApiListProcessDefinitionsRequest) Offset(offset float32) ApiListProcessD
 
 func (r ApiListProcessDefinitionsRequest) AllVersions(allVersions bool) ApiListProcessDefinitionsRequest {
 	r.allVersions = &allVersions
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiListProcessDefinitionsRequest) XApiVersion(xApiVersion string) ApiListProcessDefinitionsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1633,6 +1721,16 @@ func (a *ProcessesAPIService) ListProcessDefinitionsExecute(r ApiListProcessDefi
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.status != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "status", r.status, "form", "")
@@ -1666,9 +1764,7 @@ func (a *ProcessesAPIService) ListProcessDefinitionsExecute(r ApiListProcessDefi
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1731,18 +1827,18 @@ type ApiListProcessTestRunsRequest struct {
 	ctx         context.Context
 	ApiService  *ProcessesAPIService
 	processId   string
-	limit       *int32
 	xApiVersion *string
+	limit       *int32
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListProcessTestRunsRequest) XApiVersion(xApiVersion string) ApiListProcessTestRunsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiListProcessTestRunsRequest) Limit(limit int32) ApiListProcessTestRunsRequest {
 	r.limit = &limit
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiListProcessTestRunsRequest) XApiVersion(xApiVersion string) ApiListProcessTestRunsRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -1789,6 +1885,16 @@ func (a *ProcessesAPIService) ListProcessTestRunsExecute(r ApiListProcessTestRun
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	if r.limit != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "form", "")
@@ -1810,9 +1916,7 @@ func (a *ProcessesAPIService) ListProcessTestRunsExecute(r ApiListProcessTestRun
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -1878,7 +1982,7 @@ type ApiListProcessTestSuitesRequest struct {
 	xApiVersion *string
 }
 
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListProcessTestSuitesRequest) XApiVersion(xApiVersion string) ApiListProcessTestSuitesRequest {
 	r.xApiVersion = &xApiVersion
 	return r
@@ -1929,6 +2033,16 @@ func (a *ProcessesAPIService) ListProcessTestSuitesExecute(r ApiListProcessTestS
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -1947,9 +2061,7 @@ func (a *ProcessesAPIService) ListProcessTestSuitesExecute(r ApiListProcessTestS
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2012,18 +2124,18 @@ type ApiPublishProcessDefinitionRequest struct {
 	ctx                             context.Context
 	ApiService                      *ProcessesAPIService
 	processId                       string
-	publishProcessDefinitionPayload *PublishProcessDefinitionPayload
 	xApiVersion                     *string
+	publishProcessDefinitionPayload *PublishProcessDefinitionPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiPublishProcessDefinitionRequest) XApiVersion(xApiVersion string) ApiPublishProcessDefinitionRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiPublishProcessDefinitionRequest) PublishProcessDefinitionPayload(publishProcessDefinitionPayload PublishProcessDefinitionPayload) ApiPublishProcessDefinitionRequest {
 	r.publishProcessDefinitionPayload = &publishProcessDefinitionPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiPublishProcessDefinitionRequest) XApiVersion(xApiVersion string) ApiPublishProcessDefinitionRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -2072,6 +2184,16 @@ func (a *ProcessesAPIService) PublishProcessDefinitionExecute(r ApiPublishProces
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.publishProcessDefinitionPayload == nil {
 		return localVarReturnValue, nil, reportError("publishProcessDefinitionPayload is required and must be specified")
 	}
@@ -2093,9 +2215,7 @@ func (a *ProcessesAPIService) PublishProcessDefinitionExecute(r ApiPublishProces
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.publishProcessDefinitionPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -2160,18 +2280,18 @@ type ApiRevertProcessDefinitionRequest struct {
 	ctx                            context.Context
 	ApiService                     *ProcessesAPIService
 	processId                      string
-	revertProcessDefinitionPayload *RevertProcessDefinitionPayload
 	xApiVersion                    *string
+	revertProcessDefinitionPayload *RevertProcessDefinitionPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiRevertProcessDefinitionRequest) XApiVersion(xApiVersion string) ApiRevertProcessDefinitionRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiRevertProcessDefinitionRequest) RevertProcessDefinitionPayload(revertProcessDefinitionPayload RevertProcessDefinitionPayload) ApiRevertProcessDefinitionRequest {
 	r.revertProcessDefinitionPayload = &revertProcessDefinitionPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiRevertProcessDefinitionRequest) XApiVersion(xApiVersion string) ApiRevertProcessDefinitionRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -2220,6 +2340,16 @@ func (a *ProcessesAPIService) RevertProcessDefinitionExecute(r ApiRevertProcessD
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.revertProcessDefinitionPayload == nil {
 		return localVarReturnValue, nil, reportError("revertProcessDefinitionPayload is required and must be specified")
 	}
@@ -2241,9 +2371,7 @@ func (a *ProcessesAPIService) RevertProcessDefinitionExecute(r ApiRevertProcessD
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.revertProcessDefinitionPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -2308,18 +2436,18 @@ type ApiStartProcessTestRunRequest struct {
 	ctx                        context.Context
 	ApiService                 *ProcessesAPIService
 	processId                  string
-	startProcessTestRunPayload *StartProcessTestRunPayload
 	xApiVersion                *string
+	startProcessTestRunPayload *StartProcessTestRunPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiStartProcessTestRunRequest) XApiVersion(xApiVersion string) ApiStartProcessTestRunRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiStartProcessTestRunRequest) StartProcessTestRunPayload(startProcessTestRunPayload StartProcessTestRunPayload) ApiStartProcessTestRunRequest {
 	r.startProcessTestRunPayload = &startProcessTestRunPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiStartProcessTestRunRequest) XApiVersion(xApiVersion string) ApiStartProcessTestRunRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -2368,6 +2496,16 @@ func (a *ProcessesAPIService) StartProcessTestRunExecute(r ApiStartProcessTestRu
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.startProcessTestRunPayload == nil {
 		return localVarReturnValue, nil, reportError("startProcessTestRunPayload is required and must be specified")
 	}
@@ -2389,9 +2527,7 @@ func (a *ProcessesAPIService) StartProcessTestRunExecute(r ApiStartProcessTestRu
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.startProcessTestRunPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -2455,18 +2591,18 @@ func (a *ProcessesAPIService) StartProcessTestRunExecute(r ApiStartProcessTestRu
 type ApiSubmitProcessTestRunRequest struct {
 	ctx                         context.Context
 	ApiService                  *ProcessesAPIService
-	submitProcessTestRunPayload *SubmitProcessTestRunPayload
 	xApiVersion                 *string
+	submitProcessTestRunPayload *SubmitProcessTestRunPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiSubmitProcessTestRunRequest) XApiVersion(xApiVersion string) ApiSubmitProcessTestRunRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiSubmitProcessTestRunRequest) SubmitProcessTestRunPayload(submitProcessTestRunPayload SubmitProcessTestRunPayload) ApiSubmitProcessTestRunRequest {
 	r.submitProcessTestRunPayload = &submitProcessTestRunPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiSubmitProcessTestRunRequest) XApiVersion(xApiVersion string) ApiSubmitProcessTestRunRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -2512,6 +2648,16 @@ func (a *ProcessesAPIService) SubmitProcessTestRunExecute(r ApiSubmitProcessTest
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.submitProcessTestRunPayload == nil {
 		return localVarReturnValue, nil, reportError("submitProcessTestRunPayload is required and must be specified")
 	}
@@ -2533,9 +2679,7 @@ func (a *ProcessesAPIService) SubmitProcessTestRunExecute(r ApiSubmitProcessTest
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.submitProcessTestRunPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -2600,18 +2744,18 @@ type ApiUpdateProcessDefinitionRequest struct {
 	ctx                            context.Context
 	ApiService                     *ProcessesAPIService
 	processId                      string
-	updateProcessDefinitionPayload *UpdateProcessDefinitionPayload
 	xApiVersion                    *string
+	updateProcessDefinitionPayload *UpdateProcessDefinitionPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateProcessDefinitionRequest) XApiVersion(xApiVersion string) ApiUpdateProcessDefinitionRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateProcessDefinitionRequest) UpdateProcessDefinitionPayload(updateProcessDefinitionPayload UpdateProcessDefinitionPayload) ApiUpdateProcessDefinitionRequest {
 	r.updateProcessDefinitionPayload = &updateProcessDefinitionPayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateProcessDefinitionRequest) XApiVersion(xApiVersion string) ApiUpdateProcessDefinitionRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -2660,6 +2804,16 @@ func (a *ProcessesAPIService) UpdateProcessDefinitionExecute(r ApiUpdateProcessD
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.updateProcessDefinitionPayload == nil {
 		return localVarReturnValue, nil, reportError("updateProcessDefinitionPayload is required and must be specified")
 	}
@@ -2681,9 +2835,7 @@ func (a *ProcessesAPIService) UpdateProcessDefinitionExecute(r ApiUpdateProcessD
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.updateProcessDefinitionPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
@@ -2749,18 +2901,18 @@ type ApiUpdateProcessTestSuiteRequest struct {
 	ApiService                    *ProcessesAPIService
 	processId                     string
 	suiteId                       string
-	updateProcessTestSuitePayload *UpdateProcessTestSuitePayload
 	xApiVersion                   *string
+	updateProcessTestSuitePayload *UpdateProcessTestSuitePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateProcessTestSuiteRequest) XApiVersion(xApiVersion string) ApiUpdateProcessTestSuiteRequest {
+	r.xApiVersion = &xApiVersion
+	return r
 }
 
 func (r ApiUpdateProcessTestSuiteRequest) UpdateProcessTestSuitePayload(updateProcessTestSuitePayload UpdateProcessTestSuitePayload) ApiUpdateProcessTestSuiteRequest {
 	r.updateProcessTestSuitePayload = &updateProcessTestSuitePayload
-	return r
-}
-
-// Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
-func (r ApiUpdateProcessTestSuiteRequest) XApiVersion(xApiVersion string) ApiUpdateProcessTestSuiteRequest {
-	r.xApiVersion = &xApiVersion
 	return r
 }
 
@@ -2810,6 +2962,16 @@ func (a *ProcessesAPIService) UpdateProcessTestSuiteExecute(r ApiUpdateProcessTe
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
 	if r.updateProcessTestSuitePayload == nil {
 		return localVarReturnValue, nil, reportError("updateProcessTestSuitePayload is required and must be specified")
 	}
@@ -2831,9 +2993,7 @@ func (a *ProcessesAPIService) UpdateProcessTestSuiteExecute(r ApiUpdateProcessTe
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
-	if r.xApiVersion != nil {
-		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
-	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.updateProcessTestSuitePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
