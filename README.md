@@ -202,8 +202,8 @@ Release.
 
 ### Model option decoding
 
-The generation patch dispatches `ModelOptions` using the specification's `_option_id`
-mapping and delegates recognized IDs to the generated subtype. Missing or unknown
+The generation patch dispatches `ModelOptions` using each schema branch's literal
+`_option_id` (supporting both the older required-ID `oneOf` and optional-ID `anyOf`) and delegates recognized IDs to the generated subtype. Missing or unknown
 IDs are preserved in `ModelOptions.Raw` as `json.RawMessage`; they can be inspected
 through `GetActualInstance()` / `GetActualInstanceValue()` and serialized without
 losing fields or guessing a provider. JSON `null` is preserved too. Malformed JSON,

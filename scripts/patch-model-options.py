@@ -7,11 +7,21 @@ import sys
 
 model_path, spec_path = map(Path, sys.argv[1:])
 source = model_path.read_text()
-schema = json.loads(spec_path.read_text())["components"]["schemas"]["ModelOptions"]
-discriminator = schema["discriminator"]
-mapping = discriminator["mapping"]
-if not mapping or set(mapping.values()) != {branch["$ref"] for branch in schema["oneOf"]}:
-    raise ValueError("ModelOptions discriminator must cover every oneOf branch")
+components = json.loads(spec_path.read_text())["components"]["schemas"]
+schema = components["ModelOptions"]
+branches = schema.get("oneOf", schema.get("anyOf", []))
+discriminator = schema.get("discriminator", {"propertyName": "_option_id"})
+mapping = {}
+for branch in branches:
+    ref = branch["$ref"]
+    member = components[ref.removeprefix("#/components/schemas/")]
+    tag = member["properties"][discriminator["propertyName"]]
+    values = tag.get("enum", [tag.get("const")])
+    if len(values) != 1 or not isinstance(values[0], str) or values[0] in mapping:
+        raise ValueError(f"Expected a unique literal option ID in {ref}")
+    mapping[values[0]] = ref
+if not mapping or ("mapping" in discriminator and discriminator["mapping"] != mapping):
+    raise ValueError("ModelOptions family IDs must cover every union branch")
 # Resolve Go field/type names from generated output instead of duplicating generator naming rules.
 struct = re.search(r"type ModelOptions struct \{(.*?)\n\}", source, re.S)
 if not struct:
@@ -52,13 +62,15 @@ lines.extend([
     "}",
 ])
 
-def replace_method(name, body):
+def replace_method(name, body, allow_missing=False):
     global source
     source, count = re.subn(
         r"func \((?:dst \*|src |obj \*?)ModelOptions\) " + name + r"\([^\n]*\{.*?\n\}",
         lambda _: "\n".join(body), source, flags=re.S,
     )
-    if count != 1:
+    if count == 0 and allow_missing:
+        source += "\n\n" + "\n".join(body) + "\n"
+    elif count != 1:
         raise ValueError(f"Expected exactly one ModelOptions {name} method")
 
 
@@ -83,6 +95,17 @@ for name, receiver, returns, expression, fallback in [
     if name != "MarshalJSON":
         body.append(f"\tif {variable}.Raw == nil {{ return nil }}")
     body.extend([f"\treturn {fallback}", "}"])
-    replace_method(name, body)
+    replace_method(name, body, allow_missing="anyOf" in schema and name != "MarshalJSON")
+# The generator omits oneOf convenience APIs for anyOf. Keep those existing
+# constructors available when the schema relaxes the ID requirement.
+for field, field_type in fields.items():
+    constructor = f"{field}AsModelOptions"
+    if not re.search(r"func " + re.escape(constructor) + r"\(", source):
+        source += (
+            f"\n// {constructor} wraps typed options in ModelOptions.\n"
+            f"func {constructor}(v *{field_type}) ModelOptions {{\n"
+            f"\treturn ModelOptions{{{field}: v}}\n"
+            "}\n"
+        )
 source = source.replace('\n\t"gopkg.in/validator.v2"', "").replace('\n\t"fmt"', "")
 model_path.write_text(source)

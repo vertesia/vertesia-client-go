@@ -8,24 +8,59 @@ import (
 	"testing"
 )
 
+func TestModelOptionsConvenienceAPI(t *testing.T) {
+	options := &TextFallbackOptions{}
+	wrapped := TextFallbackOptionsAsModelOptions(options)
+	if wrapped.GetActualInstance() != options || !reflect.DeepEqual(wrapped.GetActualInstanceValue(), *options) {
+		t.Fatal("typed convenience API must preserve the wrapped options")
+	}
+}
+
 func TestModelOptionsDiscriminatorCoverage(t *testing.T) {
 	raw, err := os.ReadFile("../spec/vertesia-openapi.json")
 	if err != nil {
 		t.Fatal(err)
 	}
+	type reference struct {
+		Ref string `json:"$ref"`
+	}
+	type component struct {
+		OneOf      []reference `json:"oneOf"`
+		AnyOf      []reference `json:"anyOf"`
+		Properties map[string]struct {
+			Enum  []json.RawMessage `json:"enum"`
+			Const json.RawMessage   `json:"const"`
+		} `json:"properties"`
+	}
 	var spec struct {
-		Components struct {
-			Schemas map[string]struct {
-				Discriminator struct{ Mapping map[string]string }
-			}
-		}
+		Components struct{ Schemas map[string]component }
 	}
 	if err := json.Unmarshal(raw, &spec); err != nil {
 		t.Fatal(err)
 	}
-	mapping := spec.Components.Schemas["ModelOptions"].Discriminator.Mapping
+	union := spec.Components.Schemas["ModelOptions"]
+	refs := append(union.OneOf, union.AnyOf...)
+	mapping := make(map[string]string)
+	for _, ref := range refs {
+		member := spec.Components.Schemas[strings.TrimPrefix(ref.Ref, "#/components/schemas/")]
+		var id string
+		if value := member.Properties["_option_id"].Const; len(value) > 0 {
+			if err := json.Unmarshal(value, &id); err != nil {
+				t.Fatal(err)
+			}
+		}
+		if values := member.Properties["_option_id"].Enum; len(values) == 1 {
+			if err := json.Unmarshal(values[0], &id); err != nil {
+				t.Fatal(err)
+			}
+		}
+		if id == "" || mapping[id] != "" {
+			t.Fatalf("missing or duplicate option ID in %s", ref.Ref)
+		}
+		mapping[id] = ref.Ref
+	}
 	if len(mapping) == 0 {
-		t.Fatal("ModelOptions discriminator mapping is missing")
+		t.Fatal("ModelOptions union is empty")
 	}
 	for id, ref := range mapping {
 		t.Run(id, func(t *testing.T) {
