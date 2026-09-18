@@ -215,6 +215,8 @@ survive typed edits, extraction/rewrapping, and `ToMap()`/JSON serialization. Ty
 fields take precedence, including when cleared; remove an extension by deleting its
 map entry. Decoding a new payload resets both typed fields and extensions.
 This response-decoding tolerance does not relax server request validation.
-The patch requires Python 3 and leaves other unions' validation unchanged. Run
+The patch runs with `go run` using only the Go standard library. It locates generated
+declarations with `go/parser` and `go/ast`, applies targeted source edits, and formats
+the output with `go/format`. Other unions' validation remains unchanged. Run
 `go test ./...` to exercise the patch against every registered model option family
 without modifying generated files.

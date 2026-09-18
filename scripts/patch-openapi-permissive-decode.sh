@@ -24,7 +24,7 @@ fi
 # for unrelated oneOf models through the generator-wide lookup option.
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [[ -f "$openapi_dir/model_model_options.go" ]]; then
-  python3 "$script_dir/patch-model-options.py" "$openapi_dir/model_model_options.go" "$script_dir/../spec/vertesia-openapi.json"
+  go run "$script_dir/patch-model-options/main.go" -model "$openapi_dir/model_model_options.go" -spec "$script_dir/../spec/vertesia-openapi.json"
 fi
 
 client_file="$openapi_dir/client.go"
