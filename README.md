@@ -199,3 +199,12 @@ Releases are created from git tags. The release workflow runs tests against the
 preview environment, verifies the tag matches the OpenAPI spec `info.version`
 and generator `packageVersion`, creates an annotated tag, and publishes a GitHub
 Release.
+
+### Model option decoding
+
+The generation patch dispatches `ModelOptions` using the specification's `_option_id`
+mapping and delegates field decoding to the generated subtype. It rejects missing
+or unknown IDs and clears previous branches when a destination is reused. The
+patch requires Python 3, preserves permissive decoding of future response fields,
+and leaves other unions' validation unchanged. Run `go test ./...` to exercise the
+patch against every registered model option family without modifying generated files.
