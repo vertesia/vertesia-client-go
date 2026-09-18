@@ -26,20 +26,26 @@ func TestModelOptionsGenerationPatch(t *testing.T) {
 		}
 	}
 	generated := filepath.Join(dir, "openapi")
-	var first []byte
+	first := make(map[string][]byte)
 	for i := 0; i < 2; i++ {
 		cmd := exec.Command("bash", "scripts/patch-openapi-permissive-decode.sh", generated)
 		if output, err := cmd.CombinedOutput(); err != nil {
 			t.Fatalf("patch: %v: %s", err, output)
 		}
-		patched, err := os.ReadFile(filepath.Join(generated, "model_model_options.go"))
+		models, err := filepath.Glob(filepath.Join(generated, "model_*.go"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		if i == 1 && !bytes.Equal(first, patched) {
-			t.Fatal("ModelOptions patch is not idempotent")
+		for _, model := range models {
+			patched, err := os.ReadFile(model)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if i == 1 && !bytes.Equal(first[model], patched) {
+				t.Fatalf("patch is not idempotent for %s", filepath.Base(model))
+			}
+			first[model] = patched
 		}
-		first = patched
 	}
 	tests, err := os.ReadFile("testdata/model_options_test.go")
 	if err != nil {

@@ -64,7 +64,7 @@ func TestModelOptionsDiscriminatorCoverage(t *testing.T) {
 	}
 	for id, ref := range mapping {
 		t.Run(id, func(t *testing.T) {
-			payload := map[string]any{"_option_id": id}
+			payload := map[string]any{"_option_id": id, "future_option": json.RawMessage(`{"large":9007199254740993,"value":null}`)}
 			if id == "groq-deepseek-thinking" {
 				payload["reasoning_format"] = "parsed"
 			}
@@ -97,6 +97,13 @@ func TestModelOptionsDiscriminatorCoverage(t *testing.T) {
 			}
 			if roundTrip["_option_id"] != id {
 				t.Fatalf("lost discriminator: %s", encoded)
+			}
+			var preserved map[string]json.RawMessage
+			if err := json.Unmarshal(encoded, &preserved); err != nil {
+				t.Fatal(err)
+			}
+			if string(preserved["future_option"]) != string(payload["future_option"].(json.RawMessage)) {
+				t.Fatalf("lost extension or numeric precision: %s", encoded)
 			}
 		})
 	}
@@ -196,5 +203,67 @@ func TestModelOptionsSwitchesBetweenTypedAndRaw(t *testing.T) {
 	}
 	if options.Raw != nil || options.GetActualInstance() != nil {
 		t.Fatal("failed decode retained raw data")
+	}
+}
+
+func TestModelOptionsReadEditSavePreservesExtensions(t *testing.T) {
+	data := []byte(`{"_option_id":"openai-text","max_tokens":42,"temperature":0.5,"future_option":{"large":9007199254740993,"huge":1e1000,"values":[null,false,{},[]]}}`)
+	var options ModelOptions
+	if err := json.Unmarshal(data, &options); err != nil {
+		t.Fatal(err)
+	}
+	branch := options.OpenAiTextOptions
+	if branch == nil || len(branch.AdditionalProperties) != 1 {
+		t.Fatal("expected typed options with only unknown fields retained")
+	}
+	data[0] = 'X'
+	branch.SetMaxTokens(128)
+	branch.Temperature = nil
+	// Even manually supplied extensions cannot override typed values or undo clears.
+	branch.AdditionalProperties["max_tokens"] = json.RawMessage(`999`)
+	branch.AdditionalProperties["TEMPERATURE"] = json.RawMessage(`0.9`)
+	rewrapped := OpenAiTextOptionsAsModelOptions(branch)
+	encoded, err := json.Marshal(rewrapped)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(encoded, &fields); err != nil {
+		t.Fatal(err)
+	}
+	if string(fields["max_tokens"]) != "128" || fields["temperature"] != nil || fields["TEMPERATURE"] != nil {
+		t.Fatalf("typed edit or clear lost: %s", encoded)
+	}
+	if string(fields["future_option"]) != `{"large":9007199254740993,"huge":1e1000,"values":[null,false,{},[]]}` {
+		t.Fatalf("extension changed: %s", encoded)
+	}
+	delete(branch.AdditionalProperties, "future_option")
+	mapped, err := branch.ToMap()
+	if err != nil || mapped["future_option"] != nil {
+		t.Fatalf("extension removal failed: %v, %v", mapped, err)
+	}
+}
+
+func TestModelOptionsConcreteDecoderClearsExtensions(t *testing.T) {
+	var options OpenAiTextOptions
+	for _, body := range []string{
+		`{"_option_id":"openai-text","MAX_TOKENS":42,"future":true}`,
+		`{"_option_id":"openai-text","max_tokens":64}`,
+	} {
+		if err := json.Unmarshal([]byte(body), &options); err != nil {
+			t.Fatal(err)
+		}
+		if options.AdditionalProperties["MAX_TOKENS"] != nil {
+			t.Fatal("case-insensitive known field was also retained as an extension")
+		}
+	}
+	if len(options.AdditionalProperties) != 0 || options.GetMaxTokens() != 64 {
+		t.Fatal("reused typed destination retained stale data")
+	}
+	if err := json.Unmarshal([]byte(`{"_option_id":"openai-text","max_tokens":"bad","future":true}`), &options); err == nil {
+		t.Fatal("extension support weakened typed validation")
+	}
+	if options.MaxTokens != nil || len(options.AdditionalProperties) != 0 {
+		t.Fatal("failed decode retained previous values")
 	}
 }

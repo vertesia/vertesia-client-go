@@ -108,4 +108,115 @@ for field, field_type in fields.items():
             "}\n"
         )
 source = source.replace('\n\t"gopkg.in/validator.v2"', "").replace('\n\t"fmt"', "")
+if '"strings"' not in source:
+    source = source.replace('"encoding/json"', '"encoding/json"\n\t"strings"', 1)
+if "func modelOptionsIsKnownField(" not in source:
+    source += '''
+// Match encoding/json's case-insensitive field lookup too, so an alternate
+// spelling cannot resurrect a cleared typed field during a later round trip.
+func modelOptionsIsKnownField(name string, known []string) bool {
+    for _, field := range known {
+        if strings.EqualFold(name, field) { return true }
+    }
+    return false
+}
+'''
 model_path.write_text(source)
+
+# Keep extensions on each concrete subtype, so extracting and rewrapping typed
+# options does not lose them. Retain the generator's validation and ToMap logic.
+model_files = {}
+for path in model_path.parent.glob("model_*.go"):
+    content = path.read_text()
+    for name in re.findall(r"^type (\w+) struct \{", content, re.M):
+        model_files[name] = path
+for ref in mapping.values():
+    name = ref.removeprefix("#/components/schemas/")
+    path = model_files[fields[name]]
+    content = path.read_text()
+    name = fields[name]
+    # Required-field checks only need key presence, not float64 conversion of
+    # unrelated extension values (which can contain arbitrary JSON numbers).
+    content = content.replace("allProperties := make(map[string]interface{})", "allProperties := make(map[string]json.RawMessage)")
+    struct = re.search(r"type " + name + r" struct \{(.*?)\n\}", content, re.S)
+    # Read the actual generated wire fields rather than guessing Go field names.
+    known = re.findall(r'`json:"([^",]+)(?:,[^"]*)?"`', struct[1])
+    known = [field for field in known if field != "-"]
+    if not known:
+        raise ValueError(f"No generated wire fields for {name}")
+    known_literal = "[]string{" + ", ".join(json.dumps(field) for field in known) + "}"
+    if "AdditionalProperties" not in struct[1]:
+        content = content.replace(
+            f"type {name} struct {{",
+            f"type {name} struct {{\n"
+            '\t// AdditionalProperties preserves unknown option fields across read-edit-save.\n'
+            '\tAdditionalProperties map[string]interface{} `json:"-"`', 1,
+        )
+    else:
+        content, count = re.subn(
+            r'AdditionalProperties\s+map\[string\]interface\{\}(?:\s+`json:"-"`)?',
+            'AdditionalProperties map[string]interface{} `json:"-"`', content, count=1,
+        )
+        if count != 1:
+            raise ValueError(f"Unexpected generated AdditionalProperties representation for {name}")
+    # Some older branches already had generator-owned extension handling. Replace
+    # it with the precision-preserving wrapper below, retaining the public map API.
+    content = re.sub(
+        r'\n\s*additionalProperties := make\(map\[string\]interface\{\}\).*?\n\t\}',
+        '', content, flags=re.S,
+    )
+    content = re.sub(
+        r'\n\s*for key, value := range o.AdditionalProperties \{\s*toSerialize\[key\] = value\s*\}',
+        '', content,
+    )
+    if f"func (o *{name}) unmarshalKnownJSON(" not in content:
+        content, count = re.subn(
+            r"func \(o \*" + name + r"\) UnmarshalJSON\(",
+            f"func (o *{name}) unmarshalKnownJSON(", content,
+        )
+        if count == 0:
+            content += f'''
+func (o *{name}) unmarshalKnownJSON(data []byte) error {{
+    type plain {name}
+    return json.Unmarshal(data, (*plain)(o))
+}}
+'''
+        elif count != 1:
+            raise ValueError(f"Unexpected decoder count for {name}")
+    wrapper = f'''func (o *{name}) UnmarshalJSON(data []byte) error {{
+    *o = {name}{{}}
+    var decoded {name}
+    if err := decoded.unmarshalKnownJSON(data); err != nil {{ return err }}
+    var extra map[string]json.RawMessage
+    if err := json.Unmarshal(data, &extra); err != nil {{ return err }}
+    for key := range extra {{
+        if modelOptionsIsKnownField(key, {known_literal}) {{ delete(extra, key) }}
+    }}
+    if len(extra) > 0 {{
+        decoded.AdditionalProperties = make(map[string]interface{{}}, len(extra))
+        for key, value := range extra {{ decoded.AdditionalProperties[key] = value }}
+    }}
+    *o = decoded
+    return nil
+}}'''
+    content, count = re.subn(
+        r"func \(o \*" + name + r"\) UnmarshalJSON\([^\n]*\{.*?\n\}",
+        lambda _: wrapper, content, flags=re.S,
+    )
+    if count == 0:
+        content += "\n" + wrapper + "\n"
+    elif count != 1:
+        raise ValueError(f"Unexpected wrapper count for {name}")
+    if "// Preserve only unknown fields; typed fields retain precedence even when cleared." not in content:
+        content, count = re.subn(
+            r"(func \(o " + name + r"\) ToMap\(\) \(map\[string\]interface\{\}, error\) \{\s*"
+            r"toSerialize := map\[string\]interface\{\}\{\})",
+            lambda match: match[1] + f'''
+    // Preserve only unknown fields; typed fields retain precedence even when cleared.
+    for key, value := range o.AdditionalProperties {{
+        if !modelOptionsIsKnownField(key, {known_literal}) {{ toSerialize[key] = value }}
+    }}''', content,
+        )
+        if count != 1:
+            raise ValueError(f"Expected generated ToMap for {name}")
+    path.write_text(content)
