@@ -18,14 +18,15 @@ import (
 // checks if the PrincipalIdentity type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &PrincipalIdentity{}
 
-// PrincipalIdentity Response shape of the `/iam/users/identity` endpoint: the current principal's  {@link  PrincipalContext }  plus its id. Distinct from `PrincipalContext` itself because the id is identity metadata, not a merged BLP field — adding it to `PrincipalContext` would unintentionally expose `$principal.id` to PrincipalSet rule evaluation.
+// PrincipalIdentity Response shape of the `/iam/users/identity` endpoint: the current principal's full ABAC context — its `kind` (always `user` here), `id`, and the merged BLP attributes a rule can reference through `$principal.*`.
 type PrincipalIdentity struct {
+	Kind                 string                 `json:"kind"`
+	Id                   string                 `json:"id"`
 	Clearance            float32                `json:"clearance"`
 	Compartments         []string               `json:"compartments"`
 	Email                *string                `json:"email,omitempty"`
 	Tags                 []string               `json:"tags"`
 	Properties           map[string]interface{} `json:"properties"`
-	Id                   string                 `json:"id"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -35,13 +36,14 @@ type _PrincipalIdentity PrincipalIdentity
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewPrincipalIdentity(clearance float32, compartments []string, tags []string, properties map[string]interface{}, id string) *PrincipalIdentity {
+func NewPrincipalIdentity(kind string, id string, clearance float32, compartments []string, tags []string, properties map[string]interface{}) *PrincipalIdentity {
 	this := PrincipalIdentity{}
+	this.Kind = kind
+	this.Id = id
 	this.Clearance = clearance
 	this.Compartments = compartments
 	this.Tags = tags
 	this.Properties = properties
-	this.Id = id
 	return &this
 }
 
@@ -51,6 +53,54 @@ func NewPrincipalIdentity(clearance float32, compartments []string, tags []strin
 func NewPrincipalIdentityWithDefaults() *PrincipalIdentity {
 	this := PrincipalIdentity{}
 	return &this
+}
+
+// GetKind returns the Kind field value
+func (o *PrincipalIdentity) GetKind() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Kind
+}
+
+// GetKindOk returns a tuple with the Kind field value
+// and a boolean to check if the value has been set.
+func (o *PrincipalIdentity) GetKindOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Kind, true
+}
+
+// SetKind sets field value
+func (o *PrincipalIdentity) SetKind(v string) {
+	o.Kind = v
+}
+
+// GetId returns the Id field value
+func (o *PrincipalIdentity) GetId() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value
+// and a boolean to check if the value has been set.
+func (o *PrincipalIdentity) GetIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Id, true
+}
+
+// SetId sets field value
+func (o *PrincipalIdentity) SetId(v string) {
+	o.Id = v
 }
 
 // GetClearance returns the Clearance field value
@@ -183,30 +233,6 @@ func (o *PrincipalIdentity) SetProperties(v map[string]interface{}) {
 	o.Properties = v
 }
 
-// GetId returns the Id field value
-func (o *PrincipalIdentity) GetId() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.Id
-}
-
-// GetIdOk returns a tuple with the Id field value
-// and a boolean to check if the value has been set.
-func (o *PrincipalIdentity) GetIdOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.Id, true
-}
-
-// SetId sets field value
-func (o *PrincipalIdentity) SetId(v string) {
-	o.Id = v
-}
-
 func (o PrincipalIdentity) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -217,6 +243,8 @@ func (o PrincipalIdentity) MarshalJSON() ([]byte, error) {
 
 func (o PrincipalIdentity) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	toSerialize["kind"] = o.Kind
+	toSerialize["id"] = o.Id
 	toSerialize["clearance"] = o.Clearance
 	toSerialize["compartments"] = o.Compartments
 	if !IsNil(o.Email) {
@@ -226,7 +254,6 @@ func (o PrincipalIdentity) ToMap() (map[string]interface{}, error) {
 	if o.Properties != nil {
 		toSerialize["properties"] = o.Properties
 	}
-	toSerialize["id"] = o.Id
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -240,11 +267,12 @@ func (o *PrincipalIdentity) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
+		"kind",
+		"id",
 		"clearance",
 		"compartments",
 		"tags",
 		"properties",
-		"id",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -274,12 +302,13 @@ func (o *PrincipalIdentity) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "kind")
+		delete(additionalProperties, "id")
 		delete(additionalProperties, "clearance")
 		delete(additionalProperties, "compartments")
 		delete(additionalProperties, "email")
 		delete(additionalProperties, "tags")
 		delete(additionalProperties, "properties")
-		delete(additionalProperties, "id")
 		o.AdditionalProperties = additionalProperties
 	}
 
