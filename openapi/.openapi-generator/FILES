@@ -22,6 +22,7 @@ api_events.go
 api_files.go
 api_interaction_runs.go
 api_interactions.go
+api_o_auth.go
 api_o_auth_clients.go
 api_o_auth_grants.go
 api_o_auth_providers.go
@@ -145,6 +146,7 @@ model_app_inspection_result.go
 model_app_installation.go
 model_app_installation_list_entry.go
 model_app_installation_o_auth_binding.go
+model_app_installation_oauth_approval.go
 model_app_installation_payload.go
 model_app_installation_provider_binding.go
 model_app_installation_with_manifest.go
@@ -168,6 +170,8 @@ model_app_repo_tree_entry.go
 model_app_scaffold_module.go
 model_app_scaffold_progress.go
 model_app_scaffold_progress_status.go
+model_app_session_token_request.go
+model_app_session_token_response.go
 model_app_source_config.go
 model_app_tool_collection.go
 model_app_ui_config.go
@@ -708,6 +712,9 @@ model_o_auth_grant_sort_field.go
 model_o_auth_grant_sort_order.go
 model_o_auth_grant_status.go
 model_o_auth_grant_type.go
+model_o_auth_login_decision_response.go
+model_o_auth_login_payload.go
+model_o_auth_login_user_not_found_response.go
 model_o_auth_metadata_response.go
 model_o_auth_project_binding_mode.go
 model_o_auth_provider.go
@@ -802,6 +809,7 @@ model_project_configuration.go
 model_project_configuration_embedding.go
 model_project_configuration_embedding_enable_payload.go
 model_project_configuration_embeddings.go
+model_project_configuration_oauth_clients.go
 model_project_indexing_configuration.go
 model_project_intake_configuration.go
 model_project_intake_sniff_configuration.go
@@ -1009,6 +1017,7 @@ model_update_account_payload.go
 model_update_agent_artifact_content_payload.go
 model_update_agent_artifact_content_response.go
 model_update_api_key_payload.go
+model_update_app_installation_o_auth_approval_payload.go
 model_update_app_installation_tool_allowlist_payload.go
 model_update_app_payload.go
 model_update_collection_payload.go
