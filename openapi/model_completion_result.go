@@ -13,7 +13,6 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // CompletionResult - struct for CompletionResult
@@ -62,106 +61,51 @@ func VideoResultAsCompletionResult(v *VideoResult) CompletionResult {
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *CompletionResult) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into ImageResult
-	err = newStrictDecoder(data).Decode(&dst.ImageResult)
-	if err == nil {
-		jsonImageResult, _ := json.Marshal(dst.ImageResult)
-		if string(jsonImageResult) == "{}" { // empty struct
-			dst.ImageResult = nil
-		} else {
-			if err = validator.Validate(dst.ImageResult); err != nil {
-				dst.ImageResult = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ImageResult = nil
+	*dst = CompletionResult{}
+	var tag struct {
+		Type string `json:"type"`
 	}
-
-	// try to unmarshal data into JsonResult
-	err = newStrictDecoder(data).Decode(&dst.JsonResult)
-	if err == nil {
-		jsonJsonResult, _ := json.Marshal(dst.JsonResult)
-		if string(jsonJsonResult) == "{}" { // empty struct
-			dst.JsonResult = nil
-		} else {
-			if err = validator.Validate(dst.JsonResult); err != nil {
-				dst.JsonResult = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.JsonResult = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into TextResult
-	err = newStrictDecoder(data).Decode(&dst.TextResult)
-	if err == nil {
-		jsonTextResult, _ := json.Marshal(dst.TextResult)
-		if string(jsonTextResult) == "{}" { // empty struct
-			dst.TextResult = nil
-		} else {
-			if err = validator.Validate(dst.TextResult); err != nil {
-				dst.TextResult = nil
-			} else {
-				match++
-			}
+	switch tag.Type {
+	case "text":
+		var value TextResult
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.TextResult = nil
-	}
-
-	// try to unmarshal data into ThoughtsResult
-	err = newStrictDecoder(data).Decode(&dst.ThoughtsResult)
-	if err == nil {
-		jsonThoughtsResult, _ := json.Marshal(dst.ThoughtsResult)
-		if string(jsonThoughtsResult) == "{}" { // empty struct
-			dst.ThoughtsResult = nil
-		} else {
-			if err = validator.Validate(dst.ThoughtsResult); err != nil {
-				dst.ThoughtsResult = nil
-			} else {
-				match++
-			}
+		dst.TextResult = &value
+		return nil
+	case "thoughts":
+		var value ThoughtsResult
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.ThoughtsResult = nil
-	}
-
-	// try to unmarshal data into VideoResult
-	err = newStrictDecoder(data).Decode(&dst.VideoResult)
-	if err == nil {
-		jsonVideoResult, _ := json.Marshal(dst.VideoResult)
-		if string(jsonVideoResult) == "{}" { // empty struct
-			dst.VideoResult = nil
-		} else {
-			if err = validator.Validate(dst.VideoResult); err != nil {
-				dst.VideoResult = nil
-			} else {
-				match++
-			}
+		dst.ThoughtsResult = &value
+		return nil
+	case "json":
+		var value JsonResult
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.VideoResult = nil
-	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.ImageResult = nil
-		dst.JsonResult = nil
-		dst.TextResult = nil
-		dst.ThoughtsResult = nil
-		dst.VideoResult = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(CompletionResult)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(CompletionResult)")
+		dst.JsonResult = &value
+		return nil
+	case "image":
+		var value ImageResult
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		dst.ImageResult = &value
+		return nil
+	case "video":
+		var value VideoResult
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		dst.VideoResult = &value
+		return nil
+	default:
+		return fmt.Errorf("unknown CompletionResult type %q", tag.Type)
 	}
 }
 
