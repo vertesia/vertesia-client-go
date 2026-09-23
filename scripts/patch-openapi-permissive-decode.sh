@@ -20,6 +20,13 @@ if [[ -f "$openapi_dir/utils.go" ]]; then
   ' "$openapi_dir/utils.go"
 fi
 
+# Dispatch ModelOptions by its published discriminator without weakening validation
+# for unrelated oneOf models through the generator-wide lookup option.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "$openapi_dir/model_model_options.go" ]]; then
+  go run "$script_dir/patch-model-options/main.go" -model "$openapi_dir/model_model_options.go" -spec "$script_dir/../spec/vertesia-openapi.json"
+fi
+
 client_file="$openapi_dir/client.go"
 if [[ -f "$client_file" ]]; then
   perl -0pi -e '
