@@ -36,13 +36,19 @@ type VertexAIGeminiOptions struct {
 	ServiceTier *string `json:"service_tier,omitempty"`
 	// Deprecated: Use service_tier=\"flex\" instead.
 	// Deprecated
-	Flex                     *bool    `json:"flex,omitempty"`
-	ImageAspectRatio         *string  `json:"image_aspect_ratio,omitempty"`
-	ImageSize                *string  `json:"image_size,omitempty"`
-	PersonGeneration         *string  `json:"person_generation,omitempty"`
-	ProminentPeople          *string  `json:"prominent_people,omitempty"`
-	OutputMimeType           *string  `json:"output_mime_type,omitempty"`
-	OutputCompressionQuality *float32 `json:"output_compression_quality,omitempty"`
+	Flex                        *bool    `json:"flex,omitempty"`
+	SpeechVoice                 *string  `json:"speech_voice,omitempty"`
+	SpeechLanguage              *string  `json:"speech_language,omitempty"`
+	TranscriptionLanguageCodes  []string `json:"transcription_language_codes,omitempty"`
+	TranscriptionDiarization    *bool    `json:"transcription_diarization,omitempty"`
+	TranscriptionWordTimestamps *bool    `json:"transcription_word_timestamps,omitempty"`
+	TranscriptionVocabulary     []string `json:"transcription_vocabulary,omitempty"`
+	ImageAspectRatio            *string  `json:"image_aspect_ratio,omitempty"`
+	ImageSize                   *string  `json:"image_size,omitempty"`
+	PersonGeneration            *string  `json:"person_generation,omitempty"`
+	ProminentPeople             *string  `json:"prominent_people,omitempty"`
+	OutputMimeType              *string  `json:"output_mime_type,omitempty"`
+	OutputCompressionQuality    *float32 `json:"output_compression_quality,omitempty"`
 }
 
 // NewVertexAIGeminiOptions instantiates a new VertexAIGeminiOptions object
@@ -545,6 +551,198 @@ func (o *VertexAIGeminiOptions) SetFlex(v bool) {
 	o.Flex = &v
 }
 
+// GetSpeechVoice returns the SpeechVoice field value if set, zero value otherwise.
+func (o *VertexAIGeminiOptions) GetSpeechVoice() string {
+	if o == nil || IsNil(o.SpeechVoice) {
+		var ret string
+		return ret
+	}
+	return *o.SpeechVoice
+}
+
+// GetSpeechVoiceOk returns a tuple with the SpeechVoice field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VertexAIGeminiOptions) GetSpeechVoiceOk() (*string, bool) {
+	if o == nil || IsNil(o.SpeechVoice) {
+		return nil, false
+	}
+	return o.SpeechVoice, true
+}
+
+// HasSpeechVoice returns a boolean if a field has been set.
+func (o *VertexAIGeminiOptions) HasSpeechVoice() bool {
+	if o != nil && !IsNil(o.SpeechVoice) {
+		return true
+	}
+
+	return false
+}
+
+// SetSpeechVoice gets a reference to the given string and assigns it to the SpeechVoice field.
+func (o *VertexAIGeminiOptions) SetSpeechVoice(v string) {
+	o.SpeechVoice = &v
+}
+
+// GetSpeechLanguage returns the SpeechLanguage field value if set, zero value otherwise.
+func (o *VertexAIGeminiOptions) GetSpeechLanguage() string {
+	if o == nil || IsNil(o.SpeechLanguage) {
+		var ret string
+		return ret
+	}
+	return *o.SpeechLanguage
+}
+
+// GetSpeechLanguageOk returns a tuple with the SpeechLanguage field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VertexAIGeminiOptions) GetSpeechLanguageOk() (*string, bool) {
+	if o == nil || IsNil(o.SpeechLanguage) {
+		return nil, false
+	}
+	return o.SpeechLanguage, true
+}
+
+// HasSpeechLanguage returns a boolean if a field has been set.
+func (o *VertexAIGeminiOptions) HasSpeechLanguage() bool {
+	if o != nil && !IsNil(o.SpeechLanguage) {
+		return true
+	}
+
+	return false
+}
+
+// SetSpeechLanguage gets a reference to the given string and assigns it to the SpeechLanguage field.
+func (o *VertexAIGeminiOptions) SetSpeechLanguage(v string) {
+	o.SpeechLanguage = &v
+}
+
+// GetTranscriptionLanguageCodes returns the TranscriptionLanguageCodes field value if set, zero value otherwise.
+func (o *VertexAIGeminiOptions) GetTranscriptionLanguageCodes() []string {
+	if o == nil || IsNil(o.TranscriptionLanguageCodes) {
+		var ret []string
+		return ret
+	}
+	return o.TranscriptionLanguageCodes
+}
+
+// GetTranscriptionLanguageCodesOk returns a tuple with the TranscriptionLanguageCodes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VertexAIGeminiOptions) GetTranscriptionLanguageCodesOk() ([]string, bool) {
+	if o == nil || IsNil(o.TranscriptionLanguageCodes) {
+		return nil, false
+	}
+	return o.TranscriptionLanguageCodes, true
+}
+
+// HasTranscriptionLanguageCodes returns a boolean if a field has been set.
+func (o *VertexAIGeminiOptions) HasTranscriptionLanguageCodes() bool {
+	if o != nil && !IsNil(o.TranscriptionLanguageCodes) {
+		return true
+	}
+
+	return false
+}
+
+// SetTranscriptionLanguageCodes gets a reference to the given []string and assigns it to the TranscriptionLanguageCodes field.
+func (o *VertexAIGeminiOptions) SetTranscriptionLanguageCodes(v []string) {
+	o.TranscriptionLanguageCodes = v
+}
+
+// GetTranscriptionDiarization returns the TranscriptionDiarization field value if set, zero value otherwise.
+func (o *VertexAIGeminiOptions) GetTranscriptionDiarization() bool {
+	if o == nil || IsNil(o.TranscriptionDiarization) {
+		var ret bool
+		return ret
+	}
+	return *o.TranscriptionDiarization
+}
+
+// GetTranscriptionDiarizationOk returns a tuple with the TranscriptionDiarization field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VertexAIGeminiOptions) GetTranscriptionDiarizationOk() (*bool, bool) {
+	if o == nil || IsNil(o.TranscriptionDiarization) {
+		return nil, false
+	}
+	return o.TranscriptionDiarization, true
+}
+
+// HasTranscriptionDiarization returns a boolean if a field has been set.
+func (o *VertexAIGeminiOptions) HasTranscriptionDiarization() bool {
+	if o != nil && !IsNil(o.TranscriptionDiarization) {
+		return true
+	}
+
+	return false
+}
+
+// SetTranscriptionDiarization gets a reference to the given bool and assigns it to the TranscriptionDiarization field.
+func (o *VertexAIGeminiOptions) SetTranscriptionDiarization(v bool) {
+	o.TranscriptionDiarization = &v
+}
+
+// GetTranscriptionWordTimestamps returns the TranscriptionWordTimestamps field value if set, zero value otherwise.
+func (o *VertexAIGeminiOptions) GetTranscriptionWordTimestamps() bool {
+	if o == nil || IsNil(o.TranscriptionWordTimestamps) {
+		var ret bool
+		return ret
+	}
+	return *o.TranscriptionWordTimestamps
+}
+
+// GetTranscriptionWordTimestampsOk returns a tuple with the TranscriptionWordTimestamps field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VertexAIGeminiOptions) GetTranscriptionWordTimestampsOk() (*bool, bool) {
+	if o == nil || IsNil(o.TranscriptionWordTimestamps) {
+		return nil, false
+	}
+	return o.TranscriptionWordTimestamps, true
+}
+
+// HasTranscriptionWordTimestamps returns a boolean if a field has been set.
+func (o *VertexAIGeminiOptions) HasTranscriptionWordTimestamps() bool {
+	if o != nil && !IsNil(o.TranscriptionWordTimestamps) {
+		return true
+	}
+
+	return false
+}
+
+// SetTranscriptionWordTimestamps gets a reference to the given bool and assigns it to the TranscriptionWordTimestamps field.
+func (o *VertexAIGeminiOptions) SetTranscriptionWordTimestamps(v bool) {
+	o.TranscriptionWordTimestamps = &v
+}
+
+// GetTranscriptionVocabulary returns the TranscriptionVocabulary field value if set, zero value otherwise.
+func (o *VertexAIGeminiOptions) GetTranscriptionVocabulary() []string {
+	if o == nil || IsNil(o.TranscriptionVocabulary) {
+		var ret []string
+		return ret
+	}
+	return o.TranscriptionVocabulary
+}
+
+// GetTranscriptionVocabularyOk returns a tuple with the TranscriptionVocabulary field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VertexAIGeminiOptions) GetTranscriptionVocabularyOk() ([]string, bool) {
+	if o == nil || IsNil(o.TranscriptionVocabulary) {
+		return nil, false
+	}
+	return o.TranscriptionVocabulary, true
+}
+
+// HasTranscriptionVocabulary returns a boolean if a field has been set.
+func (o *VertexAIGeminiOptions) HasTranscriptionVocabulary() bool {
+	if o != nil && !IsNil(o.TranscriptionVocabulary) {
+		return true
+	}
+
+	return false
+}
+
+// SetTranscriptionVocabulary gets a reference to the given []string and assigns it to the TranscriptionVocabulary field.
+func (o *VertexAIGeminiOptions) SetTranscriptionVocabulary(v []string) {
+	o.TranscriptionVocabulary = v
+}
+
 // GetImageAspectRatio returns the ImageAspectRatio field value if set, zero value otherwise.
 func (o *VertexAIGeminiOptions) GetImageAspectRatio() string {
 	if o == nil || IsNil(o.ImageAspectRatio) {
@@ -791,6 +989,24 @@ func (o VertexAIGeminiOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Flex) {
 		toSerialize["flex"] = o.Flex
+	}
+	if !IsNil(o.SpeechVoice) {
+		toSerialize["speech_voice"] = o.SpeechVoice
+	}
+	if !IsNil(o.SpeechLanguage) {
+		toSerialize["speech_language"] = o.SpeechLanguage
+	}
+	if !IsNil(o.TranscriptionLanguageCodes) {
+		toSerialize["transcription_language_codes"] = o.TranscriptionLanguageCodes
+	}
+	if !IsNil(o.TranscriptionDiarization) {
+		toSerialize["transcription_diarization"] = o.TranscriptionDiarization
+	}
+	if !IsNil(o.TranscriptionWordTimestamps) {
+		toSerialize["transcription_word_timestamps"] = o.TranscriptionWordTimestamps
+	}
+	if !IsNil(o.TranscriptionVocabulary) {
+		toSerialize["transcription_vocabulary"] = o.TranscriptionVocabulary
 	}
 	if !IsNil(o.ImageAspectRatio) {
 		toSerialize["image_aspect_ratio"] = o.ImageAspectRatio

@@ -34,10 +34,13 @@ type ModelOptions struct {
 	ImagenOptions                       *ImagenOptions
 	MistralTextOptions                  *MistralTextOptions
 	NovaCanvasOptions                   *NovaCanvasOptions
+	OpenAiAudioOptions                  *OpenAiAudioOptions
 	OpenAiDalleOptions                  *OpenAiDalleOptions
 	OpenAiGptImageOptions               *OpenAiGptImageOptions
+	OpenAiSpeechOptions                 *OpenAiSpeechOptions
 	OpenAiTextOptions                   *OpenAiTextOptions
 	OpenAiThinkingOptions               *OpenAiThinkingOptions
+	OpenAiTranscriptionOptions          *OpenAiTranscriptionOptions
 	OpenRouterTextOptions               *OpenRouterTextOptions
 	TextFallbackOptions                 *TextFallbackOptions
 	TwelvelabsPegasusOptions            *TwelvelabsPegasusOptions
@@ -272,6 +275,19 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.NovaCanvasOptions = nil
 	}
 
+	// try to unmarshal JSON data into OpenAiAudioOptions
+	err = json.Unmarshal(data, &dst.OpenAiAudioOptions)
+	if err == nil {
+		jsonOpenAiAudioOptions, _ := json.Marshal(dst.OpenAiAudioOptions)
+		if string(jsonOpenAiAudioOptions) == "{}" { // empty struct
+			dst.OpenAiAudioOptions = nil
+		} else {
+			return nil // data stored in dst.OpenAiAudioOptions, return on the first match
+		}
+	} else {
+		dst.OpenAiAudioOptions = nil
+	}
+
 	// try to unmarshal JSON data into OpenAiDalleOptions
 	err = json.Unmarshal(data, &dst.OpenAiDalleOptions)
 	if err == nil {
@@ -298,6 +314,19 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		dst.OpenAiGptImageOptions = nil
 	}
 
+	// try to unmarshal JSON data into OpenAiSpeechOptions
+	err = json.Unmarshal(data, &dst.OpenAiSpeechOptions)
+	if err == nil {
+		jsonOpenAiSpeechOptions, _ := json.Marshal(dst.OpenAiSpeechOptions)
+		if string(jsonOpenAiSpeechOptions) == "{}" { // empty struct
+			dst.OpenAiSpeechOptions = nil
+		} else {
+			return nil // data stored in dst.OpenAiSpeechOptions, return on the first match
+		}
+	} else {
+		dst.OpenAiSpeechOptions = nil
+	}
+
 	// try to unmarshal JSON data into OpenAiTextOptions
 	err = json.Unmarshal(data, &dst.OpenAiTextOptions)
 	if err == nil {
@@ -322,6 +351,19 @@ func (dst *ModelOptions) UnmarshalJSON(data []byte) error {
 		}
 	} else {
 		dst.OpenAiThinkingOptions = nil
+	}
+
+	// try to unmarshal JSON data into OpenAiTranscriptionOptions
+	err = json.Unmarshal(data, &dst.OpenAiTranscriptionOptions)
+	if err == nil {
+		jsonOpenAiTranscriptionOptions, _ := json.Marshal(dst.OpenAiTranscriptionOptions)
+		if string(jsonOpenAiTranscriptionOptions) == "{}" { // empty struct
+			dst.OpenAiTranscriptionOptions = nil
+		} else {
+			return nil // data stored in dst.OpenAiTranscriptionOptions, return on the first match
+		}
+	} else {
+		dst.OpenAiTranscriptionOptions = nil
 	}
 
 	// try to unmarshal JSON data into OpenRouterTextOptions
@@ -501,6 +543,10 @@ func (src ModelOptions) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.NovaCanvasOptions)
 	}
 
+	if src.OpenAiAudioOptions != nil {
+		return json.Marshal(&src.OpenAiAudioOptions)
+	}
+
 	if src.OpenAiDalleOptions != nil {
 		return json.Marshal(&src.OpenAiDalleOptions)
 	}
@@ -509,12 +555,20 @@ func (src ModelOptions) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.OpenAiGptImageOptions)
 	}
 
+	if src.OpenAiSpeechOptions != nil {
+		return json.Marshal(&src.OpenAiSpeechOptions)
+	}
+
 	if src.OpenAiTextOptions != nil {
 		return json.Marshal(&src.OpenAiTextOptions)
 	}
 
 	if src.OpenAiThinkingOptions != nil {
 		return json.Marshal(&src.OpenAiThinkingOptions)
+	}
+
+	if src.OpenAiTranscriptionOptions != nil {
+		return json.Marshal(&src.OpenAiTranscriptionOptions)
 	}
 
 	if src.OpenRouterTextOptions != nil {
