@@ -46,21 +46,21 @@ func TestGeneratedModelsIgnoreNestedUnknownResponseFields(t *testing.T) {
 	}
 }
 
-func TestGeneratedUnionsIgnoreUnknownResponseFields(t *testing.T) {
-	var response openapi.DocTableResponse
+func TestGeneratedUnionsIgnoreUnknownFields(t *testing.T) {
+	var response openapi.EmbeddingsApiInput
 	err := json.Unmarshal([]byte(`{
-		"format": "csv",
-		"data": "name,value\nalpha,1",
+		"type": "text",
+		"text": "hello",
 		"server_added_field": "ignored"
 	}`), &response)
 	if err != nil {
-		t.Fatalf("unmarshal DocTableResponse with unknown field failed: %v", err)
+		t.Fatalf("unmarshal EmbeddingsApiInput with unknown field failed: %v", err)
 	}
-	if response.DocTableCsv == nil {
-		t.Fatalf("DocTableResponse did not resolve to DocTableCsv: %#v", response)
+	if response.EmbeddingsApiTextInput == nil {
+		t.Fatalf("EmbeddingsApiInput did not resolve to EmbeddingsApiTextInput: %#v", response)
 	}
-	if response.DocTableCsv.GetData() == "" {
-		t.Fatal("DocTableCsv data was not decoded")
+	if response.EmbeddingsApiTextInput.GetText() == "" {
+		t.Fatal("EmbeddingsApiTextInput text was not decoded")
 	}
 }
 
