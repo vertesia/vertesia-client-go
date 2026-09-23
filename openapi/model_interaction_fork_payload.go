@@ -19,6 +19,7 @@ var _ MappedNullable = &InteractionForkPayload{}
 
 // InteractionForkPayload struct for InteractionForkPayload
 type InteractionForkPayload struct {
+	NewName       *string `json:"newName,omitempty"`
 	KeepTags      *bool   `json:"keepTags,omitempty"`
 	ForkPrompts   *bool   `json:"forkPrompts,omitempty"`
 	TargetProject *string `json:"targetProject,omitempty"`
@@ -39,6 +40,38 @@ func NewInteractionForkPayload() *InteractionForkPayload {
 func NewInteractionForkPayloadWithDefaults() *InteractionForkPayload {
 	this := InteractionForkPayload{}
 	return &this
+}
+
+// GetNewName returns the NewName field value if set, zero value otherwise.
+func (o *InteractionForkPayload) GetNewName() string {
+	if o == nil || IsNil(o.NewName) {
+		var ret string
+		return ret
+	}
+	return *o.NewName
+}
+
+// GetNewNameOk returns a tuple with the NewName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InteractionForkPayload) GetNewNameOk() (*string, bool) {
+	if o == nil || IsNil(o.NewName) {
+		return nil, false
+	}
+	return o.NewName, true
+}
+
+// HasNewName returns a boolean if a field has been set.
+func (o *InteractionForkPayload) HasNewName() bool {
+	if o != nil && !IsNil(o.NewName) {
+		return true
+	}
+
+	return false
+}
+
+// SetNewName gets a reference to the given string and assigns it to the NewName field.
+func (o *InteractionForkPayload) SetNewName(v string) {
+	o.NewName = &v
 }
 
 // GetKeepTags returns the KeepTags field value if set, zero value otherwise.
@@ -147,6 +180,9 @@ func (o InteractionForkPayload) MarshalJSON() ([]byte, error) {
 
 func (o InteractionForkPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.NewName) {
+		toSerialize["newName"] = o.NewName
+	}
 	if !IsNil(o.KeepTags) {
 		toSerialize["keepTags"] = o.KeepTags
 	}
