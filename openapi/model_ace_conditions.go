@@ -23,7 +23,7 @@ type AceConditions struct {
 	PrincipalProps map[string]interface{} `json:"principal_props,omitempty"`
 	// Property conditions matched against object properties at query time (ResourceSet).
 	ResourceProps map[string]interface{} `json:"resource_props,omitempty"`
-	// Kind of object the `resource_props` matches. Used to disambiguate which partition's roles apply (e.g. content roles vs task roles) and to form the JWT `content_security` key prefix (`{scope}:{verb}`). Absent → `'document'` (default; emits bare `read`/`write`/`delete` keys for backward compatibility).
+	// Kind of object the `resource_props` matches. Used to disambiguate which partition's roles apply (e.g. content roles vs agent-run roles) and to form the JWT `content_security` key prefix (`{scope}:{verb}`). Absent → `'document'` (default; emits bare `read`/`write`/`delete` keys for backward compatibility).
 	Scope *AbacScope `json:"scope,omitempty"`
 }
 

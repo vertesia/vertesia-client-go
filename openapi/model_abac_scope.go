@@ -22,6 +22,7 @@ type AbacScope string
 const (
 	ABACSCOPE_DOCUMENT                 AbacScope = "document"
 	ABACSCOPE_COLLECTION               AbacScope = "collection"
+	ABACSCOPE_AGENT_RUN                AbacScope = "agent_run"
 	ABACSCOPE_TASK                     AbacScope = "task"
 	ABACSCOPE_UNKNOWN_DEFAULT_OPEN_API AbacScope = "unknown_default_open_api"
 )
@@ -30,6 +31,7 @@ const (
 var AllowedAbacScopeEnumValues = []AbacScope{
 	"document",
 	"collection",
+	"agent_run",
 	"task",
 	"unknown_default_open_api",
 }

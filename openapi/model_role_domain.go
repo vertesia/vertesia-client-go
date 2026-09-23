@@ -15,13 +15,14 @@ import (
 	"fmt"
 )
 
-// RoleDomain Logical grouping of roles by the service area that owns them. One domain may declare roles applicable to multiple scopes (e.g. the `content` domain owns roles applicable to both `document` and `collection` scopes). The `system` domain owns the built-in foundational roles (currently exposed as `SystemRoles`) — registered first so domain partitions cannot shadow them.
+// RoleDomain Logical grouping of roles by the service area that owns them. One domain may declare roles applicable to multiple scopes (e.g. the `content` domain owns roles applicable to both `document` and `collection` scopes, while `agent_runs` owns the `agent_run` scope). The `system` domain owns the built-in foundational roles (currently exposed as `SystemRoles`) — registered first so domain partitions cannot shadow them.
 type RoleDomain string
 
 // List of RoleDomain
 const (
 	ROLEDOMAIN_SYSTEM                   RoleDomain = "system"
 	ROLEDOMAIN_CONTENT                  RoleDomain = "content"
+	ROLEDOMAIN_AGENT_RUNS               RoleDomain = "agent_runs"
 	ROLEDOMAIN_TASKS                    RoleDomain = "tasks"
 	ROLEDOMAIN_UNKNOWN_DEFAULT_OPEN_API RoleDomain = "unknown_default_open_api"
 )
@@ -30,6 +31,7 @@ const (
 var AllowedRoleDomainEnumValues = []RoleDomain{
 	"system",
 	"content",
+	"agent_runs",
 	"tasks",
 	"unknown_default_open_api",
 }
