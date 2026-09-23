@@ -19,6 +19,7 @@ var _ MappedNullable = &PromptTemplateForkPayload{}
 
 // PromptTemplateForkPayload struct for PromptTemplateForkPayload
 type PromptTemplateForkPayload struct {
+	NewName       *string `json:"newName,omitempty"`
 	KeepTags      *bool   `json:"keepTags,omitempty"`
 	TargetProject *string `json:"targetProject,omitempty"`
 }
@@ -38,6 +39,38 @@ func NewPromptTemplateForkPayload() *PromptTemplateForkPayload {
 func NewPromptTemplateForkPayloadWithDefaults() *PromptTemplateForkPayload {
 	this := PromptTemplateForkPayload{}
 	return &this
+}
+
+// GetNewName returns the NewName field value if set, zero value otherwise.
+func (o *PromptTemplateForkPayload) GetNewName() string {
+	if o == nil || IsNil(o.NewName) {
+		var ret string
+		return ret
+	}
+	return *o.NewName
+}
+
+// GetNewNameOk returns a tuple with the NewName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PromptTemplateForkPayload) GetNewNameOk() (*string, bool) {
+	if o == nil || IsNil(o.NewName) {
+		return nil, false
+	}
+	return o.NewName, true
+}
+
+// HasNewName returns a boolean if a field has been set.
+func (o *PromptTemplateForkPayload) HasNewName() bool {
+	if o != nil && !IsNil(o.NewName) {
+		return true
+	}
+
+	return false
+}
+
+// SetNewName gets a reference to the given string and assigns it to the NewName field.
+func (o *PromptTemplateForkPayload) SetNewName(v string) {
+	o.NewName = &v
 }
 
 // GetKeepTags returns the KeepTags field value if set, zero value otherwise.
@@ -114,6 +147,9 @@ func (o PromptTemplateForkPayload) MarshalJSON() ([]byte, error) {
 
 func (o PromptTemplateForkPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.NewName) {
+		toSerialize["newName"] = o.NewName
+	}
 	if !IsNil(o.KeepTags) {
 		toSerialize["keepTags"] = o.KeepTags
 	}
