@@ -39,3 +39,9 @@ fi
 find "$openapi_dir" -name 'api_*.go' -print0 | xargs -0 perl -0pi -e '
   s/\tif r\.xApiVersion == nil \{\n(\t\treturn [^\n]+\n)\t\}/\tif r.xApiVersion == nil {\n\t\tversion := a.client.cfg.DefaultHeader["x-api-version"]\n\t\tif version == "" {\n\t$1\t\t}\n\t\tr.xApiVersion = \&version\n\t}/g;
 '
+
+# Permissive object decoding must still honor the CompletionResult discriminator.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "$openapi_dir/model_completion_result.go" ]]; then
+  go run "$script_dir/patch-completion-result/main.go" -model "$openapi_dir/model_completion_result.go" -spec "$script_dir/../spec/vertesia-openapi.json"
+fi
