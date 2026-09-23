@@ -1085,8 +1085,6 @@ DeleteObject Delete a content object
 
 Deletes a content object. Deleting a head revision deletes the whole revision set visible to the caller.
 
-**Required permissions:** `content:delete`
-
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param objectId
 	@return ApiDeleteObjectRequest
@@ -3214,8 +3212,6 @@ SetObjectEmbeddings Set content object embeddings
 
 Stores embeddings for a specific embedding type on a content object.
 
-**Required permissions:** `content:write`
-
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param objectId
 	@param type_
@@ -3847,8 +3843,6 @@ func (r ApiUpdateObjectRequest) Execute() (*ContentObjectApiResponse, *http.Resp
 UpdateObject Update a content object
 
 Updates a content object, optionally creating a new revision and triggering downstream indexing and processing workflows.
-
-**Required permissions:** `content:write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param objectId
