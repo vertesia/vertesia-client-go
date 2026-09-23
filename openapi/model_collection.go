@@ -56,7 +56,9 @@ type Collection struct {
 	// Compartments — propagated to member documents (union across collections)
 	Compartments []string `json:"compartments,omitempty"`
 	// List of property names from the collection's properties that should be shared with (injected into) member objects. These properties will be propagated to all members of this collection and merged as arrays.
-	SharedProperties     []string `json:"shared_properties,omitempty"`
+	SharedProperties []string `json:"shared_properties,omitempty"`
+	// Computed per-request permissions for the current user on this collection. Not stored — computed on the fly from the collection's security field (same semantics as a content object's user_permissions).
+	UserPermissions      *ContentObjectUserPermissions `json:"user_permissions,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -691,6 +693,38 @@ func (o *Collection) SetSharedProperties(v []string) {
 	o.SharedProperties = v
 }
 
+// GetUserPermissions returns the UserPermissions field value if set, zero value otherwise.
+func (o *Collection) GetUserPermissions() ContentObjectUserPermissions {
+	if o == nil || IsNil(o.UserPermissions) {
+		var ret ContentObjectUserPermissions
+		return ret
+	}
+	return *o.UserPermissions
+}
+
+// GetUserPermissionsOk returns a tuple with the UserPermissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Collection) GetUserPermissionsOk() (*ContentObjectUserPermissions, bool) {
+	if o == nil || IsNil(o.UserPermissions) {
+		return nil, false
+	}
+	return o.UserPermissions, true
+}
+
+// HasUserPermissions returns a boolean if a field has been set.
+func (o *Collection) HasUserPermissions() bool {
+	if o != nil && !IsNil(o.UserPermissions) {
+		return true
+	}
+
+	return false
+}
+
+// SetUserPermissions gets a reference to the given ContentObjectUserPermissions and assigns it to the UserPermissions field.
+func (o *Collection) SetUserPermissions(v ContentObjectUserPermissions) {
+	o.UserPermissions = &v
+}
+
 func (o Collection) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -745,6 +779,9 @@ func (o Collection) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.SharedProperties) {
 		toSerialize["shared_properties"] = o.SharedProperties
+	}
+	if !IsNil(o.UserPermissions) {
+		toSerialize["user_permissions"] = o.UserPermissions
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -818,6 +855,7 @@ func (o *Collection) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "sensitivity")
 		delete(additionalProperties, "compartments")
 		delete(additionalProperties, "shared_properties")
+		delete(additionalProperties, "user_permissions")
 		o.AdditionalProperties = additionalProperties
 	}
 

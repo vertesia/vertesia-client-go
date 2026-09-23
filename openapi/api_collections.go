@@ -504,8 +504,6 @@ DeleteCollection Delete a collection
 
 Deletes a collection after verifying delete permission.
 
-**Required permissions:** `content:delete`
-
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param collectionId
 	@return ApiDeleteCollectionRequest
@@ -1733,8 +1731,6 @@ UpdateCollection Update a collection
 
 Updates a collection, including shared properties and content type settings.
 
-**Required permissions:** `content:write`
-
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param collectionId
 	@return ApiUpdateCollectionRequest
@@ -1889,8 +1885,6 @@ UpdateCollectionChildren Update child collections
 
 Adds or removes child collections from a parent collection.
 
-**Required permissions:** `content:write`
-
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param collectionId
 	@return ApiUpdateCollectionChildrenRequest
@@ -2044,8 +2038,6 @@ func (r ApiUpdateCollectionMembersRequest) Execute() (*CollectionMembersUpdateRe
 UpdateCollectionMembers Update collection members
 
 Adds or removes content objects from a static collection.
-
-**Required permissions:** `content:write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param collectionId
