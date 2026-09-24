@@ -41,6 +41,7 @@ type ExecutionRunRef struct {
 	Account                AccountRef                         `json:"account"`
 	Project                ProjectRef                         `json:"project"`
 	Config                 InteractionExecutionConfiguration  `json:"config"`
+	InferenceProfile       *InferenceProfileSnapshot          `json:"inference_profile,omitempty"`
 	Error                  *InteractionExecutionError         `json:"error,omitempty"`
 	Source                 RunSource                          `json:"source"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.
@@ -658,6 +659,38 @@ func (o *ExecutionRunRef) SetConfig(v InteractionExecutionConfiguration) {
 	o.Config = v
 }
 
+// GetInferenceProfile returns the InferenceProfile field value if set, zero value otherwise.
+func (o *ExecutionRunRef) GetInferenceProfile() InferenceProfileSnapshot {
+	if o == nil || IsNil(o.InferenceProfile) {
+		var ret InferenceProfileSnapshot
+		return ret
+	}
+	return *o.InferenceProfile
+}
+
+// GetInferenceProfileOk returns a tuple with the InferenceProfile field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExecutionRunRef) GetInferenceProfileOk() (*InferenceProfileSnapshot, bool) {
+	if o == nil || IsNil(o.InferenceProfile) {
+		return nil, false
+	}
+	return o.InferenceProfile, true
+}
+
+// HasInferenceProfile returns a boolean if a field has been set.
+func (o *ExecutionRunRef) HasInferenceProfile() bool {
+	if o != nil && !IsNil(o.InferenceProfile) {
+		return true
+	}
+
+	return false
+}
+
+// SetInferenceProfile gets a reference to the given InferenceProfileSnapshot and assigns it to the InferenceProfile field.
+func (o *ExecutionRunRef) SetInferenceProfile(v InferenceProfileSnapshot) {
+	o.InferenceProfile = &v
+}
+
 // GetError returns the Error field value if set, zero value otherwise.
 func (o *ExecutionRunRef) GetError() InteractionExecutionError {
 	if o == nil || IsNil(o.Error) {
@@ -978,6 +1011,9 @@ func (o ExecutionRunRef) ToMap() (map[string]interface{}, error) {
 	toSerialize["account"] = o.Account
 	toSerialize["project"] = o.Project
 	toSerialize["config"] = o.Config
+	if !IsNil(o.InferenceProfile) {
+		toSerialize["inference_profile"] = o.InferenceProfile
+	}
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
@@ -1073,6 +1109,7 @@ func (o *ExecutionRunRef) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "account")
 		delete(additionalProperties, "project")
 		delete(additionalProperties, "config")
+		delete(additionalProperties, "inference_profile")
 		delete(additionalProperties, "error")
 		delete(additionalProperties, "source")
 		delete(additionalProperties, "output_modality")

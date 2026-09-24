@@ -92,6 +92,8 @@ type APIClient struct {
 
 	FilesAPI *FilesAPIService
 
+	InferenceProfilesAPI *InferenceProfilesAPIService
+
 	InteractionRunsAPI *InteractionRunsAPIService
 
 	InteractionsAPI *InteractionsAPIService
@@ -180,6 +182,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.EventSubscriptionsAPI = (*EventSubscriptionsAPIService)(&c.common)
 	c.EventsAPI = (*EventsAPIService)(&c.common)
 	c.FilesAPI = (*FilesAPIService)(&c.common)
+	c.InferenceProfilesAPI = (*InferenceProfilesAPIService)(&c.common)
 	c.InteractionRunsAPI = (*InteractionRunsAPIService)(&c.common)
 	c.InteractionsAPI = (*InteractionsAPIService)(&c.common)
 	c.OAuthAPI = (*OAuthAPIService)(&c.common)

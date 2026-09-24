@@ -35,9 +35,11 @@ type ResolvedCatalogInteraction struct {
 	OutputModality *Modalities              `json:"output_modality,omitempty"`
 	Storage        *RunDataStorageLevel     `json:"storage,omitempty"`
 	// Tags, normalized to an empty array when absent.
-	Tags                 []string                           `json:"tags"`
-	AgentRunnerOptions   *AgentRunnerOptions                `json:"agent_runner_options,omitempty"`
-	ModelOptions         *ModelOptions                      `json:"model_options,omitempty"`
+	Tags               []string            `json:"tags"`
+	AgentRunnerOptions *AgentRunnerOptions `json:"agent_runner_options,omitempty"`
+	ModelOptions       *ModelOptions       `json:"model_options,omitempty"`
+	// MongoDB ObjectId of the inference profile.
+	InferenceProfile     NullableString                     `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
 	Prompts              []InCodePrompt                     `json:"prompts"`
 	ExternalId           *string                            `json:"externalId,omitempty"`
 	Runtime              *ResolvedCatalogInteractionRuntime `json:"runtime,omitempty"`
@@ -445,6 +447,49 @@ func (o *ResolvedCatalogInteraction) SetModelOptions(v ModelOptions) {
 	o.ModelOptions = &v
 }
 
+// GetInferenceProfile returns the InferenceProfile field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *ResolvedCatalogInteraction) GetInferenceProfile() string {
+	if o == nil || IsNil(o.InferenceProfile.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.InferenceProfile.Get()
+}
+
+// GetInferenceProfileOk returns a tuple with the InferenceProfile field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *ResolvedCatalogInteraction) GetInferenceProfileOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.InferenceProfile.Get(), o.InferenceProfile.IsSet()
+}
+
+// HasInferenceProfile returns a boolean if a field has been set.
+func (o *ResolvedCatalogInteraction) HasInferenceProfile() bool {
+	if o != nil && o.InferenceProfile.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetInferenceProfile gets a reference to the given NullableString and assigns it to the InferenceProfile field.
+func (o *ResolvedCatalogInteraction) SetInferenceProfile(v string) {
+	o.InferenceProfile.Set(&v)
+}
+
+// SetInferenceProfileNil sets the value for InferenceProfile to be an explicit nil
+func (o *ResolvedCatalogInteraction) SetInferenceProfileNil() {
+	o.InferenceProfile.Set(nil)
+}
+
+// UnsetInferenceProfile ensures that no value is present for InferenceProfile, not even an explicit nil
+func (o *ResolvedCatalogInteraction) UnsetInferenceProfile() {
+	o.InferenceProfile.Unset()
+}
+
 // GetPrompts returns the Prompts field value
 func (o *ResolvedCatalogInteraction) GetPrompts() []InCodePrompt {
 	if o == nil {
@@ -572,6 +617,9 @@ func (o ResolvedCatalogInteraction) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ModelOptions) {
 		toSerialize["model_options"] = o.ModelOptions
 	}
+	if o.InferenceProfile.IsSet() {
+		toSerialize["inference_profile"] = o.InferenceProfile.Get()
+	}
 	toSerialize["prompts"] = o.Prompts
 	if !IsNil(o.ExternalId) {
 		toSerialize["externalId"] = o.ExternalId
@@ -640,6 +688,7 @@ func (o *ResolvedCatalogInteraction) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "tags")
 		delete(additionalProperties, "agent_runner_options")
 		delete(additionalProperties, "model_options")
+		delete(additionalProperties, "inference_profile")
 		delete(additionalProperties, "prompts")
 		delete(additionalProperties, "externalId")
 		delete(additionalProperties, "runtime")

@@ -22,7 +22,10 @@ var _ MappedNullable = &RateLimitRequestPayload{}
 type RateLimitRequestPayload struct {
 	Interaction   string  `json:"interaction"`
 	EnvironmentId *string `json:"environment_id,omitempty"`
-	ModelId       *string `json:"model_id,omitempty"`
+	// MongoDB ObjectId of the inference profile.
+	InferenceProfile   NullableString `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	InheritModelConfig *bool          `json:"inherit_model_config,omitempty"`
+	ModelId            *string        `json:"model_id,omitempty"`
 	// Deprecated: Use rate_limit_id for admission/completion correlation.
 	// Deprecated
 	WorkflowRunId *string `json:"workflow_run_id,omitempty"`
@@ -105,6 +108,81 @@ func (o *RateLimitRequestPayload) HasEnvironmentId() bool {
 // SetEnvironmentId gets a reference to the given string and assigns it to the EnvironmentId field.
 func (o *RateLimitRequestPayload) SetEnvironmentId(v string) {
 	o.EnvironmentId = &v
+}
+
+// GetInferenceProfile returns the InferenceProfile field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *RateLimitRequestPayload) GetInferenceProfile() string {
+	if o == nil || IsNil(o.InferenceProfile.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.InferenceProfile.Get()
+}
+
+// GetInferenceProfileOk returns a tuple with the InferenceProfile field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *RateLimitRequestPayload) GetInferenceProfileOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.InferenceProfile.Get(), o.InferenceProfile.IsSet()
+}
+
+// HasInferenceProfile returns a boolean if a field has been set.
+func (o *RateLimitRequestPayload) HasInferenceProfile() bool {
+	if o != nil && o.InferenceProfile.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetInferenceProfile gets a reference to the given NullableString and assigns it to the InferenceProfile field.
+func (o *RateLimitRequestPayload) SetInferenceProfile(v string) {
+	o.InferenceProfile.Set(&v)
+}
+
+// SetInferenceProfileNil sets the value for InferenceProfile to be an explicit nil
+func (o *RateLimitRequestPayload) SetInferenceProfileNil() {
+	o.InferenceProfile.Set(nil)
+}
+
+// UnsetInferenceProfile ensures that no value is present for InferenceProfile, not even an explicit nil
+func (o *RateLimitRequestPayload) UnsetInferenceProfile() {
+	o.InferenceProfile.Unset()
+}
+
+// GetInheritModelConfig returns the InheritModelConfig field value if set, zero value otherwise.
+func (o *RateLimitRequestPayload) GetInheritModelConfig() bool {
+	if o == nil || IsNil(o.InheritModelConfig) {
+		var ret bool
+		return ret
+	}
+	return *o.InheritModelConfig
+}
+
+// GetInheritModelConfigOk returns a tuple with the InheritModelConfig field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RateLimitRequestPayload) GetInheritModelConfigOk() (*bool, bool) {
+	if o == nil || IsNil(o.InheritModelConfig) {
+		return nil, false
+	}
+	return o.InheritModelConfig, true
+}
+
+// HasInheritModelConfig returns a boolean if a field has been set.
+func (o *RateLimitRequestPayload) HasInheritModelConfig() bool {
+	if o != nil && !IsNil(o.InheritModelConfig) {
+		return true
+	}
+
+	return false
+}
+
+// SetInheritModelConfig gets a reference to the given bool and assigns it to the InheritModelConfig field.
+func (o *RateLimitRequestPayload) SetInheritModelConfig(v bool) {
+	o.InheritModelConfig = &v
 }
 
 // GetModelId returns the ModelId field value if set, zero value otherwise.
@@ -251,6 +329,12 @@ func (o RateLimitRequestPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize["interaction"] = o.Interaction
 	if !IsNil(o.EnvironmentId) {
 		toSerialize["environment_id"] = o.EnvironmentId
+	}
+	if o.InferenceProfile.IsSet() {
+		toSerialize["inference_profile"] = o.InferenceProfile.Get()
+	}
+	if !IsNil(o.InheritModelConfig) {
+		toSerialize["inherit_model_config"] = o.InheritModelConfig
 	}
 	if !IsNil(o.ModelId) {
 		toSerialize["model_id"] = o.ModelId

@@ -19,10 +19,13 @@ var _ MappedNullable = &UpdateProjectConfigurationPayload{}
 
 // UpdateProjectConfigurationPayload struct for UpdateProjectConfigurationPayload
 type UpdateProjectConfigurationPayload struct {
-	DefaultEnvironment    *string                         `json:"default_environment,omitempty"`
-	DefaultModel          *string                         `json:"default_model,omitempty"`
-	HumanContext          *string                         `json:"human_context,omitempty"`
+	DefaultEnvironment *string `json:"default_environment,omitempty"`
+	DefaultModel       *string `json:"default_model,omitempty"`
+	HumanContext       *string `json:"human_context,omitempty"`
+	// Legacy model defaults, replaced by inference profile assignments after migration.
+	// Deprecated
 	Defaults              *ProjectModelDefaults           `json:"defaults,omitempty"`
+	Inference             *ProjectInferenceProfiles       `json:"inference,omitempty"`
 	DefaultVisibility     *ResourceVisibility             `json:"default_visibility,omitempty"`
 	SyncContentProperties *bool                           `json:"sync_content_properties,omitempty"`
 	Embeddings            *ProjectConfigurationEmbeddings `json:"embeddings,omitempty"`
@@ -162,6 +165,7 @@ func (o *UpdateProjectConfigurationPayload) SetHumanContext(v string) {
 }
 
 // GetDefaults returns the Defaults field value if set, zero value otherwise.
+// Deprecated
 func (o *UpdateProjectConfigurationPayload) GetDefaults() ProjectModelDefaults {
 	if o == nil || IsNil(o.Defaults) {
 		var ret ProjectModelDefaults
@@ -172,6 +176,7 @@ func (o *UpdateProjectConfigurationPayload) GetDefaults() ProjectModelDefaults {
 
 // GetDefaultsOk returns a tuple with the Defaults field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// Deprecated
 func (o *UpdateProjectConfigurationPayload) GetDefaultsOk() (*ProjectModelDefaults, bool) {
 	if o == nil || IsNil(o.Defaults) {
 		return nil, false
@@ -189,8 +194,41 @@ func (o *UpdateProjectConfigurationPayload) HasDefaults() bool {
 }
 
 // SetDefaults gets a reference to the given ProjectModelDefaults and assigns it to the Defaults field.
+// Deprecated
 func (o *UpdateProjectConfigurationPayload) SetDefaults(v ProjectModelDefaults) {
 	o.Defaults = &v
+}
+
+// GetInference returns the Inference field value if set, zero value otherwise.
+func (o *UpdateProjectConfigurationPayload) GetInference() ProjectInferenceProfiles {
+	if o == nil || IsNil(o.Inference) {
+		var ret ProjectInferenceProfiles
+		return ret
+	}
+	return *o.Inference
+}
+
+// GetInferenceOk returns a tuple with the Inference field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateProjectConfigurationPayload) GetInferenceOk() (*ProjectInferenceProfiles, bool) {
+	if o == nil || IsNil(o.Inference) {
+		return nil, false
+	}
+	return o.Inference, true
+}
+
+// HasInference returns a boolean if a field has been set.
+func (o *UpdateProjectConfigurationPayload) HasInference() bool {
+	if o != nil && !IsNil(o.Inference) {
+		return true
+	}
+
+	return false
+}
+
+// SetInference gets a reference to the given ProjectInferenceProfiles and assigns it to the Inference field.
+func (o *UpdateProjectConfigurationPayload) SetInference(v ProjectInferenceProfiles) {
+	o.Inference = &v
 }
 
 // GetDefaultVisibility returns the DefaultVisibility field value if set, zero value otherwise.
@@ -642,6 +680,9 @@ func (o UpdateProjectConfigurationPayload) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.Defaults) {
 		toSerialize["defaults"] = o.Defaults
 	}
+	if !IsNil(o.Inference) {
+		toSerialize["inference"] = o.Inference
+	}
 	if !IsNil(o.DefaultVisibility) {
 		toSerialize["default_visibility"] = o.DefaultVisibility
 	}
@@ -707,6 +748,7 @@ func (o *UpdateProjectConfigurationPayload) UnmarshalJSON(data []byte) (err erro
 		delete(additionalProperties, "default_model")
 		delete(additionalProperties, "human_context")
 		delete(additionalProperties, "defaults")
+		delete(additionalProperties, "inference")
 		delete(additionalProperties, "default_visibility")
 		delete(additionalProperties, "sync_content_properties")
 		delete(additionalProperties, "embeddings")

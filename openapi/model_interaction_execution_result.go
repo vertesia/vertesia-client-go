@@ -43,6 +43,7 @@ type InteractionExecutionResult struct {
 	CreatedAt              time.Time                         `json:"created_at"`
 	UpdatedAt              time.Time                         `json:"updated_at"`
 	Config                 InteractionExecutionConfiguration `json:"config"`
+	InferenceProfile       *InferenceProfileSnapshot         `json:"inference_profile,omitempty"`
 	Error                  *InteractionExecutionError        `json:"error,omitempty"`
 	Source                 RunSource                         `json:"source"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.
@@ -663,6 +664,38 @@ func (o *InteractionExecutionResult) SetConfig(v InteractionExecutionConfigurati
 	o.Config = v
 }
 
+// GetInferenceProfile returns the InferenceProfile field value if set, zero value otherwise.
+func (o *InteractionExecutionResult) GetInferenceProfile() InferenceProfileSnapshot {
+	if o == nil || IsNil(o.InferenceProfile) {
+		var ret InferenceProfileSnapshot
+		return ret
+	}
+	return *o.InferenceProfile
+}
+
+// GetInferenceProfileOk returns a tuple with the InferenceProfile field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InteractionExecutionResult) GetInferenceProfileOk() (*InferenceProfileSnapshot, bool) {
+	if o == nil || IsNil(o.InferenceProfile) {
+		return nil, false
+	}
+	return o.InferenceProfile, true
+}
+
+// HasInferenceProfile returns a boolean if a field has been set.
+func (o *InteractionExecutionResult) HasInferenceProfile() bool {
+	if o != nil && !IsNil(o.InferenceProfile) {
+		return true
+	}
+
+	return false
+}
+
+// SetInferenceProfile gets a reference to the given InferenceProfileSnapshot and assigns it to the InferenceProfile field.
+func (o *InteractionExecutionResult) SetInferenceProfile(v InferenceProfileSnapshot) {
+	o.InferenceProfile = &v
+}
+
 // GetError returns the Error field value if set, zero value otherwise.
 func (o *InteractionExecutionResult) GetError() InteractionExecutionError {
 	if o == nil || IsNil(o.Error) {
@@ -1063,6 +1096,9 @@ func (o InteractionExecutionResult) ToMap() (map[string]interface{}, error) {
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt
 	toSerialize["config"] = o.Config
+	if !IsNil(o.InferenceProfile) {
+		toSerialize["inference_profile"] = o.InferenceProfile
+	}
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
 	}
@@ -1165,6 +1201,7 @@ func (o *InteractionExecutionResult) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "updated_at")
 		delete(additionalProperties, "config")
+		delete(additionalProperties, "inference_profile")
 		delete(additionalProperties, "error")
 		delete(additionalProperties, "source")
 		delete(additionalProperties, "output_modality")

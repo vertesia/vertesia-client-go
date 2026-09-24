@@ -20,6 +20,7 @@ api_event_ingest_channels.go
 api_event_subscriptions.go
 api_events.go
 api_files.go
+api_inference_profiles.go
 api_interaction_runs.go
 api_interactions.go
 api_o_auth.go
@@ -368,6 +369,7 @@ model_create_email_route_request.go
 model_create_email_route_response.go
 model_create_event_ingest_channel_payload.go
 model_create_event_subscription_payload.go
+model_create_inference_profile_payload.go
 model_create_o_auth_client_payload.go
 model_create_o_auth_provider_payload.go
 model_create_process_definition_payload.go
@@ -604,6 +606,11 @@ model_in_code_view_definition.go
 model_indexing_status_response.go
 model_indexing_status_response_index.go
 model_indexing_status_response_reindex_progress.go
+model_inference_profile.go
+model_inference_profile_record.go
+model_inference_profile_snapshot.go
+model_inference_profile_usage.go
+model_inference_profile_usage_entry.go
 model_inherited_property_metadata.go
 model_initial_tool_call.go
 model_intake_page_scope.go
@@ -611,6 +618,8 @@ model_intake_vision_detail.go
 model_intake_vision_profile_settings_map.go
 model_intake_vision_profile_settings_update.go
 model_interaction.go
+model_interaction_configuration_record.go
+model_interaction_configuration_result.go
 model_interaction_create_payload.go
 model_interaction_endpoint.go
 model_interaction_endpoint_query.go
@@ -811,6 +820,9 @@ model_project_configuration_embedding_enable_payload.go
 model_project_configuration_embeddings.go
 model_project_configuration_oauth_clients.go
 model_project_indexing_configuration.go
+model_project_inference_profiles.go
+model_project_inference_profiles_modality.go
+model_project_inference_profiles_system.go
 model_project_intake_configuration.go
 model_project_intake_sniff_configuration.go
 model_project_integration_config_request.go
@@ -1029,6 +1041,8 @@ model_update_email_route_response.go
 model_update_event_ingest_channel_payload.go
 model_update_event_subscription_payload.go
 model_update_execution_run_payload.go
+model_update_inference_profile_payload.go
+model_update_interaction_configuration_payload.go
 model_update_o_auth_client_payload.go
 model_update_o_auth_provider_payload.go
 model_update_process_definition_payload.go

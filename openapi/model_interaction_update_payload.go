@@ -39,8 +39,10 @@ type InteractionUpdatePayload struct {
 	Environment          *InteractionEnvironment         `json:"environment,omitempty"`
 	Model                *string                         `json:"model,omitempty"`
 	ModelOptions         *ModelOptions                   `json:"model_options,omitempty"`
-	StoreMediaResults    *bool                           `json:"store_media_results,omitempty"`
-	Restriction          *RunDataStorageLevel            `json:"restriction,omitempty"`
+	// MongoDB ObjectId of the inference profile.
+	InferenceProfile  NullableString       `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	StoreMediaResults *bool                `json:"store_media_results,omitempty"`
+	Restriction       *RunDataStorageLevel `json:"restriction,omitempty"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.
 	// Deprecated
 	OutputModality *Modalities                                           `json:"output_modality,omitempty"`
@@ -640,6 +642,49 @@ func (o *InteractionUpdatePayload) SetModelOptions(v ModelOptions) {
 	o.ModelOptions = &v
 }
 
+// GetInferenceProfile returns the InferenceProfile field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *InteractionUpdatePayload) GetInferenceProfile() string {
+	if o == nil || IsNil(o.InferenceProfile.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.InferenceProfile.Get()
+}
+
+// GetInferenceProfileOk returns a tuple with the InferenceProfile field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *InteractionUpdatePayload) GetInferenceProfileOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.InferenceProfile.Get(), o.InferenceProfile.IsSet()
+}
+
+// HasInferenceProfile returns a boolean if a field has been set.
+func (o *InteractionUpdatePayload) HasInferenceProfile() bool {
+	if o != nil && o.InferenceProfile.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetInferenceProfile gets a reference to the given NullableString and assigns it to the InferenceProfile field.
+func (o *InteractionUpdatePayload) SetInferenceProfile(v string) {
+	o.InferenceProfile.Set(&v)
+}
+
+// SetInferenceProfileNil sets the value for InferenceProfile to be an explicit nil
+func (o *InteractionUpdatePayload) SetInferenceProfileNil() {
+	o.InferenceProfile.Set(nil)
+}
+
+// UnsetInferenceProfile ensures that no value is present for InferenceProfile, not even an explicit nil
+func (o *InteractionUpdatePayload) UnsetInferenceProfile() {
+	o.InferenceProfile.Unset()
+}
+
 // GetStoreMediaResults returns the StoreMediaResults field value if set, zero value otherwise.
 func (o *InteractionUpdatePayload) GetStoreMediaResults() bool {
 	if o == nil || IsNil(o.StoreMediaResults) {
@@ -845,6 +890,9 @@ func (o InteractionUpdatePayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ModelOptions) {
 		toSerialize["model_options"] = o.ModelOptions
+	}
+	if o.InferenceProfile.IsSet() {
+		toSerialize["inference_profile"] = o.InferenceProfile.Get()
 	}
 	if !IsNil(o.StoreMediaResults) {
 		toSerialize["store_media_results"] = o.StoreMediaResults

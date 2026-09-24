@@ -19,13 +19,17 @@ var _ MappedNullable = &InteractionExecutionConfiguration{}
 
 // InteractionExecutionConfiguration struct for InteractionExecutionConfiguration
 type InteractionExecutionConfiguration struct {
-	Id           *string              `json:"id,omitempty"`
-	Environment  *string              `json:"environment,omitempty"`
-	Model        *string              `json:"model,omitempty"`
-	DoValidate   *bool                `json:"do_validate,omitempty"`
-	RunData      *RunDataStorageLevel `json:"run_data,omitempty"`
-	ConfigMode   *ConfigModes         `json:"configMode,omitempty"`
-	ModelOptions *ModelOptions        `json:"model_options,omitempty"`
+	Id *string `json:"id,omitempty"`
+	// Select a project inference profile. Null bypasses profile defaults.
+	InferenceProfile NullableString `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	// Treat supplied model settings as inherited fallback: an applicable profile replaces them.
+	InheritModelConfig *bool                `json:"inherit_model_config,omitempty"`
+	Environment        *string              `json:"environment,omitempty"`
+	Model              *string              `json:"model,omitempty"`
+	DoValidate         *bool                `json:"do_validate,omitempty"`
+	RunData            *RunDataStorageLevel `json:"run_data,omitempty"`
+	ConfigMode         *ConfigModes         `json:"configMode,omitempty"`
+	ModelOptions       *ModelOptions        `json:"model_options,omitempty"`
 	// Stable provider-side routing key for automatic prompt caching.
 	PromptCacheKey *string `json:"prompt_cache_key,omitempty"`
 	// Controls provider-side explicit caching: auto falls back safely, off disables it, and required surfaces cache preparation failures for diagnostics.
@@ -85,6 +89,81 @@ func (o *InteractionExecutionConfiguration) HasId() bool {
 // SetId gets a reference to the given string and assigns it to the Id field.
 func (o *InteractionExecutionConfiguration) SetId(v string) {
 	o.Id = &v
+}
+
+// GetInferenceProfile returns the InferenceProfile field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *InteractionExecutionConfiguration) GetInferenceProfile() string {
+	if o == nil || IsNil(o.InferenceProfile.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.InferenceProfile.Get()
+}
+
+// GetInferenceProfileOk returns a tuple with the InferenceProfile field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *InteractionExecutionConfiguration) GetInferenceProfileOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.InferenceProfile.Get(), o.InferenceProfile.IsSet()
+}
+
+// HasInferenceProfile returns a boolean if a field has been set.
+func (o *InteractionExecutionConfiguration) HasInferenceProfile() bool {
+	if o != nil && o.InferenceProfile.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetInferenceProfile gets a reference to the given NullableString and assigns it to the InferenceProfile field.
+func (o *InteractionExecutionConfiguration) SetInferenceProfile(v string) {
+	o.InferenceProfile.Set(&v)
+}
+
+// SetInferenceProfileNil sets the value for InferenceProfile to be an explicit nil
+func (o *InteractionExecutionConfiguration) SetInferenceProfileNil() {
+	o.InferenceProfile.Set(nil)
+}
+
+// UnsetInferenceProfile ensures that no value is present for InferenceProfile, not even an explicit nil
+func (o *InteractionExecutionConfiguration) UnsetInferenceProfile() {
+	o.InferenceProfile.Unset()
+}
+
+// GetInheritModelConfig returns the InheritModelConfig field value if set, zero value otherwise.
+func (o *InteractionExecutionConfiguration) GetInheritModelConfig() bool {
+	if o == nil || IsNil(o.InheritModelConfig) {
+		var ret bool
+		return ret
+	}
+	return *o.InheritModelConfig
+}
+
+// GetInheritModelConfigOk returns a tuple with the InheritModelConfig field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InteractionExecutionConfiguration) GetInheritModelConfigOk() (*bool, bool) {
+	if o == nil || IsNil(o.InheritModelConfig) {
+		return nil, false
+	}
+	return o.InheritModelConfig, true
+}
+
+// HasInheritModelConfig returns a boolean if a field has been set.
+func (o *InteractionExecutionConfiguration) HasInheritModelConfig() bool {
+	if o != nil && !IsNil(o.InheritModelConfig) {
+		return true
+	}
+
+	return false
+}
+
+// SetInheritModelConfig gets a reference to the given bool and assigns it to the InheritModelConfig field.
+func (o *InteractionExecutionConfiguration) SetInheritModelConfig(v bool) {
+	o.InheritModelConfig = &v
 }
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
@@ -451,6 +530,12 @@ func (o InteractionExecutionConfiguration) ToMap() (map[string]interface{}, erro
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Id) {
 		toSerialize["id"] = o.Id
+	}
+	if o.InferenceProfile.IsSet() {
+		toSerialize["inference_profile"] = o.InferenceProfile.Get()
+	}
+	if !IsNil(o.InheritModelConfig) {
+		toSerialize["inherit_model_config"] = o.InheritModelConfig
 	}
 	if !IsNil(o.Environment) {
 		toSerialize["environment"] = o.Environment

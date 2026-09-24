@@ -472,6 +472,149 @@ func (a *InteractionsAPIService) DeleteInteractionExecute(r ApiDeleteInteraction
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiDeleteInteractionConfigurationRequest struct {
+	ctx           context.Context
+	ApiService    *InteractionsAPIService
+	interactionId string
+	xApiVersion   *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiDeleteInteractionConfigurationRequest) XApiVersion(xApiVersion string) ApiDeleteInteractionConfigurationRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiDeleteInteractionConfigurationRequest) Execute() (*InteractionConfigurationResult, *http.Response, error) {
+	return r.ApiService.DeleteInteractionConfigurationExecute(r)
+}
+
+/*
+DeleteInteractionConfiguration Remove code interaction configuration
+
+**Required permissions:** `project:settings_write`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param interactionId
+	@return ApiDeleteInteractionConfigurationRequest
+*/
+func (a *InteractionsAPIService) DeleteInteractionConfiguration(ctx context.Context, interactionId string) ApiDeleteInteractionConfigurationRequest {
+	return ApiDeleteInteractionConfigurationRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		interactionId: interactionId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return InteractionConfigurationResult
+func (a *InteractionsAPIService) DeleteInteractionConfigurationExecute(r ApiDeleteInteractionConfigurationRequest) (*InteractionConfigurationResult, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *InteractionConfigurationResult
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.DeleteInteractionConfiguration")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/interaction-configurations/{interactionId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"interactionId"+"}", url.PathEscape(parameterValueToString(r.interactionId, "interactionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiExecuteInteractionRequest struct {
 	ctx                         context.Context
 	ApiService                  *InteractionsAPIService
@@ -1779,6 +1922,147 @@ func (a *InteractionsAPIService) GetInteractionExecute(r ApiGetInteractionReques
 	}
 
 	localVarPath := localBasePath + "/interactions/{interactionId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"interactionId"+"}", url.PathEscape(parameterValueToString(r.interactionId, "interactionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetInteractionConfigurationRequest struct {
+	ctx           context.Context
+	ApiService    *InteractionsAPIService
+	interactionId string
+	xApiVersion   *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiGetInteractionConfigurationRequest) XApiVersion(xApiVersion string) ApiGetInteractionConfigurationRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiGetInteractionConfigurationRequest) Execute() (*InteractionConfigurationResult, *http.Response, error) {
+	return r.ApiService.GetInteractionConfigurationExecute(r)
+}
+
+/*
+GetInteractionConfiguration Get saved code interaction configuration
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param interactionId
+	@return ApiGetInteractionConfigurationRequest
+*/
+func (a *InteractionsAPIService) GetInteractionConfiguration(ctx context.Context, interactionId string) ApiGetInteractionConfigurationRequest {
+	return ApiGetInteractionConfigurationRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		interactionId: interactionId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return InteractionConfigurationResult
+func (a *InteractionsAPIService) GetInteractionConfigurationExecute(r ApiGetInteractionConfigurationRequest) (*InteractionConfigurationResult, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *InteractionConfigurationResult
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.GetInteractionConfiguration")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/interaction-configurations/{interactionId}"
 	localVarPath = strings.Replace(localVarPath, "{"+"interactionId"+"}", url.PathEscape(parameterValueToString(r.interactionId, "interactionId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
@@ -4393,14 +4677,16 @@ func (a *InteractionsAPIService) ResolveCatalogInteractionExecute(r ApiResolveCa
 }
 
 type ApiResolveInteractionRequest struct {
-	ctx         context.Context
-	ApiService  *InteractionsAPIService
-	nameOrId    string
-	xApiVersion *string
-	environment *string
-	model       *string
-	hasImage    *bool
-	hasVideo    *bool
+	ctx                context.Context
+	ApiService         *InteractionsAPIService
+	nameOrId           string
+	xApiVersion        *string
+	environment        *string
+	model              *string
+	inferenceProfile   *string
+	inheritModelConfig *bool
+	hasImage           *bool
+	hasVideo           *bool
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
@@ -4416,6 +4702,16 @@ func (r ApiResolveInteractionRequest) Environment(environment string) ApiResolve
 
 func (r ApiResolveInteractionRequest) Model(model string) ApiResolveInteractionRequest {
 	r.model = &model
+	return r
+}
+
+func (r ApiResolveInteractionRequest) InferenceProfile(inferenceProfile string) ApiResolveInteractionRequest {
+	r.inferenceProfile = &inferenceProfile
+	return r
+}
+
+func (r ApiResolveInteractionRequest) InheritModelConfig(inheritModelConfig bool) ApiResolveInteractionRequest {
+	r.inheritModelConfig = &inheritModelConfig
 	return r
 }
 
@@ -4490,6 +4786,12 @@ func (a *InteractionsAPIService) ResolveInteractionExecute(r ApiResolveInteracti
 	}
 	if r.model != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "model", r.model, "form", "")
+	}
+	if r.inferenceProfile != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "inference_profile", r.inferenceProfile, "form", "")
+	}
+	if r.inheritModelConfig != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "inherit_model_config", r.inheritModelConfig, "form", "")
 	}
 	if r.hasImage != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "hasImage", r.hasImage, "form", "")
@@ -4827,6 +5129,160 @@ func (a *InteractionsAPIService) UpdateInteractionExecute(r ApiUpdateInteraction
 	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.interactionUpdatePayload
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpdateInteractionConfigurationRequest struct {
+	ctx                                   context.Context
+	ApiService                            *InteractionsAPIService
+	interactionId                         string
+	xApiVersion                           *string
+	updateInteractionConfigurationPayload *UpdateInteractionConfigurationPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateInteractionConfigurationRequest) XApiVersion(xApiVersion string) ApiUpdateInteractionConfigurationRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiUpdateInteractionConfigurationRequest) UpdateInteractionConfigurationPayload(updateInteractionConfigurationPayload UpdateInteractionConfigurationPayload) ApiUpdateInteractionConfigurationRequest {
+	r.updateInteractionConfigurationPayload = &updateInteractionConfigurationPayload
+	return r
+}
+
+func (r ApiUpdateInteractionConfigurationRequest) Execute() (*InteractionConfigurationResult, *http.Response, error) {
+	return r.ApiService.UpdateInteractionConfigurationExecute(r)
+}
+
+/*
+UpdateInteractionConfiguration Create or update code interaction configuration
+
+**Required permissions:** `project:settings_write`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param interactionId
+	@return ApiUpdateInteractionConfigurationRequest
+*/
+func (a *InteractionsAPIService) UpdateInteractionConfiguration(ctx context.Context, interactionId string) ApiUpdateInteractionConfigurationRequest {
+	return ApiUpdateInteractionConfigurationRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		interactionId: interactionId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return InteractionConfigurationResult
+func (a *InteractionsAPIService) UpdateInteractionConfigurationExecute(r ApiUpdateInteractionConfigurationRequest) (*InteractionConfigurationResult, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *InteractionConfigurationResult
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.UpdateInteractionConfiguration")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/interaction-configurations/{interactionId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"interactionId"+"}", url.PathEscape(parameterValueToString(r.interactionId, "interactionId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+	if r.updateInteractionConfigurationPayload == nil {
+		return localVarReturnValue, nil, reportError("updateInteractionConfigurationPayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.updateInteractionConfigurationPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

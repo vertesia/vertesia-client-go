@@ -20,9 +20,11 @@ var _ MappedNullable = &ResolvedRuntimeConfig{}
 
 // ResolvedRuntimeConfig Resolved runtime configuration for an interaction
 type ResolvedRuntimeConfig struct {
-	Environment ResolvedEnvironmentInfo `json:"environment"`
-	Model       *string                 `json:"model,omitempty"`
-	ModelSource ModelSource             `json:"model_source"`
+	Environment      ResolvedEnvironmentInfo   `json:"environment"`
+	Model            *string                   `json:"model,omitempty"`
+	ModelSource      ModelSource               `json:"model_source"`
+	InferenceProfile *InferenceProfileSnapshot `json:"inference_profile,omitempty"`
+	ModelOptions     *ModelOptions             `json:"model_options,omitempty"`
 }
 
 type _ResolvedRuntimeConfig ResolvedRuntimeConfig
@@ -126,6 +128,70 @@ func (o *ResolvedRuntimeConfig) SetModelSource(v ModelSource) {
 	o.ModelSource = v
 }
 
+// GetInferenceProfile returns the InferenceProfile field value if set, zero value otherwise.
+func (o *ResolvedRuntimeConfig) GetInferenceProfile() InferenceProfileSnapshot {
+	if o == nil || IsNil(o.InferenceProfile) {
+		var ret InferenceProfileSnapshot
+		return ret
+	}
+	return *o.InferenceProfile
+}
+
+// GetInferenceProfileOk returns a tuple with the InferenceProfile field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ResolvedRuntimeConfig) GetInferenceProfileOk() (*InferenceProfileSnapshot, bool) {
+	if o == nil || IsNil(o.InferenceProfile) {
+		return nil, false
+	}
+	return o.InferenceProfile, true
+}
+
+// HasInferenceProfile returns a boolean if a field has been set.
+func (o *ResolvedRuntimeConfig) HasInferenceProfile() bool {
+	if o != nil && !IsNil(o.InferenceProfile) {
+		return true
+	}
+
+	return false
+}
+
+// SetInferenceProfile gets a reference to the given InferenceProfileSnapshot and assigns it to the InferenceProfile field.
+func (o *ResolvedRuntimeConfig) SetInferenceProfile(v InferenceProfileSnapshot) {
+	o.InferenceProfile = &v
+}
+
+// GetModelOptions returns the ModelOptions field value if set, zero value otherwise.
+func (o *ResolvedRuntimeConfig) GetModelOptions() ModelOptions {
+	if o == nil || IsNil(o.ModelOptions) {
+		var ret ModelOptions
+		return ret
+	}
+	return *o.ModelOptions
+}
+
+// GetModelOptionsOk returns a tuple with the ModelOptions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ResolvedRuntimeConfig) GetModelOptionsOk() (*ModelOptions, bool) {
+	if o == nil || IsNil(o.ModelOptions) {
+		return nil, false
+	}
+	return o.ModelOptions, true
+}
+
+// HasModelOptions returns a boolean if a field has been set.
+func (o *ResolvedRuntimeConfig) HasModelOptions() bool {
+	if o != nil && !IsNil(o.ModelOptions) {
+		return true
+	}
+
+	return false
+}
+
+// SetModelOptions gets a reference to the given ModelOptions and assigns it to the ModelOptions field.
+func (o *ResolvedRuntimeConfig) SetModelOptions(v ModelOptions) {
+	o.ModelOptions = &v
+}
+
 func (o ResolvedRuntimeConfig) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -141,6 +207,12 @@ func (o ResolvedRuntimeConfig) ToMap() (map[string]interface{}, error) {
 		toSerialize["model"] = o.Model
 	}
 	toSerialize["model_source"] = o.ModelSource
+	if !IsNil(o.InferenceProfile) {
+		toSerialize["inference_profile"] = o.InferenceProfile
+	}
+	if !IsNil(o.ModelOptions) {
+		toSerialize["model_options"] = o.ModelOptions
+	}
 	return toSerialize, nil
 }
 

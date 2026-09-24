@@ -19,6 +19,8 @@ var _ MappedNullable = &ProcessRunConfig{}
 
 // ProcessRunConfig struct for ProcessRunConfig
 type ProcessRunConfig struct {
+	// Run-level inference profile ID for process LLM nodes and the supervisor. Explicit model settings retain precedence.
+	InferenceProfile NullableString `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
 	// Execution environment id used by Process LLM nodes and the supervisor.
 	Environment *string `json:"environment,omitempty"`
 	Model       *string `json:"model,omitempty"`
@@ -47,6 +49,49 @@ func NewProcessRunConfig() *ProcessRunConfig {
 func NewProcessRunConfigWithDefaults() *ProcessRunConfig {
 	this := ProcessRunConfig{}
 	return &this
+}
+
+// GetInferenceProfile returns the InferenceProfile field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *ProcessRunConfig) GetInferenceProfile() string {
+	if o == nil || IsNil(o.InferenceProfile.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.InferenceProfile.Get()
+}
+
+// GetInferenceProfileOk returns a tuple with the InferenceProfile field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *ProcessRunConfig) GetInferenceProfileOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.InferenceProfile.Get(), o.InferenceProfile.IsSet()
+}
+
+// HasInferenceProfile returns a boolean if a field has been set.
+func (o *ProcessRunConfig) HasInferenceProfile() bool {
+	if o != nil && o.InferenceProfile.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetInferenceProfile gets a reference to the given NullableString and assigns it to the InferenceProfile field.
+func (o *ProcessRunConfig) SetInferenceProfile(v string) {
+	o.InferenceProfile.Set(&v)
+}
+
+// SetInferenceProfileNil sets the value for InferenceProfile to be an explicit nil
+func (o *ProcessRunConfig) SetInferenceProfileNil() {
+	o.InferenceProfile.Set(nil)
+}
+
+// UnsetInferenceProfile ensures that no value is present for InferenceProfile, not even an explicit nil
+func (o *ProcessRunConfig) UnsetInferenceProfile() {
+	o.InferenceProfile.Unset()
 }
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
@@ -219,6 +264,9 @@ func (o ProcessRunConfig) MarshalJSON() ([]byte, error) {
 
 func (o ProcessRunConfig) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if o.InferenceProfile.IsSet() {
+		toSerialize["inference_profile"] = o.InferenceProfile.Get()
+	}
 	if !IsNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
@@ -256,6 +304,7 @@ func (o *ProcessRunConfig) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "inference_profile")
 		delete(additionalProperties, "environment")
 		delete(additionalProperties, "model")
 		delete(additionalProperties, "model_options")
