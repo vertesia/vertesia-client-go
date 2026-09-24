@@ -19,14 +19,15 @@ var _ MappedNullable = &OpenAiThinkingOptions{}
 
 // OpenAiThinkingOptions struct for OpenAiThinkingOptions
 type OpenAiThinkingOptions struct {
-	OptionId        *string          `json:"_option_id,omitempty"`
-	MaxTokens       *float32         `json:"max_tokens,omitempty"`
-	ToolChoice      *string          `json:"tool_choice,omitempty"`
-	StopSequence    []string         `json:"stop_sequence,omitempty"`
-	Effort          *ReasoningEffort `json:"effort,omitempty"`
-	ReasoningEffort *ReasoningEffort `json:"reasoning_effort,omitempty"`
-	ImageDetail     *string          `json:"image_detail,omitempty"`
-	IncludeThoughts *bool            `json:"include_thoughts,omitempty"`
+	OptionId         *string          `json:"_option_id,omitempty"`
+	MaxTokens        *float32         `json:"max_tokens,omitempty"`
+	ToolChoice       *string          `json:"tool_choice,omitempty"`
+	StopSequence     []string         `json:"stop_sequence,omitempty"`
+	Effort           *ReasoningEffort `json:"effort,omitempty"`
+	ReasoningEffort  *ReasoningEffort `json:"reasoning_effort,omitempty"`
+	ReasoningContext *string          `json:"reasoning_context,omitempty"`
+	ImageDetail      *string          `json:"image_detail,omitempty"`
+	IncludeThoughts  *bool            `json:"include_thoughts,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
 	ServiceTier *string `json:"service_tier,omitempty"`
 	// Additional provider-specific fields merged into the OpenAI-compatible request body.
@@ -245,6 +246,38 @@ func (o *OpenAiThinkingOptions) SetReasoningEffort(v ReasoningEffort) {
 	o.ReasoningEffort = &v
 }
 
+// GetReasoningContext returns the ReasoningContext field value if set, zero value otherwise.
+func (o *OpenAiThinkingOptions) GetReasoningContext() string {
+	if o == nil || IsNil(o.ReasoningContext) {
+		var ret string
+		return ret
+	}
+	return *o.ReasoningContext
+}
+
+// GetReasoningContextOk returns a tuple with the ReasoningContext field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiThinkingOptions) GetReasoningContextOk() (*string, bool) {
+	if o == nil || IsNil(o.ReasoningContext) {
+		return nil, false
+	}
+	return o.ReasoningContext, true
+}
+
+// HasReasoningContext returns a boolean if a field has been set.
+func (o *OpenAiThinkingOptions) HasReasoningContext() bool {
+	if o != nil && !IsNil(o.ReasoningContext) {
+		return true
+	}
+
+	return false
+}
+
+// SetReasoningContext gets a reference to the given string and assigns it to the ReasoningContext field.
+func (o *OpenAiThinkingOptions) SetReasoningContext(v string) {
+	o.ReasoningContext = &v
+}
+
 // GetImageDetail returns the ImageDetail field value if set, zero value otherwise.
 func (o *OpenAiThinkingOptions) GetImageDetail() string {
 	if o == nil || IsNil(o.ImageDetail) {
@@ -401,6 +434,9 @@ func (o OpenAiThinkingOptions) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ReasoningEffort) {
 		toSerialize["reasoning_effort"] = o.ReasoningEffort
 	}
+	if !IsNil(o.ReasoningContext) {
+		toSerialize["reasoning_context"] = o.ReasoningContext
+	}
 	if !IsNil(o.ImageDetail) {
 		toSerialize["image_detail"] = o.ImageDetail
 	}
@@ -415,7 +451,7 @@ func (o OpenAiThinkingOptions) ToMap() (map[string]interface{}, error) {
 	}
 
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -484,7 +520,7 @@ func (o *OpenAiThinkingOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
 			delete(extra, key)
 		}
 	}
