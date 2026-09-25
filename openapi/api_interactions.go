@@ -4177,14 +4177,15 @@ func (a *InteractionsAPIService) ResolveCatalogInteractionExecute(r ApiResolveCa
 }
 
 type ApiResolveInteractionRequest struct {
-	ctx         context.Context
-	ApiService  *InteractionsAPIService
-	nameOrId    string
-	environment *string
-	model       *string
-	hasImage    *bool
-	hasVideo    *bool
-	xApiVersion *string
+	ctx                context.Context
+	ApiService         *InteractionsAPIService
+	nameOrId           string
+	environment        *string
+	model              *string
+	inheritModelConfig *bool
+	hasImage           *bool
+	hasVideo           *bool
+	xApiVersion        *string
 }
 
 func (r ApiResolveInteractionRequest) Environment(environment string) ApiResolveInteractionRequest {
@@ -4194,6 +4195,12 @@ func (r ApiResolveInteractionRequest) Environment(environment string) ApiResolve
 
 func (r ApiResolveInteractionRequest) Model(model string) ApiResolveInteractionRequest {
 	r.model = &model
+	return r
+}
+
+// Treat environment and model as inherited fallbacks after interaction settings, before project defaults.
+func (r ApiResolveInteractionRequest) InheritModelConfig(inheritModelConfig bool) ApiResolveInteractionRequest {
+	r.inheritModelConfig = &inheritModelConfig
 	return r
 }
 
@@ -4264,6 +4271,9 @@ func (a *InteractionsAPIService) ResolveInteractionExecute(r ApiResolveInteracti
 	}
 	if r.model != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "model", r.model, "form", "")
+	}
+	if r.inheritModelConfig != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "inherit_model_config", r.inheritModelConfig, "form", "")
 	}
 	if r.hasImage != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "hasImage", r.hasImage, "form", "")

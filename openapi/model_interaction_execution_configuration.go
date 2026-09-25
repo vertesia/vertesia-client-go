@@ -19,13 +19,15 @@ var _ MappedNullable = &InteractionExecutionConfiguration{}
 
 // InteractionExecutionConfiguration struct for InteractionExecutionConfiguration
 type InteractionExecutionConfiguration struct {
-	Id           *string              `json:"id,omitempty"`
-	Environment  *string              `json:"environment,omitempty"`
-	Model        *string              `json:"model,omitempty"`
-	DoValidate   *bool                `json:"do_validate,omitempty"`
-	RunData      *RunDataStorageLevel `json:"run_data,omitempty"`
-	ConfigMode   *ConfigModes         `json:"configMode,omitempty"`
-	ModelOptions *ModelOptions        `json:"model_options,omitempty"`
+	Id          *string `json:"id,omitempty"`
+	Environment *string `json:"environment,omitempty"`
+	Model       *string `json:"model,omitempty"`
+	// Treat environment and model as inherited fallbacks after interaction settings, before project defaults.
+	InheritModelConfig *bool                `json:"inherit_model_config,omitempty"`
+	DoValidate         *bool                `json:"do_validate,omitempty"`
+	RunData            *RunDataStorageLevel `json:"run_data,omitempty"`
+	ConfigMode         *ConfigModes         `json:"configMode,omitempty"`
+	ModelOptions       *ModelOptions        `json:"model_options,omitempty"`
 	// Stable provider-side routing key for automatic prompt caching.
 	PromptCacheKey *string `json:"prompt_cache_key,omitempty"`
 	// Controls provider-side explicit caching: auto falls back safely, off disables it, and required surfaces cache preparation failures for diagnostics.
@@ -149,6 +151,38 @@ func (o *InteractionExecutionConfiguration) HasModel() bool {
 // SetModel gets a reference to the given string and assigns it to the Model field.
 func (o *InteractionExecutionConfiguration) SetModel(v string) {
 	o.Model = &v
+}
+
+// GetInheritModelConfig returns the InheritModelConfig field value if set, zero value otherwise.
+func (o *InteractionExecutionConfiguration) GetInheritModelConfig() bool {
+	if o == nil || IsNil(o.InheritModelConfig) {
+		var ret bool
+		return ret
+	}
+	return *o.InheritModelConfig
+}
+
+// GetInheritModelConfigOk returns a tuple with the InheritModelConfig field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *InteractionExecutionConfiguration) GetInheritModelConfigOk() (*bool, bool) {
+	if o == nil || IsNil(o.InheritModelConfig) {
+		return nil, false
+	}
+	return o.InheritModelConfig, true
+}
+
+// HasInheritModelConfig returns a boolean if a field has been set.
+func (o *InteractionExecutionConfiguration) HasInheritModelConfig() bool {
+	if o != nil && !IsNil(o.InheritModelConfig) {
+		return true
+	}
+
+	return false
+}
+
+// SetInheritModelConfig gets a reference to the given bool and assigns it to the InheritModelConfig field.
+func (o *InteractionExecutionConfiguration) SetInheritModelConfig(v bool) {
+	o.InheritModelConfig = &v
 }
 
 // GetDoValidate returns the DoValidate field value if set, zero value otherwise.
@@ -457,6 +491,9 @@ func (o InteractionExecutionConfiguration) ToMap() (map[string]interface{}, erro
 	}
 	if !IsNil(o.Model) {
 		toSerialize["model"] = o.Model
+	}
+	if !IsNil(o.InheritModelConfig) {
+		toSerialize["inherit_model_config"] = o.InheritModelConfig
 	}
 	if !IsNil(o.DoValidate) {
 		toSerialize["do_validate"] = o.DoValidate

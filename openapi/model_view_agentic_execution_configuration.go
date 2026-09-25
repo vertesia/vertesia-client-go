@@ -19,12 +19,14 @@ var _ MappedNullable = &ViewAgenticExecutionConfiguration{}
 
 // ViewAgenticExecutionConfiguration struct for ViewAgenticExecutionConfiguration
 type ViewAgenticExecutionConfiguration struct {
-	Id          *string              `json:"id,omitempty"`
-	Environment *string              `json:"environment,omitempty"`
-	Model       *string              `json:"model,omitempty"`
-	DoValidate  *bool                `json:"do_validate,omitempty"`
-	RunData     *RunDataStorageLevel `json:"run_data,omitempty"`
-	ConfigMode  *ConfigModes         `json:"configMode,omitempty"`
+	Id          *string `json:"id,omitempty"`
+	Environment *string `json:"environment,omitempty"`
+	Model       *string `json:"model,omitempty"`
+	// Treat environment and model as inherited fallbacks after interaction settings, before project defaults.
+	InheritModelConfig *bool                `json:"inherit_model_config,omitempty"`
+	DoValidate         *bool                `json:"do_validate,omitempty"`
+	RunData            *RunDataStorageLevel `json:"run_data,omitempty"`
+	ConfigMode         *ConfigModes         `json:"configMode,omitempty"`
 	// Model options as authored for this View. Open rather than the driver-discriminated `ModelOptions` union, because a View is saved before a driver is resolved.
 	ModelOptions map[string]interface{} `json:"model_options,omitempty"`
 	// Stable provider-side routing key for automatic prompt caching.
@@ -153,6 +155,38 @@ func (o *ViewAgenticExecutionConfiguration) HasModel() bool {
 // SetModel gets a reference to the given string and assigns it to the Model field.
 func (o *ViewAgenticExecutionConfiguration) SetModel(v string) {
 	o.Model = &v
+}
+
+// GetInheritModelConfig returns the InheritModelConfig field value if set, zero value otherwise.
+func (o *ViewAgenticExecutionConfiguration) GetInheritModelConfig() bool {
+	if o == nil || IsNil(o.InheritModelConfig) {
+		var ret bool
+		return ret
+	}
+	return *o.InheritModelConfig
+}
+
+// GetInheritModelConfigOk returns a tuple with the InheritModelConfig field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ViewAgenticExecutionConfiguration) GetInheritModelConfigOk() (*bool, bool) {
+	if o == nil || IsNil(o.InheritModelConfig) {
+		return nil, false
+	}
+	return o.InheritModelConfig, true
+}
+
+// HasInheritModelConfig returns a boolean if a field has been set.
+func (o *ViewAgenticExecutionConfiguration) HasInheritModelConfig() bool {
+	if o != nil && !IsNil(o.InheritModelConfig) {
+		return true
+	}
+
+	return false
+}
+
+// SetInheritModelConfig gets a reference to the given bool and assigns it to the InheritModelConfig field.
+func (o *ViewAgenticExecutionConfiguration) SetInheritModelConfig(v bool) {
+	o.InheritModelConfig = &v
 }
 
 // GetDoValidate returns the DoValidate field value if set, zero value otherwise.
@@ -462,6 +496,9 @@ func (o ViewAgenticExecutionConfiguration) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.Model) {
 		toSerialize["model"] = o.Model
 	}
+	if !IsNil(o.InheritModelConfig) {
+		toSerialize["inherit_model_config"] = o.InheritModelConfig
+	}
 	if !IsNil(o.DoValidate) {
 		toSerialize["do_validate"] = o.DoValidate
 	}
@@ -514,6 +551,7 @@ func (o *ViewAgenticExecutionConfiguration) UnmarshalJSON(data []byte) (err erro
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "environment")
 		delete(additionalProperties, "model")
+		delete(additionalProperties, "inherit_model_config")
 		delete(additionalProperties, "do_validate")
 		delete(additionalProperties, "run_data")
 		delete(additionalProperties, "configMode")
