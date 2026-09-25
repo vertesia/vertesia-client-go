@@ -4710,6 +4710,7 @@ func (r ApiResolveInteractionRequest) InferenceProfile(inferenceProfile string) 
 	return r
 }
 
+// Treat supplied model settings as inherited fallback: an applicable profile replaces them.
 func (r ApiResolveInteractionRequest) InheritModelConfig(inheritModelConfig bool) ApiResolveInteractionRequest {
 	r.inheritModelConfig = &inheritModelConfig
 	return r
