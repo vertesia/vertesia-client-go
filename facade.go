@@ -18,7 +18,7 @@ import (
 const (
 	defaultSite         = "api.vertesia.io"
 	defaultTokenURL     = "https://sts.vertesia.io"
-	defaultAPIVersion   = "20260319"
+	defaultAPIVersion   = "20260803"
 	tokenRefreshWindow  = time.Minute
 	tokenIssueOperation = "TokenServiceAPIService.IssueToken"
 )
