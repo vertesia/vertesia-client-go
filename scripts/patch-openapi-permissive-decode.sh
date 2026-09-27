@@ -14,56 +14,48 @@ find "$openapi_dir" -name 'model_*.go' -print0 | xargs -0 perl -0pi -e '
 '
 
 # OpenAPI Generator's Go oneOf decoder ignores discriminators and tries every branch. With
-# permissive response decoding, structurally identical branches such as EndpointRef's
-# {kind,id} variants all match. Dispatch this public union by its declared wire discriminator
-# while retaining explicit required-field validation.
-endpoint_ref_file="$openapi_dir/model_endpoint_ref.go"
-if [[ -f "$endpoint_ref_file" ]]; then
-  python3 - "$endpoint_ref_file" <<'PY'
+# permissive response decoding, structurally identical {kind,id} branches all match.
+# Dispatch both public endpoint unions by their wire discriminator and validate required fields.
+python3 - "$openapi_dir" <<'PY'
 from pathlib import Path
 import sys
 
-path = Path(sys.argv[1])
-source = path.read_text()
-start = source.index('func (dst *EndpointRef) UnmarshalJSON(data []byte) error {')
-end = source.index('\n}\n\n// Marshal data from the first non-nil pointers', start) + 2
-replacement = '''func (dst *EndpointRef) UnmarshalJSON(data []byte) error {
-\tvar discriminator struct {
-\t\tKind string `json:"kind"`
-\t}
-\tif err := json.Unmarshal(data, &discriminator); err != nil {
-\t\treturn err
-\t}
-\tswitch discriminator.Kind {
-\tcase "subject":
-\t\tvar value SubjectEndpointRef
-\t\tif err := json.Unmarshal(data, &value); err != nil { return err }
-\t\tif value.Id == "" { return fmt.Errorf("subject endpoint requires id") }
-\t\t*dst = EndpointRef{SubjectEndpointRef: &value}
-\tcase "document":
-\t\tvar value DocumentEndpointRef
-\t\tif err := json.Unmarshal(data, &value); err != nil { return err }
-\t\tif value.Id == "" { return fmt.Errorf("document endpoint requires id") }
-\t\t*dst = EndpointRef{DocumentEndpointRef: &value}
-\tcase "document_version":
-\t\tvar value DocumentVersionEndpointRef
-\t\tif err := json.Unmarshal(data, &value); err != nil { return err }
-\t\tif value.Id == "" { return fmt.Errorf("document_version endpoint requires id") }
-\t\t*dst = EndpointRef{DocumentVersionEndpointRef: &value}
-\tcase "external":
-\t\tvar value ExternalEndpointRef
-\t\tif err := json.Unmarshal(data, &value); err != nil { return err }
-\t\tif value.Namespace == "" || value.Value == "" { return fmt.Errorf("external endpoint requires namespace and value") }
-\t\t*dst = EndpointRef{ExternalEndpointRef: &value}
-\tdefault:
-\t\treturn fmt.Errorf("unknown endpoint kind %q", discriminator.Kind)
-\t}
-\treturn nil
-}'''
-path.write_text(source[:start] + replacement + source[end:])
+branches = (
+    ('subject', 'SubjectEndpointRef', ('Id',)),
+    ('document', 'DocumentEndpointRef', ('Id',)),
+    ('document_version', 'DocumentVersionEndpointRef', ('Id',)),
+    ('external', 'ExternalEndpointRef', ('Namespace', 'Value')),
+)
+for union, union_branches in (
+    ('EndpointRef', branches),
+    ('RelationshipContributionEndpoint', (('entity', 'RelationshipContributionEntityEndpoint', ('Key',)),) + branches),
+):
+    path = Path(sys.argv[1]) / ('model_' + ''.join('_' + c.lower() if c.isupper() else c for c in union).lstrip('_') + '.go')
+    if not path.exists():
+        continue
+    source = path.read_text()
+    start = source.index(f'func (dst *{union}) UnmarshalJSON(data []byte) error {{')
+    end = source.index('\n}\n\n// Marshal data from the first non-nil pointers', start) + 2
+    lines = [f'func (dst *{union}) UnmarshalJSON(data []byte) error {{',
+             '\tvar discriminator struct {', '\t\tKind string `json:"kind"`', '\t}',
+             '\tif err := json.Unmarshal(data, &discriminator); err != nil { return err }',
+             '\tswitch discriminator.Kind {']
+    for kind, model, required in union_branches:
+        lines.extend([f'\tcase "{kind}":', f'\t\tvar value {model}',
+                      '\t\tif err := json.Unmarshal(data, &value); err != nil { return err }'])
+        missing = ' || '.join(f'value.{field} == ""' for field in required)
+        names = ' and '.join(field.lower() for field in required)
+        lines.extend([f'\t\tif {missing} {{ return fmt.Errorf("{kind} endpoint requires {names}") }}',
+                      f'\t\t*dst = {union}{{{model}: &value}}'])
+    lines.extend(['\tdefault:', '\t\treturn fmt.Errorf("unknown endpoint kind %q", discriminator.Kind)',
+                  '\t}', '\treturn nil', '}'])
+    path.write_text(source[:start] + '\n'.join(lines) + source[end:])
 PY
-  perl -ni -e 'print unless /"gopkg\.in\/validator\.v2"/' "$endpoint_ref_file"
-fi
+for union_file in "$openapi_dir/model_endpoint_ref.go" "$openapi_dir/model_relationship_contribution_endpoint.go"; do
+  if [[ -f "$union_file" ]]; then
+    perl -ni -e 'print unless /"gopkg\.in\/validator\.v2"/' "$union_file"
+  fi
+done
 
 if [[ -f "$openapi_dir/utils.go" ]]; then
   perl -0pi -e '
