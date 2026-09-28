@@ -24,6 +24,7 @@ type CostAnalyticsResponsePricingCoverage struct {
 	UnpricedCalls       float32                                             `json:"unpriced_calls"`
 	AssumedDefaultCalls float32                                             `json:"assumed_default_calls"`
 	Unpriced            []CostAnalyticsResponsePricingCoverageUnpricedInner `json:"unpriced"`
+	CostBySource        *CostAnalyticsResponsePricingCoverageCostBySource   `json:"cost_by_source,omitempty"`
 }
 
 type _CostAnalyticsResponsePricingCoverage CostAnalyticsResponsePricingCoverage
@@ -145,6 +146,38 @@ func (o *CostAnalyticsResponsePricingCoverage) SetUnpriced(v []CostAnalyticsResp
 	o.Unpriced = v
 }
 
+// GetCostBySource returns the CostBySource field value if set, zero value otherwise.
+func (o *CostAnalyticsResponsePricingCoverage) GetCostBySource() CostAnalyticsResponsePricingCoverageCostBySource {
+	if o == nil || IsNil(o.CostBySource) {
+		var ret CostAnalyticsResponsePricingCoverageCostBySource
+		return ret
+	}
+	return *o.CostBySource
+}
+
+// GetCostBySourceOk returns a tuple with the CostBySource field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CostAnalyticsResponsePricingCoverage) GetCostBySourceOk() (*CostAnalyticsResponsePricingCoverageCostBySource, bool) {
+	if o == nil || IsNil(o.CostBySource) {
+		return nil, false
+	}
+	return o.CostBySource, true
+}
+
+// HasCostBySource returns a boolean if a field has been set.
+func (o *CostAnalyticsResponsePricingCoverage) HasCostBySource() bool {
+	if o != nil && !IsNil(o.CostBySource) {
+		return true
+	}
+
+	return false
+}
+
+// SetCostBySource gets a reference to the given CostAnalyticsResponsePricingCoverageCostBySource and assigns it to the CostBySource field.
+func (o *CostAnalyticsResponsePricingCoverage) SetCostBySource(v CostAnalyticsResponsePricingCoverageCostBySource) {
+	o.CostBySource = &v
+}
+
 func (o CostAnalyticsResponsePricingCoverage) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -159,6 +192,9 @@ func (o CostAnalyticsResponsePricingCoverage) ToMap() (map[string]interface{}, e
 	toSerialize["unpriced_calls"] = o.UnpricedCalls
 	toSerialize["assumed_default_calls"] = o.AssumedDefaultCalls
 	toSerialize["unpriced"] = o.Unpriced
+	if !IsNil(o.CostBySource) {
+		toSerialize["cost_by_source"] = o.CostBySource
+	}
 	return toSerialize, nil
 }
 

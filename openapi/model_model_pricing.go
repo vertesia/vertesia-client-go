@@ -24,12 +24,15 @@ type ModelPricing struct {
 	Provider          *string `json:"provider,omitempty"`
 	ProviderAccountId *string `json:"provider_account_id,omitempty"`
 	// Processing tier this price applies to
-	ServiceTier                    *string  `json:"service_tier,omitempty"`
+	ServiceTier *string `json:"service_tier,omitempty"`
+	// When set, these prices apply to calls whose prompt (input, cached and cache-write tokens) is longer than this many tokens, in place of the prices without it.
+	MinPromptTokens                *int32   `json:"min_prompt_tokens,omitempty"`
 	InputPricePerMTokens           float32  `json:"input_price_per_m_tokens"`
 	CachedInputPricePerMTokens     *float32 `json:"cached_input_price_per_m_tokens,omitempty"`
 	CacheWriteInputPricePerMTokens *float32 `json:"cache_write_input_price_per_m_tokens,omitempty"`
 	OutputPricePerMTokens          float32  `json:"output_price_per_m_tokens"`
-	Source                         string   `json:"source"`
+	// Where the rates come from. `run_time_estimate` rates are the ones recorded on the calls when their cost was estimated; the others come from the pricing catalog.
+	Source string `json:"source"`
 }
 
 type _ModelPricing ModelPricing
@@ -173,6 +176,38 @@ func (o *ModelPricing) HasServiceTier() bool {
 // SetServiceTier gets a reference to the given string and assigns it to the ServiceTier field.
 func (o *ModelPricing) SetServiceTier(v string) {
 	o.ServiceTier = &v
+}
+
+// GetMinPromptTokens returns the MinPromptTokens field value if set, zero value otherwise.
+func (o *ModelPricing) GetMinPromptTokens() int32 {
+	if o == nil || IsNil(o.MinPromptTokens) {
+		var ret int32
+		return ret
+	}
+	return *o.MinPromptTokens
+}
+
+// GetMinPromptTokensOk returns a tuple with the MinPromptTokens field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ModelPricing) GetMinPromptTokensOk() (*int32, bool) {
+	if o == nil || IsNil(o.MinPromptTokens) {
+		return nil, false
+	}
+	return o.MinPromptTokens, true
+}
+
+// HasMinPromptTokens returns a boolean if a field has been set.
+func (o *ModelPricing) HasMinPromptTokens() bool {
+	if o != nil && !IsNil(o.MinPromptTokens) {
+		return true
+	}
+
+	return false
+}
+
+// SetMinPromptTokens gets a reference to the given int32 and assigns it to the MinPromptTokens field.
+func (o *ModelPricing) SetMinPromptTokens(v int32) {
+	o.MinPromptTokens = &v
 }
 
 // GetInputPricePerMTokens returns the InputPricePerMTokens field value
@@ -330,6 +365,9 @@ func (o ModelPricing) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ServiceTier) {
 		toSerialize["service_tier"] = o.ServiceTier
+	}
+	if !IsNil(o.MinPromptTokens) {
+		toSerialize["min_prompt_tokens"] = o.MinPromptTokens
 	}
 	toSerialize["input_price_per_m_tokens"] = o.InputPricePerMTokens
 	if !IsNil(o.CachedInputPricePerMTokens) {

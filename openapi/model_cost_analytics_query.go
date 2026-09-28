@@ -21,7 +21,7 @@ var _ MappedNullable = &CostAnalyticsQuery{}
 type CostAnalyticsQuery struct {
 	From *GetModelPricesFromParameter `json:"from,omitempty"`
 	To   *GetModelPricesToParameter   `json:"to,omitempty"`
-	// Group results by this dimension
+	// Group results by this dimension. `agent_run` groups by root agent run, including the calls of its sub-agents; `workflow_run` groups by Temporal workflow run, which separates each sub-agent.
 	GroupBy *string `json:"group_by,omitempty"`
 	// Time series resolution
 	Resolution *string `json:"resolution,omitempty"`
