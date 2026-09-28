@@ -20,15 +20,15 @@ type AgentRunContradictionReason string
 
 // List of AgentRunContradictionReason
 const (
-	AGENTRUNCONTRADICTIONREASON_FEEDBACK_DOWN_ON_CLEAN_RUN AgentRunContradictionReason = "feedback_down_on_clean_run"
-	AGENTRUNCONTRADICTIONREASON_JUDGE_FAILURE_ON_CLEAN_RUN AgentRunContradictionReason = "judge_failure_on_clean_run"
-	AGENTRUNCONTRADICTIONREASON_UNKNOWN_DEFAULT_OPEN_API   AgentRunContradictionReason = "unknown_default_open_api"
+	AGENTRUNCONTRADICTIONREASON_FEEDBACK_DOWN_ON_CLEAN_RUN      AgentRunContradictionReason = "feedback_down_on_clean_run"
+	AGENTRUNCONTRADICTIONREASON_EVALUATION_FAILURE_ON_CLEAN_RUN AgentRunContradictionReason = "evaluation_failure_on_clean_run"
+	AGENTRUNCONTRADICTIONREASON_UNKNOWN_DEFAULT_OPEN_API        AgentRunContradictionReason = "unknown_default_open_api"
 )
 
 // All allowed values of AgentRunContradictionReason enum
 var AllowedAgentRunContradictionReasonEnumValues = []AgentRunContradictionReason{
 	"feedback_down_on_clean_run",
-	"judge_failure_on_clean_run",
+	"evaluation_failure_on_clean_run",
 	"unknown_default_open_api",
 }
 

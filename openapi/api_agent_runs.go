@@ -2491,7 +2491,7 @@ func (r ApiListAgentRunsRequest) FeedbackRating(feedbackRating string) ApiListAg
 	return r
 }
 
-// Only runs whose feedback or judge contradicts the detectors
+// Only runs whose feedback or LLM evaluation contradicts the detectors
 func (r ApiListAgentRunsRequest) Contradicted(contradicted bool) ApiListAgentRunsRequest {
 	r.contradicted = &contradicted
 	return r

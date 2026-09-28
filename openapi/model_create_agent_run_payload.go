@@ -30,6 +30,8 @@ type CreateAgentRunPayload struct {
 	GenerateTopic *bool `json:"generate_topic,omitempty"`
 	// Whether to generate lessons automatically at completion. Defaults to true; conversation content remains searchable when disabled.
 	GenerateLessons *bool `json:"generate_lessons,omitempty"`
+	// Request LLM evaluation when the project evaluation policy is opt_in. Defaults to false. Cannot override disabled or opt out of always_on.
+	Evaluate *bool `json:"evaluate,omitempty"`
 	// Input parameters, typed per interaction
 	Data map[string]interface{} `json:"data,omitempty"`
 	// Execution configuration (environment, model, model_options, etc.)
@@ -260,6 +262,38 @@ func (o *CreateAgentRunPayload) HasGenerateLessons() bool {
 // SetGenerateLessons gets a reference to the given bool and assigns it to the GenerateLessons field.
 func (o *CreateAgentRunPayload) SetGenerateLessons(v bool) {
 	o.GenerateLessons = &v
+}
+
+// GetEvaluate returns the Evaluate field value if set, zero value otherwise.
+func (o *CreateAgentRunPayload) GetEvaluate() bool {
+	if o == nil || IsNil(o.Evaluate) {
+		var ret bool
+		return ret
+	}
+	return *o.Evaluate
+}
+
+// GetEvaluateOk returns a tuple with the Evaluate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAgentRunPayload) GetEvaluateOk() (*bool, bool) {
+	if o == nil || IsNil(o.Evaluate) {
+		return nil, false
+	}
+	return o.Evaluate, true
+}
+
+// HasEvaluate returns a boolean if a field has been set.
+func (o *CreateAgentRunPayload) HasEvaluate() bool {
+	if o != nil && !IsNil(o.Evaluate) {
+		return true
+	}
+
+	return false
+}
+
+// SetEvaluate gets a reference to the given bool and assigns it to the Evaluate field.
+func (o *CreateAgentRunPayload) SetEvaluate(v bool) {
+	o.Evaluate = &v
 }
 
 // GetData returns the Data field value if set, zero value otherwise.
@@ -1184,6 +1218,9 @@ func (o CreateAgentRunPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.GenerateLessons) {
 		toSerialize["generate_lessons"] = o.GenerateLessons
 	}
+	if !IsNil(o.Evaluate) {
+		toSerialize["evaluate"] = o.Evaluate
+	}
 	if !IsNil(o.Data) {
 		toSerialize["data"] = o.Data
 	}
@@ -1316,6 +1353,7 @@ func (o *CreateAgentRunPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "topic")
 		delete(additionalProperties, "generate_topic")
 		delete(additionalProperties, "generate_lessons")
+		delete(additionalProperties, "evaluate")
 		delete(additionalProperties, "data")
 		delete(additionalProperties, "config")
 		delete(additionalProperties, "interactive")

@@ -117,6 +117,8 @@ type AgentRun struct {
 	GenerateLessons *bool `json:"generate_lessons,omitempty"`
 	// Lessons learned from the conversation (extracted at completion)
 	LessonsLearned []string `json:"lessons_learned,omitempty"`
+	// Request LLM evaluation when the project evaluation policy is opt_in. Defaults to false. Cannot override disabled or opt out of always_on.
+	Evaluate *bool `json:"evaluate,omitempty"`
 	// Evaluation summary of the run.
 	Evaluation *AgentRunEvaluation `json:"evaluation,omitempty"`
 	// Retained user ratings on the run.
@@ -1606,6 +1608,38 @@ func (o *AgentRun) SetLessonsLearned(v []string) {
 	o.LessonsLearned = v
 }
 
+// GetEvaluate returns the Evaluate field value if set, zero value otherwise.
+func (o *AgentRun) GetEvaluate() bool {
+	if o == nil || IsNil(o.Evaluate) {
+		var ret bool
+		return ret
+	}
+	return *o.Evaluate
+}
+
+// GetEvaluateOk returns a tuple with the Evaluate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentRun) GetEvaluateOk() (*bool, bool) {
+	if o == nil || IsNil(o.Evaluate) {
+		return nil, false
+	}
+	return o.Evaluate, true
+}
+
+// HasEvaluate returns a boolean if a field has been set.
+func (o *AgentRun) HasEvaluate() bool {
+	if o != nil && !IsNil(o.Evaluate) {
+		return true
+	}
+
+	return false
+}
+
+// SetEvaluate gets a reference to the given bool and assigns it to the Evaluate field.
+func (o *AgentRun) SetEvaluate(v bool) {
+	o.Evaluate = &v
+}
+
 // GetEvaluation returns the Evaluation field value if set, zero value otherwise.
 func (o *AgentRun) GetEvaluation() AgentRunEvaluation {
 	if o == nil || IsNil(o.Evaluation) {
@@ -1928,6 +1962,9 @@ func (o AgentRun) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.LessonsLearned) {
 		toSerialize["lessons_learned"] = o.LessonsLearned
 	}
+	if !IsNil(o.Evaluate) {
+		toSerialize["evaluate"] = o.Evaluate
+	}
 	if !IsNil(o.Evaluation) {
 		toSerialize["evaluation"] = o.Evaluation
 	}
@@ -2048,6 +2085,7 @@ func (o *AgentRun) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "generate_topic")
 		delete(additionalProperties, "generate_lessons")
 		delete(additionalProperties, "lessons_learned")
+		delete(additionalProperties, "evaluate")
 		delete(additionalProperties, "evaluation")
 		delete(additionalProperties, "feedback")
 		delete(additionalProperties, "archived_at")

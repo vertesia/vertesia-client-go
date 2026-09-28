@@ -25,7 +25,7 @@ type AgentRunEvaluation struct {
 	Rev                  int32                         `json:"rev"`
 	Rollup               *AgentRunEvaluationRollup     `json:"rollup,omitempty"`
 	FeedbackCounts       *AgentRunFeedbackCounts       `json:"feedback_counts,omitempty"`
-	Judge                *AgentRunJudgeResult          `json:"judge,omitempty"`
+	LlmEvaluation        *AgentRunLlmEvaluationResult  `json:"llm_evaluation,omitempty"`
 	Severity             EvaluationSeverity            `json:"severity"`
 	Flags                []TurnEvaluationFlag          `json:"flags"`
 	Contradicted         bool                          `json:"contradicted"`
@@ -146,36 +146,36 @@ func (o *AgentRunEvaluation) SetFeedbackCounts(v AgentRunFeedbackCounts) {
 	o.FeedbackCounts = &v
 }
 
-// GetJudge returns the Judge field value if set, zero value otherwise.
-func (o *AgentRunEvaluation) GetJudge() AgentRunJudgeResult {
-	if o == nil || IsNil(o.Judge) {
-		var ret AgentRunJudgeResult
+// GetLlmEvaluation returns the LlmEvaluation field value if set, zero value otherwise.
+func (o *AgentRunEvaluation) GetLlmEvaluation() AgentRunLlmEvaluationResult {
+	if o == nil || IsNil(o.LlmEvaluation) {
+		var ret AgentRunLlmEvaluationResult
 		return ret
 	}
-	return *o.Judge
+	return *o.LlmEvaluation
 }
 
-// GetJudgeOk returns a tuple with the Judge field value if set, nil otherwise
+// GetLlmEvaluationOk returns a tuple with the LlmEvaluation field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *AgentRunEvaluation) GetJudgeOk() (*AgentRunJudgeResult, bool) {
-	if o == nil || IsNil(o.Judge) {
+func (o *AgentRunEvaluation) GetLlmEvaluationOk() (*AgentRunLlmEvaluationResult, bool) {
+	if o == nil || IsNil(o.LlmEvaluation) {
 		return nil, false
 	}
-	return o.Judge, true
+	return o.LlmEvaluation, true
 }
 
-// HasJudge returns a boolean if a field has been set.
-func (o *AgentRunEvaluation) HasJudge() bool {
-	if o != nil && !IsNil(o.Judge) {
+// HasLlmEvaluation returns a boolean if a field has been set.
+func (o *AgentRunEvaluation) HasLlmEvaluation() bool {
+	if o != nil && !IsNil(o.LlmEvaluation) {
 		return true
 	}
 
 	return false
 }
 
-// SetJudge gets a reference to the given AgentRunJudgeResult and assigns it to the Judge field.
-func (o *AgentRunEvaluation) SetJudge(v AgentRunJudgeResult) {
-	o.Judge = &v
+// SetLlmEvaluation gets a reference to the given AgentRunLlmEvaluationResult and assigns it to the LlmEvaluation field.
+func (o *AgentRunEvaluation) SetLlmEvaluation(v AgentRunLlmEvaluationResult) {
+	o.LlmEvaluation = &v
 }
 
 // GetSeverity returns the Severity field value
@@ -355,8 +355,8 @@ func (o AgentRunEvaluation) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.FeedbackCounts) {
 		toSerialize["feedback_counts"] = o.FeedbackCounts
 	}
-	if !IsNil(o.Judge) {
-		toSerialize["judge"] = o.Judge
+	if !IsNil(o.LlmEvaluation) {
+		toSerialize["llm_evaluation"] = o.LlmEvaluation
 	}
 	toSerialize["severity"] = o.Severity
 	toSerialize["flags"] = o.Flags

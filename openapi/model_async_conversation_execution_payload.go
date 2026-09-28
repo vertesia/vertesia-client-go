@@ -30,6 +30,8 @@ type AsyncConversationExecutionPayload struct {
 	GenerateTopic *bool `json:"generate_topic,omitempty"`
 	// Whether to generate lessons automatically at completion. Defaults to true; conversation content remains searchable when disabled.
 	GenerateLessons *bool `json:"generate_lessons,omitempty"`
+	// Request LLM evaluation when the project evaluation policy is opt_in. Defaults to false. Cannot override disabled or opt out of always_on.
+	Evaluate *bool `json:"evaluate,omitempty"`
 	// Immutable app-version target inherited by this conversation execution. The workflow applies it to app-owned resource resolution; callers normally set the x-vertesia-app-version header instead of populating this field directly.
 	AppVersion   *string                                               `json:"app_version,omitempty"`
 	Data         interface{}                                           `json:"data,omitempty"`
@@ -280,6 +282,38 @@ func (o *AsyncConversationExecutionPayload) HasGenerateLessons() bool {
 // SetGenerateLessons gets a reference to the given bool and assigns it to the GenerateLessons field.
 func (o *AsyncConversationExecutionPayload) SetGenerateLessons(v bool) {
 	o.GenerateLessons = &v
+}
+
+// GetEvaluate returns the Evaluate field value if set, zero value otherwise.
+func (o *AsyncConversationExecutionPayload) GetEvaluate() bool {
+	if o == nil || IsNil(o.Evaluate) {
+		var ret bool
+		return ret
+	}
+	return *o.Evaluate
+}
+
+// GetEvaluateOk returns a tuple with the Evaluate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AsyncConversationExecutionPayload) GetEvaluateOk() (*bool, bool) {
+	if o == nil || IsNil(o.Evaluate) {
+		return nil, false
+	}
+	return o.Evaluate, true
+}
+
+// HasEvaluate returns a boolean if a field has been set.
+func (o *AsyncConversationExecutionPayload) HasEvaluate() bool {
+	if o != nil && !IsNil(o.Evaluate) {
+		return true
+	}
+
+	return false
+}
+
+// SetEvaluate gets a reference to the given bool and assigns it to the Evaluate field.
+func (o *AsyncConversationExecutionPayload) SetEvaluate(v bool) {
+	o.Evaluate = &v
 }
 
 // GetAppVersion returns the AppVersion field value if set, zero value otherwise.
@@ -1654,6 +1688,9 @@ func (o AsyncConversationExecutionPayload) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.GenerateLessons) {
 		toSerialize["generate_lessons"] = o.GenerateLessons
 	}
+	if !IsNil(o.Evaluate) {
+		toSerialize["evaluate"] = o.Evaluate
+	}
 	if !IsNil(o.AppVersion) {
 		toSerialize["app_version"] = o.AppVersion
 	}
@@ -1827,6 +1864,7 @@ func (o *AsyncConversationExecutionPayload) UnmarshalJSON(data []byte) (err erro
 		delete(additionalProperties, "topic")
 		delete(additionalProperties, "generate_topic")
 		delete(additionalProperties, "generate_lessons")
+		delete(additionalProperties, "evaluate")
 		delete(additionalProperties, "app_version")
 		delete(additionalProperties, "data")
 		delete(additionalProperties, "config")

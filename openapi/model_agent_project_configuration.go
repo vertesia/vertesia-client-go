@@ -19,6 +19,8 @@ var _ MappedNullable = &AgentProjectConfiguration{}
 
 // AgentProjectConfiguration Agent runtime configuration, scoped under project configuration so agent settings have one home (`configuration.agent`).
 type AgentProjectConfiguration struct {
+	// LLM evaluation policy. Defaults to always_on when omitted. disabled prevents evaluation even when requested; opt_in requires evaluate=true on the run; always_on evaluates every eligible run without sampling. Deterministic diagnostics are unaffected.
+	EvaluationPolicy *string `json:"evaluation_policy,omitempty"`
 	// Conversation checkpoint (context compaction) tuning.
 	Checkpoint *AgentCheckpointConfiguration `json:"checkpoint,omitempty"`
 }
@@ -38,6 +40,38 @@ func NewAgentProjectConfiguration() *AgentProjectConfiguration {
 func NewAgentProjectConfigurationWithDefaults() *AgentProjectConfiguration {
 	this := AgentProjectConfiguration{}
 	return &this
+}
+
+// GetEvaluationPolicy returns the EvaluationPolicy field value if set, zero value otherwise.
+func (o *AgentProjectConfiguration) GetEvaluationPolicy() string {
+	if o == nil || IsNil(o.EvaluationPolicy) {
+		var ret string
+		return ret
+	}
+	return *o.EvaluationPolicy
+}
+
+// GetEvaluationPolicyOk returns a tuple with the EvaluationPolicy field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentProjectConfiguration) GetEvaluationPolicyOk() (*string, bool) {
+	if o == nil || IsNil(o.EvaluationPolicy) {
+		return nil, false
+	}
+	return o.EvaluationPolicy, true
+}
+
+// HasEvaluationPolicy returns a boolean if a field has been set.
+func (o *AgentProjectConfiguration) HasEvaluationPolicy() bool {
+	if o != nil && !IsNil(o.EvaluationPolicy) {
+		return true
+	}
+
+	return false
+}
+
+// SetEvaluationPolicy gets a reference to the given string and assigns it to the EvaluationPolicy field.
+func (o *AgentProjectConfiguration) SetEvaluationPolicy(v string) {
+	o.EvaluationPolicy = &v
 }
 
 // GetCheckpoint returns the Checkpoint field value if set, zero value otherwise.
@@ -82,6 +116,9 @@ func (o AgentProjectConfiguration) MarshalJSON() ([]byte, error) {
 
 func (o AgentProjectConfiguration) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.EvaluationPolicy) {
+		toSerialize["evaluation_policy"] = o.EvaluationPolicy
+	}
 	if !IsNil(o.Checkpoint) {
 		toSerialize["checkpoint"] = o.Checkpoint
 	}
