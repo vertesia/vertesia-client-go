@@ -79,6 +79,8 @@ type CreateAgentRunPayload struct {
 	Checkpoint *AgentCheckpointConfiguration `json:"checkpoint,omitempty"`
 	// Maximum conversation iterations (default: 20)
 	MaxIterations *float32 `json:"max_iterations,omitempty"`
+	// When true, a non-interactive free-form run takes one extra turn after its answer to check that the task is complete. Off by default. Not kept on restart or fork.
+	FinalVerification *bool `json:"final_verification,omitempty"`
 	// Webhook URLs to notify on completion
 	NotifyEndpoints []string `json:"notify_endpoints,omitempty"`
 	// Enable debug mode for verbose logging
@@ -1031,6 +1033,38 @@ func (o *CreateAgentRunPayload) SetMaxIterations(v float32) {
 	o.MaxIterations = &v
 }
 
+// GetFinalVerification returns the FinalVerification field value if set, zero value otherwise.
+func (o *CreateAgentRunPayload) GetFinalVerification() bool {
+	if o == nil || IsNil(o.FinalVerification) {
+		var ret bool
+		return ret
+	}
+	return *o.FinalVerification
+}
+
+// GetFinalVerificationOk returns a tuple with the FinalVerification field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAgentRunPayload) GetFinalVerificationOk() (*bool, bool) {
+	if o == nil || IsNil(o.FinalVerification) {
+		return nil, false
+	}
+	return o.FinalVerification, true
+}
+
+// HasFinalVerification returns a boolean if a field has been set.
+func (o *CreateAgentRunPayload) HasFinalVerification() bool {
+	if o != nil && !IsNil(o.FinalVerification) {
+		return true
+	}
+
+	return false
+}
+
+// SetFinalVerification gets a reference to the given bool and assigns it to the FinalVerification field.
+func (o *CreateAgentRunPayload) SetFinalVerification(v bool) {
+	o.FinalVerification = &v
+}
+
 // GetNotifyEndpoints returns the NotifyEndpoints field value if set, zero value otherwise.
 func (o *CreateAgentRunPayload) GetNotifyEndpoints() []string {
 	if o == nil || IsNil(o.NotifyEndpoints) {
@@ -1222,6 +1256,9 @@ func (o CreateAgentRunPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.MaxIterations) {
 		toSerialize["max_iterations"] = o.MaxIterations
 	}
+	if !IsNil(o.FinalVerification) {
+		toSerialize["final_verification"] = o.FinalVerification
+	}
 	if !IsNil(o.NotifyEndpoints) {
 		toSerialize["notify_endpoints"] = o.NotifyEndpoints
 	}
@@ -1303,6 +1340,7 @@ func (o *CreateAgentRunPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "checkpoint_tokens")
 		delete(additionalProperties, "checkpoint")
 		delete(additionalProperties, "max_iterations")
+		delete(additionalProperties, "final_verification")
 		delete(additionalProperties, "notify_endpoints")
 		delete(additionalProperties, "debug_mode")
 		delete(additionalProperties, "started_by")

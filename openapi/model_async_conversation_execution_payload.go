@@ -92,6 +92,8 @@ type AsyncConversationExecutionPayload struct {
 	MaxNestedConversationDepth *float32 `json:"max_nested_conversation_depth,omitempty"`
 	// Metadata inherited from parent workflow. Used to propagate context (e.g., apiKey, session info) to child workflows/workstreams. When a workstream is spawned, the parent's `data` is preserved here so that child tools can access it via metadata.parent_metadata.
 	ParentMetadata map[string]interface{} `json:"parent_metadata,omitempty"`
+	// When true, a non-interactive free-form run takes one extra turn after its answer to check that the task is complete. Off by default, and never applied to workstreams: their parent reviews the result and can message the workstream to continue.
+	FinalVerification *bool `json:"final_verification,omitempty"`
 	// When true, subagent/workstream tool calls use fire-and-forget `startChild()` instead of blocking `executeChild()`. The parent continues reasoning while children run, receiving progress/completion via Temporal signals.
 	NonBlockingSubagents *bool `json:"non_blocking_subagents,omitempty"`
 	// Temporal runId of a previous workflow to restart/fork from. When set, conversation history is loaded from the old run's GCS storage instead of calling startConversation fresh.
@@ -1405,6 +1407,38 @@ func (o *AsyncConversationExecutionPayload) SetParentMetadata(v map[string]inter
 	o.ParentMetadata = v
 }
 
+// GetFinalVerification returns the FinalVerification field value if set, zero value otherwise.
+func (o *AsyncConversationExecutionPayload) GetFinalVerification() bool {
+	if o == nil || IsNil(o.FinalVerification) {
+		var ret bool
+		return ret
+	}
+	return *o.FinalVerification
+}
+
+// GetFinalVerificationOk returns a tuple with the FinalVerification field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AsyncConversationExecutionPayload) GetFinalVerificationOk() (*bool, bool) {
+	if o == nil || IsNil(o.FinalVerification) {
+		return nil, false
+	}
+	return o.FinalVerification, true
+}
+
+// HasFinalVerification returns a boolean if a field has been set.
+func (o *AsyncConversationExecutionPayload) HasFinalVerification() bool {
+	if o != nil && !IsNil(o.FinalVerification) {
+		return true
+	}
+
+	return false
+}
+
+// SetFinalVerification gets a reference to the given bool and assigns it to the FinalVerification field.
+func (o *AsyncConversationExecutionPayload) SetFinalVerification(v bool) {
+	o.FinalVerification = &v
+}
+
 // GetNonBlockingSubagents returns the NonBlockingSubagents field value if set, zero value otherwise.
 func (o *AsyncConversationExecutionPayload) GetNonBlockingSubagents() bool {
 	if o == nil || IsNil(o.NonBlockingSubagents) {
@@ -1723,6 +1757,9 @@ func (o AsyncConversationExecutionPayload) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.ParentMetadata) {
 		toSerialize["parent_metadata"] = o.ParentMetadata
 	}
+	if !IsNil(o.FinalVerification) {
+		toSerialize["final_verification"] = o.FinalVerification
+	}
 	if !IsNil(o.NonBlockingSubagents) {
 		toSerialize["non_blocking_subagents"] = o.NonBlockingSubagents
 	}
@@ -1825,6 +1862,7 @@ func (o *AsyncConversationExecutionPayload) UnmarshalJSON(data []byte) (err erro
 		delete(additionalProperties, "debug_mode")
 		delete(additionalProperties, "max_nested_conversation_depth")
 		delete(additionalProperties, "parent_metadata")
+		delete(additionalProperties, "final_verification")
 		delete(additionalProperties, "non_blocking_subagents")
 		delete(additionalProperties, "restart_from_workflow_run_id")
 		delete(additionalProperties, "source_first_workflow_run_id")
