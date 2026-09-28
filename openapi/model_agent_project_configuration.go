@@ -23,6 +23,8 @@ type AgentProjectConfiguration struct {
 	EvaluationPolicy *string `json:"evaluation_policy,omitempty"`
 	// Conversation checkpoint (context compaction) tuning.
 	Checkpoint *AgentCheckpointConfiguration `json:"checkpoint,omitempty"`
+	// Default token budget for agent runs in this project. Field-wise overridden by the interaction's `agent_runner_options.budget` and the per-run `budget`.
+	Budget *AgentBudgetConfiguration `json:"budget,omitempty"`
 }
 
 // NewAgentProjectConfiguration instantiates a new AgentProjectConfiguration object
@@ -106,6 +108,38 @@ func (o *AgentProjectConfiguration) SetCheckpoint(v AgentCheckpointConfiguration
 	o.Checkpoint = &v
 }
 
+// GetBudget returns the Budget field value if set, zero value otherwise.
+func (o *AgentProjectConfiguration) GetBudget() AgentBudgetConfiguration {
+	if o == nil || IsNil(o.Budget) {
+		var ret AgentBudgetConfiguration
+		return ret
+	}
+	return *o.Budget
+}
+
+// GetBudgetOk returns a tuple with the Budget field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentProjectConfiguration) GetBudgetOk() (*AgentBudgetConfiguration, bool) {
+	if o == nil || IsNil(o.Budget) {
+		return nil, false
+	}
+	return o.Budget, true
+}
+
+// HasBudget returns a boolean if a field has been set.
+func (o *AgentProjectConfiguration) HasBudget() bool {
+	if o != nil && !IsNil(o.Budget) {
+		return true
+	}
+
+	return false
+}
+
+// SetBudget gets a reference to the given AgentBudgetConfiguration and assigns it to the Budget field.
+func (o *AgentProjectConfiguration) SetBudget(v AgentBudgetConfiguration) {
+	o.Budget = &v
+}
+
 func (o AgentProjectConfiguration) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -121,6 +155,9 @@ func (o AgentProjectConfiguration) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Checkpoint) {
 		toSerialize["checkpoint"] = o.Checkpoint
+	}
+	if !IsNil(o.Budget) {
+		toSerialize["budget"] = o.Budget
 	}
 	return toSerialize, nil
 }

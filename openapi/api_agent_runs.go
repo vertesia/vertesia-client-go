@@ -180,6 +180,162 @@ func (a *AgentRunsAPIService) AdvanceProcessRunExecute(r ApiAdvanceProcessRunReq
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiAllocateAgentRunBudgetRequest struct {
+	ctx                           context.Context
+	ApiService                    *AgentRunsAPIService
+	agentRunId                    string
+	xApiVersion                   *string
+	allocateAgentRunBudgetPayload *AllocateAgentRunBudgetPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiAllocateAgentRunBudgetRequest) XApiVersion(xApiVersion string) ApiAllocateAgentRunBudgetRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiAllocateAgentRunBudgetRequest) AllocateAgentRunBudgetPayload(allocateAgentRunBudgetPayload AllocateAgentRunBudgetPayload) ApiAllocateAgentRunBudgetRequest {
+	r.allocateAgentRunBudgetPayload = &allocateAgentRunBudgetPayload
+	return r
+}
+
+func (r ApiAllocateAgentRunBudgetRequest) Execute() (*SignalAgentResponse, *http.Response, error) {
+	return r.ApiService.AllocateAgentRunBudgetExecute(r)
+}
+
+/*
+AllocateAgentRunBudget Add token budget to a paused run
+
+Adds token budget to a run paused because its budget ran out; the run resumes from where it stopped. Interactive agent runs pause when their budget runs out, and so do process runs managed by one; other runs end instead. The amount is added to the limit the run was granted, so usage past that limit is paid out of it. Sent to a run that is not paused yet, it is applied when the budget runs out.
+
+**Required permissions:** `workflow:run`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param agentRunId
+	@return ApiAllocateAgentRunBudgetRequest
+*/
+func (a *AgentRunsAPIService) AllocateAgentRunBudget(ctx context.Context, agentRunId string) ApiAllocateAgentRunBudgetRequest {
+	return ApiAllocateAgentRunBudgetRequest{
+		ApiService: a,
+		ctx:        ctx,
+		agentRunId: agentRunId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return SignalAgentResponse
+func (a *AgentRunsAPIService) AllocateAgentRunBudgetExecute(r ApiAllocateAgentRunBudgetRequest) (*SignalAgentResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *SignalAgentResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AgentRunsAPIService.AllocateAgentRunBudget")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/agents/{agentRunId}/budget"
+	localVarPath = strings.Replace(localVarPath, "{"+"agentRunId"+"}", url.PathEscape(parameterValueToString(r.agentRunId, "agentRunId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+	if r.allocateAgentRunBudgetPayload == nil {
+		return localVarReturnValue, nil, reportError("allocateAgentRunBudgetPayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.allocateAgentRunBudgetPayload
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiAnswerProcessTaskRequest struct {
 	ctx                      context.Context
 	ApiService               *AgentRunsAPIService

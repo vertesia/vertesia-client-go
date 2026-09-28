@@ -72,6 +72,8 @@ type ConversationState struct {
 	CheckpointThreshold *float32 `json:"checkpoint_threshold,omitempty"`
 	// Project-configured checkpoint hard cap in tokens (cached from project.configuration.agent_checkpoint_tokens at conversation start). The workflow resolves the effective threshold from these, the per-run checkpoint_tokens override, and the model-based default.
 	CheckpointTokens *float32 `json:"checkpoint_tokens,omitempty"`
+	// Project-configured agent token budget (cached from project.configuration.agent.budget at conversation start). The workflow resolves the effective budget field-wise from this, the interaction's agent_runner_options.budget, and the per-run budget override.
+	Budget *AgentBudgetConfiguration `json:"budget,omitempty"`
 	// Active communication channels with their current state. Channels can be updated as conversation progresses (e.g., email threading info).
 	UserChannels []UserChannel `json:"user_channels,omitempty"`
 	// The resolved interaction execution info. Contains interaction ID, name, version, and environment details.
@@ -920,6 +922,38 @@ func (o *ConversationState) SetCheckpointTokens(v float32) {
 	o.CheckpointTokens = &v
 }
 
+// GetBudget returns the Budget field value if set, zero value otherwise.
+func (o *ConversationState) GetBudget() AgentBudgetConfiguration {
+	if o == nil || IsNil(o.Budget) {
+		var ret AgentBudgetConfiguration
+		return ret
+	}
+	return *o.Budget
+}
+
+// GetBudgetOk returns a tuple with the Budget field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetBudgetOk() (*AgentBudgetConfiguration, bool) {
+	if o == nil || IsNil(o.Budget) {
+		return nil, false
+	}
+	return o.Budget, true
+}
+
+// HasBudget returns a boolean if a field has been set.
+func (o *ConversationState) HasBudget() bool {
+	if o != nil && !IsNil(o.Budget) {
+		return true
+	}
+
+	return false
+}
+
+// SetBudget gets a reference to the given AgentBudgetConfiguration and assigns it to the Budget field.
+func (o *ConversationState) SetBudget(v AgentBudgetConfiguration) {
+	o.Budget = &v
+}
+
 // GetUserChannels returns the UserChannels field value if set, zero value otherwise.
 func (o *ConversationState) GetUserChannels() []UserChannel {
 	if o == nil || IsNil(o.UserChannels) {
@@ -1478,6 +1512,9 @@ func (o ConversationState) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.CheckpointTokens) {
 		toSerialize["checkpoint_tokens"] = o.CheckpointTokens
 	}
+	if !IsNil(o.Budget) {
+		toSerialize["budget"] = o.Budget
+	}
 	if !IsNil(o.UserChannels) {
 		toSerialize["user_channels"] = o.UserChannels
 	}
@@ -1596,6 +1633,7 @@ func (o *ConversationState) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "streaming_enabled")
 		delete(additionalProperties, "checkpoint_threshold")
 		delete(additionalProperties, "checkpoint_tokens")
+		delete(additionalProperties, "budget")
 		delete(additionalProperties, "user_channels")
 		delete(additionalProperties, "resolvedInteraction")
 		delete(additionalProperties, "end_conversation")

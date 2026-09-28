@@ -79,6 +79,8 @@ type CreateAgentRunPayload struct {
 	CheckpointTokens *float32 `json:"checkpoint_tokens,omitempty"`
 	// Structured checkpoint override for this run. Field-wise it takes precedence over the interaction's `agent_runner_options.checkpoint` and the project's `configuration.agent.checkpoint`; the legacy `checkpoint_tokens` above still wins over everything when set.
 	Checkpoint *AgentCheckpointConfiguration `json:"checkpoint,omitempty"`
+	// Token budget for this run and its subagent workstreams. Field-wise it takes precedence over the interaction's `agent_runner_options.budget` and the project's `configuration.agent.budget`.
+	Budget *AgentBudgetConfiguration `json:"budget,omitempty"`
 	// Maximum conversation iterations (default: 20)
 	MaxIterations *float32 `json:"max_iterations,omitempty"`
 	// When true, a non-interactive free-form run takes one extra turn after its answer to check that the task is complete. Off by default. Not kept on restart or fork.
@@ -1035,6 +1037,38 @@ func (o *CreateAgentRunPayload) SetCheckpoint(v AgentCheckpointConfiguration) {
 	o.Checkpoint = &v
 }
 
+// GetBudget returns the Budget field value if set, zero value otherwise.
+func (o *CreateAgentRunPayload) GetBudget() AgentBudgetConfiguration {
+	if o == nil || IsNil(o.Budget) {
+		var ret AgentBudgetConfiguration
+		return ret
+	}
+	return *o.Budget
+}
+
+// GetBudgetOk returns a tuple with the Budget field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAgentRunPayload) GetBudgetOk() (*AgentBudgetConfiguration, bool) {
+	if o == nil || IsNil(o.Budget) {
+		return nil, false
+	}
+	return o.Budget, true
+}
+
+// HasBudget returns a boolean if a field has been set.
+func (o *CreateAgentRunPayload) HasBudget() bool {
+	if o != nil && !IsNil(o.Budget) {
+		return true
+	}
+
+	return false
+}
+
+// SetBudget gets a reference to the given AgentBudgetConfiguration and assigns it to the Budget field.
+func (o *CreateAgentRunPayload) SetBudget(v AgentBudgetConfiguration) {
+	o.Budget = &v
+}
+
 // GetMaxIterations returns the MaxIterations field value if set, zero value otherwise.
 func (o *CreateAgentRunPayload) GetMaxIterations() float32 {
 	if o == nil || IsNil(o.MaxIterations) {
@@ -1290,6 +1324,9 @@ func (o CreateAgentRunPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Checkpoint) {
 		toSerialize["checkpoint"] = o.Checkpoint
 	}
+	if !IsNil(o.Budget) {
+		toSerialize["budget"] = o.Budget
+	}
 	if !IsNil(o.MaxIterations) {
 		toSerialize["max_iterations"] = o.MaxIterations
 	}
@@ -1377,6 +1414,7 @@ func (o *CreateAgentRunPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "user_channels")
 		delete(additionalProperties, "checkpoint_tokens")
 		delete(additionalProperties, "checkpoint")
+		delete(additionalProperties, "budget")
 		delete(additionalProperties, "max_iterations")
 		delete(additionalProperties, "final_verification")
 		delete(additionalProperties, "notify_endpoints")

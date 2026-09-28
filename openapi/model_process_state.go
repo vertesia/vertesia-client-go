@@ -20,11 +20,14 @@ var _ MappedNullable = &ProcessState{}
 
 // ProcessState struct for ProcessState
 type ProcessState struct {
-	Context              map[string]interface{} `json:"context"`
-	CurrentNode          string                 `json:"current_node"`
-	NodeHistory          []NodeHistoryEntry     `json:"node_history"`
-	NodeHistoryRef       *ProcessHistoryRef     `json:"node_history_ref,omitempty"`
-	Sequence             float32                `json:"sequence"`
+	Context        map[string]interface{} `json:"context"`
+	CurrentNode    string                 `json:"current_node"`
+	NodeHistory    []NodeHistoryEntry     `json:"node_history"`
+	NodeHistoryRef *ProcessHistoryRef     `json:"node_history_ref,omitempty"`
+	Sequence       float32                `json:"sequence"`
+	TerminalReason *ProcessTerminalReason `json:"terminal_reason,omitempty"`
+	// Token budget of the run, present when the run has one.
+	Budget               *ProcessBudgetState `json:"budget,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -181,6 +184,70 @@ func (o *ProcessState) SetSequence(v float32) {
 	o.Sequence = v
 }
 
+// GetTerminalReason returns the TerminalReason field value if set, zero value otherwise.
+func (o *ProcessState) GetTerminalReason() ProcessTerminalReason {
+	if o == nil || IsNil(o.TerminalReason) {
+		var ret ProcessTerminalReason
+		return ret
+	}
+	return *o.TerminalReason
+}
+
+// GetTerminalReasonOk returns a tuple with the TerminalReason field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessState) GetTerminalReasonOk() (*ProcessTerminalReason, bool) {
+	if o == nil || IsNil(o.TerminalReason) {
+		return nil, false
+	}
+	return o.TerminalReason, true
+}
+
+// HasTerminalReason returns a boolean if a field has been set.
+func (o *ProcessState) HasTerminalReason() bool {
+	if o != nil && !IsNil(o.TerminalReason) {
+		return true
+	}
+
+	return false
+}
+
+// SetTerminalReason gets a reference to the given ProcessTerminalReason and assigns it to the TerminalReason field.
+func (o *ProcessState) SetTerminalReason(v ProcessTerminalReason) {
+	o.TerminalReason = &v
+}
+
+// GetBudget returns the Budget field value if set, zero value otherwise.
+func (o *ProcessState) GetBudget() ProcessBudgetState {
+	if o == nil || IsNil(o.Budget) {
+		var ret ProcessBudgetState
+		return ret
+	}
+	return *o.Budget
+}
+
+// GetBudgetOk returns a tuple with the Budget field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessState) GetBudgetOk() (*ProcessBudgetState, bool) {
+	if o == nil || IsNil(o.Budget) {
+		return nil, false
+	}
+	return o.Budget, true
+}
+
+// HasBudget returns a boolean if a field has been set.
+func (o *ProcessState) HasBudget() bool {
+	if o != nil && !IsNil(o.Budget) {
+		return true
+	}
+
+	return false
+}
+
+// SetBudget gets a reference to the given ProcessBudgetState and assigns it to the Budget field.
+func (o *ProcessState) SetBudget(v ProcessBudgetState) {
+	o.Budget = &v
+}
+
 func (o ProcessState) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -200,6 +267,12 @@ func (o ProcessState) ToMap() (map[string]interface{}, error) {
 		toSerialize["node_history_ref"] = o.NodeHistoryRef
 	}
 	toSerialize["sequence"] = o.Sequence
+	if !IsNil(o.TerminalReason) {
+		toSerialize["terminal_reason"] = o.TerminalReason
+	}
+	if !IsNil(o.Budget) {
+		toSerialize["budget"] = o.Budget
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -251,6 +324,8 @@ func (o *ProcessState) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "node_history")
 		delete(additionalProperties, "node_history_ref")
 		delete(additionalProperties, "sequence")
+		delete(additionalProperties, "terminal_reason")
+		delete(additionalProperties, "budget")
 		o.AdditionalProperties = additionalProperties
 	}
 

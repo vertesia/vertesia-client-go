@@ -68,6 +68,7 @@ model_activity_task.go
 model_advance_process_payload.go
 model_agent_artifact_content_response.go
 model_agent_artifact_url_response.go
+model_agent_budget_configuration.go
 model_agent_checkpoint_configuration.go
 model_agent_delivery_match_mode.go
 model_agent_event_delivery_target.go
@@ -112,6 +113,7 @@ model_agentic_view_search_configuration.go
 model_aggregated_tool.go
 model_ai_model.go
 model_ai_model_status.go
+model_allocate_agent_run_budget_payload.go
 model_alter_table_operation.go
 model_alter_table_operation_one_of.go
 model_alter_table_operation_one_of_1.go
@@ -766,6 +768,8 @@ model_process_agent_execution_policy.go
 model_process_agent_phase_reset.go
 model_process_agent_tool_input_contains.go
 model_process_agent_tool_phase.go
+model_process_budget_state.go
+model_process_budget_summary.go
 model_process_context_definition.go
 model_process_context_response.go
 model_process_definition.go
@@ -788,6 +792,7 @@ model_process_script_inline_source.go
 model_process_script_language.go
 model_process_script_resource.go
 model_process_state.go
+model_process_terminal_reason.go
 model_process_test_actor_decision.go
 model_process_test_assertion_result.go
 model_process_test_assertions.go

@@ -82,6 +82,8 @@ type AsyncConversationExecutionPayload struct {
 	CheckpointTokens *float32 `json:"checkpoint_tokens,omitempty"`
 	// Structured per-run checkpoint override. Field-wise it takes precedence over the interaction's `agent_runner_options.checkpoint` and the project's `configuration.agent.checkpoint`. The legacy absolute `checkpoint_tokens` above still wins over everything when set.
 	Checkpoint *AgentCheckpointConfiguration `json:"checkpoint,omitempty"`
+	// Per-run token budget override. Field-wise it takes precedence over the interaction's `agent_runner_options.budget` and the project's `configuration.agent.budget`. Subagent workstreams receive the remaining budget of their parent here.
+	Budget *AgentBudgetConfiguration `json:"budget,omitempty"`
 	// Configuration for stripping large data (images, text) from conversation history to prevent JSON serialization issues and reduce storage bloat.
 	StripOptions *ConversationStripOptions `json:"strip_options,omitempty"`
 	// In child execution workflow, this is the curent task_id
@@ -1249,6 +1251,38 @@ func (o *AsyncConversationExecutionPayload) SetCheckpoint(v AgentCheckpointConfi
 	o.Checkpoint = &v
 }
 
+// GetBudget returns the Budget field value if set, zero value otherwise.
+func (o *AsyncConversationExecutionPayload) GetBudget() AgentBudgetConfiguration {
+	if o == nil || IsNil(o.Budget) {
+		var ret AgentBudgetConfiguration
+		return ret
+	}
+	return *o.Budget
+}
+
+// GetBudgetOk returns a tuple with the Budget field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AsyncConversationExecutionPayload) GetBudgetOk() (*AgentBudgetConfiguration, bool) {
+	if o == nil || IsNil(o.Budget) {
+		return nil, false
+	}
+	return o.Budget, true
+}
+
+// HasBudget returns a boolean if a field has been set.
+func (o *AsyncConversationExecutionPayload) HasBudget() bool {
+	if o != nil && !IsNil(o.Budget) {
+		return true
+	}
+
+	return false
+}
+
+// SetBudget gets a reference to the given AgentBudgetConfiguration and assigns it to the Budget field.
+func (o *AsyncConversationExecutionPayload) SetBudget(v AgentBudgetConfiguration) {
+	o.Budget = &v
+}
+
 // GetStripOptions returns the StripOptions field value if set, zero value otherwise.
 func (o *AsyncConversationExecutionPayload) GetStripOptions() ConversationStripOptions {
 	if o == nil || IsNil(o.StripOptions) {
@@ -1776,6 +1810,9 @@ func (o AsyncConversationExecutionPayload) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.Checkpoint) {
 		toSerialize["checkpoint"] = o.Checkpoint
 	}
+	if !IsNil(o.Budget) {
+		toSerialize["budget"] = o.Budget
+	}
 	if !IsNil(o.StripOptions) {
 		toSerialize["strip_options"] = o.StripOptions
 	}
@@ -1894,6 +1931,7 @@ func (o *AsyncConversationExecutionPayload) UnmarshalJSON(data []byte) (err erro
 		delete(additionalProperties, "disabled_mcp_collections")
 		delete(additionalProperties, "checkpoint_tokens")
 		delete(additionalProperties, "checkpoint")
+		delete(additionalProperties, "budget")
 		delete(additionalProperties, "strip_options")
 		delete(additionalProperties, "task_id")
 		delete(additionalProperties, "launch_id")

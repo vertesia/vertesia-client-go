@@ -27,7 +27,9 @@ type ProcessRunConfig struct {
 	// Validated model options applied to Process LLM nodes and the supervisor.
 	ModelOptions *ModelOptions `json:"model_options,omitempty"`
 	// Free-form message from the user when starting a run. Passed to the orchestrator LLM in supervised mode; stored on the run regardless so programmatic runs retain the intent that triggered them.
-	UserMessage              *string                                   `json:"user_message,omitempty"`
+	UserMessage *string `json:"user_message,omitempty"`
+	// Token budget shared by the whole run: agent nodes, interaction nodes, nested processes and, when the run is managed by an agent run, that agent run. Agent nodes and nested processes start with what is left of it. When it runs out the process stops scheduling nodes and lets running agent nodes write a final summary. A run managed by an interactive agent run then pauses (`budget.awaiting_allocation`) until more budget is added through that agent run, and retries the interrupted node; any other run ends failed with `terminal_reason` `token_budget_exhausted`. This is a soft limit, not a spending cap.
+	Budget                   *AgentBudgetConfiguration                 `json:"budget,omitempty"`
 	ProcessWorkstreamMonitor *ProcessRunConfigProcessWorkstreamMonitor `json:"process_workstream_monitor,omitempty"`
 	AdditionalProperties     map[string]interface{}
 }
@@ -222,6 +224,38 @@ func (o *ProcessRunConfig) SetUserMessage(v string) {
 	o.UserMessage = &v
 }
 
+// GetBudget returns the Budget field value if set, zero value otherwise.
+func (o *ProcessRunConfig) GetBudget() AgentBudgetConfiguration {
+	if o == nil || IsNil(o.Budget) {
+		var ret AgentBudgetConfiguration
+		return ret
+	}
+	return *o.Budget
+}
+
+// GetBudgetOk returns a tuple with the Budget field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessRunConfig) GetBudgetOk() (*AgentBudgetConfiguration, bool) {
+	if o == nil || IsNil(o.Budget) {
+		return nil, false
+	}
+	return o.Budget, true
+}
+
+// HasBudget returns a boolean if a field has been set.
+func (o *ProcessRunConfig) HasBudget() bool {
+	if o != nil && !IsNil(o.Budget) {
+		return true
+	}
+
+	return false
+}
+
+// SetBudget gets a reference to the given AgentBudgetConfiguration and assigns it to the Budget field.
+func (o *ProcessRunConfig) SetBudget(v AgentBudgetConfiguration) {
+	o.Budget = &v
+}
+
 // GetProcessWorkstreamMonitor returns the ProcessWorkstreamMonitor field value if set, zero value otherwise.
 func (o *ProcessRunConfig) GetProcessWorkstreamMonitor() ProcessRunConfigProcessWorkstreamMonitor {
 	if o == nil || IsNil(o.ProcessWorkstreamMonitor) {
@@ -279,6 +313,9 @@ func (o ProcessRunConfig) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.UserMessage) {
 		toSerialize["user_message"] = o.UserMessage
 	}
+	if !IsNil(o.Budget) {
+		toSerialize["budget"] = o.Budget
+	}
 	if !IsNil(o.ProcessWorkstreamMonitor) {
 		toSerialize["process_workstream_monitor"] = o.ProcessWorkstreamMonitor
 	}
@@ -309,6 +346,7 @@ func (o *ProcessRunConfig) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "model")
 		delete(additionalProperties, "model_options")
 		delete(additionalProperties, "user_message")
+		delete(additionalProperties, "budget")
 		delete(additionalProperties, "process_workstream_monitor")
 		o.AdditionalProperties = additionalProperties
 	}
