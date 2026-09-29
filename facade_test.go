@@ -165,6 +165,9 @@ func TestNewClientSetsVersionAndAliases(t *testing.T) {
 	seenStudio := false
 	seenStore := false
 	apiServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if len(r.Header.Values("x-api-version")) != 1 {
+			t.Fatalf("expected exactly one version header: %v", r.Header.Values("x-api-version"))
+		}
 		if got := r.Header.Get("x-api-version"); got != "20260101" {
 			t.Fatalf("x-api-version = %q", got)
 		}
@@ -258,6 +261,9 @@ func TestNewClientExchangesSecretKeyForGeneratedClients(t *testing.T) {
 		}
 		if got := r.Header.Get("Authorization"); got != "Bearer sk-test" {
 			t.Fatalf("STS Authorization = %q", got)
+		}
+		if len(r.Header.Values("x-api-version")) != 1 {
+			t.Fatalf("expected exactly one version header: %v", r.Header.Values("x-api-version"))
 		}
 		if got := r.Header.Get("x-api-version"); got != "20260101" {
 			t.Fatalf("STS x-api-version = %q", got)
