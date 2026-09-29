@@ -71,6 +71,7 @@ path.write_text(source)
 PY
 fi
 
+if [[ -f "$openapi_dir/../spec/vertesia-openapi.json" ]]; then
 python3 - "$openapi_dir" <<'PY'
 import json
 from pathlib import Path
@@ -125,6 +126,7 @@ for filename, (wire_field, branches) in models.items():
     source = source.replace('\n\t"gopkg.in/validator.v2"', '')
     path.write_text(source)
 PY
+fi
 
 tool_definition_file="$openapi_dir/model_conversation_tool_definition.go"
 if [[ -f "$tool_definition_file" ]]; then
