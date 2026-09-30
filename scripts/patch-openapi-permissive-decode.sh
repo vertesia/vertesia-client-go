@@ -80,8 +80,9 @@ import sys
 
 root = Path(sys.argv[1])
 spec = json.loads((root.parent / 'spec' / 'vertesia-openapi.json').read_text())
+schemas = spec['components']['schemas']
 models = {}
-for type_name, schema in spec['components']['schemas'].items():
+for type_name, schema in schemas.items():
     if not (
         type_name.startswith('Conversation')
         or type_name == 'RunConversationResponse'
@@ -91,9 +92,57 @@ for type_name, schema in spec['components']['schemas'].items():
     discriminator = schema.get('discriminator')
     if not discriminator:
         continue
+    wire_field = discriminator.get('propertyName')
+    if not isinstance(wire_field, str) or not wire_field:
+        raise ValueError(f'{type_name} discriminator has no propertyName')
+
+    branches = []
+    mapping = discriminator.get('mapping')
+    if mapping is not None:
+        if not isinstance(mapping, dict) or not mapping:
+            raise ValueError(f'{type_name} discriminator mapping is empty')
+        for value, ref in mapping.items():
+            if not isinstance(value, str) or not isinstance(ref, str) or not ref.startswith('#/components/schemas/'):
+                raise ValueError(f'{type_name} discriminator mapping is invalid')
+            branches.append((value, ref.rsplit('/', 1)[-1]))
+    else:
+        one_of = schema.get('oneOf')
+        if not isinstance(one_of, list) or not one_of:
+            raise ValueError(f'{type_name} discriminator has neither mapping nor oneOf branches')
+        seen_values = set()
+        for index, branch in enumerate(one_of):
+            if not isinstance(branch, dict):
+                raise ValueError(f'{type_name} oneOf branch {index} is not an object schema')
+            if '$ref' in branch:
+                ref = branch['$ref']
+                if not isinstance(ref, str) or not ref.startswith('#/components/schemas/'):
+                    raise ValueError(f'{type_name} oneOf branch {index} has an unsupported reference')
+                branch_name = ref.rsplit('/', 1)[-1]
+                branch_schema = schemas.get(branch_name)
+                if not isinstance(branch_schema, dict):
+                    raise ValueError(f'{type_name} oneOf branch {index} reference is missing')
+            else:
+                branch_name = f'{type_name}OneOf{index if index else ""}'
+                branch_schema = branch
+            required = branch_schema.get('required')
+            if not isinstance(required, list) or wire_field not in required:
+                raise ValueError(f'{type_name} oneOf branch {index} does not require discriminator {wire_field}')
+            property_schema = branch_schema.get('properties', {}).get(wire_field)
+            if not isinstance(property_schema, dict):
+                raise ValueError(f'{type_name} oneOf branch {index} has no discriminator schema')
+            if isinstance(property_schema.get('const'), str):
+                values = [property_schema['const']]
+            else:
+                values = property_schema.get('enum')
+                if not isinstance(values, list) or not values or any(not isinstance(value, str) for value in values):
+                    raise ValueError(f'{type_name} oneOf branch {index} discriminator is not a string const/enum')
+            for value in values:
+                if value in seen_values:
+                    raise ValueError(f'{type_name} discriminator value {value!r} is ambiguous')
+                seen_values.add(value)
+                branches.append((value, branch_name))
     filename = re.sub(r'(?<!^)(?=[A-Z])', '_', type_name).lower()
-    branches = {value: ref.rsplit('/', 1)[-1] for value, ref in discriminator['mapping'].items()}
-    models[filename] = (discriminator['propertyName'], branches)
+    models[filename] = (wire_field, branches)
 
 def replace_function(source, signature, replacement):
     start = source.index(signature)
@@ -110,9 +159,15 @@ for filename, (wire_field, branches) in models.items():
     path = root / f'model_{filename}.go'
     if not path.exists(): continue
     type_name = ''.join(part.title() for part in filename.split('_'))
+    values_by_branch = {}
+    for value, branch in branches:
+        if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', branch):
+            raise ValueError(f'{type_name} discriminator branch {branch!r} is not a Go identifier')
+        values_by_branch.setdefault(branch, []).append(value)
     cases = []
-    for value, branch in branches.items():
-        cases.append(f'''\tcase "{value}":
+    for branch, values in values_by_branch.items():
+        labels = ', '.join(json.dumps(value) for value in values)
+        cases.append(f'''\tcase {labels}:
 \t\tselected := &{branch}{{}}
 \t\tif err := json.Unmarshal(data, selected); err != nil {{
 \t\t\treturn fmt.Errorf("failed to unmarshal {type_name} as {branch}: %w", err)

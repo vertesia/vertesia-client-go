@@ -6,7 +6,80 @@ work_dir="$(mktemp -d)"
 trap 'rm -rf "$work_dir"' EXIT
 mkdir -p "$work_dir/openapi" "$work_dir/spec"
 
-printf '%s\n' '{"components":{"schemas":{"ConversationTimestamp":{"type":"string","format":"date-time"},"RunConversationResponse":{"discriminator":{"propertyName":"status","mapping":{"available":"#/components/schemas/AvailableRunConversation","unavailable":"#/components/schemas/UnavailableRunConversation"}}},"ExperimentalCanonicalInteractionInitialState":{"discriminator":{"propertyName":"type","mapping":{"new":"#/components/schemas/ExperimentalCanonicalInteractionNewState","document":"#/components/schemas/ExperimentalCanonicalInteractionDocumentState","reference":"#/components/schemas/ExperimentalCanonicalInteractionReferenceState"}}}}}}' > "$work_dir/spec/vertesia-openapi.json"
+cat > "$work_dir/spec/vertesia-openapi.json" <<'JSON'
+{
+  "components": {
+    "schemas": {
+      "ConversationTimestamp": { "type": "string", "format": "date-time" },
+      "RunConversationResponse": {
+        "discriminator": {
+          "propertyName": "status",
+          "mapping": {
+            "available": "#/components/schemas/AvailableRunConversation",
+            "unavailable": "#/components/schemas/UnavailableRunConversation"
+          }
+        }
+      },
+      "ExperimentalCanonicalInteractionInitialState": {
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "new": "#/components/schemas/ExperimentalCanonicalInteractionNewState",
+            "document": "#/components/schemas/ExperimentalCanonicalInteractionDocumentState",
+            "reference": "#/components/schemas/ExperimentalCanonicalInteractionReferenceState"
+          }
+        }
+      },
+      "ConversationStreamDraftBlock": {
+        "type": "object",
+        "required": ["type"],
+        "discriminator": { "propertyName": "type" },
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "const": "text" },
+              "text": { "type": "string" }
+            },
+            "required": ["type", "text"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "enum": ["image", "audio", "video", "document"] },
+              "mime_type": { "type": "string" }
+            },
+            "required": ["type", "mime_type"]
+          }
+        ]
+      },
+      "ConversationStreamEvent": {
+        "type": "object",
+        "required": ["type"],
+        "discriminator": { "propertyName": "type" },
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "const": "draft_started" },
+              "event_id": { "type": "string" }
+            },
+            "required": ["type", "event_id"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "const": "draft_text_delta" },
+              "text": { "type": "string" }
+            },
+            "required": ["type", "text"]
+          }
+        ]
+      }
+    }
+  }
+}
+JSON
 printf '%s\n' 'package fixture
 import (
 	"encoding/json"
@@ -66,6 +139,86 @@ func (dst *ExperimentalCanonicalInteractionInitialState) UnmarshalJSON(data []by
 }
 var _ = json.Unmarshal
 var _ = fmt.Errorf' > "$work_dir/openapi/model_experimental_canonical_interaction_initial_state.go"
+printf '%s\n' 'package fixture
+import (
+	"encoding/json"
+	"fmt"
+	"gopkg.in/validator.v2"
+)
+type ConversationStreamDraftBlockOneOf struct {
+	Type string `json:"type"`
+	Text string `json:"text"`
+}
+func (value *ConversationStreamDraftBlockOneOf) UnmarshalJSON(data []byte) error {
+	fields := map[string]json.RawMessage{}
+	if err := json.Unmarshal(data, &fields); err != nil { return err }
+	for _, required := range []string{"type", "text"} {
+		if _, ok := fields[required]; !ok { return fmt.Errorf("missing %s", required) }
+	}
+	type alias ConversationStreamDraftBlockOneOf
+	return json.Unmarshal(data, (*alias)(value))
+}
+type ConversationStreamDraftBlockOneOf1 struct {
+	Type string `json:"type"`
+	MimeType string `json:"mime_type"`
+}
+func (value *ConversationStreamDraftBlockOneOf1) UnmarshalJSON(data []byte) error {
+	fields := map[string]json.RawMessage{}
+	if err := json.Unmarshal(data, &fields); err != nil { return err }
+	for _, required := range []string{"type", "mime_type"} {
+		if _, ok := fields[required]; !ok { return fmt.Errorf("missing %s", required) }
+	}
+	type alias ConversationStreamDraftBlockOneOf1
+	return json.Unmarshal(data, (*alias)(value))
+}
+type ConversationStreamDraftBlock struct {
+	ConversationStreamDraftBlockOneOf *ConversationStreamDraftBlockOneOf
+	ConversationStreamDraftBlockOneOf1 *ConversationStreamDraftBlockOneOf1
+}
+func (dst *ConversationStreamDraftBlock) UnmarshalJSON(data []byte) error {
+	return validator.Validate(dst)
+}
+var _ = fmt.Errorf' > "$work_dir/openapi/model_conversation_stream_draft_block.go"
+printf '%s\n' 'package fixture
+import (
+	"encoding/json"
+	"fmt"
+	"gopkg.in/validator.v2"
+)
+type ConversationStreamEventOneOf struct {
+	Type string `json:"type"`
+	EventID string `json:"event_id"`
+}
+func (value *ConversationStreamEventOneOf) UnmarshalJSON(data []byte) error {
+	fields := map[string]json.RawMessage{}
+	if err := json.Unmarshal(data, &fields); err != nil { return err }
+	for _, required := range []string{"type", "event_id"} {
+		if _, ok := fields[required]; !ok { return fmt.Errorf("missing %s", required) }
+	}
+	type alias ConversationStreamEventOneOf
+	return json.Unmarshal(data, (*alias)(value))
+}
+type ConversationStreamEventOneOf1 struct {
+	Type string `json:"type"`
+	Text string `json:"text"`
+}
+func (value *ConversationStreamEventOneOf1) UnmarshalJSON(data []byte) error {
+	fields := map[string]json.RawMessage{}
+	if err := json.Unmarshal(data, &fields); err != nil { return err }
+	for _, required := range []string{"type", "text"} {
+		if _, ok := fields[required]; !ok { return fmt.Errorf("missing %s", required) }
+	}
+	type alias ConversationStreamEventOneOf1
+	return json.Unmarshal(data, (*alias)(value))
+}
+type ConversationStreamEvent struct {
+	ConversationStreamEventOneOf *ConversationStreamEventOneOf
+	ConversationStreamEventOneOf1 *ConversationStreamEventOneOf1
+}
+func (dst *ConversationStreamEvent) UnmarshalJSON(data []byte) error {
+	return validator.Validate(dst)
+}
+var _ = fmt.Errorf' > "$work_dir/openapi/model_conversation_stream_event.go"
 printf '%s\n' 'package fixture
 import (
 	"encoding/json"
@@ -136,6 +289,14 @@ grep -q '\*dst = ExperimentalCanonicalInteractionInitialState{}' \
 grep -q 'case "reference"' "$work_dir/openapi/model_experimental_canonical_interaction_initial_state.go"
 if grep -q 'validator.v2' "$work_dir/openapi/model_experimental_canonical_interaction_initial_state.go"; then
     echo 'unused experimental initial-state validator import was not removed' >&2
+    exit 1
+fi
+grep -q 'case "image", "audio", "video", "document"' \
+    "$work_dir/openapi/model_conversation_stream_draft_block.go"
+grep -q 'case "draft_text_delta"' "$work_dir/openapi/model_conversation_stream_event.go"
+if grep -q 'validator.v2' "$work_dir/openapi/model_conversation_stream_draft_block.go" ||
+    grep -q 'validator.v2' "$work_dir/openapi/model_conversation_stream_event.go"; then
+    echo 'unused inline-discriminator validator import was not removed' >&2
     exit 1
 fi
 
@@ -247,6 +408,61 @@ func TestCanonicalInitialStateDispatchValidationAndReset(t *testing.T) {
 				state.ExperimentalCanonicalInteractionDocumentState != nil ||
 				state.ExperimentalCanonicalInteractionReferenceState != nil {
 				t.Fatalf("failed reuse retained a branch: %#v", state)
+			}
+		})
+	}
+}
+
+func TestInlineDiscriminatorDispatchValidationAndReset(t *testing.T) {
+	var block ConversationStreamDraftBlock
+	if err := json.Unmarshal([]byte(`{"type":"text","text":"hello"}`), &block); err != nil { t.Fatal(err) }
+	if block.ConversationStreamDraftBlockOneOf == nil || block.ConversationStreamDraftBlockOneOf1 != nil {
+		t.Fatalf("text branch not selected: %#v", block)
+	}
+	for _, mediaType := range []string{"image", "audio", "video", "document"} {
+		body := `{"type":"` + mediaType + `","mime_type":"application/octet-stream"}`
+		if err := json.Unmarshal([]byte(body), &block); err != nil { t.Fatalf("decode %s: %v", mediaType, err) }
+		if block.ConversationStreamDraftBlockOneOf != nil || block.ConversationStreamDraftBlockOneOf1 == nil {
+			t.Fatalf("%s did not select shared media branch: %#v", mediaType, block)
+		}
+	}
+	invalidBlocks := map[string]string{
+		"missing type": `{"text":"hello"}`,
+		"non-string type": `{"type":7,"text":"hello"}`,
+		"unknown type": `{"type":"future","text":"hello"}`,
+		"text missing text": `{"type":"text"}`,
+		"media missing mime": `{"type":"image"}`,
+	}
+	for name, body := range invalidBlocks {
+		t.Run("block "+name, func(t *testing.T) {
+			if err := json.Unmarshal([]byte(`{"type":"text","text":"seed"}`), &block); err != nil { t.Fatal(err) }
+			if err := json.Unmarshal([]byte(body), &block); err == nil { t.Fatalf("invalid block accepted: %s", body) }
+			if block.ConversationStreamDraftBlockOneOf != nil || block.ConversationStreamDraftBlockOneOf1 != nil {
+				t.Fatalf("failed block reuse retained a branch: %#v", block)
+			}
+		})
+	}
+
+	var event ConversationStreamEvent
+	if err := json.Unmarshal([]byte(`{"type":"draft_started","event_id":"event-1"}`), &event); err != nil { t.Fatal(err) }
+	if event.ConversationStreamEventOneOf == nil || event.ConversationStreamEventOneOf1 != nil {
+		t.Fatalf("started branch not selected: %#v", event)
+	}
+	if err := json.Unmarshal([]byte(`{"type":"draft_text_delta","text":"delta"}`), &event); err != nil { t.Fatal(err) }
+	if event.ConversationStreamEventOneOf != nil || event.ConversationStreamEventOneOf1 == nil {
+		t.Fatalf("delta branch did not reset started branch: %#v", event)
+	}
+	invalidEvents := map[string]string{
+		"unknown type": `{"type":"future","text":"delta"}`,
+		"started missing event": `{"type":"draft_started"}`,
+		"delta missing text": `{"type":"draft_text_delta"}`,
+	}
+	for name, body := range invalidEvents {
+		t.Run("event "+name, func(t *testing.T) {
+			if err := json.Unmarshal([]byte(`{"type":"draft_started","event_id":"seed"}`), &event); err != nil { t.Fatal(err) }
+			if err := json.Unmarshal([]byte(body), &event); err == nil { t.Fatalf("invalid event accepted: %s", body) }
+			if event.ConversationStreamEventOneOf != nil || event.ConversationStreamEventOneOf1 != nil {
+				t.Fatalf("failed event reuse retained a branch: %#v", event)
 			}
 		})
 	}
