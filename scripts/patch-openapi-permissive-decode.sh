@@ -82,7 +82,11 @@ root = Path(sys.argv[1])
 spec = json.loads((root.parent / 'spec' / 'vertesia-openapi.json').read_text())
 models = {}
 for type_name, schema in spec['components']['schemas'].items():
-    if not (type_name.startswith('Conversation') or type_name == 'RunConversationResponse'):
+    if not (
+        type_name.startswith('Conversation')
+        or type_name == 'RunConversationResponse'
+        or type_name == 'ExperimentalCanonicalInteractionInitialState'
+    ):
         continue
     discriminator = schema.get('discriminator')
     if not discriminator:
@@ -109,12 +113,16 @@ for filename, (wire_field, branches) in models.items():
     cases = []
     for value, branch in branches.items():
         cases.append(f'''\tcase "{value}":
-\t\tdst.{branch} = &{branch}{{}}
-\t\treturn json.Unmarshal(data, dst.{branch})''')
+\t\tselected := &{branch}{{}}
+\t\tif err := json.Unmarshal(data, selected); err != nil {{
+\t\t\treturn fmt.Errorf("failed to unmarshal {type_name} as {branch}: %w", err)
+\t\t}}
+\t\tdst.{branch} = selected
+\t\treturn nil''')
     replacement = f'''func (dst *{type_name}) UnmarshalJSON(data []byte) error {{
+\t*dst = {type_name}{{}}
 \tvar discriminator struct {{ Value string `json:"{wire_field}"` }}
 \tif err := json.Unmarshal(data, &discriminator); err != nil {{ return err }}
-\t*dst = {type_name}{{}}
 \tswitch discriminator.Value {{
 {chr(10).join(cases)}
 \tdefault:
