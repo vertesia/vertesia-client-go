@@ -60,7 +60,11 @@ type ProjectedContentObjectApiResponse struct {
 	// BLP sensitivity level — set directly or inherited from collections (max across collections).
 	Sensitivity NullableFloat32 `json:"sensitivity,omitempty"`
 	// Compartments — set directly or inherited from collections (union across collections).
-	Compartments         []string                    `json:"compartments,omitempty"`
+	Compartments []string `json:"compartments,omitempty"`
+	// Effective shared state: true iff the document is a member of an effectively-shared collection (inherited; sync-managed). Combine with shared_root for full readability.
+	Shared *bool `json:"shared,omitempty"`
+	// True iff the document was explicitly shared via the API (a root of the project shared space). Never set by the sync.
+	SharedRoot           *bool                       `json:"shared_root,omitempty"`
 	InheritedProperties  []InheritedPropertyMetadata `json:"inherited_properties,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
@@ -1121,6 +1125,70 @@ func (o *ProjectedContentObjectApiResponse) SetCompartments(v []string) {
 	o.Compartments = v
 }
 
+// GetShared returns the Shared field value if set, zero value otherwise.
+func (o *ProjectedContentObjectApiResponse) GetShared() bool {
+	if o == nil || IsNil(o.Shared) {
+		var ret bool
+		return ret
+	}
+	return *o.Shared
+}
+
+// GetSharedOk returns a tuple with the Shared field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProjectedContentObjectApiResponse) GetSharedOk() (*bool, bool) {
+	if o == nil || IsNil(o.Shared) {
+		return nil, false
+	}
+	return o.Shared, true
+}
+
+// HasShared returns a boolean if a field has been set.
+func (o *ProjectedContentObjectApiResponse) HasShared() bool {
+	if o != nil && !IsNil(o.Shared) {
+		return true
+	}
+
+	return false
+}
+
+// SetShared gets a reference to the given bool and assigns it to the Shared field.
+func (o *ProjectedContentObjectApiResponse) SetShared(v bool) {
+	o.Shared = &v
+}
+
+// GetSharedRoot returns the SharedRoot field value if set, zero value otherwise.
+func (o *ProjectedContentObjectApiResponse) GetSharedRoot() bool {
+	if o == nil || IsNil(o.SharedRoot) {
+		var ret bool
+		return ret
+	}
+	return *o.SharedRoot
+}
+
+// GetSharedRootOk returns a tuple with the SharedRoot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProjectedContentObjectApiResponse) GetSharedRootOk() (*bool, bool) {
+	if o == nil || IsNil(o.SharedRoot) {
+		return nil, false
+	}
+	return o.SharedRoot, true
+}
+
+// HasSharedRoot returns a boolean if a field has been set.
+func (o *ProjectedContentObjectApiResponse) HasSharedRoot() bool {
+	if o != nil && !IsNil(o.SharedRoot) {
+		return true
+	}
+
+	return false
+}
+
+// SetSharedRoot gets a reference to the given bool and assigns it to the SharedRoot field.
+func (o *ProjectedContentObjectApiResponse) SetSharedRoot(v bool) {
+	o.SharedRoot = &v
+}
+
 // GetInheritedProperties returns the InheritedProperties field value if set, zero value otherwise.
 func (o *ProjectedContentObjectApiResponse) GetInheritedProperties() []InheritedPropertyMetadata {
 	if o == nil || IsNil(o.InheritedProperties) {
@@ -1259,6 +1327,12 @@ func (o ProjectedContentObjectApiResponse) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.Compartments) {
 		toSerialize["compartments"] = o.Compartments
 	}
+	if !IsNil(o.Shared) {
+		toSerialize["shared"] = o.Shared
+	}
+	if !IsNil(o.SharedRoot) {
+		toSerialize["shared_root"] = o.SharedRoot
+	}
 	if !IsNil(o.InheritedProperties) {
 		toSerialize["inherited_properties"] = o.InheritedProperties
 	}
@@ -1316,6 +1390,8 @@ func (o *ProjectedContentObjectApiResponse) UnmarshalJSON(data []byte) (err erro
 		delete(additionalProperties, "security")
 		delete(additionalProperties, "sensitivity")
 		delete(additionalProperties, "compartments")
+		delete(additionalProperties, "shared")
+		delete(additionalProperties, "shared_root")
 		delete(additionalProperties, "inherited_properties")
 		o.AdditionalProperties = additionalProperties
 	}

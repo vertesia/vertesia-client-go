@@ -46,6 +46,8 @@ type CreateCollectionPayload struct {
 	Sensitivity *float32 `json:"sensitivity,omitempty"`
 	// Compartments for member documents
 	Compartments []string `json:"compartments,omitempty"`
+	// Explicitly share this collection as a root of the project shared space (listable/readable by non-members via matching shared-content ABAC rules). This is the explicit API share flag — the sync never sets it.
+	SharedRoot *bool `json:"shared_root,omitempty"`
 	// Name of the collection
 	Name string `json:"name"`
 	// When true, membership is determined by `query`; when false, members are added explicitly
@@ -513,6 +515,38 @@ func (o *CreateCollectionPayload) SetCompartments(v []string) {
 	o.Compartments = v
 }
 
+// GetSharedRoot returns the SharedRoot field value if set, zero value otherwise.
+func (o *CreateCollectionPayload) GetSharedRoot() bool {
+	if o == nil || IsNil(o.SharedRoot) {
+		var ret bool
+		return ret
+	}
+	return *o.SharedRoot
+}
+
+// GetSharedRootOk returns a tuple with the SharedRoot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateCollectionPayload) GetSharedRootOk() (*bool, bool) {
+	if o == nil || IsNil(o.SharedRoot) {
+		return nil, false
+	}
+	return o.SharedRoot, true
+}
+
+// HasSharedRoot returns a boolean if a field has been set.
+func (o *CreateCollectionPayload) HasSharedRoot() bool {
+	if o != nil && !IsNil(o.SharedRoot) {
+		return true
+	}
+
+	return false
+}
+
+// SetSharedRoot gets a reference to the given bool and assigns it to the SharedRoot field.
+func (o *CreateCollectionPayload) SetSharedRoot(v bool) {
+	o.SharedRoot = &v
+}
+
 // GetName returns the Name field value
 func (o *CreateCollectionPayload) GetName() string {
 	if o == nil {
@@ -610,6 +644,9 @@ func (o CreateCollectionPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Compartments) {
 		toSerialize["compartments"] = o.Compartments
 	}
+	if !IsNil(o.SharedRoot) {
+		toSerialize["shared_root"] = o.SharedRoot
+	}
 	toSerialize["name"] = o.Name
 	toSerialize["dynamic"] = o.Dynamic
 
@@ -669,6 +706,7 @@ func (o *CreateCollectionPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "shared_properties")
 		delete(additionalProperties, "sensitivity")
 		delete(additionalProperties, "compartments")
+		delete(additionalProperties, "shared_root")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "dynamic")
 		o.AdditionalProperties = additionalProperties

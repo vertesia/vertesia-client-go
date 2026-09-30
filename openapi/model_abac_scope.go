@@ -23,6 +23,7 @@ const (
 	ABACSCOPE_DOCUMENT                 AbacScope = "document"
 	ABACSCOPE_COLLECTION               AbacScope = "collection"
 	ABACSCOPE_AGENT_RUN                AbacScope = "agent_run"
+	ABACSCOPE_SHARED_CONTENT           AbacScope = "shared_content"
 	ABACSCOPE_TASK                     AbacScope = "task"
 	ABACSCOPE_UNKNOWN_DEFAULT_OPEN_API AbacScope = "unknown_default_open_api"
 )
@@ -32,6 +33,7 @@ var AllowedAbacScopeEnumValues = []AbacScope{
 	"document",
 	"collection",
 	"agent_run",
+	"shared_content",
 	"task",
 	"unknown_default_open_api",
 }

@@ -55,6 +55,10 @@ type Collection struct {
 	Sensitivity *float32 `json:"sensitivity,omitempty"`
 	// Compartments — propagated to member documents (union across collections)
 	Compartments []string `json:"compartments,omitempty"`
+	// Effective shared state: true iff the collection is a member of an effectively-shared parent collection (inherited; sync-managed). Combine with shared_root for full readability.
+	Shared *bool `json:"shared,omitempty"`
+	// True iff the collection was explicitly shared via the API (a root of the project shared space). Never set by the sync.
+	SharedRoot *bool `json:"shared_root,omitempty"`
 	// List of property names from the collection's properties that should be shared with (injected into) member objects. These properties will be propagated to all members of this collection and merged as arrays.
 	SharedProperties []string `json:"shared_properties,omitempty"`
 	// Computed per-request permissions for the current user on this collection. Not stored — computed on the fly from the collection's security field (same semantics as a content object's user_permissions).
@@ -661,6 +665,70 @@ func (o *Collection) SetCompartments(v []string) {
 	o.Compartments = v
 }
 
+// GetShared returns the Shared field value if set, zero value otherwise.
+func (o *Collection) GetShared() bool {
+	if o == nil || IsNil(o.Shared) {
+		var ret bool
+		return ret
+	}
+	return *o.Shared
+}
+
+// GetSharedOk returns a tuple with the Shared field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Collection) GetSharedOk() (*bool, bool) {
+	if o == nil || IsNil(o.Shared) {
+		return nil, false
+	}
+	return o.Shared, true
+}
+
+// HasShared returns a boolean if a field has been set.
+func (o *Collection) HasShared() bool {
+	if o != nil && !IsNil(o.Shared) {
+		return true
+	}
+
+	return false
+}
+
+// SetShared gets a reference to the given bool and assigns it to the Shared field.
+func (o *Collection) SetShared(v bool) {
+	o.Shared = &v
+}
+
+// GetSharedRoot returns the SharedRoot field value if set, zero value otherwise.
+func (o *Collection) GetSharedRoot() bool {
+	if o == nil || IsNil(o.SharedRoot) {
+		var ret bool
+		return ret
+	}
+	return *o.SharedRoot
+}
+
+// GetSharedRootOk returns a tuple with the SharedRoot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Collection) GetSharedRootOk() (*bool, bool) {
+	if o == nil || IsNil(o.SharedRoot) {
+		return nil, false
+	}
+	return o.SharedRoot, true
+}
+
+// HasSharedRoot returns a boolean if a field has been set.
+func (o *Collection) HasSharedRoot() bool {
+	if o != nil && !IsNil(o.SharedRoot) {
+		return true
+	}
+
+	return false
+}
+
+// SetSharedRoot gets a reference to the given bool and assigns it to the SharedRoot field.
+func (o *Collection) SetSharedRoot(v bool) {
+	o.SharedRoot = &v
+}
+
 // GetSharedProperties returns the SharedProperties field value if set, zero value otherwise.
 func (o *Collection) GetSharedProperties() []string {
 	if o == nil || IsNil(o.SharedProperties) {
@@ -777,6 +845,12 @@ func (o Collection) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Compartments) {
 		toSerialize["compartments"] = o.Compartments
 	}
+	if !IsNil(o.Shared) {
+		toSerialize["shared"] = o.Shared
+	}
+	if !IsNil(o.SharedRoot) {
+		toSerialize["shared_root"] = o.SharedRoot
+	}
 	if !IsNil(o.SharedProperties) {
 		toSerialize["shared_properties"] = o.SharedProperties
 	}
@@ -854,6 +928,8 @@ func (o *Collection) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "security")
 		delete(additionalProperties, "sensitivity")
 		delete(additionalProperties, "compartments")
+		delete(additionalProperties, "shared")
+		delete(additionalProperties, "shared_root")
 		delete(additionalProperties, "shared_properties")
 		delete(additionalProperties, "user_permissions")
 		o.AdditionalProperties = additionalProperties

@@ -30,6 +30,8 @@ type UpdateContentObjectPayload struct {
 	Sensitivity *float32 `json:"sensitivity,omitempty"`
 	// Compartments — set directly or inherited from collections (union across collections).
 	Compartments []string `json:"compartments,omitempty"`
+	// Explicitly share this document as a root of the project shared space (readable by non-members via matching shared-content ABAC rules). This is the explicit API share flag — the sync never sets it.
+	SharedRoot *bool `json:"shared_root,omitempty"`
 	// Inherited properties metadata - tracks which properties were inherited from parent collections. Used to display readonly inherited properties in the UI and enable incremental sync optimization.
 	InheritedProperties []InheritedPropertyMetadata `json:"inherited_properties,omitempty"`
 	Parent              *string                     `json:"parent,omitempty"`
@@ -374,6 +376,38 @@ func (o *UpdateContentObjectPayload) HasCompartments() bool {
 // SetCompartments gets a reference to the given []string and assigns it to the Compartments field.
 func (o *UpdateContentObjectPayload) SetCompartments(v []string) {
 	o.Compartments = v
+}
+
+// GetSharedRoot returns the SharedRoot field value if set, zero value otherwise.
+func (o *UpdateContentObjectPayload) GetSharedRoot() bool {
+	if o == nil || IsNil(o.SharedRoot) {
+		var ret bool
+		return ret
+	}
+	return *o.SharedRoot
+}
+
+// GetSharedRootOk returns a tuple with the SharedRoot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateContentObjectPayload) GetSharedRootOk() (*bool, bool) {
+	if o == nil || IsNil(o.SharedRoot) {
+		return nil, false
+	}
+	return o.SharedRoot, true
+}
+
+// HasSharedRoot returns a boolean if a field has been set.
+func (o *UpdateContentObjectPayload) HasSharedRoot() bool {
+	if o != nil && !IsNil(o.SharedRoot) {
+		return true
+	}
+
+	return false
+}
+
+// SetSharedRoot gets a reference to the given bool and assigns it to the SharedRoot field.
+func (o *UpdateContentObjectPayload) SetSharedRoot(v bool) {
+	o.SharedRoot = &v
 }
 
 // GetInheritedProperties returns the InheritedProperties field value if set, zero value otherwise.
@@ -1116,6 +1150,9 @@ func (o UpdateContentObjectPayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Compartments) {
 		toSerialize["compartments"] = o.Compartments
+	}
+	if !IsNil(o.SharedRoot) {
+		toSerialize["shared_root"] = o.SharedRoot
 	}
 	if !IsNil(o.InheritedProperties) {
 		toSerialize["inherited_properties"] = o.InheritedProperties

@@ -23,6 +23,7 @@ const (
 	ROLEDOMAIN_SYSTEM                   RoleDomain = "system"
 	ROLEDOMAIN_CONTENT                  RoleDomain = "content"
 	ROLEDOMAIN_AGENT_RUNS               RoleDomain = "agent_runs"
+	ROLEDOMAIN_SHARED_CONTENT           RoleDomain = "shared_content"
 	ROLEDOMAIN_TASKS                    RoleDomain = "tasks"
 	ROLEDOMAIN_UNKNOWN_DEFAULT_OPEN_API RoleDomain = "unknown_default_open_api"
 )
@@ -32,6 +33,7 @@ var AllowedRoleDomainEnumValues = []RoleDomain{
 	"system",
 	"content",
 	"agent_runs",
+	"shared_content",
 	"tasks",
 	"unknown_default_open_api",
 }
