@@ -15,106 +15,55 @@ import (
 	"fmt"
 )
 
-// checks if the AllocateAgentRunBudgetPayload type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &AllocateAgentRunBudgetPayload{}
-
-// AllocateAgentRunBudgetPayload Budget to add to a run paused because its token budget ran out. The run resumes from where it stopped.
+// AllocateAgentRunBudgetPayload Add exactly one allowance: weighted tokens or USD.
 type AllocateAgentRunBudgetPayload struct {
-	// Weighted tokens to add. They are added to the limit the run was granted, so usage past that limit is paid out of them.
-	AdditionalTokens int32 `json:"additional_tokens"`
+	AllocateAgentRunBudgetPayloadAnyOf  *AllocateAgentRunBudgetPayloadAnyOf
+	AllocateAgentRunBudgetPayloadAnyOf1 *AllocateAgentRunBudgetPayloadAnyOf1
 }
 
-type _AllocateAgentRunBudgetPayload AllocateAgentRunBudgetPayload
-
-// NewAllocateAgentRunBudgetPayload instantiates a new AllocateAgentRunBudgetPayload object
-// This constructor will assign default values to properties that have it defined,
-// and makes sure properties required by API are set, but the set of arguments
-// will change when the set of required properties is changed
-func NewAllocateAgentRunBudgetPayload(additionalTokens int32) *AllocateAgentRunBudgetPayload {
-	this := AllocateAgentRunBudgetPayload{}
-	this.AdditionalTokens = additionalTokens
-	return &this
-}
-
-// NewAllocateAgentRunBudgetPayloadWithDefaults instantiates a new AllocateAgentRunBudgetPayload object
-// This constructor will only assign default values to properties that have it defined,
-// but it doesn't guarantee that properties required by API are set
-func NewAllocateAgentRunBudgetPayloadWithDefaults() *AllocateAgentRunBudgetPayload {
-	this := AllocateAgentRunBudgetPayload{}
-	return &this
-}
-
-// GetAdditionalTokens returns the AdditionalTokens field value
-func (o *AllocateAgentRunBudgetPayload) GetAdditionalTokens() int32 {
-	if o == nil {
-		var ret int32
-		return ret
-	}
-
-	return o.AdditionalTokens
-}
-
-// GetAdditionalTokensOk returns a tuple with the AdditionalTokens field value
-// and a boolean to check if the value has been set.
-func (o *AllocateAgentRunBudgetPayload) GetAdditionalTokensOk() (*int32, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.AdditionalTokens, true
-}
-
-// SetAdditionalTokens sets field value
-func (o *AllocateAgentRunBudgetPayload) SetAdditionalTokens(v int32) {
-	o.AdditionalTokens = v
-}
-
-func (o AllocateAgentRunBudgetPayload) MarshalJSON() ([]byte, error) {
-	toSerialize, err := o.ToMap()
-	if err != nil {
-		return []byte{}, err
-	}
-	return json.Marshal(toSerialize)
-}
-
-func (o AllocateAgentRunBudgetPayload) ToMap() (map[string]interface{}, error) {
-	toSerialize := map[string]interface{}{}
-	toSerialize["additional_tokens"] = o.AdditionalTokens
-	return toSerialize, nil
-}
-
-func (o *AllocateAgentRunBudgetPayload) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"additional_tokens",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
+// Unmarshal JSON data into any of the pointers in the struct
+func (dst *AllocateAgentRunBudgetPayload) UnmarshalJSON(data []byte) error {
+	var err error
+	// try to unmarshal JSON data into AllocateAgentRunBudgetPayloadAnyOf
+	err = json.Unmarshal(data, &dst.AllocateAgentRunBudgetPayloadAnyOf)
+	if err == nil {
+		jsonAllocateAgentRunBudgetPayloadAnyOf, _ := json.Marshal(dst.AllocateAgentRunBudgetPayloadAnyOf)
+		if string(jsonAllocateAgentRunBudgetPayloadAnyOf) == "{}" { // empty struct
+			dst.AllocateAgentRunBudgetPayloadAnyOf = nil
+		} else {
+			return nil // data stored in dst.AllocateAgentRunBudgetPayloadAnyOf, return on the first match
 		}
+	} else {
+		dst.AllocateAgentRunBudgetPayloadAnyOf = nil
 	}
 
-	varAllocateAgentRunBudgetPayload := _AllocateAgentRunBudgetPayload{}
-
-	err = json.Unmarshal(data, &varAllocateAgentRunBudgetPayload)
-
-	if err != nil {
-		return err
+	// try to unmarshal JSON data into AllocateAgentRunBudgetPayloadAnyOf1
+	err = json.Unmarshal(data, &dst.AllocateAgentRunBudgetPayloadAnyOf1)
+	if err == nil {
+		jsonAllocateAgentRunBudgetPayloadAnyOf1, _ := json.Marshal(dst.AllocateAgentRunBudgetPayloadAnyOf1)
+		if string(jsonAllocateAgentRunBudgetPayloadAnyOf1) == "{}" { // empty struct
+			dst.AllocateAgentRunBudgetPayloadAnyOf1 = nil
+		} else {
+			return nil // data stored in dst.AllocateAgentRunBudgetPayloadAnyOf1, return on the first match
+		}
+	} else {
+		dst.AllocateAgentRunBudgetPayloadAnyOf1 = nil
 	}
 
-	*o = AllocateAgentRunBudgetPayload(varAllocateAgentRunBudgetPayload)
+	return fmt.Errorf("data failed to match schemas in anyOf(AllocateAgentRunBudgetPayload)")
+}
 
-	return err
+// Marshal data from the first non-nil pointers in the struct to JSON
+func (src AllocateAgentRunBudgetPayload) MarshalJSON() ([]byte, error) {
+	if src.AllocateAgentRunBudgetPayloadAnyOf != nil {
+		return json.Marshal(&src.AllocateAgentRunBudgetPayloadAnyOf)
+	}
+
+	if src.AllocateAgentRunBudgetPayloadAnyOf1 != nil {
+		return json.Marshal(&src.AllocateAgentRunBudgetPayloadAnyOf1)
+	}
+
+	return nil, nil // no data in anyOf schemas
 }
 
 type NullableAllocateAgentRunBudgetPayload struct {

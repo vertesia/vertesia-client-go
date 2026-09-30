@@ -26,7 +26,7 @@ type ProcessState struct {
 	NodeHistoryRef *ProcessHistoryRef     `json:"node_history_ref,omitempty"`
 	Sequence       float32                `json:"sequence"`
 	TerminalReason *ProcessTerminalReason `json:"terminal_reason,omitempty"`
-	// Token budget of the run, present when the run has one.
+	// Run budget status, including dollar consumption when configured.
 	Budget               *ProcessBudgetState `json:"budget,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

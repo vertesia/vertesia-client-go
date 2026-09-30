@@ -20,7 +20,14 @@ var _ MappedNullable = &ProcessBudgetState{}
 
 // ProcessBudgetState struct for ProcessBudgetState
 type ProcessBudgetState struct {
-	LimitTokens float32 `json:"limit_tokens"`
+	// Absent on historical token-only status.
+	Mode             *string  `json:"mode,omitempty"`
+	LimitUsd         *float32 `json:"limit_usd,omitempty"`
+	ReportedUsd      *float32 `json:"reported_usd,omitempty"`
+	EstimatedUsd     *float32 `json:"estimated_usd,omitempty"`
+	AccountingStatus *string  `json:"accounting_status,omitempty"`
+	UnmeasuredCalls  *int32   `json:"unmeasured_calls,omitempty"`
+	LimitTokens      float32  `json:"limit_tokens"`
 	// Weighted tokens used by the run and everything it launched.
 	UsedUnits float32 `json:"used_units"`
 	Exhausted bool    `json:"exhausted"`
@@ -50,6 +57,198 @@ func NewProcessBudgetState(limitTokens float32, usedUnits float32, exhausted boo
 func NewProcessBudgetStateWithDefaults() *ProcessBudgetState {
 	this := ProcessBudgetState{}
 	return &this
+}
+
+// GetMode returns the Mode field value if set, zero value otherwise.
+func (o *ProcessBudgetState) GetMode() string {
+	if o == nil || IsNil(o.Mode) {
+		var ret string
+		return ret
+	}
+	return *o.Mode
+}
+
+// GetModeOk returns a tuple with the Mode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessBudgetState) GetModeOk() (*string, bool) {
+	if o == nil || IsNil(o.Mode) {
+		return nil, false
+	}
+	return o.Mode, true
+}
+
+// HasMode returns a boolean if a field has been set.
+func (o *ProcessBudgetState) HasMode() bool {
+	if o != nil && !IsNil(o.Mode) {
+		return true
+	}
+
+	return false
+}
+
+// SetMode gets a reference to the given string and assigns it to the Mode field.
+func (o *ProcessBudgetState) SetMode(v string) {
+	o.Mode = &v
+}
+
+// GetLimitUsd returns the LimitUsd field value if set, zero value otherwise.
+func (o *ProcessBudgetState) GetLimitUsd() float32 {
+	if o == nil || IsNil(o.LimitUsd) {
+		var ret float32
+		return ret
+	}
+	return *o.LimitUsd
+}
+
+// GetLimitUsdOk returns a tuple with the LimitUsd field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessBudgetState) GetLimitUsdOk() (*float32, bool) {
+	if o == nil || IsNil(o.LimitUsd) {
+		return nil, false
+	}
+	return o.LimitUsd, true
+}
+
+// HasLimitUsd returns a boolean if a field has been set.
+func (o *ProcessBudgetState) HasLimitUsd() bool {
+	if o != nil && !IsNil(o.LimitUsd) {
+		return true
+	}
+
+	return false
+}
+
+// SetLimitUsd gets a reference to the given float32 and assigns it to the LimitUsd field.
+func (o *ProcessBudgetState) SetLimitUsd(v float32) {
+	o.LimitUsd = &v
+}
+
+// GetReportedUsd returns the ReportedUsd field value if set, zero value otherwise.
+func (o *ProcessBudgetState) GetReportedUsd() float32 {
+	if o == nil || IsNil(o.ReportedUsd) {
+		var ret float32
+		return ret
+	}
+	return *o.ReportedUsd
+}
+
+// GetReportedUsdOk returns a tuple with the ReportedUsd field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessBudgetState) GetReportedUsdOk() (*float32, bool) {
+	if o == nil || IsNil(o.ReportedUsd) {
+		return nil, false
+	}
+	return o.ReportedUsd, true
+}
+
+// HasReportedUsd returns a boolean if a field has been set.
+func (o *ProcessBudgetState) HasReportedUsd() bool {
+	if o != nil && !IsNil(o.ReportedUsd) {
+		return true
+	}
+
+	return false
+}
+
+// SetReportedUsd gets a reference to the given float32 and assigns it to the ReportedUsd field.
+func (o *ProcessBudgetState) SetReportedUsd(v float32) {
+	o.ReportedUsd = &v
+}
+
+// GetEstimatedUsd returns the EstimatedUsd field value if set, zero value otherwise.
+func (o *ProcessBudgetState) GetEstimatedUsd() float32 {
+	if o == nil || IsNil(o.EstimatedUsd) {
+		var ret float32
+		return ret
+	}
+	return *o.EstimatedUsd
+}
+
+// GetEstimatedUsdOk returns a tuple with the EstimatedUsd field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessBudgetState) GetEstimatedUsdOk() (*float32, bool) {
+	if o == nil || IsNil(o.EstimatedUsd) {
+		return nil, false
+	}
+	return o.EstimatedUsd, true
+}
+
+// HasEstimatedUsd returns a boolean if a field has been set.
+func (o *ProcessBudgetState) HasEstimatedUsd() bool {
+	if o != nil && !IsNil(o.EstimatedUsd) {
+		return true
+	}
+
+	return false
+}
+
+// SetEstimatedUsd gets a reference to the given float32 and assigns it to the EstimatedUsd field.
+func (o *ProcessBudgetState) SetEstimatedUsd(v float32) {
+	o.EstimatedUsd = &v
+}
+
+// GetAccountingStatus returns the AccountingStatus field value if set, zero value otherwise.
+func (o *ProcessBudgetState) GetAccountingStatus() string {
+	if o == nil || IsNil(o.AccountingStatus) {
+		var ret string
+		return ret
+	}
+	return *o.AccountingStatus
+}
+
+// GetAccountingStatusOk returns a tuple with the AccountingStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessBudgetState) GetAccountingStatusOk() (*string, bool) {
+	if o == nil || IsNil(o.AccountingStatus) {
+		return nil, false
+	}
+	return o.AccountingStatus, true
+}
+
+// HasAccountingStatus returns a boolean if a field has been set.
+func (o *ProcessBudgetState) HasAccountingStatus() bool {
+	if o != nil && !IsNil(o.AccountingStatus) {
+		return true
+	}
+
+	return false
+}
+
+// SetAccountingStatus gets a reference to the given string and assigns it to the AccountingStatus field.
+func (o *ProcessBudgetState) SetAccountingStatus(v string) {
+	o.AccountingStatus = &v
+}
+
+// GetUnmeasuredCalls returns the UnmeasuredCalls field value if set, zero value otherwise.
+func (o *ProcessBudgetState) GetUnmeasuredCalls() int32 {
+	if o == nil || IsNil(o.UnmeasuredCalls) {
+		var ret int32
+		return ret
+	}
+	return *o.UnmeasuredCalls
+}
+
+// GetUnmeasuredCallsOk returns a tuple with the UnmeasuredCalls field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessBudgetState) GetUnmeasuredCallsOk() (*int32, bool) {
+	if o == nil || IsNil(o.UnmeasuredCalls) {
+		return nil, false
+	}
+	return o.UnmeasuredCalls, true
+}
+
+// HasUnmeasuredCalls returns a boolean if a field has been set.
+func (o *ProcessBudgetState) HasUnmeasuredCalls() bool {
+	if o != nil && !IsNil(o.UnmeasuredCalls) {
+		return true
+	}
+
+	return false
+}
+
+// SetUnmeasuredCalls gets a reference to the given int32 and assigns it to the UnmeasuredCalls field.
+func (o *ProcessBudgetState) SetUnmeasuredCalls(v int32) {
+	o.UnmeasuredCalls = &v
 }
 
 // GetLimitTokens returns the LimitTokens field value
@@ -198,6 +397,24 @@ func (o ProcessBudgetState) MarshalJSON() ([]byte, error) {
 
 func (o ProcessBudgetState) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Mode) {
+		toSerialize["mode"] = o.Mode
+	}
+	if !IsNil(o.LimitUsd) {
+		toSerialize["limit_usd"] = o.LimitUsd
+	}
+	if !IsNil(o.ReportedUsd) {
+		toSerialize["reported_usd"] = o.ReportedUsd
+	}
+	if !IsNil(o.EstimatedUsd) {
+		toSerialize["estimated_usd"] = o.EstimatedUsd
+	}
+	if !IsNil(o.AccountingStatus) {
+		toSerialize["accounting_status"] = o.AccountingStatus
+	}
+	if !IsNil(o.UnmeasuredCalls) {
+		toSerialize["unmeasured_calls"] = o.UnmeasuredCalls
+	}
 	toSerialize["limit_tokens"] = o.LimitTokens
 	toSerialize["used_units"] = o.UsedUnits
 	toSerialize["exhausted"] = o.Exhausted
