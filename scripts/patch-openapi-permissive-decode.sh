@@ -136,6 +136,87 @@ for filename, (wire_field, branches) in models.items():
 PY
 fi
 
+# Canonical conversation fingerprints bind the exact RFC 3339 string, including fractional
+# second spelling. The generator's date-time type normalizes that spelling through time.Time.
+# schemaMappings suppresses the generated date-time model; retain the public schema name as an
+# exact string alias so only fields that reference ConversationTimestamp use lexical strings.
+if python3 - "$openapi_dir/../spec/vertesia-openapi.json" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+spec_path = Path(sys.argv[1])
+if not spec_path.is_file():
+    raise SystemExit(1)
+spec = json.loads(spec_path.read_text())
+raise SystemExit(0 if 'ConversationTimestamp' in spec.get('components', {}).get('schemas', {}) else 1)
+PY
+then
+  package_name="$(python3 - "$openapi_dir" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+root = Path(sys.argv[1])
+for path in sorted(root.glob('*.go')):
+    match = re.search(r'^package\s+([A-Za-z_][A-Za-z0-9_]*)$', path.read_text(), re.MULTILINE)
+    if match:
+        print(match.group(1))
+        raise SystemExit(0)
+raise SystemExit('generated Go package declaration not found')
+PY
+)"
+  cat > "$openapi_dir/model_conversation_timestamp.go" <<EOF
+package $package_name
+
+// ConversationTimestamp preserves the exact RFC 3339 lexical value used by canonical fingerprints.
+type ConversationTimestamp = string
+EOF
+fi
+
+result_schema_file="$openapi_dir/model_experimental_canonical_interaction_result_schema_input.go"
+if [[ -f "$result_schema_file" ]]; then
+  python3 - "$result_schema_file" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+source = path.read_text()
+signature = 'func (o *ExperimentalCanonicalInteractionResultSchemaInput) UnmarshalJSON(data []byte) (err error) {'
+patched_signature = 'func (o *ExperimentalCanonicalInteractionResultSchemaInput) UnmarshalJSON(data []byte) error {'
+if signature not in source:
+    if patched_signature in source:
+        raise SystemExit(0)
+    raise ValueError('generated result-schema UnmarshalJSON signature not found')
+start = source.index(signature)
+brace = source.index('{', start)
+depth = 0
+for end in range(brace, len(source)):
+    if source[end] == '{':
+        depth += 1
+    elif source[end] == '}':
+        depth -= 1
+        if depth == 0:
+            break
+else:
+    raise ValueError(f'unclosed function {signature}')
+
+# OpenAPI Generator first unmarshals this free-form object through the generated alias. Its
+# exported AdditionalProperties field case-insensitively captures the legitimate JSON Schema
+# keyword "additionalProperties" and rejects boolean values before the free-form map is decoded.
+# Decode the complete JSON object directly into the map so every user key remains data.
+replacement = '''func (o *ExperimentalCanonicalInteractionResultSchemaInput) UnmarshalJSON(data []byte) error {
+\tadditionalProperties := make(map[string]interface{})
+\tif err := json.Unmarshal(data, &additionalProperties); err != nil {
+\t\treturn err
+\t}
+\to.AdditionalProperties = additionalProperties
+\treturn nil
+}'''
+path.write_text(source[:start] + replacement + source[end + 1:])
+PY
+fi
+
 tool_definition_file="$openapi_dir/model_conversation_tool_definition.go"
 if [[ -f "$tool_definition_file" ]]; then
   python3 - "$tool_definition_file" <<'PY'

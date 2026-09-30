@@ -6,6 +6,9 @@ gitHost: github.com
 gitUserId: vertesia
 gitRepoId: vertesia-client-go
 
+schemaMappings:
+  ConversationTimestamp: string
+
 globalProperties:
   modelTests: "false"
   apiTests: "false"

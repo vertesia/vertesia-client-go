@@ -6,7 +6,7 @@ work_dir="$(mktemp -d)"
 trap 'rm -rf "$work_dir"' EXIT
 mkdir -p "$work_dir/openapi" "$work_dir/spec"
 
-printf '%s\n' '{"components":{"schemas":{"RunConversationResponse":{"discriminator":{"propertyName":"status","mapping":{"available":"#/components/schemas/AvailableRunConversation","unavailable":"#/components/schemas/UnavailableRunConversation"}}},"ExperimentalCanonicalInteractionInitialState":{"discriminator":{"propertyName":"type","mapping":{"new":"#/components/schemas/ExperimentalCanonicalInteractionNewState","document":"#/components/schemas/ExperimentalCanonicalInteractionDocumentState","reference":"#/components/schemas/ExperimentalCanonicalInteractionReferenceState"}}}}}}' > "$work_dir/spec/vertesia-openapi.json"
+printf '%s\n' '{"components":{"schemas":{"ConversationTimestamp":{"type":"string","format":"date-time"},"RunConversationResponse":{"discriminator":{"propertyName":"status","mapping":{"available":"#/components/schemas/AvailableRunConversation","unavailable":"#/components/schemas/UnavailableRunConversation"}}},"ExperimentalCanonicalInteractionInitialState":{"discriminator":{"propertyName":"type","mapping":{"new":"#/components/schemas/ExperimentalCanonicalInteractionNewState","document":"#/components/schemas/ExperimentalCanonicalInteractionDocumentState","reference":"#/components/schemas/ExperimentalCanonicalInteractionReferenceState"}}}}}}' > "$work_dir/spec/vertesia-openapi.json"
 printf '%s\n' 'package fixture
 import (
 	"encoding/json"
@@ -87,8 +87,44 @@ func (dst *ConversationAgentTurn) UnmarshalJSON(data []byte) error {
 func (o ConversationAgentTurn) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct{}{})
 }' > "$work_dir/openapi/model_conversation_agent_turn.go"
+printf '%s\n' 'package fixture
+import "encoding/json"
+type ExperimentalCanonicalInteractionResultSchemaInput struct {
+	AdditionalProperties map[string]interface{}
+}
+type _ExperimentalCanonicalInteractionResultSchemaInput ExperimentalCanonicalInteractionResultSchemaInput
+func (o ExperimentalCanonicalInteractionResultSchemaInput) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.AdditionalProperties)
+}
+func (o *ExperimentalCanonicalInteractionResultSchemaInput) UnmarshalJSON(data []byte) (err error) {
+	decoded := _ExperimentalCanonicalInteractionResultSchemaInput{}
+	if err = json.Unmarshal(data, &decoded); err != nil { return err }
+	*o = ExperimentalCanonicalInteractionResultSchemaInput(decoded)
+	additionalProperties := make(map[string]interface{})
+	if err = json.Unmarshal(data, &additionalProperties); err == nil { o.AdditionalProperties = additionalProperties }
+	return err
+}
+type NullableExperimentalCanonicalInteractionResultSchemaInput struct {
+	value *ExperimentalCanonicalInteractionResultSchemaInput
+	isSet bool
+}
+func (v NullableExperimentalCanonicalInteractionResultSchemaInput) MarshalJSON() ([]byte, error) { return json.Marshal(v.value) }
+func (v *NullableExperimentalCanonicalInteractionResultSchemaInput) UnmarshalJSON(data []byte) error {
+	v.isSet = true
+	return json.Unmarshal(data, &v.value)
+}
+type ExperimentalCanonicalInteractionExecutionRequest struct {
+	ResultSchema NullableExperimentalCanonicalInteractionResultSchemaInput `json:"result_schema,omitempty"`
+}
+func (o ExperimentalCanonicalInteractionExecutionRequest) MarshalJSON() ([]byte, error) {
+	value := map[string]interface{}{}
+	if o.ResultSchema.isSet { value["result_schema"] = o.ResultSchema.value }
+	return json.Marshal(value)
+}' > "$work_dir/openapi/model_experimental_canonical_interaction_result_schema_input.go"
 
 bash "$repo_dir/scripts/patch-openapi-permissive-decode.sh" "$work_dir/openapi"
+bash "$repo_dir/scripts/patch-openapi-permissive-decode.sh" "$work_dir/openapi"
+grep -q '^type ConversationTimestamp = string$' "$work_dir/openapi/model_conversation_timestamp.go"
 grep -q '\*dst = RunConversationResponse{}' "$work_dir/openapi/model_run_conversation_response.go"
 grep -q 'case "available"' "$work_dir/openapi/model_run_conversation_response.go"
 if grep -q 'validator.v2' "$work_dir/openapi/model_run_conversation_response.go"; then
@@ -110,8 +146,47 @@ printf '%s\n' 'package fixture
 
 import (
 	"encoding/json"
+	"reflect"
 	"testing"
 )
+
+type CanonicalTimestampFixture struct {
+	CreatedAt ConversationTimestamp `json:"created_at"`
+	Nested struct {
+		RecordedAt ConversationTimestamp `json:"recorded_at"`
+		CompletedAt ConversationTimestamp `json:"completed_at"`
+	} `json:"nested"`
+}
+
+func TestCanonicalTimestampPreservesExactLexicalValue(t *testing.T) {
+	body := []byte(`{"created_at":"2026-09-30T00:00:00.000Z","nested":{"recorded_at":"2026-09-30T00:00:00.120Z","completed_at":"2026-09-30T00:00:00.123456789123Z"}}`)
+	var value CanonicalTimestampFixture
+	if err := json.Unmarshal(body, &value); err != nil { t.Fatal(err) }
+	serialized, err := json.Marshal(value)
+	if err != nil { t.Fatal(err) }
+	var before, after map[string]any
+	if err := json.Unmarshal(body, &before); err != nil { t.Fatal(err) }
+	if err := json.Unmarshal(serialized, &after); err != nil { t.Fatal(err) }
+	if !reflect.DeepEqual(before, after) { t.Fatalf("timestamp spelling changed: %s", serialized) }
+}
+
+func TestCanonicalResultSchemaPreservesOmissionNullAndArbitraryProperties(t *testing.T) {
+	bodies := []string{
+		`{}`,
+		`{"result_schema":null}`,
+		`{"result_schema":{"type":"object","additionalProperties":false,"x-test":{"enabled":true,"nullable":null,"values":["text",false,{"nested":"value"}]}}}`,
+	}
+	for _, body := range bodies {
+		var request ExperimentalCanonicalInteractionExecutionRequest
+		if err := json.Unmarshal([]byte(body), &request); err != nil { t.Fatalf("decode %s: %v", body, err) }
+		serialized, err := json.Marshal(request)
+		if err != nil { t.Fatalf("encode %s: %v", body, err) }
+		var before, after map[string]any
+		if err := json.Unmarshal([]byte(body), &before); err != nil { t.Fatal(err) }
+		if err := json.Unmarshal(serialized, &after); err != nil { t.Fatal(err) }
+		if !reflect.DeepEqual(before, after) { t.Fatalf("result schema changed: before=%#v after=%#v", before, after) }
+	}
+}
 
 func TestRunConversationDispatchAndReset(t *testing.T) {
 	var response RunConversationResponse
