@@ -19,7 +19,6 @@ var _ MappedNullable = &ExecutionEnvironmentSettings{}
 
 // ExecutionEnvironmentSettings struct for ExecutionEnvironmentSettings
 type ExecutionEnvironmentSettings struct {
-	BucketAccessPrincipal *string `json:"bucket_access_principal,omitempty"`
 	// Custom HTTP headers sent by OpenAI-compatible environments.
 	DefaultHeaders       map[string]string `json:"default_headers,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -42,38 +41,6 @@ func NewExecutionEnvironmentSettings() *ExecutionEnvironmentSettings {
 func NewExecutionEnvironmentSettingsWithDefaults() *ExecutionEnvironmentSettings {
 	this := ExecutionEnvironmentSettings{}
 	return &this
-}
-
-// GetBucketAccessPrincipal returns the BucketAccessPrincipal field value if set, zero value otherwise.
-func (o *ExecutionEnvironmentSettings) GetBucketAccessPrincipal() string {
-	if o == nil || IsNil(o.BucketAccessPrincipal) {
-		var ret string
-		return ret
-	}
-	return *o.BucketAccessPrincipal
-}
-
-// GetBucketAccessPrincipalOk returns a tuple with the BucketAccessPrincipal field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ExecutionEnvironmentSettings) GetBucketAccessPrincipalOk() (*string, bool) {
-	if o == nil || IsNil(o.BucketAccessPrincipal) {
-		return nil, false
-	}
-	return o.BucketAccessPrincipal, true
-}
-
-// HasBucketAccessPrincipal returns a boolean if a field has been set.
-func (o *ExecutionEnvironmentSettings) HasBucketAccessPrincipal() bool {
-	if o != nil && !IsNil(o.BucketAccessPrincipal) {
-		return true
-	}
-
-	return false
-}
-
-// SetBucketAccessPrincipal gets a reference to the given string and assigns it to the BucketAccessPrincipal field.
-func (o *ExecutionEnvironmentSettings) SetBucketAccessPrincipal(v string) {
-	o.BucketAccessPrincipal = &v
 }
 
 // GetDefaultHeaders returns the DefaultHeaders field value if set, zero value otherwise.
@@ -118,9 +85,6 @@ func (o ExecutionEnvironmentSettings) MarshalJSON() ([]byte, error) {
 
 func (o ExecutionEnvironmentSettings) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.BucketAccessPrincipal) {
-		toSerialize["bucket_access_principal"] = o.BucketAccessPrincipal
-	}
 	if !IsNil(o.DefaultHeaders) {
 		toSerialize["default_headers"] = o.DefaultHeaders
 	}
@@ -146,7 +110,6 @@ func (o *ExecutionEnvironmentSettings) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "bucket_access_principal")
 		delete(additionalProperties, "default_headers")
 		o.AdditionalProperties = additionalProperties
 	}
