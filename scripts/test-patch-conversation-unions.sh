@@ -30,6 +30,16 @@ cat > "$work_dir/spec/vertesia-openapi.json" <<'JSON'
           }
         }
       },
+      "ExperimentalAgentConversationStreamEnvelope": {
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "conversation_event": "#/components/schemas/ExperimentalAgentConversationEvent",
+            "preview_unavailable": "#/components/schemas/ExperimentalAgentConversationPreviewUnavailable",
+            "accepted_output": "#/components/schemas/ExperimentalAgentConversationAcceptedOutput"
+          }
+        }
+      },
       "ConversationStreamDraftBlock": {
         "type": "object",
         "required": ["type"],
@@ -139,6 +149,25 @@ func (dst *ExperimentalCanonicalInteractionInitialState) UnmarshalJSON(data []by
 }
 var _ = json.Unmarshal
 var _ = fmt.Errorf' > "$work_dir/openapi/model_experimental_canonical_interaction_initial_state.go"
+printf '%s\n' 'package fixture
+import (
+	"encoding/json"
+	"fmt"
+	"gopkg.in/validator.v2"
+)
+type ExperimentalAgentConversationEvent struct { Type string `json:"type"` }
+type ExperimentalAgentConversationPreviewUnavailable struct { Type string `json:"type"` }
+type ExperimentalAgentConversationAcceptedOutput struct { Type string `json:"type"` }
+type ExperimentalAgentConversationStreamEnvelope struct {
+	ExperimentalAgentConversationEvent *ExperimentalAgentConversationEvent
+	ExperimentalAgentConversationPreviewUnavailable *ExperimentalAgentConversationPreviewUnavailable
+	ExperimentalAgentConversationAcceptedOutput *ExperimentalAgentConversationAcceptedOutput
+}
+func (dst *ExperimentalAgentConversationStreamEnvelope) UnmarshalJSON(data []byte) error {
+	return validator.Validate(dst)
+}
+var _ = json.Unmarshal
+var _ = fmt.Errorf' > "$work_dir/openapi/model_experimental_agent_conversation_stream_envelope.go"
 printf '%s\n' 'package fixture
 import (
 	"encoding/json"
@@ -291,6 +320,14 @@ if grep -q 'validator.v2' "$work_dir/openapi/model_experimental_canonical_intera
     echo 'unused experimental initial-state validator import was not removed' >&2
     exit 1
 fi
+grep -q '\*dst = ExperimentalAgentConversationStreamEnvelope{}' \
+    "$work_dir/openapi/model_experimental_agent_conversation_stream_envelope.go"
+grep -q 'case "accepted_output"' \
+    "$work_dir/openapi/model_experimental_agent_conversation_stream_envelope.go"
+if grep -q 'validator.v2' "$work_dir/openapi/model_experimental_agent_conversation_stream_envelope.go"; then
+    echo 'unused experimental agent stream validator import was not removed' >&2
+    exit 1
+fi
 grep -q 'case "image", "audio", "video", "document"' \
     "$work_dir/openapi/model_conversation_stream_draft_block.go"
 grep -q 'case "draft_text_delta"' "$work_dir/openapi/model_conversation_stream_event.go"
@@ -410,6 +447,24 @@ func TestCanonicalInitialStateDispatchValidationAndReset(t *testing.T) {
 				t.Fatalf("failed reuse retained a branch: %#v", state)
 			}
 		})
+	}
+}
+
+func TestExperimentalAgentStreamEnvelopeDispatchAndReset(t *testing.T) {
+	var envelope ExperimentalAgentConversationStreamEnvelope
+	if err := json.Unmarshal([]byte(`{"type":"preview_unavailable"}`), &envelope); err != nil { t.Fatal(err) }
+	if envelope.ExperimentalAgentConversationPreviewUnavailable == nil { t.Fatal("preview branch not selected") }
+	if err := json.Unmarshal([]byte(`{"type":"accepted_output"}`), &envelope); err != nil { t.Fatal(err) }
+	if envelope.ExperimentalAgentConversationPreviewUnavailable != nil || envelope.ExperimentalAgentConversationAcceptedOutput == nil {
+		t.Fatalf("stale branch after accepted output reuse: %#v", envelope)
+	}
+	if err := json.Unmarshal([]byte(`{"type":"future_envelope"}`), &envelope); err == nil {
+		t.Fatal("unknown experimental agent stream discriminator accepted")
+	}
+	if envelope.ExperimentalAgentConversationEvent != nil ||
+		envelope.ExperimentalAgentConversationPreviewUnavailable != nil ||
+		envelope.ExperimentalAgentConversationAcceptedOutput != nil {
+		t.Fatalf("failed reuse retained a branch: %#v", envelope)
 	}
 }
 
