@@ -40,6 +40,43 @@ cat > "$work_dir/spec/vertesia-openapi.json" <<'JSON'
           }
         }
       },
+      "ExperimentalCanonicalInteractionAutoTurnSelection": {
+        "type": "object",
+        "properties": {
+          "mode": { "type": "string", "const": "auto" }
+        },
+        "required": ["mode"]
+      },
+      "ExperimentalCanonicalInteractionNoneTurnSelection": {
+        "type": "object",
+        "properties": {
+          "mode": { "type": "string", "const": "none" }
+        },
+        "required": ["mode"]
+      },
+      "ExperimentalCanonicalInteractionRequiredTurnSelection": {
+        "type": "object",
+        "properties": {
+          "mode": { "type": "string", "const": "required" },
+          "tool_name": { "type": "string" }
+        },
+        "required": ["mode"]
+      },
+      "ExperimentalCanonicalInteractionTurnSelection": {
+        "oneOf": [
+          { "$ref": "#/components/schemas/ExperimentalCanonicalInteractionAutoTurnSelection" },
+          { "$ref": "#/components/schemas/ExperimentalCanonicalInteractionNoneTurnSelection" },
+          { "$ref": "#/components/schemas/ExperimentalCanonicalInteractionRequiredTurnSelection" }
+        ],
+        "discriminator": {
+          "propertyName": "mode",
+          "mapping": {
+            "auto": "#/components/schemas/ExperimentalCanonicalInteractionAutoTurnSelection",
+            "none": "#/components/schemas/ExperimentalCanonicalInteractionNoneTurnSelection",
+            "required": "#/components/schemas/ExperimentalCanonicalInteractionRequiredTurnSelection"
+          }
+        }
+      },
       "ConversationStreamDraftBlock": {
         "type": "object",
         "required": ["type"],
@@ -168,6 +205,30 @@ func (dst *ExperimentalAgentConversationStreamEnvelope) UnmarshalJSON(data []byt
 }
 var _ = json.Unmarshal
 var _ = fmt.Errorf' > "$work_dir/openapi/model_experimental_agent_conversation_stream_envelope.go"
+printf '%s\n' 'package fixture
+import (
+	"encoding/json"
+	"fmt"
+)
+type ExperimentalCanonicalInteractionAutoTurnSelection struct {
+	Mode string `json:"mode"`
+}
+type ExperimentalCanonicalInteractionNoneTurnSelection struct {
+	Mode string `json:"mode"`
+}
+type ExperimentalCanonicalInteractionRequiredTurnSelection struct {
+	Mode string `json:"mode"`
+	ToolName *string `json:"tool_name,omitempty"`
+}
+type ExperimentalCanonicalInteractionTurnSelection struct {
+	ExperimentalCanonicalInteractionAutoTurnSelection *ExperimentalCanonicalInteractionAutoTurnSelection
+	ExperimentalCanonicalInteractionNoneTurnSelection *ExperimentalCanonicalInteractionNoneTurnSelection
+	ExperimentalCanonicalInteractionRequiredTurnSelection *ExperimentalCanonicalInteractionRequiredTurnSelection
+}
+func (dst *ExperimentalCanonicalInteractionTurnSelection) UnmarshalJSON(data []byte) error {
+	return fmt.Errorf("unpatched generated turn-selection union")
+}
+var _ = json.Unmarshal' > "$work_dir/openapi/model_experimental_canonical_interaction_turn_selection.go"
 printf '%s\n' 'package fixture
 import (
 	"encoding/json"
@@ -328,6 +389,11 @@ if grep -q 'validator.v2' "$work_dir/openapi/model_experimental_agent_conversati
     echo 'unused experimental agent stream validator import was not removed' >&2
     exit 1
 fi
+grep -q '\*dst = ExperimentalCanonicalInteractionTurnSelection{}' \
+    "$work_dir/openapi/model_experimental_canonical_interaction_turn_selection.go"
+grep -q 'case "auto"' "$work_dir/openapi/model_experimental_canonical_interaction_turn_selection.go"
+grep -q 'case "none"' "$work_dir/openapi/model_experimental_canonical_interaction_turn_selection.go"
+grep -q 'case "required"' "$work_dir/openapi/model_experimental_canonical_interaction_turn_selection.go"
 grep -q 'case "image", "audio", "video", "document"' \
     "$work_dir/openapi/model_conversation_stream_draft_block.go"
 grep -q 'case "draft_text_delta"' "$work_dir/openapi/model_conversation_stream_event.go"
@@ -465,6 +531,46 @@ func TestExperimentalAgentStreamEnvelopeDispatchAndReset(t *testing.T) {
 		envelope.ExperimentalAgentConversationPreviewUnavailable != nil ||
 		envelope.ExperimentalAgentConversationAcceptedOutput != nil {
 		t.Fatalf("failed reuse retained a branch: %#v", envelope)
+	}
+}
+
+func TestCanonicalTurnSelectionDispatchValidationAndReset(t *testing.T) {
+	var selection ExperimentalCanonicalInteractionTurnSelection
+	if err := json.Unmarshal([]byte(`{"mode":"auto"}`), &selection); err != nil { t.Fatal(err) }
+	if selection.ExperimentalCanonicalInteractionAutoTurnSelection == nil ||
+		selection.ExperimentalCanonicalInteractionNoneTurnSelection != nil ||
+		selection.ExperimentalCanonicalInteractionRequiredTurnSelection != nil {
+		t.Fatalf("auto branch not selected: %#v", selection)
+	}
+	if err := json.Unmarshal([]byte(`{"mode":"none"}`), &selection); err != nil { t.Fatal(err) }
+	if selection.ExperimentalCanonicalInteractionAutoTurnSelection != nil ||
+		selection.ExperimentalCanonicalInteractionNoneTurnSelection == nil ||
+		selection.ExperimentalCanonicalInteractionRequiredTurnSelection != nil {
+		t.Fatalf("none branch did not reset auto branch: %#v", selection)
+	}
+	if err := json.Unmarshal([]byte(`{"mode":"required"}`), &selection); err != nil { t.Fatal(err) }
+	if selection.ExperimentalCanonicalInteractionRequiredTurnSelection == nil ||
+		selection.ExperimentalCanonicalInteractionRequiredTurnSelection.ToolName != nil {
+		t.Fatalf("unnamed required branch not selected: %#v", selection)
+	}
+	if err := json.Unmarshal([]byte(`{"mode":"required","tool_name":"lookup"}`), &selection); err != nil { t.Fatal(err) }
+	required := selection.ExperimentalCanonicalInteractionRequiredTurnSelection
+	if required == nil || required.ToolName == nil || *required.ToolName != "lookup" {
+		t.Fatalf("named required branch changed: %#v", selection)
+	}
+	for name, body := range map[string]string{
+		"missing mode": `{}`,
+		"unknown mode": `{"mode":"future"}`,
+	} {
+		t.Run(name, func(t *testing.T) {
+			if err := json.Unmarshal([]byte(`{"mode":"required","tool_name":"seed"}`), &selection); err != nil { t.Fatal(err) }
+			if err := json.Unmarshal([]byte(body), &selection); err == nil { t.Fatalf("invalid selection accepted: %s", body) }
+			if selection.ExperimentalCanonicalInteractionAutoTurnSelection != nil ||
+				selection.ExperimentalCanonicalInteractionNoneTurnSelection != nil ||
+				selection.ExperimentalCanonicalInteractionRequiredTurnSelection != nil {
+				t.Fatalf("failed selection reuse retained a branch: %#v", selection)
+			}
+		})
 	}
 }
 

@@ -87,6 +87,7 @@ for type_name, schema in schemas.items():
         type_name.startswith('Conversation')
         or type_name == 'RunConversationResponse'
         or type_name == 'ExperimentalCanonicalInteractionInitialState'
+        or type_name == 'ExperimentalCanonicalInteractionTurnSelection'
         or type_name == 'ExperimentalAgentConversationStreamEnvelope'
     ):
         continue
