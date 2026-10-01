@@ -153,6 +153,8 @@ for type_name, schema in schemas.items():
         or type_name == 'ExperimentalAgentConversationStreamEnvelope'
         or type_name == 'ExperimentalAgentConversationSourceDescriptor'
         or type_name == 'AppendRunConversationProgramTurnPayload'
+        or type_name == 'ImportAgentRunConversationArchivePayload'
+        or type_name == 'ImportAgentRunConversationArchiveResponse'
     ):
         continue
     register_discriminator(type_name, schema)
