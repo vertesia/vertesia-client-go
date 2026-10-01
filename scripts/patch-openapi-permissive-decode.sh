@@ -144,6 +144,45 @@ def register_discriminator(type_name, schema):
                 branches.append((value, branch_name))
     models[go_filename(type_name)] = (wire_field, branches)
 
+# Follow component references and generated inline object/array/union model names. Required
+# arbitrary JSON is not optional merely because its Go interface{} value represents null as nil.
+visited_models = {}
+
+def visit_model(type_name, schema):
+    previous = visited_models.get(type_name)
+    if previous is not None:
+        if previous != schema:
+            raise ValueError(f'conflicting generated model schema: {type_name}')
+        return
+    visited_models[type_name] = schema
+    register_discriminator(type_name, schema)
+    if schema.get('discriminator'):
+        required_discriminator_models.add(go_filename(type_name))
+    properties = schema.get('properties', {})
+    required = schema.get('required', [])
+    for wire_name, property_schema in properties.items():
+        if wire_name in required and property_schema == {'$ref': '#/components/schemas/ConversationJsonValue'}:
+            field_name = ''.join(part[:1].upper() + part[1:] for part in re.split(r'[^A-Za-z0-9]+', wire_name))
+            required_json_value_models.append((type_name, field_name, wire_name))
+        suffix = ''.join(part[:1].upper() + part[1:] for part in re.split(r'[^A-Za-z0-9]+', wire_name))
+        visit_property(f'{type_name}{suffix}', property_schema)
+    for index, branch in enumerate(schema.get('oneOf', [])):
+        visit_property(f'{type_name}OneOf{index if index else ""}', branch)
+
+def visit_property(type_name, schema):
+    if not isinstance(schema, dict):
+        return
+    ref = schema.get('$ref')
+    if isinstance(ref, str) and ref.startswith('#/components/schemas/'):
+        referenced_name = ref.rsplit('/', 1)[-1]
+        referenced_schema = schemas.get(referenced_name)
+        if isinstance(referenced_schema, dict):
+            visit_model(referenced_name, referenced_schema)
+    elif schema.get('type') == 'array':
+        visit_property(f'{type_name}Inner', schema.get('items'))
+    elif isinstance(schema.get('properties'), dict) or isinstance(schema.get('oneOf'), list):
+        visit_model(type_name, schema)
+
 for type_name, schema in schemas.items():
     if not (
         type_name.startswith('Conversation')
@@ -152,60 +191,14 @@ for type_name, schema in schemas.items():
         or type_name == 'ExperimentalCanonicalInteractionTurnSelection'
         or type_name == 'ExperimentalAgentConversationStreamEnvelope'
         or type_name == 'ExperimentalAgentConversationSourceDescriptor'
+        or type_name == 'ExperimentalCanonicalUserMessagePayload'
+        or type_name == 'ExperimentalCanonicalToolResultsPayload'
         or type_name == 'AppendRunConversationProgramTurnPayload'
         or type_name == 'ImportAgentRunConversationArchivePayload'
         or type_name == 'ImportAgentRunConversationArchiveResponse'
     ):
         continue
-    register_discriminator(type_name, schema)
-
-# The terminal program-turn result is an inline discriminated union. OpenAPI Generator gives it a
-# deterministic model name derived from its containing branch and property. Derive the same name
-# from the contract, validate the exact required JsonValue field, and patch both discriminator
-# dispatch and required-null serialization without maintaining a second wire schema.
-append_type = 'AppendRunConversationProgramTurnPayload'
-append_schema = schemas.get(append_type)
-if isinstance(append_schema, dict):
-    one_of = append_schema.get('oneOf')
-    if not isinstance(one_of, list):
-        raise ValueError(f'{append_type} must be a oneOf schema')
-    terminal_branches = []
-    for index, branch in enumerate(one_of):
-        if not isinstance(branch, dict):
-            continue
-        purpose = branch.get('properties', {}).get('purpose')
-        if isinstance(purpose, dict) and purpose.get('const') == 'terminal_result':
-            terminal_branches.append((index, branch))
-    if len(terminal_branches) != 1:
-        raise ValueError(f'{append_type} must have one terminal_result branch')
-    terminal_index, terminal_schema = terminal_branches[0]
-    terminal_type = f'{append_type}OneOf{terminal_index if terminal_index else ""}'
-    result_schema = terminal_schema.get('properties', {}).get('result')
-    if not isinstance(result_schema, dict):
-        raise ValueError(f'{terminal_type} result schema is missing')
-    result_type = f'{terminal_type}Result'
-    register_discriminator(result_type, result_schema)
-    required_discriminator_models.update({go_filename(append_type), go_filename(result_type)})
-
-    result_one_of = result_schema.get('oneOf')
-    if not isinstance(result_one_of, list):
-        raise ValueError(f'{result_type} must be a oneOf schema')
-    json_branches = []
-    for index, branch in enumerate(result_one_of):
-        if not isinstance(branch, dict):
-            continue
-        result_kind = branch.get('properties', {}).get('type')
-        if isinstance(result_kind, dict) and result_kind.get('const') == 'json':
-            json_branches.append((index, branch))
-    if len(json_branches) != 1:
-        raise ValueError(f'{result_type} must have one json branch')
-    json_index, json_schema = json_branches[0]
-    value_schema = json_schema.get('properties', {}).get('value')
-    required = json_schema.get('required')
-    if value_schema != {'$ref': '#/components/schemas/ConversationJsonValue'} or not isinstance(required, list) or 'value' not in required:
-        raise ValueError(f'{result_type} json branch must require ConversationJsonValue value')
-    json_type = f'{result_type}OneOf{json_index if json_index else ""}'
-    required_json_value_models.append((json_type, 'Value', 'value'))
+    visit_model(type_name, schema)
 
 def replace_function(source, signature, replacement):
     start = source.index(signature)

@@ -7,6 +7,49 @@ mkdir -p "$work_dir/openapi" "$work_dir/spec"
 cat > "$work_dir/spec/vertesia-openapi.json" <<'JSON'
 {"components":{"schemas":{"ExperimentalAgentConversationSourceDescriptor":{"oneOf":[{"$ref":"#/components/schemas/ExperimentalAgentConversationSourceUninitialized"},{"$ref":"#/components/schemas/ExperimentalAgentConversationSourceInitialized"}],"discriminator":{"propertyName":"status","mapping":{"uninitialized":"#/components/schemas/ExperimentalAgentConversationSourceUninitialized","initialized":"#/components/schemas/ExperimentalAgentConversationSourceInitialized"}}}}}}
 JSON
+python3 - "$work_dir/spec/vertesia-openapi.json" <<'PYFIXTURE'
+import json
+from pathlib import Path
+import sys
+path = Path(sys.argv[1])
+spec = json.loads(path.read_text())
+spec['components']['schemas'].update({
+    'ExperimentalCanonicalUserMessagePayload': {'properties': {
+        'blocks': {'type': 'array', 'items': {'$ref': '#/components/schemas/ConversationJsonBlock'}},
+    }},
+    'ExperimentalCanonicalToolResultsPayload': {'properties': {
+        'records': {'type': 'array', 'items': {'type': 'object', 'properties': {
+            'payload': {'$ref': '#/components/schemas/ConversationJsonValue'},
+        }, 'required': ['payload']}},
+    }},
+    'ConversationJsonBlock': {'properties': {
+        'value': {'$ref': '#/components/schemas/ConversationJsonValue'},
+        'optional': {'$ref': '#/components/schemas/ConversationJsonValue'},
+    }, 'required': ['value']},
+    'ConversationJsonValue': {},
+})
+path.write_text(json.dumps(spec))
+PYFIXTURE
+for entry in 'ConversationJsonBlock value Value' 'ExperimentalCanonicalToolResultsPayloadRecordsInner payload Payload'; do
+  read -r model wire field <<< "$entry"
+  snake="$(printf '%s' "$model" | sed -E 's/([a-z0-9])([A-Z])/\1_\2/g' | tr '[:upper:]' '[:lower:]')"
+  cat > "$work_dir/openapi/model_${snake}.go" <<GO
+package fixture
+import "encoding/json"
+type ${model} struct { ${field} interface{} \`json:"${wire}"\`; Optional interface{} \`json:"optional,omitempty"\` }
+func (o ${model}) MarshalJSON() ([]byte,error) { m,err:=o.ToMap(); if err!=nil{return nil,err}; return json.Marshal(m) }
+func (o ${model}) ToMap() (map[string]interface{},error) {
+    toSerialize:=map[string]interface{}{}
+    if o.${field} != nil {
+        toSerialize["${wire}"] = o.${field}
+    }
+    if o.Optional != nil {
+        toSerialize["optional"] = o.Optional
+    }
+    return toSerialize,nil
+}
+GO
+done
 cat > "$work_dir/openapi/model_experimental_agent_conversation_source_descriptor.go" <<'GO'
 package fixture
 import (
@@ -83,6 +126,28 @@ func TestSourceDiscriminatorAndReset(t *testing.T) {
 	if err := json.Unmarshal([]byte(`{"status":"future"}`), &descriptor); err == nil {
 		t.Fatal("unknown status accepted")
 	}
+}
+
+func TestRequiredCanonicalJSONValuesAndInlineResumeRecords(t *testing.T) {
+    for _, value := range []string{`null`, `false`, `7`, `"text"`, `[null,{"nested":true}]`, `{"protocol":"data","additionalProperties":false}`} {
+        for _, entry := range []struct{ wire string; target interface{} }{
+            {"value", &ConversationJsonBlock{}},
+            {"payload", &ExperimentalCanonicalToolResultsPayloadRecordsInner{}},
+        } {
+            body := `{"` + entry.wire + `":` + value + `,"future":"ignored"}`
+            if err := json.Unmarshal([]byte(body), entry.target); err != nil { t.Fatal(err) }
+            encoded, err := json.Marshal(entry.target)
+            if err != nil { t.Fatal(err) }
+            var decoded map[string]interface{}
+            if err := json.Unmarshal(encoded, &decoded); err != nil { t.Fatal(err) }
+            var want interface{}
+            if err := json.Unmarshal([]byte(value), &want); err != nil { t.Fatal(err) }
+            actual, present := decoded[entry.wire]
+            if !present || !reflect.DeepEqual(want, actual) { t.Fatalf("required JSON %s => %s", body, encoded) }
+            if _, ok := decoded["optional"]; ok { t.Fatalf("optional null materialized: %s", encoded) }
+            if _, ok := decoded["future"]; ok { t.Fatalf("unknown field retained: %s", encoded) }
+        }
+    }
 }
 
 type dataAccessors interface {
