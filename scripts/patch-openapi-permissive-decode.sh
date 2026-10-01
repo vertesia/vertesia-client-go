@@ -89,6 +89,7 @@ for type_name, schema in schemas.items():
         or type_name == 'ExperimentalCanonicalInteractionInitialState'
         or type_name == 'ExperimentalCanonicalInteractionTurnSelection'
         or type_name == 'ExperimentalAgentConversationStreamEnvelope'
+        or type_name == 'ExperimentalAgentConversationSourceDescriptor'
     ):
         continue
     discriminator = schema.get('discriminator')
@@ -273,6 +274,97 @@ replacement = '''func (o *ExperimentalCanonicalInteractionResultSchemaInput) Unm
 path.write_text(source[:start] + replacement + source[end + 1:])
 PY
 fi
+
+# Optional free-form JSON must distinguish an omitted property from an explicit JSON null.
+for data_model in \
+  experimental_canonical_interaction_execution_request \
+  experimental_canonical_named_interaction_execution_request
+do
+  data_file="$openapi_dir/model_${data_model}.go"
+  [[ -f "$data_file" ]] || continue
+  python3 - "$data_file" <<'PYDATA'
+from pathlib import Path
+import re
+import sys
+
+path = Path(sys.argv[1])
+source = path.read_text()
+match = re.search(r'type (ExperimentalCanonical(?:Named)?InteractionExecutionRequest) struct \{', source)
+if match is None:
+    raise ValueError(f'canonical request type not found in {path.name}')
+type_name = match.group(1)
+if not re.search(r'(?m)^\s*dataSet\s+bool\s+`json:"-"`$', source):
+    pattern = r'(?m)^(?P<indent>\s*)Data\s+interface\{\}\s+`json:"data,omitempty"`$'
+    matches = list(re.finditer(pattern, source))
+    if len(matches) != 1:
+        raise ValueError(f'{type_name} Data field shape changed')
+    source = re.sub(pattern, lambda match: match.group(0) + '\n' + match.group('indent') + 'dataSet bool `json:"-"`', source, count=1)
+
+def replace_function(signature, replacement):
+    global source
+    if replacement in source:
+        return
+    start = source.find(signature)
+    if start < 0:
+        raise ValueError(f'{type_name} function not found: {signature}')
+    brace = start + len(signature) - 1
+    depth = 0
+    for end in range(brace, len(source)):
+        if source[end] == '{': depth += 1
+        elif source[end] == '}':
+            depth -= 1
+            if depth == 0:
+                source = source[:start] + replacement + source[end + 1:]
+                return
+    raise ValueError(f'unclosed function: {signature}')
+
+replace_function(
+    f'func (o *{type_name}) GetDataOk() (*interface{{}}, bool) {{',
+    f'''func (o *{type_name}) GetDataOk() (*interface{{}}, bool) {{
+\tif o == nil || (!o.dataSet && IsNil(o.Data)) {{
+\t\treturn nil, false
+\t}}
+\treturn &o.Data, true
+}}''')
+replace_function(
+    f'func (o *{type_name}) HasData() bool {{',
+    f'''func (o *{type_name}) HasData() bool {{
+\treturn o != nil && (o.dataSet || !IsNil(o.Data))
+}}''')
+replace_function(
+    f'func (o *{type_name}) SetData(v interface{{}}) {{',
+    f'''func (o *{type_name}) SetData(v interface{{}}) {{
+\to.Data = v
+\to.dataSet = true
+}}''')
+old_pattern = r'(?m)^(?P<i>\s*)if (?:!IsNil\(o\.Data\)|o\.Data != nil) \{\n(?P=i)\s+toSerialize\["data"\] = o\.Data\n(?P=i)\}'
+new = '\tif o.dataSet || !IsNil(o.Data) {\n\t\ttoSerialize["data"] = o.Data\n\t}'
+if re.search(old_pattern, source):
+    source = re.sub(old_pattern, new, source, count=1)
+elif new not in source:
+    raise ValueError(f'{type_name} ToMap Data condition changed')
+unmarshal = f'func (o *{type_name}) UnmarshalJSON(data []byte) (err error) {{'
+start = source.find(unmarshal)
+if start < 0:
+    raise ValueError(f'{type_name} UnmarshalJSON not found')
+reset = '\to.Data = nil\n\to.dataSet = false\n'
+body_start = start + len(unmarshal)
+body_end = source.find('\n}', body_start)
+if reset not in source[body_start:body_end]:
+    source = source[:body_start] + '\n' + reset + source[body_start:]
+assignment_pattern = rf'(?m)^(?P<i>\s*)\*o = {type_name}\(var{type_name}\)\s*$'
+restore_marker = '_, o.dataSet = allProperties["data"]'
+if restore_marker not in source:
+    matches = list(re.finditer(assignment_pattern, source))
+    if len(matches) != 1:
+        raise ValueError(f'{type_name} alias assignment changed')
+    match = matches[0]
+    indent = match.group('i')
+    replacement = match.group(0) + f'\n{indent}o.dataSet = false\n{indent}_, o.dataSet = allProperties["data"]'
+    source = source[:match.start()] + replacement + source[match.end():]
+path.write_text(source)
+PYDATA
+done
 
 tool_definition_file="$openapi_dir/model_conversation_tool_definition.go"
 if [[ -f "$tool_definition_file" ]]; then
