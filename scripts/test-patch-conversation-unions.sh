@@ -77,6 +77,56 @@ cat > "$work_dir/spec/vertesia-openapi.json" <<'JSON'
           }
         }
       },
+      "ConversationJsonValue": {},
+      "AppendRunConversationProgramTurnPayload": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "conversation_id": { "type": "string" },
+              "expected_revision": { "type": "integer" },
+              "operation_id": { "type": "string" },
+              "recorded_at": { "$ref": "#/components/schemas/ConversationTimestamp" },
+              "purpose": { "type": "string", "const": "controller_corrective" },
+              "text": { "type": "string" }
+            },
+            "required": ["conversation_id", "expected_revision", "operation_id", "recorded_at", "purpose", "text"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "conversation_id": { "type": "string" },
+              "expected_revision": { "type": "integer" },
+              "operation_id": { "type": "string" },
+              "recorded_at": { "$ref": "#/components/schemas/ConversationTimestamp" },
+              "purpose": { "type": "string", "const": "terminal_result" },
+              "result": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": { "type": "string", "const": "text" },
+                      "text": { "type": "string" }
+                    },
+                    "required": ["type", "text"]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": { "type": "string", "const": "json" },
+                      "value": { "$ref": "#/components/schemas/ConversationJsonValue" }
+                    },
+                    "required": ["type", "value"]
+                  }
+                ],
+                "discriminator": { "propertyName": "type" }
+              }
+            },
+            "required": ["conversation_id", "expected_revision", "operation_id", "recorded_at", "purpose", "result"]
+          }
+        ],
+        "discriminator": { "propertyName": "purpose" }
+      },
       "ConversationStreamDraftBlock": {
         "type": "object",
         "required": ["type"],
@@ -365,6 +415,120 @@ func (o ExperimentalCanonicalInteractionExecutionRequest) MarshalJSON() ([]byte,
 	return json.Marshal(value)
 }' > "$work_dir/openapi/model_experimental_canonical_interaction_result_schema_input.go"
 
+printf '%s\n' 'package fixture
+import (
+    "encoding/json"
+    "fmt"
+    "gopkg.in/validator.v2"
+)
+type AppendRunConversationProgramTurnPayloadOneOf struct {
+    ConversationId string `json:"conversation_id"`
+    ExpectedRevision int32 `json:"expected_revision"`
+    OperationId string `json:"operation_id"`
+    RecordedAt string `json:"recorded_at"`
+    Purpose string `json:"purpose"`
+    Text string `json:"text"`
+}
+func (value *AppendRunConversationProgramTurnPayloadOneOf) UnmarshalJSON(data []byte) error {
+    fields := map[string]json.RawMessage{}
+    if err := json.Unmarshal(data, &fields); err != nil { return err }
+    for _, required := range []string{"conversation_id", "expected_revision", "operation_id", "recorded_at", "purpose", "text"} {
+        if _, ok := fields[required]; !ok { return fmt.Errorf("missing %s", required) }
+    }
+    type alias AppendRunConversationProgramTurnPayloadOneOf
+    return json.Unmarshal(data, (*alias)(value))
+}
+type AppendRunConversationProgramTurnPayloadOneOf1 struct {
+    ConversationId string `json:"conversation_id"`
+    ExpectedRevision int32 `json:"expected_revision"`
+    OperationId string `json:"operation_id"`
+    RecordedAt string `json:"recorded_at"`
+    Purpose string `json:"purpose"`
+    Result AppendRunConversationProgramTurnPayloadOneOf1Result `json:"result"`
+}
+func (value *AppendRunConversationProgramTurnPayloadOneOf1) UnmarshalJSON(data []byte) error {
+    fields := map[string]json.RawMessage{}
+    if err := json.Unmarshal(data, &fields); err != nil { return err }
+    for _, required := range []string{"conversation_id", "expected_revision", "operation_id", "recorded_at", "purpose", "result"} {
+        if _, ok := fields[required]; !ok { return fmt.Errorf("missing %s", required) }
+    }
+    type alias AppendRunConversationProgramTurnPayloadOneOf1
+    return json.Unmarshal(data, (*alias)(value))
+}
+type AppendRunConversationProgramTurnPayload struct {
+    AppendRunConversationProgramTurnPayloadOneOf *AppendRunConversationProgramTurnPayloadOneOf
+    AppendRunConversationProgramTurnPayloadOneOf1 *AppendRunConversationProgramTurnPayloadOneOf1
+}
+func (dst *AppendRunConversationProgramTurnPayload) UnmarshalJSON(data []byte) error {
+    return validator.Validate(dst)
+}
+func (src AppendRunConversationProgramTurnPayload) MarshalJSON() ([]byte, error) {
+    if src.AppendRunConversationProgramTurnPayloadOneOf != nil { return json.Marshal(src.AppendRunConversationProgramTurnPayloadOneOf) }
+    if src.AppendRunConversationProgramTurnPayloadOneOf1 != nil { return json.Marshal(src.AppendRunConversationProgramTurnPayloadOneOf1) }
+    return nil, nil
+}' > "$work_dir/openapi/model_append_run_conversation_program_turn_payload.go"
+printf '%s\n' 'package fixture
+import (
+    "encoding/json"
+    "fmt"
+    "gopkg.in/validator.v2"
+)
+type AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf struct {
+    Type string `json:"type"`
+    Text string `json:"text"`
+}
+func (value *AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf) UnmarshalJSON(data []byte) error {
+    fields := map[string]json.RawMessage{}
+    if err := json.Unmarshal(data, &fields); err != nil { return err }
+    for _, required := range []string{"type", "text"} {
+        if _, ok := fields[required]; !ok { return fmt.Errorf("missing %s", required) }
+    }
+    type alias AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf
+    return json.Unmarshal(data, (*alias)(value))
+}
+type AppendRunConversationProgramTurnPayloadOneOf1Result struct {
+    AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf *AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf
+    AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf1 *AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf1
+}
+func (dst *AppendRunConversationProgramTurnPayloadOneOf1Result) UnmarshalJSON(data []byte) error {
+    return validator.Validate(dst)
+}
+func (src AppendRunConversationProgramTurnPayloadOneOf1Result) MarshalJSON() ([]byte, error) {
+    if src.AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf != nil { return json.Marshal(src.AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf) }
+    if src.AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf1 != nil { return json.Marshal(src.AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf1) }
+    return nil, nil
+}' > "$work_dir/openapi/model_append_run_conversation_program_turn_payload_one_of_1_result.go"
+printf '%s\n' 'package fixture
+import (
+    "encoding/json"
+    "fmt"
+)
+type AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf1 struct {
+    Type string `json:"type"`
+    Value interface{} `json:"value"`
+}
+func (o AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf1) MarshalJSON() ([]byte, error) {
+    value, err := o.ToMap()
+    if err != nil { return nil, err }
+    return json.Marshal(value)
+}
+func (o AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf1) ToMap() (map[string]interface{}, error) {
+    toSerialize := map[string]interface{}{"type": o.Type}
+    if o.Value != nil {
+        toSerialize["value"] = o.Value
+    }
+    return toSerialize, nil
+}
+func (o *AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf1) UnmarshalJSON(data []byte) error {
+    fields := map[string]json.RawMessage{}
+    if err := json.Unmarshal(data, &fields); err != nil { return err }
+    for _, required := range []string{"type", "value"} {
+        if _, ok := fields[required]; !ok { return fmt.Errorf("missing %s", required) }
+    }
+    type alias AppendRunConversationProgramTurnPayloadOneOf1ResultOneOf1
+    return json.Unmarshal(data, (*alias)(o))
+}' > "$work_dir/openapi/model_append_run_conversation_program_turn_payload_one_of_1_result_one_of_1.go"
+
 bash "$repo_dir/scripts/patch-openapi-permissive-decode.sh" "$work_dir/openapi"
 bash "$repo_dir/scripts/patch-openapi-permissive-decode.sh" "$work_dir/openapi"
 grep -q '^type ConversationTimestamp = string$' "$work_dir/openapi/model_conversation_timestamp.go"
@@ -394,6 +558,16 @@ grep -q '\*dst = ExperimentalCanonicalInteractionTurnSelection{}' \
 grep -q 'case "auto"' "$work_dir/openapi/model_experimental_canonical_interaction_turn_selection.go"
 grep -q 'case "none"' "$work_dir/openapi/model_experimental_canonical_interaction_turn_selection.go"
 grep -q 'case "required"' "$work_dir/openapi/model_experimental_canonical_interaction_turn_selection.go"
+grep -q '\*dst = AppendRunConversationProgramTurnPayload{}' \
+    "$work_dir/openapi/model_append_run_conversation_program_turn_payload.go"
+grep -q 'case "terminal_result"' \
+    "$work_dir/openapi/model_append_run_conversation_program_turn_payload.go"
+grep -q '\*dst = AppendRunConversationProgramTurnPayloadOneOf1Result{}' \
+    "$work_dir/openapi/model_append_run_conversation_program_turn_payload_one_of_1_result.go"
+grep -q 'case "json"' \
+    "$work_dir/openapi/model_append_run_conversation_program_turn_payload_one_of_1_result.go"
+grep -q 'toSerialize\["value"\] = o.Value' \
+    "$work_dir/openapi/model_append_run_conversation_program_turn_payload_one_of_1_result_one_of_1.go"
 grep -q 'case "image", "audio", "video", "document"' \
     "$work_dir/openapi/model_conversation_stream_draft_block.go"
 grep -q 'case "draft_text_delta"' "$work_dir/openapi/model_conversation_stream_event.go"
@@ -569,6 +743,54 @@ func TestCanonicalTurnSelectionDispatchValidationAndReset(t *testing.T) {
 				selection.ExperimentalCanonicalInteractionNoneTurnSelection != nil ||
 				selection.ExperimentalCanonicalInteractionRequiredTurnSelection != nil {
 				t.Fatalf("failed selection reuse retained a branch: %#v", selection)
+			}
+		})
+	}
+}
+
+func TestTerminalProgramDispatchPreservesJSONRootsAndResets(t *testing.T) {
+	prefix := `{"conversation_id":"conversation","expected_revision":1,"operation_id":"operation","recorded_at":"2026-09-30T00:00:00.000Z","purpose":"terminal_result","result":`
+	for _, result := range []string{
+		`{"type":"json","value":null}`,
+		`{"type":"json","value":false}`,
+		`{"type":"json","value":[null,false,{"nested":true}]}`,
+		`{"type":"text","text":"done"}`,
+	} {
+		body := prefix + result + `}`
+		var payload AppendRunConversationProgramTurnPayload
+		if err := json.Unmarshal([]byte(body), &payload); err != nil { t.Fatal(err) }
+		terminal := payload.AppendRunConversationProgramTurnPayloadOneOf1
+		if terminal == nil || payload.AppendRunConversationProgramTurnPayloadOneOf != nil {
+			t.Fatalf("terminal branch not selected: %#v", payload)
+		}
+		serialized, err := json.Marshal(payload)
+		if err != nil { t.Fatal(err) }
+		var before, after map[string]interface{}
+		if err := json.Unmarshal([]byte(body), &before); err != nil { t.Fatal(err) }
+		if err := json.Unmarshal(serialized, &after); err != nil { t.Fatal(err) }
+		if !reflect.DeepEqual(before, after) { t.Fatalf("terminal result changed: %s", serialized) }
+	}
+
+	controller := `{"conversation_id":"conversation","expected_revision":1,"operation_id":"operation","recorded_at":"2026-09-30T00:00:00.000Z","purpose":"controller_corrective","text":"continue"}`
+	var payload AppendRunConversationProgramTurnPayload
+	if err := json.Unmarshal([]byte(controller), &payload); err != nil { t.Fatal(err) }
+	if payload.AppendRunConversationProgramTurnPayloadOneOf == nil || payload.AppendRunConversationProgramTurnPayloadOneOf1 != nil {
+		t.Fatalf("controller branch not selected: %#v", payload)
+	}
+
+	invalid := map[string]string{
+		"missing purpose": `{"conversation_id":"conversation"}`,
+		"unknown purpose": `{"purpose":"future"}`,
+		"unknown result type": prefix + `{"type":"future","text":"done"}}`,
+		"json result missing value": prefix + `{"type":"json"}}`,
+		"text result missing text": prefix + `{"type":"text"}}`,
+	}
+	for name, body := range invalid {
+		t.Run(name, func(t *testing.T) {
+			if err := json.Unmarshal([]byte(controller), &payload); err != nil { t.Fatal(err) }
+			if err := json.Unmarshal([]byte(body), &payload); err == nil { t.Fatalf("invalid payload accepted: %s", body) }
+			if payload.AppendRunConversationProgramTurnPayloadOneOf != nil || payload.AppendRunConversationProgramTurnPayloadOneOf1 != nil {
+				t.Fatalf("failed payload reuse retained a branch: %#v", payload)
 			}
 		})
 	}

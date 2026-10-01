@@ -82,19 +82,17 @@ root = Path(sys.argv[1])
 spec = json.loads((root.parent / 'spec' / 'vertesia-openapi.json').read_text())
 schemas = spec['components']['schemas']
 models = {}
-for type_name, schema in schemas.items():
-    if not (
-        type_name.startswith('Conversation')
-        or type_name == 'RunConversationResponse'
-        or type_name == 'ExperimentalCanonicalInteractionInitialState'
-        or type_name == 'ExperimentalCanonicalInteractionTurnSelection'
-        or type_name == 'ExperimentalAgentConversationStreamEnvelope'
-        or type_name == 'ExperimentalAgentConversationSourceDescriptor'
-    ):
-        continue
+required_discriminator_models = set()
+required_json_value_models = []
+
+def go_filename(type_name):
+    filename = re.sub(r'(?<!^)(?=[A-Z])', '_', type_name)
+    return re.sub(r'(?<=[A-Za-z])(?=[0-9])', '_', filename).lower()
+
+def register_discriminator(type_name, schema):
     discriminator = schema.get('discriminator')
     if not discriminator:
-        continue
+        return
     wire_field = discriminator.get('propertyName')
     if not isinstance(wire_field, str) or not wire_field:
         raise ValueError(f'{type_name} discriminator has no propertyName')
@@ -144,8 +142,68 @@ for type_name, schema in schemas.items():
                     raise ValueError(f'{type_name} discriminator value {value!r} is ambiguous')
                 seen_values.add(value)
                 branches.append((value, branch_name))
-    filename = re.sub(r'(?<!^)(?=[A-Z])', '_', type_name).lower()
-    models[filename] = (wire_field, branches)
+    models[go_filename(type_name)] = (wire_field, branches)
+
+for type_name, schema in schemas.items():
+    if not (
+        type_name.startswith('Conversation')
+        or type_name == 'RunConversationResponse'
+        or type_name == 'ExperimentalCanonicalInteractionInitialState'
+        or type_name == 'ExperimentalCanonicalInteractionTurnSelection'
+        or type_name == 'ExperimentalAgentConversationStreamEnvelope'
+        or type_name == 'ExperimentalAgentConversationSourceDescriptor'
+        or type_name == 'AppendRunConversationProgramTurnPayload'
+    ):
+        continue
+    register_discriminator(type_name, schema)
+
+# The terminal program-turn result is an inline discriminated union. OpenAPI Generator gives it a
+# deterministic model name derived from its containing branch and property. Derive the same name
+# from the contract, validate the exact required JsonValue field, and patch both discriminator
+# dispatch and required-null serialization without maintaining a second wire schema.
+append_type = 'AppendRunConversationProgramTurnPayload'
+append_schema = schemas.get(append_type)
+if isinstance(append_schema, dict):
+    one_of = append_schema.get('oneOf')
+    if not isinstance(one_of, list):
+        raise ValueError(f'{append_type} must be a oneOf schema')
+    terminal_branches = []
+    for index, branch in enumerate(one_of):
+        if not isinstance(branch, dict):
+            continue
+        purpose = branch.get('properties', {}).get('purpose')
+        if isinstance(purpose, dict) and purpose.get('const') == 'terminal_result':
+            terminal_branches.append((index, branch))
+    if len(terminal_branches) != 1:
+        raise ValueError(f'{append_type} must have one terminal_result branch')
+    terminal_index, terminal_schema = terminal_branches[0]
+    terminal_type = f'{append_type}OneOf{terminal_index if terminal_index else ""}'
+    result_schema = terminal_schema.get('properties', {}).get('result')
+    if not isinstance(result_schema, dict):
+        raise ValueError(f'{terminal_type} result schema is missing')
+    result_type = f'{terminal_type}Result'
+    register_discriminator(result_type, result_schema)
+    required_discriminator_models.update({go_filename(append_type), go_filename(result_type)})
+
+    result_one_of = result_schema.get('oneOf')
+    if not isinstance(result_one_of, list):
+        raise ValueError(f'{result_type} must be a oneOf schema')
+    json_branches = []
+    for index, branch in enumerate(result_one_of):
+        if not isinstance(branch, dict):
+            continue
+        result_kind = branch.get('properties', {}).get('type')
+        if isinstance(result_kind, dict) and result_kind.get('const') == 'json':
+            json_branches.append((index, branch))
+    if len(json_branches) != 1:
+        raise ValueError(f'{result_type} must have one json branch')
+    json_index, json_schema = json_branches[0]
+    value_schema = json_schema.get('properties', {}).get('value')
+    required = json_schema.get('required')
+    if value_schema != {'$ref': '#/components/schemas/ConversationJsonValue'} or not isinstance(required, list) or 'value' not in required:
+        raise ValueError(f'{result_type} json branch must require ConversationJsonValue value')
+    json_type = f'{result_type}OneOf{json_index if json_index else ""}'
+    required_json_value_models.append((json_type, 'Value', 'value'))
 
 def replace_function(source, signature, replacement):
     start = source.index(signature)
@@ -160,7 +218,10 @@ def replace_function(source, signature, replacement):
 
 for filename, (wire_field, branches) in models.items():
     path = root / f'model_{filename}.go'
-    if not path.exists(): continue
+    if not path.exists():
+        if filename in required_discriminator_models:
+            raise ValueError(f'required discriminator model is missing: {filename}')
+        continue
     type_name = ''.join(part.title() for part in filename.split('_'))
     values_by_branch = {}
     for value, branch in branches:
@@ -188,8 +249,27 @@ for filename, (wire_field, branches) in models.items():
 \t}}
 }}'''
     source = replace_function(path.read_text(), f'func (dst *{type_name}) UnmarshalJSON(data []byte) error {{', replacement)
-    source = source.replace('\n\tvalidator "gopkg.in/validator.v2"', '')
-    source = source.replace('\n\t"gopkg.in/validator.v2"', '')
+    source = re.sub(r'\n[ \t]*(?:validator[ \t]+)?"gopkg\.in/validator\.v2"', '', source)
+    path.write_text(source)
+
+for type_name, field_name, wire_name in required_json_value_models:
+    filename = go_filename(type_name)
+    path = root / f'model_{filename}.go'
+    if not path.exists():
+        raise ValueError(f'required JSON value model is missing: {filename}')
+    source = path.read_text()
+    conditional = re.compile(
+        rf'(?m)^(?P<indent>[ \t]*)if o\.{field_name} != nil \{{\n'
+        rf'(?P=indent)[ \t]+toSerialize\["{wire_name}"\] = o\.{field_name}\n'
+        rf'(?P=indent)\}}'
+    )
+    matches = list(conditional.finditer(source))
+    unconditional = f'toSerialize["{wire_name}"] = o.{field_name}'
+    if len(matches) == 1:
+        match = matches[0]
+        source = source[:match.start()] + match.group('indent') + unconditional + source[match.end():]
+    elif len(matches) != 0 or unconditional not in source:
+        raise ValueError(f'{type_name} required JSON value serialization changed')
     path.write_text(source)
 PY
 fi
