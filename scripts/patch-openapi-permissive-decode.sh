@@ -232,6 +232,8 @@ for type_name, schema in schemas.items():
         or type_name == 'AppendRunConversationProgramTurnPayload'
         or type_name == 'ImportAgentRunConversationArchivePayload'
         or type_name == 'ImportAgentRunConversationArchiveResponse'
+        or type_name == 'ExperimentalExtractAgentAssetPayload'
+        or type_name == 'ExperimentalAgentAssetExtraction'
     ):
         continue
     visit_model(type_name, schema)
