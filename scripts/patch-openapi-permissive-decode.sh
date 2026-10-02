@@ -191,6 +191,7 @@ for type_name, schema in schemas.items():
         or type_name == 'ExperimentalCanonicalInteractionTurnSelection'
         or type_name == 'ExperimentalAgentConversationStreamEnvelope'
         or type_name == 'ExperimentalAgentConversationSourceDescriptor'
+        or type_name == 'ExperimentalAgentRoutingControlReceipt'
         or type_name == 'ExperimentalCanonicalUserMessagePayload'
         or type_name == 'ExperimentalCanonicalToolResultsPayload'
         or type_name == 'AppendRunConversationProgramTurnPayload'
@@ -226,15 +227,37 @@ for filename, (wire_field, branches) in models.items():
     cases = []
     for branch, values in values_by_branch.items():
         labels = ', '.join(json.dumps(value) for value in values)
+        required_checks = ''
+        if type_name == 'ExperimentalAgentRoutingControlReceipt':
+            branch_schema = schemas.get(branch)
+            if not isinstance(branch_schema, dict) or not isinstance(branch_schema.get('required'), list):
+                raise ValueError(f'{type_name} branch {branch!r} has no required-field contract')
+            for required_field in branch_schema['required']:
+                if not isinstance(required_field, str):
+                    raise ValueError(f'{type_name} branch {branch!r} has an invalid required field')
+                required_checks += f'''\t\tif raw, present := requiredFields[{json.dumps(required_field)}]; !present {{
+\t\t\treturn fmt.Errorf("missing {type_name} field {required_field}")
+\t\t}} else {{
+\t\t\tvar value any
+\t\t\tif err := json.Unmarshal(raw, &value); err != nil || value == nil {{
+\t\t\t\treturn fmt.Errorf("null or invalid {type_name} field {required_field}")
+\t\t\t}}
+\t\t}}
+'''
         cases.append(f'''\tcase {labels}:
+{required_checks}
 \t\tselected := &{branch}{{}}
 \t\tif err := json.Unmarshal(data, selected); err != nil {{
 \t\t\treturn fmt.Errorf("failed to unmarshal {type_name} as {branch}: %w", err)
 \t\t}}
 \t\tdst.{branch} = selected
 \t\treturn nil''')
+    required_fields_decode = '''\tvar requiredFields map[string]json.RawMessage
+\tif err := json.Unmarshal(data, &requiredFields); err != nil { return err }
+''' if type_name == 'ExperimentalAgentRoutingControlReceipt' else ''
     replacement = f'''func (dst *{type_name}) UnmarshalJSON(data []byte) error {{
 \t*dst = {type_name}{{}}
+{required_fields_decode}
 \tvar discriminator struct {{ Value string `json:"{wire_field}"` }}
 \tif err := json.Unmarshal(data, &discriminator); err != nil {{ return err }}
 \tswitch discriminator.Value {{
@@ -246,6 +269,78 @@ for filename, (wire_field, branches) in models.items():
     source = replace_function(path.read_text(), f'func (dst *{type_name}) UnmarshalJSON(data []byte) error {{', replacement)
     source = re.sub(r'\n[ \t]*(?:validator[ \t]+)?"gopkg\.in/validator\.v2"', '', source)
     path.write_text(source)
+
+# Routing's non-discriminated anyOfs share a nullable effort property. With permissive decoding,
+# an effort-only branch can otherwise consume a profile selection and discard inference_profile.
+# Select by the two mutually exclusive route keys, deriving branch model names from generated code.
+for type_name in ('ExperimentalAgentRoutingControlChange', 'ExperimentalAgentRoutingIntent'):
+    if type_name not in schemas:
+        continue
+    path = root / f'model_{go_filename(type_name)}.go'
+    source = path.read_text()
+    match = re.search(rf'type {type_name} struct \{{(.*?)\n\}}', source, re.S)
+    if not match:
+        raise ValueError(f'{type_name} generated union struct is missing')
+    branches_by_key = {}
+    for branch in re.findall(r'^\s+([A-Za-z0-9_]+) \*([A-Za-z0-9_]+)$', match.group(1), re.M):
+        field, model = branch
+        if field != model:
+            raise ValueError(f'{type_name} generated branch field differs from model')
+        model_path = root / f'model_{go_filename(model)}.go'
+        model_source = model_path.read_text()
+        for key in ('model', 'inference_profile', 'effort'):
+            if re.search(rf'json:"{key}(?:,|\")', model_source):
+                branches_by_key.setdefault(key, []).append(model)
+    model_candidates = branches_by_key.get('model', [])
+    profile_candidates = branches_by_key.get('inference_profile', [])
+    if len(model_candidates) != 1 or len(profile_candidates) != 1:
+        raise ValueError(f'{type_name} generated route selector branches are ambiguous')
+    model_branch, profile_branch = model_candidates[0], profile_candidates[0]
+    if type_name == 'ExperimentalAgentRoutingControlChange':
+        effort_candidates = set(branches_by_key.get('effort', [])) - {model_branch, profile_branch}
+        if len(effort_candidates) != 1:
+            raise ValueError(f'{type_name} generated effort-only branch is ambiguous')
+        default_branch = effort_candidates.pop()
+        default_guard = '''\tif _, present := fields["effort"]; !present {
+\t\treturn fmt.Errorf("routing change needs model, inference_profile, or effort")
+\t}
+'''
+    else:
+        default_branch = model_branch
+        default_guard = ''
+    replacement = f'''func (dst *{type_name}) UnmarshalJSON(data []byte) error {{
+\t*dst = {type_name}{{}}
+\tvar fields map[string]json.RawMessage
+\tif err := json.Unmarshal(data, &fields); err != nil {{ return err }}
+\t_, hasModel := fields["model"]
+\t_, hasProfile := fields["inference_profile"]
+\tif hasModel && hasProfile {{ return fmt.Errorf("routing model and inference_profile are mutually exclusive") }}
+\tfor _, routeKey := range []string{{"model", "inference_profile"}} {{
+\t\tif raw, present := fields[routeKey]; present {{
+\t\t\tvar value any
+\t\t\tif err := json.Unmarshal(raw, &value); err != nil || value == nil {{
+\t\t\t\treturn fmt.Errorf("routing %s must not be null", routeKey)
+\t\t\t}}
+\t\t}}
+\t}}
+\tif hasProfile {{
+\t\tselected := &{profile_branch}{{}}
+\t\tif err := json.Unmarshal(data, selected); err != nil {{ return err }}
+\t\tdst.{profile_branch} = selected
+\t\treturn nil
+\t}}
+\tif hasModel {{
+\t\tselected := &{model_branch}{{}}
+\t\tif err := json.Unmarshal(data, selected); err != nil {{ return err }}
+\t\tdst.{model_branch} = selected
+\t\treturn nil
+\t}}
+{default_guard}\tselected := &{default_branch}{{}}
+\tif err := json.Unmarshal(data, selected); err != nil {{ return err }}
+\tdst.{default_branch} = selected
+\treturn nil
+}}'''
+    path.write_text(replace_function(source, f'func (dst *{type_name}) UnmarshalJSON(data []byte) error {{', replacement))
 
 for type_name, field_name, wire_name in required_json_value_models:
     filename = go_filename(type_name)
