@@ -19,12 +19,14 @@ var _ MappedNullable = &AuditAggregationFilter{}
 
 // AuditAggregationFilter struct for AuditAggregationFilter
 type AuditAggregationFilter struct {
-	Actions         []AuditAction                  `json:"actions,omitempty"`
-	ResourceTypes   []string                       `json:"resourceTypes,omitempty"`
-	EventCategories []EventCategory                `json:"eventCategories,omitempty"`
-	Providers       []string                       `json:"providers,omitempty"`
-	Success         *bool                          `json:"success,omitempty"`
-	Details         []AuditAggregationDetailFilter `json:"details,omitempty"`
+	Actions         []AuditAction   `json:"actions,omitempty"`
+	ResourceTypes   []string        `json:"resourceTypes,omitempty"`
+	EventCategories []EventCategory `json:"eventCategories,omitempty"`
+	Providers       []string        `json:"providers,omitempty"`
+	// Restrict events to top-level actor categories such as user or apikey.
+	PrincipalTypes []string                       `json:"principalTypes,omitempty"`
+	Success        *bool                          `json:"success,omitempty"`
+	Details        []AuditAggregationDetailFilter `json:"details,omitempty"`
 }
 
 // NewAuditAggregationFilter instantiates a new AuditAggregationFilter object
@@ -172,6 +174,38 @@ func (o *AuditAggregationFilter) SetProviders(v []string) {
 	o.Providers = v
 }
 
+// GetPrincipalTypes returns the PrincipalTypes field value if set, zero value otherwise.
+func (o *AuditAggregationFilter) GetPrincipalTypes() []string {
+	if o == nil || IsNil(o.PrincipalTypes) {
+		var ret []string
+		return ret
+	}
+	return o.PrincipalTypes
+}
+
+// GetPrincipalTypesOk returns a tuple with the PrincipalTypes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AuditAggregationFilter) GetPrincipalTypesOk() ([]string, bool) {
+	if o == nil || IsNil(o.PrincipalTypes) {
+		return nil, false
+	}
+	return o.PrincipalTypes, true
+}
+
+// HasPrincipalTypes returns a boolean if a field has been set.
+func (o *AuditAggregationFilter) HasPrincipalTypes() bool {
+	if o != nil && !IsNil(o.PrincipalTypes) {
+		return true
+	}
+
+	return false
+}
+
+// SetPrincipalTypes gets a reference to the given []string and assigns it to the PrincipalTypes field.
+func (o *AuditAggregationFilter) SetPrincipalTypes(v []string) {
+	o.PrincipalTypes = v
+}
+
 // GetSuccess returns the Success field value if set, zero value otherwise.
 func (o *AuditAggregationFilter) GetSuccess() bool {
 	if o == nil || IsNil(o.Success) {
@@ -257,6 +291,9 @@ func (o AuditAggregationFilter) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Providers) {
 		toSerialize["providers"] = o.Providers
+	}
+	if !IsNil(o.PrincipalTypes) {
+		toSerialize["principalTypes"] = o.PrincipalTypes
 	}
 	if !IsNil(o.Success) {
 		toSerialize["success"] = o.Success

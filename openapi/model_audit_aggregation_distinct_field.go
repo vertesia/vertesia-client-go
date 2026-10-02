@@ -22,6 +22,8 @@ type AuditAggregationDistinctField string
 const (
 	AUDITAGGREGATIONDISTINCTFIELD_RESOURCE_ID              AuditAggregationDistinctField = "resource_id"
 	AUDITAGGREGATIONDISTINCTFIELD_REQUEST_ID               AuditAggregationDistinctField = "request_id"
+	AUDITAGGREGATIONDISTINCTFIELD_PRINCIPAL_ID             AuditAggregationDistinctField = "principal_id"
+	AUDITAGGREGATIONDISTINCTFIELD_ACTOR_ID                 AuditAggregationDistinctField = "actor_id"
 	AUDITAGGREGATIONDISTINCTFIELD_UNKNOWN_DEFAULT_OPEN_API AuditAggregationDistinctField = "unknown_default_open_api"
 )
 
@@ -29,6 +31,8 @@ const (
 var AllowedAuditAggregationDistinctFieldEnumValues = []AuditAggregationDistinctField{
 	"resource_id",
 	"request_id",
+	"principal_id",
+	"actor_id",
 	"unknown_default_open_api",
 }
 

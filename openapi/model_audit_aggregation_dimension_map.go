@@ -25,6 +25,8 @@ type AuditAggregationDimensionMap struct {
 	EventCategory       NullableString `json:"event_category,omitempty"`
 	Provider            NullableString `json:"provider,omitempty"`
 	ProjectId           NullableString `json:"project_id,omitempty"`
+	PrincipalId         NullableString `json:"principal_id,omitempty"`
+	ActorId             NullableString `json:"actor_id,omitempty"`
 	DetailsPipeline     NullableString `json:"details.pipeline,omitempty"`
 	DetailsVerdict      NullableString `json:"details.verdict,omitempty"`
 	DetailsWorkflowType NullableString `json:"details.workflow_type,omitempty"`
@@ -307,6 +309,92 @@ func (o *AuditAggregationDimensionMap) UnsetProjectId() {
 	o.ProjectId.Unset()
 }
 
+// GetPrincipalId returns the PrincipalId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *AuditAggregationDimensionMap) GetPrincipalId() string {
+	if o == nil || IsNil(o.PrincipalId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.PrincipalId.Get()
+}
+
+// GetPrincipalIdOk returns a tuple with the PrincipalId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *AuditAggregationDimensionMap) GetPrincipalIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.PrincipalId.Get(), o.PrincipalId.IsSet()
+}
+
+// HasPrincipalId returns a boolean if a field has been set.
+func (o *AuditAggregationDimensionMap) HasPrincipalId() bool {
+	if o != nil && o.PrincipalId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetPrincipalId gets a reference to the given NullableString and assigns it to the PrincipalId field.
+func (o *AuditAggregationDimensionMap) SetPrincipalId(v string) {
+	o.PrincipalId.Set(&v)
+}
+
+// SetPrincipalIdNil sets the value for PrincipalId to be an explicit nil
+func (o *AuditAggregationDimensionMap) SetPrincipalIdNil() {
+	o.PrincipalId.Set(nil)
+}
+
+// UnsetPrincipalId ensures that no value is present for PrincipalId, not even an explicit nil
+func (o *AuditAggregationDimensionMap) UnsetPrincipalId() {
+	o.PrincipalId.Unset()
+}
+
+// GetActorId returns the ActorId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *AuditAggregationDimensionMap) GetActorId() string {
+	if o == nil || IsNil(o.ActorId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.ActorId.Get()
+}
+
+// GetActorIdOk returns a tuple with the ActorId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *AuditAggregationDimensionMap) GetActorIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.ActorId.Get(), o.ActorId.IsSet()
+}
+
+// HasActorId returns a boolean if a field has been set.
+func (o *AuditAggregationDimensionMap) HasActorId() bool {
+	if o != nil && o.ActorId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetActorId gets a reference to the given NullableString and assigns it to the ActorId field.
+func (o *AuditAggregationDimensionMap) SetActorId(v string) {
+	o.ActorId.Set(&v)
+}
+
+// SetActorIdNil sets the value for ActorId to be an explicit nil
+func (o *AuditAggregationDimensionMap) SetActorIdNil() {
+	o.ActorId.Set(nil)
+}
+
+// UnsetActorId ensures that no value is present for ActorId, not even an explicit nil
+func (o *AuditAggregationDimensionMap) UnsetActorId() {
+	o.ActorId.Unset()
+}
+
 // GetDetailsPipeline returns the DetailsPipeline field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *AuditAggregationDimensionMap) GetDetailsPipeline() string {
 	if o == nil || IsNil(o.DetailsPipeline.Get()) {
@@ -549,6 +637,12 @@ func (o AuditAggregationDimensionMap) ToMap() (map[string]interface{}, error) {
 	}
 	if o.ProjectId.IsSet() {
 		toSerialize["project_id"] = o.ProjectId.Get()
+	}
+	if o.PrincipalId.IsSet() {
+		toSerialize["principal_id"] = o.PrincipalId.Get()
+	}
+	if o.ActorId.IsSet() {
+		toSerialize["actor_id"] = o.ActorId.Get()
 	}
 	if o.DetailsPipeline.IsSet() {
 		toSerialize["details.pipeline"] = o.DetailsPipeline.Get()

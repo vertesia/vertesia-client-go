@@ -26,6 +26,8 @@ const (
 	AUDITAGGREGATIONDIMENSION_EVENT_CATEGORY           AuditAggregationDimension = "event_category"
 	AUDITAGGREGATIONDIMENSION_PROVIDER                 AuditAggregationDimension = "provider"
 	AUDITAGGREGATIONDIMENSION_PROJECT_ID               AuditAggregationDimension = "project_id"
+	AUDITAGGREGATIONDIMENSION_PRINCIPAL_ID             AuditAggregationDimension = "principal_id"
+	AUDITAGGREGATIONDIMENSION_ACTOR_ID                 AuditAggregationDimension = "actor_id"
 	AUDITAGGREGATIONDIMENSION_DETAILS_PIPELINE         AuditAggregationDimension = "details.pipeline"
 	AUDITAGGREGATIONDIMENSION_DETAILS_VERDICT          AuditAggregationDimension = "details.verdict"
 	AUDITAGGREGATIONDIMENSION_DETAILS_WORKFLOW_TYPE    AuditAggregationDimension = "details.workflow_type"
@@ -42,6 +44,8 @@ var AllowedAuditAggregationDimensionEnumValues = []AuditAggregationDimension{
 	"event_category",
 	"provider",
 	"project_id",
+	"principal_id",
+	"actor_id",
 	"details.pipeline",
 	"details.verdict",
 	"details.workflow_type",
