@@ -17,6 +17,11 @@ def obj(properties, required):
     return {'type': 'object', 'properties': properties, 'required': required, 'additionalProperties': False}
 identity = {'operation_id': {'type': 'string'}}
 schemas = {
+    'ExperimentalClaimAgentAssetExtractionPayload': obj({'expected_run_id': {'type': 'string'}}, ['expected_run_id']),
+    'ExperimentalAgentAssetExtractionClaim': obj({'api_version': {'const': '=20260930'},
+        'subject_agent_run_id': {'type': 'string'}, 'operation_id': {'type': 'string'},
+        'workflow_id': {'type': 'string'}, 'run_id': {'type': 'string'}},
+        ['api_version', 'subject_agent_run_id', 'operation_id', 'workflow_id', 'run_id']),
     'ExperimentalExtractAgentAssetPayload': obj({'operation_id': {'type': 'string'},
         'transform': {'const': 'document_text/v1'}}, ['operation_id', 'transform']),
     'ExperimentalAgentAssetExtraction': {'oneOf': [ref('ExperimentalAgentAssetExtraction' + branch)
@@ -43,6 +48,8 @@ schemas = {
 }
 (root / 'spec/vertesia-openapi.json').write_text(json.dumps({'components': {'schemas': schemas}}))
 fields = {
+    'ExperimentalClaimAgentAssetExtractionPayload': 'ExpectedRunId string `json:"expected_run_id"`',
+    'ExperimentalAgentAssetExtractionClaim': 'ApiVersion string `json:"api_version"`; SubjectAgentRunId string `json:"subject_agent_run_id"`; OperationId string `json:"operation_id"`; WorkflowId string `json:"workflow_id"`; RunId string `json:"run_id"`',
     'ExperimentalExtractAgentAssetPayload': 'OperationId string `json:"operation_id"`; Transform string `json:"transform"`',
     'ExperimentalAgentAssetExtractionPending': 'OperationId string `json:"operation_id"`; Status string `json:"status"`',
     'ExperimentalAgentAssetExtractionAvailable': 'OperationId string `json:"operation_id"`; Status string `json:"status"`; Derivation ExperimentalAgentAssetDerivation `json:"derivation"`',
@@ -126,6 +133,37 @@ func TestExtractionClosure(t *testing.T) {
  }
  var request ExperimentalExtractAgentAssetPayload
  if err := json.Unmarshal([]byte(`{"operation_id":"one","transform":"document_text/v1"}`), &request); err != nil { t.Fatal(err) }
+ var claim ExperimentalAgentAssetExtractionClaim
+ claimBody := []byte(`{"api_version":"=20260930","subject_agent_run_id":"subject","operation_id":"one","workflow_id":"workflow","run_id":"actual"}`)
+ if err := json.Unmarshal(claimBody, &claim); err != nil { t.Fatal(err) }
+ encoded, err := json.Marshal(claim); if err != nil { t.Fatal(err) }
+ var beforeClaim, afterClaim map[string]any
+ if err := json.Unmarshal(claimBody, &beforeClaim); err != nil { t.Fatal(err) }
+ if err := json.Unmarshal(encoded, &afterClaim); err != nil { t.Fatal(err) }
+ if !reflect.DeepEqual(beforeClaim, afterClaim) { t.Fatal("claim roundtrip changed") }
+ for _, field := range []string{"api_version", "subject_agent_run_id", "operation_id", "workflow_id", "run_id"} {
+  for _, explicitNull := range []bool{false, true} {
+   invalid := map[string]any{}
+   for k, v := range beforeClaim { invalid[k] = v }
+   if explicitNull { invalid[field] = nil } else { delete(invalid, field) }
+   body, err := json.Marshal(invalid); if err != nil { t.Fatal(err) }
+   var dst ExperimentalAgentAssetExtractionClaim
+   if err := json.Unmarshal(body, &dst); err == nil { t.Fatalf("accepted claim %s", body) }
+  }
+ }
+ for _, body := range []string{
+  `{"api_version":"future","subject_agent_run_id":"subject","operation_id":"one","workflow_id":"workflow","run_id":"actual"}`,
+  `{"api_version":"=20260930","subject_agent_run_id":"subject","operation_id":"one","workflow_id":"workflow","run_id":"actual","credential":"forged"}`,
+ } {
+  var dst ExperimentalAgentAssetExtractionClaim
+  if err := json.Unmarshal([]byte(body), &dst); err == nil { t.Fatalf("accepted claim %s", body) }
+ }
+ var claimRequest ExperimentalClaimAgentAssetExtractionPayload
+ if err := json.Unmarshal([]byte(`{"expected_run_id":"actual"}`), &claimRequest); err != nil { t.Fatal(err) }
+ for _, body := range []string{`{}`, `{"expected_run_id":null}`, `{"expected_run_id":7}`, `{"expected_run_id":"actual","workflow_id":"forged"}`} {
+  var dst ExperimentalClaimAgentAssetExtractionPayload
+  if err := json.Unmarshal([]byte(body), &dst); err == nil { t.Fatalf("accepted claim request %s", body) }
+ }
  var legacy UnrelatedLegacyAsset
  if err := json.Unmarshal([]byte(`{"id":"old","future":1}`), &legacy); err != nil { t.Fatal(err) }
  if legacy.Id != "old" { t.Fatal("lost legacy field") }

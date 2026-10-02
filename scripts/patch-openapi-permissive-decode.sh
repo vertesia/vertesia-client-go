@@ -234,6 +234,8 @@ for type_name, schema in schemas.items():
         or type_name == 'ImportAgentRunConversationArchiveResponse'
         or type_name == 'ExperimentalExtractAgentAssetPayload'
         or type_name == 'ExperimentalAgentAssetExtraction'
+        or type_name == 'ExperimentalClaimAgentAssetExtractionPayload'
+        or type_name == 'ExperimentalAgentAssetExtractionClaim'
     ):
         continue
     visit_model(type_name, schema)
