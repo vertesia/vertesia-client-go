@@ -118,3 +118,6 @@ go vet ./...
 # Keep extraction endpoint roots covered by the same canonical recipe CI gate.
 bash "$repo_dir/scripts/test-patch-asset-extraction.sh"
 bash "$repo_dir/scripts/test-patch-generation-admission.sh"
+
+# The canonical execution result must reach its optional selected-child binding.
+bash "$repo_dir/scripts/test-patch-canonical-result.sh"

@@ -74,6 +74,7 @@ fi
 if [[ -f "$openapi_dir/../spec/vertesia-openapi.json" ]]; then
 python3 - "$openapi_dir" <<'PY'
 import json
+import math
 from pathlib import Path
 import re
 import sys
@@ -230,6 +231,7 @@ for type_name, schema in schemas.items():
         or type_name == 'ExperimentalAdmitAgentGenerationPayload'
         or type_name == 'ExperimentalCanonicalUserMessagePayload'
         or type_name == 'ExperimentalCanonicalToolResultsPayload'
+        or type_name == 'ExperimentalCanonicalInteractionExecutionResult'
         or type_name == 'AppendRunConversationProgramTurnPayload'
         or type_name == 'ImportAgentRunConversationArchivePayload'
         or type_name == 'ImportAgentRunConversationArchiveResponse'
@@ -508,6 +510,52 @@ for type_name, schema in visited_models.items():
 \t\tif !valid || value.Cmp(expected) != 0 {{ return fmt.Errorf("invalid canonical {type_name} constant {key}") }}
 \t}}
 ''')
+        scalar_type = prop.get('type')
+        if isinstance(scalar_type, list) and 'null' in scalar_type:
+            nonnull_types = set(scalar_type) - {'null'}
+            scalar_type = next(iter(nonnull_types)) if len(nonnull_types) == 1 else None
+        if scalar_type == 'string':
+            for keyword, comparison in (('minLength', '<'), ('maxLength', '>')):
+                bound = prop.get(keyword)
+                if bound is None:
+                    continue
+                if isinstance(bound, bool) or not isinstance(bound, int) or bound < 0:
+                    raise ValueError(f'invalid {keyword} for {type_name}.{key}')
+                imports.add('unicode/utf8')
+                checks.append(f'''\tif raw, present := canonicalFields[{literal}]; present && string(raw) != "null" {{
+\t\tvar value string
+\t\tif err := json.Unmarshal(raw, &value); err != nil {{ return err }}
+\t\tif utf8.RuneCountInString(value) {comparison} {bound} {{ return fmt.Errorf("invalid canonical {type_name} string length {key}") }}
+\t}}
+''')
+        if scalar_type in ('integer', 'number'):
+            imports.add('math/big')
+            checks.append(f'''\tif raw, present := canonicalFields[{literal}]; present && string(raw) != "null" {{
+\t\t// Decode with UseNumber before exact Rat arithmetic: quoted numbers are not JSON numbers.
+\t\tvar value json.Number
+\t\tvar numericValue interface{{}}
+\t\tdecoder := json.NewDecoder(strings.NewReader(string(raw)))
+\t\tdecoder.UseNumber()
+\t\tif err := decoder.Decode(&numericValue); err != nil {{ return err }}
+\t\tvalue, numeric := numericValue.(json.Number)
+\t\tif !numeric {{ return fmt.Errorf("invalid canonical {type_name} numeric type {key}") }}
+\t\tnumber, valid := new(big.Rat).SetString(string(value))
+\t\tif !valid || number == nil {{ return fmt.Errorf("invalid canonical {type_name} number {key}") }}
+''')
+            imports.add('strings')
+            if scalar_type == 'integer':
+                checks.append(f'''\t\tif number.Denom().Cmp(big.NewInt(1)) != 0 {{ return fmt.Errorf("invalid canonical {type_name} integer {key}") }}
+''')
+            for keyword, comparison in (('minimum', '<'), ('maximum', '>')):
+                bound = prop.get(keyword)
+                if bound is None:
+                    continue
+                if isinstance(bound, bool) or not isinstance(bound, (int, float)) or not math.isfinite(bound):
+                    raise ValueError(f'invalid {keyword} for {type_name}.{key}')
+                checks.append(f'''\t\tbound{keyword.title()}, _ := new(big.Rat).SetString({json.dumps(str(bound))})
+\t\tif number.Cmp(bound{keyword.title()}) {comparison} 0 {{ return fmt.Errorf("invalid canonical {type_name} numeric bound {key}") }}
+''')
+            checks.append('\t}\n')
         pattern = prop.get('pattern')
         if prop.get('type') == 'string' and isinstance(pattern, str):
             imports.add('regexp')
