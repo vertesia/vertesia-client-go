@@ -86,13 +86,36 @@ required_discriminator_models = set()
 required_json_value_models = []
 
 def go_filename(type_name):
-    filename = re.sub(r'(?<!^)(?=[A-Z])', '_', type_name)
-    return re.sub(r'(?<=[A-Za-z])(?=[0-9])', '_', filename).lower()
+    # Numeric component suffixes stay attached (V1), but generated inline branch indexes
+    # originate from `_oneOf_1` / `_anyOf_1` and retain their separator in filenames.
+    type_name = re.sub(r'(OneOf|AnyOf)([0-9]+)', r'\1_\2', type_name)
+    filename = re.sub(r'([A-Z]+)([A-Z][a-z])', r'\1_\2', type_name)
+    return re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', filename).lower()
 
 def register_discriminator(type_name, schema):
     discriminator = schema.get('discriminator')
     if not discriminator:
-        return
+        union = schema.get('oneOf', schema.get('anyOf'))
+        if not isinstance(union, list) or len(union) < 2:
+            return
+        if any(not isinstance(branch, dict) for branch in union):
+            raise ValueError(f'{type_name} has an invalid union branch')
+        resolved = [schemas.get(branch['$ref'].rsplit('/', 1)[-1], {}) if '$ref' in branch else branch for branch in union]
+        if any(not isinstance(branch, dict) for branch in resolved):
+            raise ValueError(f'{type_name} has an invalid union branch')
+        for field in resolved[0].get('required', []):
+            seen = set()
+            for branch in resolved:
+                prop = branch.get('properties', {}).get(field, {})
+                values = [prop['const']] if isinstance(prop.get('const'), str) else prop.get('enum')
+                if field not in branch.get('required', []) or not isinstance(values, list) or not values or any(not isinstance(v, str) or v in seen for v in values):
+                    break
+                seen.update(values)
+            else:
+                discriminator = {'propertyName': field}
+                break
+        if not discriminator:
+            return
     wire_field = discriminator.get('propertyName')
     if not isinstance(wire_field, str) or not wire_field:
         raise ValueError(f'{type_name} discriminator has no propertyName')
@@ -107,7 +130,7 @@ def register_discriminator(type_name, schema):
                 raise ValueError(f'{type_name} discriminator mapping is invalid')
             branches.append((value, ref.rsplit('/', 1)[-1]))
     else:
-        one_of = schema.get('oneOf')
+        one_of = schema.get('oneOf', schema.get('anyOf'))
         if not isinstance(one_of, list) or not one_of:
             raise ValueError(f'{type_name} discriminator has neither mapping nor oneOf branches')
         seen_values = set()
@@ -123,7 +146,8 @@ def register_discriminator(type_name, schema):
                 if not isinstance(branch_schema, dict):
                     raise ValueError(f'{type_name} oneOf branch {index} reference is missing')
             else:
-                branch_name = f'{type_name}OneOf{index if index else ""}'
+                suffix = 'OneOf' if 'oneOf' in schema else 'AnyOf'
+                branch_name = f'{type_name}{suffix}{index if index else ""}'
                 branch_schema = branch
             required = branch_schema.get('required')
             if not isinstance(required, list) or wire_field not in required:
@@ -142,7 +166,8 @@ def register_discriminator(type_name, schema):
                     raise ValueError(f'{type_name} discriminator value {value!r} is ambiguous')
                 seen_values.add(value)
                 branches.append((value, branch_name))
-    models[go_filename(type_name)] = (wire_field, branches)
+    models[go_filename(type_name)] = (type_name, wire_field, branches)
+    required_discriminator_models.add(go_filename(type_name))
 
 # Follow component references and generated inline object/array/union model names. Required
 # arbitrary JSON is not optional merely because its Go interface{} value represents null as nil.
@@ -158,6 +183,9 @@ def visit_model(type_name, schema):
     register_discriminator(type_name, schema)
     if schema.get('discriminator'):
         required_discriminator_models.add(go_filename(type_name))
+    additional = schema.get('additionalProperties')
+    if isinstance(additional, dict):
+        visit_property(f'{type_name}Value', additional)
     properties = schema.get('properties', {})
     required = schema.get('required', [])
     for wire_name, property_schema in properties.items():
@@ -166,8 +194,9 @@ def visit_model(type_name, schema):
             required_json_value_models.append((type_name, field_name, wire_name))
         suffix = ''.join(part[:1].upper() + part[1:] for part in re.split(r'[^A-Za-z0-9]+', wire_name))
         visit_property(f'{type_name}{suffix}', property_schema)
-    for index, branch in enumerate(schema.get('oneOf', [])):
-        visit_property(f'{type_name}OneOf{index if index else ""}', branch)
+    for keyword, suffix in [('oneOf', 'OneOf'), ('anyOf', 'AnyOf')]:
+        for index, branch in enumerate(schema.get(keyword, [])):
+            visit_property(f'{type_name}{suffix}{index if index else ""}', branch)
 
 def visit_property(type_name, schema):
     if not isinstance(schema, dict):
@@ -178,18 +207,24 @@ def visit_property(type_name, schema):
         referenced_schema = schemas.get(referenced_name)
         if isinstance(referenced_schema, dict):
             visit_model(referenced_name, referenced_schema)
+    elif isinstance(schema.get('additionalProperties'), dict):
+        visit_property(f'{type_name}Value', schema['additionalProperties'])
     elif schema.get('type') == 'array':
         visit_property(f'{type_name}Inner', schema.get('items'))
-    elif isinstance(schema.get('properties'), dict) or isinstance(schema.get('oneOf'), list):
+    elif isinstance(schema.get('properties'), dict) or isinstance(schema.get('oneOf'), list) or isinstance(schema.get('anyOf'), list):
         visit_model(type_name, schema)
 
 for type_name, schema in schemas.items():
     if not (
-        type_name.startswith('Conversation')
+        type_name in ('ConversationDocument', 'ConversationChange', 'ConversationContextChangeRequest', 'ConversationContextChangeProposal')
         or type_name == 'RunConversationResponse'
         or type_name == 'ExperimentalCanonicalInteractionInitialState'
         or type_name == 'ExperimentalCanonicalInteractionTurnSelection'
         or type_name == 'ExperimentalAgentConversationStreamEnvelope'
+        or type_name == 'ConversationStreamDraftBlock'
+        or type_name == 'ConversationStreamEvent'
+        or type_name == 'ExperimentalAgentConversationTranscriptPage'
+        or type_name == 'ExperimentalAgentConversationAcceptedOutputHistoryPage'
         or type_name == 'ExperimentalAgentConversationSourceDescriptor'
         or type_name == 'ExperimentalAgentRoutingControlReceipt'
         or type_name == 'ExperimentalCanonicalUserMessagePayload'
@@ -212,13 +247,12 @@ def replace_function(source, signature, replacement):
             if depth == 0: return source[:start] + replacement + source[end + 1:]
     raise ValueError(f'unclosed function {signature}')
 
-for filename, (wire_field, branches) in models.items():
+for filename, (type_name, wire_field, branches) in models.items():
     path = root / f'model_{filename}.go'
     if not path.exists():
         if filename in required_discriminator_models:
             raise ValueError(f'required discriminator model is missing: {filename}')
         continue
-    type_name = ''.join(part.title() for part in filename.split('_'))
     values_by_branch = {}
     for value, branch in branches:
         if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', branch):
@@ -341,6 +375,145 @@ for type_name in ('ExperimentalAgentRoutingControlChange', 'ExperimentalAgentRou
 \treturn nil
 }}'''
     path.write_text(replace_function(source, f'func (dst *{type_name}) UnmarshalJSON(data []byte) error {{', replacement))
+
+# A generated object/anyOf parent calls ToMap on referenced union children,
+# but Go Generator omits that hook on oneOfs. Use the union's own marshaler.
+for parent in visited_models.values():
+    for branch in parent.get('oneOf', parent.get('anyOf', [])):
+        ref = branch.get('$ref') if isinstance(branch, dict) else None
+        if not isinstance(ref, str):
+            continue
+        name = ref.rsplit('/', 1)[-1]
+        child = schemas.get(name, {})
+        if not isinstance(child.get('oneOf', child.get('anyOf')), list):
+            continue
+        path = root / f'model_{go_filename(name)}.go'
+        if not path.is_file():
+            continue
+        source = path.read_text()
+        if f'func (o {name}) ToMap()' not in source:
+            source += f"""
+func (o {name}) ToMap() (map[string]interface{{}}, error) {{
+    data, err := json.Marshal(o)
+    if err != nil {{ return nil, err }}
+    result := map[string]interface{{}}{{}}
+    err = json.Unmarshal(data, &result)
+    return result, err
+}}
+"""
+            path.write_text(source)
+
+# Reapply canonical closed-object constraints after the global forward-compatible
+# decoder patch. Only the exact named/reference/inline closure above is eligible.
+def resolved_property(schema):
+    ref = schema.get('$ref')
+    if isinstance(ref, str) and ref.startswith('#/components/schemas/'):
+        return schemas.get(ref.rsplit('/', 1)[-1], {})
+    return schema
+
+def allows_null(schema):
+    schema = resolved_property(schema)
+    return (not schema or schema.get('nullable') is True or schema.get('type') == 'null'
+            or isinstance(schema.get('type'), list) and 'null' in schema['type']
+            or any(allows_null(branch) for branch in schema.get('anyOf', schema.get('oneOf', []))))
+
+for type_name, schema in visited_models.items():
+    properties = schema.get('properties')
+    if not isinstance(properties, dict):
+        continue
+    path = root / f'model_{go_filename(type_name)}.go'
+    if not path.is_file():
+        continue
+    source = path.read_text()
+    marker = '// Validate canonical closed-object and scalar constraints from the source schema.'
+    if marker in source:
+        continue
+    checks = []
+    imports = set()
+    if schema.get('additionalProperties') is False:
+        keys = ', '.join(json.dumps(key) for key in properties)
+        allowed_case = f'case {keys}:\n' if keys else ''
+        checks.append(f'''\tfor key := range canonicalFields {{
+\t\tswitch key {{
+\t\t{allowed_case}
+\t\tdefault: return fmt.Errorf("unknown canonical {type_name} field %q", key)
+\t\t}}
+\t}}
+''')
+    for key in schema.get('required', []):
+        null_check = '' if allows_null(properties.get(key, {})) else ' || string(raw) == "null"'
+        checks.append(f'''\tif raw, present := canonicalFields[{json.dumps(key)}]; !present{null_check} {{
+\t\treturn fmt.Errorf("missing or null canonical {type_name} field {key}")
+\t}} else {{ _ = raw }}
+''')
+    for key, prop in properties.items():
+        if key not in schema.get('required', []) and not allows_null(prop):
+            checks.append(f'''\tif raw, present := canonicalFields[{json.dumps(key)}]; present && string(raw) == "null" {{
+\t\treturn fmt.Errorf("null canonical {type_name} field {key}")
+\t}}
+''')
+        prop = resolved_property(prop)
+        literal = json.dumps(key)
+        const = prop.get('const')
+        if isinstance(const, str):
+            checks.append(f'''\tif raw, present := canonicalFields[{literal}]; present {{
+\t\tvar value string
+\t\tif err := json.Unmarshal(raw, &value); err != nil || value != {json.dumps(const)} {{
+\t\t\treturn fmt.Errorf("invalid canonical {type_name} constant {key}")
+\t\t}}
+\t}}
+''')
+        elif isinstance(const, bool):
+            checks.append(f'''\tif raw, present := canonicalFields[{literal}]; present {{
+\t\tvar value bool
+\t\tif string(raw) == "null" {{ return fmt.Errorf("null canonical constant {key}") }}
+\t\tif err := json.Unmarshal(raw, &value); err != nil || value != {str(const).lower()} {{
+\t\t\treturn fmt.Errorf("invalid canonical {type_name} constant {key}")
+\t\t}}
+\t}}
+''')
+        elif isinstance(const, (int, float)):
+            imports.add('math/big')
+            checks.append(f'''\tif raw, present := canonicalFields[{literal}]; present {{
+\t\t// Rat comparison keeps JSON numeric equality exact, including 1.0 and 1e0.
+\t\tvalue, valid := new(big.Rat).SetString(string(raw))
+\t\texpected, _ := new(big.Rat).SetString({json.dumps(str(const))})
+\t\tif !valid || value.Cmp(expected) != 0 {{ return fmt.Errorf("invalid canonical {type_name} constant {key}") }}
+\t}}
+''')
+        pattern = prop.get('pattern')
+        if prop.get('type') == 'string' and isinstance(pattern, str):
+            imports.add('regexp')
+            checks.append(f'''\tif raw, present := canonicalFields[{literal}]; present && string(raw) != "null" {{
+\t\tvar value string
+\t\tif err := json.Unmarshal(raw, &value); err != nil {{ return err }}
+\t\tmatched, err := regexp.MatchString({json.dumps(pattern)}, value)
+\t\tif err != nil || !matched {{ return fmt.Errorf("invalid canonical {type_name} string {key}") }}
+\t}}
+''')
+    if not checks:
+        continue
+    signature = re.search(rf'func \(o \*{re.escape(type_name)}\) UnmarshalJSON\(data \[\]byte\)(?: \(err error\)| error) \{{', source)
+    if not signature:
+        # Optional-only object models have no generated decoder. A local alias
+        # prevents recursion while still invoking nested model decoders.
+        source += f"\nfunc (o *{type_name}) UnmarshalJSON(data []byte) error {{\n\ttype canonicalDecode {type_name}\n\treturn json.Unmarshal(data, (*canonicalDecode)(o))\n}}\n"
+        signature = re.search(rf'func \(o \*{re.escape(type_name)}\) UnmarshalJSON\(data \[\]byte\) error \{{', source)
+    imports.update(('encoding/json', 'fmt'))
+    validation = f'''\n\t{marker}
+\tvar canonicalFields map[string]json.RawMessage
+\tif err := json.Unmarshal(data, &canonicalFields); err != nil {{ return err }}
+\tif canonicalFields == nil {{ return fmt.Errorf("canonical {type_name} must be an object") }}
+{''.join(checks)}'''
+    source = source[:signature.end()] + validation + source[signature.end():]
+    for name in sorted(imports):
+        if f'"{name}"' not in source:
+            if 'import (' in source:
+                source = source.replace('import (', f'import (\n\t"{name}"', 1)
+            else:
+                package = re.search(r'^package [A-Za-z0-9_]+$', source, re.M)
+                source = source[:package.end()] + f'\nimport "{name}"\n' + source[package.end():]
+    path.write_text(source)
 
 for type_name, field_name, wire_name in required_json_value_models:
     filename = go_filename(type_name)
