@@ -280,6 +280,7 @@
           "document",
           "collection",
           "agent_run",
+          "shared_content",
           "task"
         ]
       },
@@ -834,6 +835,28 @@
       "AgentBudgetConfiguration": {
         "type": "object",
         "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "token",
+              "dollar"
+            ],
+            "description": "Run budget mode. An omitted mode preserves weighted-token budgeting."
+          },
+          "limit_usd": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199.25474099,
+            "description": "Soft USD allowance for priced model calls; dollar mode also requires limit_tokens for unpriced calls."
+          },
+          "reminder_at_remaining_fractions": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "exclusiveMaximum": 1
+            }
+          },
           "limit_tokens": {
             "type": "number",
             "description": "Weighted token budget shared by the run and every subagent workstream it launches. When the run and its workstreams together use this many weighted tokens, the agent gets one final turn without tools to summarize its work, and the run ends. This is a soft limit, not a spending cap: workstreams running concurrently and the final summary turns can go over it. Unset or <=0 means no budget."
@@ -2667,20 +2690,39 @@
         }
       },
       "AllocateAgentRunBudgetPayload": {
-        "type": "object",
-        "properties": {
-          "additional_tokens": {
-            "type": "integer",
-            "exclusiveMinimum": 0,
-            "maximum": 9007199254740991,
-            "description": "Weighted tokens to add. They are added to the limit the run was granted, so usage past that limit is paid out of them."
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "additional_tokens": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991,
+                "description": "Weighted tokens to add to the run allowance."
+              }
+            },
+            "required": [
+              "additional_tokens"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "additional_usd": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199.25474099,
+                "description": "USD to add to the dollar allowance."
+              }
+            },
+            "required": [
+              "additional_usd"
+            ],
+            "additionalProperties": false
           }
-        },
-        "required": [
-          "additional_tokens"
         ],
-        "additionalProperties": false,
-        "description": "Budget to add to a run paused because its token budget ran out. The run resumes from where it stopped."
+        "description": "Add exactly one allowance: weighted tokens or USD."
       },
       "AlterTableOperation": {
         "oneOf": [
@@ -2877,6 +2919,14 @@
               "xhigh",
               "max"
             ]
+          },
+          "thinking_mode": {
+            "type": "string",
+            "enum": [
+              "adaptive",
+              "between_tools"
+            ],
+            "description": "Thinking mode override. Sonnet 5.5 supports between_tools at low, medium, or high effort. It omits display and budget fields; keep effort fixed during the conversation. When unset, existing model-specific thinking behavior is preserved."
           },
           "thinking_budget_tokens": {
             "type": "number"
@@ -5983,6 +6033,8 @@
           "event_category",
           "provider",
           "project_id",
+          "principal_id",
+          "actor_id",
           "details.pipeline",
           "details.verdict",
           "details.workflow_type",
@@ -6053,6 +6105,26 @@
               }
             ]
           },
+          "principal_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "actor_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "details.pipeline": {
             "anyOf": [
               {
@@ -6110,7 +6182,9 @@
         "type": "string",
         "enum": [
           "resource_id",
-          "request_id"
+          "request_id",
+          "principal_id",
+          "actor_id"
         ]
       },
       "AuditAggregationFilter": {
@@ -6139,6 +6213,13 @@
             "items": {
               "type": "string"
             }
+          },
+          "principalTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Restrict events to top-level actor categories such as user or apikey."
           },
           "success": {
             "type": "boolean"
@@ -7046,6 +7127,14 @@
           "top_k": {
             "type": "number"
           },
+          "thinking_mode": {
+            "type": "string",
+            "enum": [
+              "adaptive",
+              "between_tools"
+            ],
+            "description": "Thinking mode override. Sonnet 5.5 supports between_tools at low, medium, or high effort. It omits display and budget fields; keep effort fixed during the conversation. When unset, existing model-specific thinking behavior is preserved."
+          },
           "thinking_budget_tokens": {
             "type": "number"
           },
@@ -7277,6 +7366,14 @@
               "xhigh",
               "max"
             ]
+          },
+          "thinking_mode": {
+            "type": "string",
+            "enum": [
+              "adaptive",
+              "between_tools"
+            ],
+            "description": "Thinking mode override. Sonnet 5.5 supports between_tools at low, medium, or high effort. It omits display and budget fields; keep effort fixed during the conversation. When unset, existing model-specific thinking behavior is preserved."
           },
           "thinking_budget_tokens": {
             "type": "number"
@@ -8233,6 +8330,14 @@
               "type": "string"
             },
             "description": "Compartments — propagated to member documents (union across collections)"
+          },
+          "shared": {
+            "type": "boolean",
+            "description": "Effective shared state: true iff the collection is a member of an effectively-shared parent collection (inherited; sync-managed). Combine with shared_root for full readability."
+          },
+          "shared_root": {
+            "type": "boolean",
+            "description": "True iff the collection was explicitly shared via the API (a root of the project shared space). Never set by the sync."
           },
           "shared_properties": {
             "type": "array",
@@ -9489,6 +9594,14 @@
             },
             "description": "Compartments — set directly or inherited from collections (union across collections)."
           },
+          "shared": {
+            "type": "boolean",
+            "description": "Effective shared state: true iff the document is a member of an effectively-shared collection (inherited; sync-managed). Combine with shared_root for full readability."
+          },
+          "shared_root": {
+            "type": "boolean",
+            "description": "True iff the document was explicitly shared via the API (a root of the project shared space). Never set by the sync."
+          },
           "inherited_properties": {
             "type": "array",
             "items": {
@@ -9909,6 +10022,12 @@
             "items": {
               "type": "string"
             }
+          },
+          "shared": {
+            "type": "boolean"
+          },
+          "shared_root": {
+            "type": "boolean"
           },
           "inherited_properties": {
             "type": "array",
@@ -12057,6 +12176,10 @@
             },
             "description": "Compartments for member documents"
           },
+          "shared_root": {
+            "type": "boolean",
+            "description": "Explicitly share this collection as a root of the project shared space (listable/readable by non-members via matching shared-content ABAC rules). This is the explicit API share flag — the sync never sets it."
+          },
           "name": {
             "type": "string",
             "description": "Name of the collection"
@@ -12109,6 +12232,10 @@
               "type": "string"
             },
             "description": "Compartments — set directly or inherited from collections (union across collections)."
+          },
+          "shared_root": {
+            "type": "boolean",
+            "description": "Explicitly share this document as a root of the project shared space (readable by non-members via matching shared-content ABAC rules). This is the explicit API share flag — the sync never sets it."
           },
           "inherited_properties": {
             "type": "array",
@@ -18058,9 +18185,6 @@
       "ExecutionEnvironmentSettings": {
         "type": "object",
         "properties": {
-          "bucket_access_principal": {
-            "type": "string"
-          },
           "default_headers": {
             "$ref": "#/components/schemas/StringValueMap",
             "description": "Custom HTTP headers sent by OpenAI-compatible environments."
@@ -20944,6 +21068,17 @@
                 "type": "null"
               }
             ]
+          },
+          "budget": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentBudgetConfiguration"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Project-scoped agent budget override. Null restores the code-defined or project default; omission preserves the saved budget."
           },
           "id": {
             "type": "string",
@@ -24686,13 +24821,13 @@
             "const": "openai-gpt-image"
           },
           "size": {
-            "type": "string",
-            "enum": [
-              "1024x1024",
-              "1024x1536",
-              "1536x1024",
-              "auto"
-            ]
+            "type": "string"
+          },
+          "width": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
           },
           "image_quality": {
             "type": "string",
@@ -24700,6 +24835,8 @@
               "low",
               "medium",
               "high",
+              "xhigh",
+              "max",
               "auto"
             ]
           },
@@ -24718,8 +24855,123 @@
               "webp",
               "jpeg"
             ]
+          },
+          "n": {
+            "type": "number"
+          },
+          "output_compression": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "moderation": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "low"
+            ]
+          },
+          "input_fidelity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "high"
+            ]
+          },
+          "partial_images": {
+            "type": "number"
           }
         },
+        "additionalProperties": false
+      },
+      "OpenAiImageGenerationMask": {
+        "type": "object",
+        "properties": {
+          "file_id": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OpenAiImageGenerationOptions": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "force": {
+            "type": "boolean"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "generate",
+              "edit"
+            ]
+          },
+          "size": {
+            "type": "string"
+          },
+          "quality": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max"
+            ]
+          },
+          "background": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "opaque",
+              "transparent"
+            ]
+          },
+          "output_format": {
+            "type": "string",
+            "enum": [
+              "png",
+              "jpeg",
+              "webp"
+            ]
+          },
+          "output_compression": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "moderation": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "low"
+            ]
+          },
+          "input_fidelity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "high"
+            ]
+          },
+          "partial_images": {
+            "type": "number"
+          },
+          "input_image_mask": {
+            "$ref": "#/components/schemas/OpenAiImageGenerationMask"
+          }
+        },
+        "required": [
+          "model"
+        ],
         "additionalProperties": false
       },
       "OpenAiSpeechOptions": {
@@ -24761,6 +25013,9 @@
           "_option_id": {
             "type": "string",
             "const": "openai-text"
+          },
+          "image_generation": {
+            "$ref": "#/components/schemas/OpenAiImageGenerationOptions"
           },
           "max_tokens": {
             "type": "number"
@@ -24828,6 +25083,9 @@
           "_option_id": {
             "type": "string",
             "const": "openai-thinking"
+          },
+          "image_generation": {
+            "$ref": "#/components/schemas/OpenAiImageGenerationOptions"
           },
           "max_tokens": {
             "type": "number"
@@ -25729,6 +25987,38 @@
       "ProcessBudgetState": {
         "type": "object",
         "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "token",
+              "dollar"
+            ],
+            "description": "Absent on historical token-only status."
+          },
+          "limit_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "reported_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "estimated_usd": {
+            "type": "number",
+            "minimum": 0
+          },
+          "accounting_status": {
+            "type": "string",
+            "enum": [
+              "current",
+              "incomplete"
+            ]
+          },
+          "unmeasured_calls": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
           "limit_tokens": {
             "type": "number"
           },
@@ -26312,7 +26602,7 @@
           },
           "budget": {
             "$ref": "#/components/schemas/ProcessBudgetState",
-            "description": "Token budget of the run, present when the run has one."
+            "description": "Run budget status, including dollar consumption when configured."
           }
         },
         "required": [
@@ -28046,6 +28336,14 @@
               "type": "string"
             },
             "description": "Compartments — set directly or inherited from collections (union across collections)."
+          },
+          "shared": {
+            "type": "boolean",
+            "description": "Effective shared state: true iff the document is a member of an effectively-shared collection (inherited; sync-managed). Combine with shared_root for full readability."
+          },
+          "shared_root": {
+            "type": "boolean",
+            "description": "True iff the document was explicitly shared via the API (a root of the project shared space). Never set by the sync."
           },
           "inherited_properties": {
             "type": "array",
@@ -30073,6 +30371,7 @@
           "system",
           "content",
           "agent_runs",
+          "shared_content",
           "tasks"
         ],
         "description": "Logical grouping of roles by the service area that owns them. One domain may declare roles applicable to multiple scopes (e.g. the `content` domain owns roles applicable to both `document` and `collection` scopes, while `agent_runs` owns the `agent_run` scope). The `system` domain owns the built-in foundational roles (currently exposed as `SystemRoles`) — registered first so domain partitions cannot shadow them."
@@ -30175,6 +30474,30 @@
         "items": {
           "$ref": "#/components/schemas/RunAnalyticsResult"
         }
+      },
+      "RunBudgetCapability": {
+        "type": "object",
+        "properties": {
+          "supported": {
+            "type": "boolean"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "provider",
+              "estimate",
+              "unavailable"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "supported",
+          "source"
+        ],
+        "additionalProperties": false
       },
       "RunCreatePayload": {
         "type": "object",
@@ -33162,6 +33485,10 @@
             },
             "description": "Compartments for member documents"
           },
+          "shared_root": {
+            "type": "boolean",
+            "description": "Explicitly share this collection as a root of the project shared space (listable/readable by non-members via matching shared-content ABAC rules). This is the explicit API share flag — the sync never sets it."
+          },
           "name": {
             "type": "string",
             "description": "Name of the collection"
@@ -33210,6 +33537,10 @@
               "type": "string"
             },
             "description": "Compartments — set directly or inherited from collections (union across collections)."
+          },
+          "shared_root": {
+            "type": "boolean",
+            "description": "Explicitly share this document as a root of the project shared space (readable by non-members via matching shared-content ABAC rules). This is the explicit API share flag — the sync never sets it."
           },
           "inherited_properties": {
             "type": "array",
@@ -33702,6 +34033,17 @@
                 "type": "null"
               }
             ]
+          },
+          "budget": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AgentBudgetConfiguration"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Project-scoped agent budget override. Null restores the code-defined or project default; omission preserves the saved budget."
           }
         },
         "required": [
@@ -35057,6 +35399,14 @@
               "xhigh",
               "max"
             ]
+          },
+          "thinking_mode": {
+            "type": "string",
+            "enum": [
+              "adaptive",
+              "between_tools"
+            ],
+            "description": "Thinking mode override. Sonnet 5.5 supports between_tools at low, medium, or high effort. It omits display and budget fields; keep effort fixed during the conversation. When unset, existing model-specific thinking behavior is preserved."
           },
           "thinking_budget_tokens": {
             "type": "number"
@@ -41792,6 +42142,128 @@
               }
             }
           }
+        }
+      },
+      "parameters": [
+        {
+          "name": "x-api-version",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "example": "20260803"
+          },
+          "description": "Required Vertesia API version header. Use `20260803` for the current stable API shape.",
+          "x-vertesia-global-header": true
+        }
+      ]
+    },
+    "/environments/{envId}/run-budget-capability": {
+      "get": {
+        "operationId": "GetRunBudgetCapability",
+        "tags": [
+          "Environments"
+        ],
+        "summary": "Check run budget pricing availability for a selected model",
+        "description": "**Required permissions:** `account:member`",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "OAuth2": [
+              "account:member"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "envId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "check_model",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "False checks only whether estimates are enabled, without consulting model prices."
+            },
+            "description": "False checks only whether estimates are enabled, without consulting model prices."
+          },
+          {
+            "name": "model",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "service_tier",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pricing availability; no billing access required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunBudgetCapability"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Internal Server Error",
+                  "status": 500,
+                  "message": "Internal server error."
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Bad Request",
+                  "status": 400,
+                  "message": "Request validation failed."
+                }
+              }
+            }
+          }
+        },
+        "x-vertesia-permissions": [
+          "account:member"
+        ],
+        "x-vertesia-source": {
+          "file": "../../apps/studio-server/src/api/environments.ts",
+          "className": "EnvironmentResource",
+          "methodName": "runBudgetCapability"
         }
       },
       "parameters": [
@@ -72224,6 +72696,9 @@
               }
             }
           },
+          "409": {
+            "description": "A content type with this name already exists in the project."
+          },
           "500": {
             "description": "Internal server error.",
             "content": {
@@ -72503,7 +72978,7 @@
             }
           },
           "409": {
-            "description": "The content type was changed after the caller read it."
+            "description": "The content type changed after the caller read it, or its new name is already taken."
           },
           "500": {
             "description": "Internal server error.",

@@ -19,15 +19,16 @@ var _ MappedNullable = &OpenAiThinkingOptions{}
 
 // OpenAiThinkingOptions struct for OpenAiThinkingOptions
 type OpenAiThinkingOptions struct {
-	OptionId         *string          `json:"_option_id,omitempty"`
-	MaxTokens        *float32         `json:"max_tokens,omitempty"`
-	ToolChoice       *string          `json:"tool_choice,omitempty"`
-	StopSequence     []string         `json:"stop_sequence,omitempty"`
-	Effort           *ReasoningEffort `json:"effort,omitempty"`
-	ReasoningEffort  *ReasoningEffort `json:"reasoning_effort,omitempty"`
-	ReasoningContext *string          `json:"reasoning_context,omitempty"`
-	ImageDetail      *string          `json:"image_detail,omitempty"`
-	IncludeThoughts  *bool            `json:"include_thoughts,omitempty"`
+	OptionId         *string                       `json:"_option_id,omitempty"`
+	ImageGeneration  *OpenAiImageGenerationOptions `json:"image_generation,omitempty"`
+	MaxTokens        *float32                      `json:"max_tokens,omitempty"`
+	ToolChoice       *string                       `json:"tool_choice,omitempty"`
+	StopSequence     []string                      `json:"stop_sequence,omitempty"`
+	Effort           *ReasoningEffort              `json:"effort,omitempty"`
+	ReasoningEffort  *ReasoningEffort              `json:"reasoning_effort,omitempty"`
+	ReasoningContext *string                       `json:"reasoning_context,omitempty"`
+	ImageDetail      *string                       `json:"image_detail,omitempty"`
+	IncludeThoughts  *bool                         `json:"include_thoughts,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
 	ServiceTier *string `json:"service_tier,omitempty"`
 	// Additional provider-specific fields merged into the OpenAI-compatible request body.
@@ -84,6 +85,38 @@ func (o *OpenAiThinkingOptions) HasOptionId() bool {
 // SetOptionId gets a reference to the given string and assigns it to the OptionId field.
 func (o *OpenAiThinkingOptions) SetOptionId(v string) {
 	o.OptionId = &v
+}
+
+// GetImageGeneration returns the ImageGeneration field value if set, zero value otherwise.
+func (o *OpenAiThinkingOptions) GetImageGeneration() OpenAiImageGenerationOptions {
+	if o == nil || IsNil(o.ImageGeneration) {
+		var ret OpenAiImageGenerationOptions
+		return ret
+	}
+	return *o.ImageGeneration
+}
+
+// GetImageGenerationOk returns a tuple with the ImageGeneration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiThinkingOptions) GetImageGenerationOk() (*OpenAiImageGenerationOptions, bool) {
+	if o == nil || IsNil(o.ImageGeneration) {
+		return nil, false
+	}
+	return o.ImageGeneration, true
+}
+
+// HasImageGeneration returns a boolean if a field has been set.
+func (o *OpenAiThinkingOptions) HasImageGeneration() bool {
+	if o != nil && !IsNil(o.ImageGeneration) {
+		return true
+	}
+
+	return false
+}
+
+// SetImageGeneration gets a reference to the given OpenAiImageGenerationOptions and assigns it to the ImageGeneration field.
+func (o *OpenAiThinkingOptions) SetImageGeneration(v OpenAiImageGenerationOptions) {
+	o.ImageGeneration = &v
 }
 
 // GetMaxTokens returns the MaxTokens field value if set, zero value otherwise.
@@ -419,6 +452,9 @@ func (o OpenAiThinkingOptions) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.OptionId) {
 		toSerialize["_option_id"] = o.OptionId
 	}
+	if !IsNil(o.ImageGeneration) {
+		toSerialize["image_generation"] = o.ImageGeneration
+	}
 	if !IsNil(o.MaxTokens) {
 		toSerialize["max_tokens"] = o.MaxTokens
 	}
@@ -451,7 +487,7 @@ func (o OpenAiThinkingOptions) ToMap() (map[string]interface{}, error) {
 	}
 
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -520,7 +556,7 @@ func (o *OpenAiThinkingOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
 			delete(extra, key)
 		}
 	}

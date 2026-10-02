@@ -22,6 +22,8 @@ var _ MappedNullable = &UpdateInteractionConfigurationPayload{}
 type UpdateInteractionConfigurationPayload struct {
 	// MongoDB ObjectId of the inference profile.
 	InferenceProfile NullableString `json:"inference_profile" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	// Project-scoped agent budget override. Null restores the code-defined or project default; omission preserves the saved budget.
+	Budget NullableAgentBudgetConfiguration `json:"budget,omitempty"`
 }
 
 type _UpdateInteractionConfigurationPayload UpdateInteractionConfigurationPayload
@@ -70,6 +72,49 @@ func (o *UpdateInteractionConfigurationPayload) SetInferenceProfile(v string) {
 	o.InferenceProfile.Set(&v)
 }
 
+// GetBudget returns the Budget field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *UpdateInteractionConfigurationPayload) GetBudget() AgentBudgetConfiguration {
+	if o == nil || IsNil(o.Budget.Get()) {
+		var ret AgentBudgetConfiguration
+		return ret
+	}
+	return *o.Budget.Get()
+}
+
+// GetBudgetOk returns a tuple with the Budget field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *UpdateInteractionConfigurationPayload) GetBudgetOk() (*AgentBudgetConfiguration, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Budget.Get(), o.Budget.IsSet()
+}
+
+// HasBudget returns a boolean if a field has been set.
+func (o *UpdateInteractionConfigurationPayload) HasBudget() bool {
+	if o != nil && o.Budget.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetBudget gets a reference to the given NullableAgentBudgetConfiguration and assigns it to the Budget field.
+func (o *UpdateInteractionConfigurationPayload) SetBudget(v AgentBudgetConfiguration) {
+	o.Budget.Set(&v)
+}
+
+// SetBudgetNil sets the value for Budget to be an explicit nil
+func (o *UpdateInteractionConfigurationPayload) SetBudgetNil() {
+	o.Budget.Set(nil)
+}
+
+// UnsetBudget ensures that no value is present for Budget, not even an explicit nil
+func (o *UpdateInteractionConfigurationPayload) UnsetBudget() {
+	o.Budget.Unset()
+}
+
 func (o UpdateInteractionConfigurationPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -81,6 +126,9 @@ func (o UpdateInteractionConfigurationPayload) MarshalJSON() ([]byte, error) {
 func (o UpdateInteractionConfigurationPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["inference_profile"] = o.InferenceProfile.Get()
+	if o.Budget.IsSet() {
+		toSerialize["budget"] = o.Budget.Get()
+	}
 	return toSerialize, nil
 }
 

@@ -19,12 +19,14 @@ var _ MappedNullable = &BedrockClaudeOptions{}
 
 // BedrockClaudeOptions struct for BedrockClaudeOptions
 type BedrockClaudeOptions struct {
-	OptionId             *string  `json:"_option_id,omitempty"`
-	MaxTokens            *float32 `json:"max_tokens,omitempty"`
-	Temperature          *float32 `json:"temperature,omitempty"`
-	TopP                 *float32 `json:"top_p,omitempty"`
-	StopSequence         []string `json:"stop_sequence,omitempty"`
-	TopK                 *float32 `json:"top_k,omitempty"`
+	OptionId     *string  `json:"_option_id,omitempty"`
+	MaxTokens    *float32 `json:"max_tokens,omitempty"`
+	Temperature  *float32 `json:"temperature,omitempty"`
+	TopP         *float32 `json:"top_p,omitempty"`
+	StopSequence []string `json:"stop_sequence,omitempty"`
+	TopK         *float32 `json:"top_k,omitempty"`
+	// Thinking mode override. Sonnet 5.5 supports between_tools at low, medium, or high effort. It omits display and budget fields; keep effort fixed during the conversation. When unset, existing model-specific thinking behavior is preserved.
+	ThinkingMode         *string  `json:"thinking_mode,omitempty"`
 	ThinkingBudgetTokens *float32 `json:"thinking_budget_tokens,omitempty"`
 	IncludeThoughts      *bool    `json:"include_thoughts,omitempty"`
 	Effort               *string  `json:"effort,omitempty"`
@@ -245,6 +247,38 @@ func (o *BedrockClaudeOptions) SetTopK(v float32) {
 	o.TopK = &v
 }
 
+// GetThinkingMode returns the ThinkingMode field value if set, zero value otherwise.
+func (o *BedrockClaudeOptions) GetThinkingMode() string {
+	if o == nil || IsNil(o.ThinkingMode) {
+		var ret string
+		return ret
+	}
+	return *o.ThinkingMode
+}
+
+// GetThinkingModeOk returns a tuple with the ThinkingMode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BedrockClaudeOptions) GetThinkingModeOk() (*string, bool) {
+	if o == nil || IsNil(o.ThinkingMode) {
+		return nil, false
+	}
+	return o.ThinkingMode, true
+}
+
+// HasThinkingMode returns a boolean if a field has been set.
+func (o *BedrockClaudeOptions) HasThinkingMode() bool {
+	if o != nil && !IsNil(o.ThinkingMode) {
+		return true
+	}
+
+	return false
+}
+
+// SetThinkingMode gets a reference to the given string and assigns it to the ThinkingMode field.
+func (o *BedrockClaudeOptions) SetThinkingMode(v string) {
+	o.ThinkingMode = &v
+}
+
 // GetThinkingBudgetTokens returns the ThinkingBudgetTokens field value if set, zero value otherwise.
 func (o *BedrockClaudeOptions) GetThinkingBudgetTokens() float32 {
 	if o == nil || IsNil(o.ThinkingBudgetTokens) {
@@ -449,7 +483,7 @@ func (o BedrockClaudeOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "top_k", "thinking_budget_tokens", "include_thoughts", "effort", "cache_enabled", "cache_ttl", "service_tier"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "top_k", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "effort", "cache_enabled", "cache_ttl", "service_tier"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -471,6 +505,9 @@ func (o BedrockClaudeOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.TopK) {
 		toSerialize["top_k"] = o.TopK
+	}
+	if !IsNil(o.ThinkingMode) {
+		toSerialize["thinking_mode"] = o.ThinkingMode
 	}
 	if !IsNil(o.ThinkingBudgetTokens) {
 		toSerialize["thinking_budget_tokens"] = o.ThinkingBudgetTokens
@@ -545,7 +582,7 @@ func (o *BedrockClaudeOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "top_k", "thinking_budget_tokens", "include_thoughts", "effort", "cache_enabled", "cache_ttl", "service_tier"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "top_k", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "effort", "cache_enabled", "cache_ttl", "service_tier"}) {
 			delete(extra, key)
 		}
 	}

@@ -60,6 +60,8 @@ type ContentObjectItemApiResponse struct {
 	Security             map[string][]string                             `json:"security,omitempty"`
 	Sensitivity          NullableFloat32                                 `json:"sensitivity,omitempty"`
 	Compartments         []string                                        `json:"compartments,omitempty"`
+	Shared               *bool                                           `json:"shared,omitempty"`
+	SharedRoot           *bool                                           `json:"shared_root,omitempty"`
 	InheritedProperties  []InheritedPropertyMetadata                     `json:"inherited_properties,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
@@ -1050,6 +1052,70 @@ func (o *ContentObjectItemApiResponse) SetCompartments(v []string) {
 	o.Compartments = v
 }
 
+// GetShared returns the Shared field value if set, zero value otherwise.
+func (o *ContentObjectItemApiResponse) GetShared() bool {
+	if o == nil || IsNil(o.Shared) {
+		var ret bool
+		return ret
+	}
+	return *o.Shared
+}
+
+// GetSharedOk returns a tuple with the Shared field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectItemApiResponse) GetSharedOk() (*bool, bool) {
+	if o == nil || IsNil(o.Shared) {
+		return nil, false
+	}
+	return o.Shared, true
+}
+
+// HasShared returns a boolean if a field has been set.
+func (o *ContentObjectItemApiResponse) HasShared() bool {
+	if o != nil && !IsNil(o.Shared) {
+		return true
+	}
+
+	return false
+}
+
+// SetShared gets a reference to the given bool and assigns it to the Shared field.
+func (o *ContentObjectItemApiResponse) SetShared(v bool) {
+	o.Shared = &v
+}
+
+// GetSharedRoot returns the SharedRoot field value if set, zero value otherwise.
+func (o *ContentObjectItemApiResponse) GetSharedRoot() bool {
+	if o == nil || IsNil(o.SharedRoot) {
+		var ret bool
+		return ret
+	}
+	return *o.SharedRoot
+}
+
+// GetSharedRootOk returns a tuple with the SharedRoot field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentObjectItemApiResponse) GetSharedRootOk() (*bool, bool) {
+	if o == nil || IsNil(o.SharedRoot) {
+		return nil, false
+	}
+	return o.SharedRoot, true
+}
+
+// HasSharedRoot returns a boolean if a field has been set.
+func (o *ContentObjectItemApiResponse) HasSharedRoot() bool {
+	if o != nil && !IsNil(o.SharedRoot) {
+		return true
+	}
+
+	return false
+}
+
+// SetSharedRoot gets a reference to the given bool and assigns it to the SharedRoot field.
+func (o *ContentObjectItemApiResponse) SetSharedRoot(v bool) {
+	o.SharedRoot = &v
+}
+
 // GetInheritedProperties returns the InheritedProperties field value if set, zero value otherwise.
 func (o *ContentObjectItemApiResponse) GetInheritedProperties() []InheritedPropertyMetadata {
 	if o == nil || IsNil(o.InheritedProperties) {
@@ -1168,6 +1234,12 @@ func (o ContentObjectItemApiResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Compartments) {
 		toSerialize["compartments"] = o.Compartments
 	}
+	if !IsNil(o.Shared) {
+		toSerialize["shared"] = o.Shared
+	}
+	if !IsNil(o.SharedRoot) {
+		toSerialize["shared_root"] = o.SharedRoot
+	}
 	if !IsNil(o.InheritedProperties) {
 		toSerialize["inherited_properties"] = o.InheritedProperties
 	}
@@ -1255,6 +1327,8 @@ func (o *ContentObjectItemApiResponse) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "security")
 		delete(additionalProperties, "sensitivity")
 		delete(additionalProperties, "compartments")
+		delete(additionalProperties, "shared")
+		delete(additionalProperties, "shared_root")
 		delete(additionalProperties, "inherited_properties")
 		o.AdditionalProperties = additionalProperties
 	}

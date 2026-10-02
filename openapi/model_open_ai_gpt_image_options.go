@@ -19,11 +19,18 @@ var _ MappedNullable = &OpenAiGptImageOptions{}
 
 // OpenAiGptImageOptions struct for OpenAiGptImageOptions
 type OpenAiGptImageOptions struct {
-	OptionId     *string `json:"_option_id,omitempty"`
-	Size         *string `json:"size,omitempty"`
-	ImageQuality *string `json:"image_quality,omitempty"`
-	Background   *string `json:"background,omitempty"`
-	OutputFormat *string `json:"output_format,omitempty"`
+	OptionId          *string  `json:"_option_id,omitempty"`
+	Size              *string  `json:"size,omitempty"`
+	Width             *float32 `json:"width,omitempty"`
+	Height            *float32 `json:"height,omitempty"`
+	ImageQuality      *string  `json:"image_quality,omitempty"`
+	Background        *string  `json:"background,omitempty"`
+	OutputFormat      *string  `json:"output_format,omitempty"`
+	N                 *float32 `json:"n,omitempty"`
+	OutputCompression *int32   `json:"output_compression,omitempty"`
+	Moderation        *string  `json:"moderation,omitempty"`
+	InputFidelity     *string  `json:"input_fidelity,omitempty"`
+	PartialImages     *float32 `json:"partial_images,omitempty"`
 	// AdditionalProperties preserves unknown fields across read-edit-save.
 	AdditionalProperties map[string]interface{} `json:"-"`
 }
@@ -107,6 +114,70 @@ func (o *OpenAiGptImageOptions) HasSize() bool {
 // SetSize gets a reference to the given string and assigns it to the Size field.
 func (o *OpenAiGptImageOptions) SetSize(v string) {
 	o.Size = &v
+}
+
+// GetWidth returns the Width field value if set, zero value otherwise.
+func (o *OpenAiGptImageOptions) GetWidth() float32 {
+	if o == nil || IsNil(o.Width) {
+		var ret float32
+		return ret
+	}
+	return *o.Width
+}
+
+// GetWidthOk returns a tuple with the Width field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiGptImageOptions) GetWidthOk() (*float32, bool) {
+	if o == nil || IsNil(o.Width) {
+		return nil, false
+	}
+	return o.Width, true
+}
+
+// HasWidth returns a boolean if a field has been set.
+func (o *OpenAiGptImageOptions) HasWidth() bool {
+	if o != nil && !IsNil(o.Width) {
+		return true
+	}
+
+	return false
+}
+
+// SetWidth gets a reference to the given float32 and assigns it to the Width field.
+func (o *OpenAiGptImageOptions) SetWidth(v float32) {
+	o.Width = &v
+}
+
+// GetHeight returns the Height field value if set, zero value otherwise.
+func (o *OpenAiGptImageOptions) GetHeight() float32 {
+	if o == nil || IsNil(o.Height) {
+		var ret float32
+		return ret
+	}
+	return *o.Height
+}
+
+// GetHeightOk returns a tuple with the Height field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiGptImageOptions) GetHeightOk() (*float32, bool) {
+	if o == nil || IsNil(o.Height) {
+		return nil, false
+	}
+	return o.Height, true
+}
+
+// HasHeight returns a boolean if a field has been set.
+func (o *OpenAiGptImageOptions) HasHeight() bool {
+	if o != nil && !IsNil(o.Height) {
+		return true
+	}
+
+	return false
+}
+
+// SetHeight gets a reference to the given float32 and assigns it to the Height field.
+func (o *OpenAiGptImageOptions) SetHeight(v float32) {
+	o.Height = &v
 }
 
 // GetImageQuality returns the ImageQuality field value if set, zero value otherwise.
@@ -205,6 +276,166 @@ func (o *OpenAiGptImageOptions) SetOutputFormat(v string) {
 	o.OutputFormat = &v
 }
 
+// GetN returns the N field value if set, zero value otherwise.
+func (o *OpenAiGptImageOptions) GetN() float32 {
+	if o == nil || IsNil(o.N) {
+		var ret float32
+		return ret
+	}
+	return *o.N
+}
+
+// GetNOk returns a tuple with the N field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiGptImageOptions) GetNOk() (*float32, bool) {
+	if o == nil || IsNil(o.N) {
+		return nil, false
+	}
+	return o.N, true
+}
+
+// HasN returns a boolean if a field has been set.
+func (o *OpenAiGptImageOptions) HasN() bool {
+	if o != nil && !IsNil(o.N) {
+		return true
+	}
+
+	return false
+}
+
+// SetN gets a reference to the given float32 and assigns it to the N field.
+func (o *OpenAiGptImageOptions) SetN(v float32) {
+	o.N = &v
+}
+
+// GetOutputCompression returns the OutputCompression field value if set, zero value otherwise.
+func (o *OpenAiGptImageOptions) GetOutputCompression() int32 {
+	if o == nil || IsNil(o.OutputCompression) {
+		var ret int32
+		return ret
+	}
+	return *o.OutputCompression
+}
+
+// GetOutputCompressionOk returns a tuple with the OutputCompression field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiGptImageOptions) GetOutputCompressionOk() (*int32, bool) {
+	if o == nil || IsNil(o.OutputCompression) {
+		return nil, false
+	}
+	return o.OutputCompression, true
+}
+
+// HasOutputCompression returns a boolean if a field has been set.
+func (o *OpenAiGptImageOptions) HasOutputCompression() bool {
+	if o != nil && !IsNil(o.OutputCompression) {
+		return true
+	}
+
+	return false
+}
+
+// SetOutputCompression gets a reference to the given int32 and assigns it to the OutputCompression field.
+func (o *OpenAiGptImageOptions) SetOutputCompression(v int32) {
+	o.OutputCompression = &v
+}
+
+// GetModeration returns the Moderation field value if set, zero value otherwise.
+func (o *OpenAiGptImageOptions) GetModeration() string {
+	if o == nil || IsNil(o.Moderation) {
+		var ret string
+		return ret
+	}
+	return *o.Moderation
+}
+
+// GetModerationOk returns a tuple with the Moderation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiGptImageOptions) GetModerationOk() (*string, bool) {
+	if o == nil || IsNil(o.Moderation) {
+		return nil, false
+	}
+	return o.Moderation, true
+}
+
+// HasModeration returns a boolean if a field has been set.
+func (o *OpenAiGptImageOptions) HasModeration() bool {
+	if o != nil && !IsNil(o.Moderation) {
+		return true
+	}
+
+	return false
+}
+
+// SetModeration gets a reference to the given string and assigns it to the Moderation field.
+func (o *OpenAiGptImageOptions) SetModeration(v string) {
+	o.Moderation = &v
+}
+
+// GetInputFidelity returns the InputFidelity field value if set, zero value otherwise.
+func (o *OpenAiGptImageOptions) GetInputFidelity() string {
+	if o == nil || IsNil(o.InputFidelity) {
+		var ret string
+		return ret
+	}
+	return *o.InputFidelity
+}
+
+// GetInputFidelityOk returns a tuple with the InputFidelity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiGptImageOptions) GetInputFidelityOk() (*string, bool) {
+	if o == nil || IsNil(o.InputFidelity) {
+		return nil, false
+	}
+	return o.InputFidelity, true
+}
+
+// HasInputFidelity returns a boolean if a field has been set.
+func (o *OpenAiGptImageOptions) HasInputFidelity() bool {
+	if o != nil && !IsNil(o.InputFidelity) {
+		return true
+	}
+
+	return false
+}
+
+// SetInputFidelity gets a reference to the given string and assigns it to the InputFidelity field.
+func (o *OpenAiGptImageOptions) SetInputFidelity(v string) {
+	o.InputFidelity = &v
+}
+
+// GetPartialImages returns the PartialImages field value if set, zero value otherwise.
+func (o *OpenAiGptImageOptions) GetPartialImages() float32 {
+	if o == nil || IsNil(o.PartialImages) {
+		var ret float32
+		return ret
+	}
+	return *o.PartialImages
+}
+
+// GetPartialImagesOk returns a tuple with the PartialImages field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiGptImageOptions) GetPartialImagesOk() (*float32, bool) {
+	if o == nil || IsNil(o.PartialImages) {
+		return nil, false
+	}
+	return o.PartialImages, true
+}
+
+// HasPartialImages returns a boolean if a field has been set.
+func (o *OpenAiGptImageOptions) HasPartialImages() bool {
+	if o != nil && !IsNil(o.PartialImages) {
+		return true
+	}
+
+	return false
+}
+
+// SetPartialImages gets a reference to the given float32 and assigns it to the PartialImages field.
+func (o *OpenAiGptImageOptions) SetPartialImages(v float32) {
+	o.PartialImages = &v
+}
+
 func (o OpenAiGptImageOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -217,7 +448,7 @@ func (o OpenAiGptImageOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "size", "image_quality", "background", "output_format"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "size", "width", "height", "image_quality", "background", "output_format", "n", "output_compression", "moderation", "input_fidelity", "partial_images"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -228,6 +459,12 @@ func (o OpenAiGptImageOptions) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Size) {
 		toSerialize["size"] = o.Size
 	}
+	if !IsNil(o.Width) {
+		toSerialize["width"] = o.Width
+	}
+	if !IsNil(o.Height) {
+		toSerialize["height"] = o.Height
+	}
 	if !IsNil(o.ImageQuality) {
 		toSerialize["image_quality"] = o.ImageQuality
 	}
@@ -236,6 +473,21 @@ func (o OpenAiGptImageOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.OutputFormat) {
 		toSerialize["output_format"] = o.OutputFormat
+	}
+	if !IsNil(o.N) {
+		toSerialize["n"] = o.N
+	}
+	if !IsNil(o.OutputCompression) {
+		toSerialize["output_compression"] = o.OutputCompression
+	}
+	if !IsNil(o.Moderation) {
+		toSerialize["moderation"] = o.Moderation
+	}
+	if !IsNil(o.InputFidelity) {
+		toSerialize["input_fidelity"] = o.InputFidelity
+	}
+	if !IsNil(o.PartialImages) {
+		toSerialize["partial_images"] = o.PartialImages
 	}
 	return toSerialize, nil
 }
@@ -292,7 +544,7 @@ func (o *OpenAiGptImageOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "size", "image_quality", "background", "output_format"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "size", "width", "height", "image_quality", "background", "output_format", "n", "output_compression", "moderation", "input_fidelity", "partial_images"}) {
 			delete(extra, key)
 		}
 	}

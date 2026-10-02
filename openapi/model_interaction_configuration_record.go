@@ -23,11 +23,13 @@ var _ MappedNullable = &InteractionConfigurationRecord{}
 type InteractionConfigurationRecord struct {
 	// MongoDB ObjectId of the inference profile.
 	InferenceProfile NullableString `json:"inference_profile" validate:"regexp=^[a-fA-F0-9]{24}$"`
-	Id               string         `json:"id" validate:"regexp=^[a-fA-F0-9]{24}$"`
-	Project          string         `json:"project"`
-	Interaction      string         `json:"interaction"`
-	CreatedAt        time.Time      `json:"created_at" validate:"regexp=^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$"`
-	UpdatedAt        time.Time      `json:"updated_at" validate:"regexp=^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$"`
+	// Project-scoped agent budget override. Null restores the code-defined or project default; omission preserves the saved budget.
+	Budget      NullableAgentBudgetConfiguration `json:"budget,omitempty"`
+	Id          string                           `json:"id" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Project     string                           `json:"project"`
+	Interaction string                           `json:"interaction"`
+	CreatedAt   time.Time                        `json:"created_at" validate:"regexp=^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$"`
+	UpdatedAt   time.Time                        `json:"updated_at" validate:"regexp=^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$"`
 }
 
 type _InteractionConfigurationRecord InteractionConfigurationRecord
@@ -79,6 +81,49 @@ func (o *InteractionConfigurationRecord) GetInferenceProfileOk() (*string, bool)
 // SetInferenceProfile sets field value
 func (o *InteractionConfigurationRecord) SetInferenceProfile(v string) {
 	o.InferenceProfile.Set(&v)
+}
+
+// GetBudget returns the Budget field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *InteractionConfigurationRecord) GetBudget() AgentBudgetConfiguration {
+	if o == nil || IsNil(o.Budget.Get()) {
+		var ret AgentBudgetConfiguration
+		return ret
+	}
+	return *o.Budget.Get()
+}
+
+// GetBudgetOk returns a tuple with the Budget field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *InteractionConfigurationRecord) GetBudgetOk() (*AgentBudgetConfiguration, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.Budget.Get(), o.Budget.IsSet()
+}
+
+// HasBudget returns a boolean if a field has been set.
+func (o *InteractionConfigurationRecord) HasBudget() bool {
+	if o != nil && o.Budget.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetBudget gets a reference to the given NullableAgentBudgetConfiguration and assigns it to the Budget field.
+func (o *InteractionConfigurationRecord) SetBudget(v AgentBudgetConfiguration) {
+	o.Budget.Set(&v)
+}
+
+// SetBudgetNil sets the value for Budget to be an explicit nil
+func (o *InteractionConfigurationRecord) SetBudgetNil() {
+	o.Budget.Set(nil)
+}
+
+// UnsetBudget ensures that no value is present for Budget, not even an explicit nil
+func (o *InteractionConfigurationRecord) UnsetBudget() {
+	o.Budget.Unset()
 }
 
 // GetId returns the Id field value
@@ -212,6 +257,9 @@ func (o InteractionConfigurationRecord) MarshalJSON() ([]byte, error) {
 func (o InteractionConfigurationRecord) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["inference_profile"] = o.InferenceProfile.Get()
+	if o.Budget.IsSet() {
+		toSerialize["budget"] = o.Budget.Get()
+	}
 	toSerialize["id"] = o.Id
 	toSerialize["project"] = o.Project
 	toSerialize["interaction"] = o.Interaction

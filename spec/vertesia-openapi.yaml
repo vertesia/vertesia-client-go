@@ -223,6 +223,7 @@ components:
         - document
         - collection
         - agent_run
+        - shared_content
         - task
     AccessControlEntry:
       type: object
@@ -659,6 +660,24 @@ components:
     AgentBudgetConfiguration:
       type: object
       properties:
+        mode:
+          type: string
+          enum:
+            - token
+            - dollar
+          description: Run budget mode. An omitted mode preserves weighted-token budgeting.
+        limit_usd:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 9007199.25474099
+          description: Soft USD allowance for priced model calls; dollar mode also
+            requires limit_tokens for unpriced calls.
+        reminder_at_remaining_fractions:
+          type: array
+          items:
+            type: number
+            exclusiveMinimum: 0
+            exclusiveMaximum: 1
         limit_tokens:
           type: number
           description: "Weighted token budget shared by the run and every subagent
@@ -2209,19 +2228,28 @@ components:
       items:
         $ref: "#/components/schemas/AggregatedTool"
     AllocateAgentRunBudgetPayload:
-      type: object
-      properties:
-        additional_tokens:
-          type: integer
-          exclusiveMinimum: 0
-          maximum: 9007199254740991
-          description: Weighted tokens to add. They are added to the limit the run was
-            granted, so usage past that limit is paid out of them.
-      required:
-        - additional_tokens
-      additionalProperties: false
-      description: Budget to add to a run paused because its token budget ran out. The
-        run resumes from where it stopped.
+      anyOf:
+        - type: object
+          properties:
+            additional_tokens:
+              type: integer
+              exclusiveMinimum: 0
+              maximum: 9007199254740991
+              description: Weighted tokens to add to the run allowance.
+          required:
+            - additional_tokens
+          additionalProperties: false
+        - type: object
+          properties:
+            additional_usd:
+              type: number
+              exclusiveMinimum: 0
+              maximum: 9007199.25474099
+              description: USD to add to the dollar allowance.
+          required:
+            - additional_usd
+          additionalProperties: false
+      description: "Add exactly one allowance: weighted tokens or USD."
     AlterTableOperation:
       oneOf:
         - type: object
@@ -2356,6 +2384,15 @@ components:
             - high
             - xhigh
             - max
+        thinking_mode:
+          type: string
+          enum:
+            - adaptive
+            - between_tools
+          description: Thinking mode override. Sonnet 5.5 supports between_tools at low,
+            medium, or high effort. It omits display and budget fields; keep
+            effort fixed during the conversation. When unset, existing
+            model-specific thinking behavior is preserved.
         thinking_budget_tokens:
           type: number
         include_thoughts:
@@ -5026,6 +5063,8 @@ components:
         - event_category
         - provider
         - project_id
+        - principal_id
+        - actor_id
         - details.pipeline
         - details.verdict
         - details.workflow_type
@@ -5058,6 +5097,14 @@ components:
           anyOf:
             - type: string
             - type: "null"
+        principal_id:
+          anyOf:
+            - type: string
+            - type: "null"
+        actor_id:
+          anyOf:
+            - type: string
+            - type: "null"
         details.pipeline:
           anyOf:
             - type: string
@@ -5084,6 +5131,8 @@ components:
       enum:
         - resource_id
         - request_id
+        - principal_id
+        - actor_id
     AuditAggregationFilter:
       type: object
       properties:
@@ -5103,6 +5152,11 @@ components:
           type: array
           items:
             type: string
+        principalTypes:
+          type: array
+          items:
+            type: string
+          description: Restrict events to top-level actor categories such as user or apikey.
         success:
           type: boolean
         details:
@@ -5768,6 +5822,15 @@ components:
             type: string
         top_k:
           type: number
+        thinking_mode:
+          type: string
+          enum:
+            - adaptive
+            - between_tools
+          description: Thinking mode override. Sonnet 5.5 supports between_tools at low,
+            medium, or high effort. It omits display and budget fields; keep
+            effort fixed during the conversation. When unset, existing
+            model-specific thinking behavior is preserved.
         thinking_budget_tokens:
           type: number
         include_thoughts:
@@ -5936,6 +5999,15 @@ components:
             - high
             - xhigh
             - max
+        thinking_mode:
+          type: string
+          enum:
+            - adaptive
+            - between_tools
+          description: Thinking mode override. Sonnet 5.5 supports between_tools at low,
+            medium, or high effort. It omits display and budget fields; keep
+            effort fixed during the conversation. When unset, existing
+            model-specific thinking behavior is preserved.
         thinking_budget_tokens:
           type: number
         include_thoughts:
@@ -6653,6 +6725,15 @@ components:
             type: string
           description: Compartments — propagated to member documents (union across
             collections)
+        shared:
+          type: boolean
+          description: "Effective shared state: true iff the collection is a member of an
+            effectively-shared parent collection (inherited; sync-managed).
+            Combine with shared_root for full readability."
+        shared_root:
+          type: boolean
+          description: True iff the collection was explicitly shared via the API (a root
+            of the project shared space). Never set by the sync.
         shared_properties:
           type: array
           items:
@@ -7661,6 +7742,15 @@ components:
             type: string
           description: Compartments — set directly or inherited from collections (union
             across collections).
+        shared:
+          type: boolean
+          description: "Effective shared state: true iff the document is a member of an
+            effectively-shared collection (inherited; sync-managed). Combine
+            with shared_root for full readability."
+        shared_root:
+          type: boolean
+          description: True iff the document was explicitly shared via the API (a root of
+            the project shared space). Never set by the sync.
         inherited_properties:
           type: array
           items:
@@ -7958,6 +8048,10 @@ components:
           type: array
           items:
             type: string
+        shared:
+          type: boolean
+        shared_root:
+          type: boolean
         inherited_properties:
           type: array
           items:
@@ -9723,6 +9817,12 @@ components:
           items:
             type: string
           description: Compartments for member documents
+        shared_root:
+          type: boolean
+          description: Explicitly share this collection as a root of the project shared
+            space (listable/readable by non-members via matching shared-content
+            ABAC rules). This is the explicit API share flag — the sync never
+            sets it.
         name:
           type: string
           description: Name of the collection
@@ -9763,6 +9863,12 @@ components:
             type: string
           description: Compartments — set directly or inherited from collections (union
             across collections).
+        shared_root:
+          type: boolean
+          description: Explicitly share this document as a root of the project shared
+            space (readable by non-members via matching shared-content ABAC
+            rules). This is the explicit API share flag — the sync never sets
+            it.
         inherited_properties:
           type: array
           items:
@@ -14288,8 +14394,6 @@ components:
     ExecutionEnvironmentSettings:
       type: object
       properties:
-        bucket_access_principal:
-          type: string
         default_headers:
           $ref: "#/components/schemas/StringValueMap"
           description: Custom HTTP headers sent by OpenAI-compatible environments.
@@ -16545,6 +16649,13 @@ components:
           anyOf:
             - $ref: "#/components/schemas/InferenceProfileId"
             - type: "null"
+        budget:
+          anyOf:
+            - $ref: "#/components/schemas/AgentBudgetConfiguration"
+            - type: "null"
+          description: Project-scoped agent budget override. Null restores the
+            code-defined or project default; omission preserves the saved
+            budget.
         id:
           type: string
           pattern: ^[a-fA-F0-9]{24}$
@@ -19252,17 +19363,18 @@ components:
           const: openai-gpt-image
         size:
           type: string
-          enum:
-            - 1024x1024
-            - 1024x1536
-            - 1536x1024
-            - auto
+        width:
+          type: number
+        height:
+          type: number
         image_quality:
           type: string
           enum:
             - low
             - medium
             - high
+            - xhigh
+            - max
             - auto
         background:
           type: string
@@ -19276,6 +19388,89 @@ components:
             - png
             - webp
             - jpeg
+        n:
+          type: number
+        output_compression:
+          type: integer
+          minimum: 0
+          maximum: 100
+        moderation:
+          type: string
+          enum:
+            - auto
+            - low
+        input_fidelity:
+          type: string
+          enum:
+            - low
+            - high
+        partial_images:
+          type: number
+      additionalProperties: false
+    OpenAiImageGenerationMask:
+      type: object
+      properties:
+        file_id:
+          type: string
+        image_url:
+          type: string
+      additionalProperties: false
+    OpenAiImageGenerationOptions:
+      type: object
+      properties:
+        model:
+          type: string
+        force:
+          type: boolean
+        action:
+          type: string
+          enum:
+            - auto
+            - generate
+            - edit
+        size:
+          type: string
+        quality:
+          type: string
+          enum:
+            - auto
+            - low
+            - medium
+            - high
+            - xhigh
+            - max
+        background:
+          type: string
+          enum:
+            - auto
+            - opaque
+            - transparent
+        output_format:
+          type: string
+          enum:
+            - png
+            - jpeg
+            - webp
+        output_compression:
+          type: integer
+          minimum: 0
+          maximum: 100
+        moderation:
+          type: string
+          enum:
+            - auto
+            - low
+        input_fidelity:
+          type: string
+          enum:
+            - low
+            - high
+        partial_images:
+          type: number
+        input_image_mask:
+          $ref: "#/components/schemas/OpenAiImageGenerationMask"
+      required:
+        - model
       additionalProperties: false
     OpenAiSpeechOptions:
       type: object
@@ -19308,6 +19503,8 @@ components:
         _option_id:
           type: string
           const: openai-text
+        image_generation:
+          $ref: "#/components/schemas/OpenAiImageGenerationOptions"
         max_tokens:
           type: number
         tool_choice:
@@ -19358,6 +19555,8 @@ components:
         _option_id:
           type: string
           const: openai-thinking
+        image_generation:
+          $ref: "#/components/schemas/OpenAiImageGenerationOptions"
         max_tokens:
           type: number
         tool_choice:
@@ -20068,6 +20267,30 @@ components:
     ProcessBudgetState:
       type: object
       properties:
+        mode:
+          type: string
+          enum:
+            - token
+            - dollar
+          description: Absent on historical token-only status.
+        limit_usd:
+          type: number
+          minimum: 0
+        reported_usd:
+          type: number
+          minimum: 0
+        estimated_usd:
+          type: number
+          minimum: 0
+        accounting_status:
+          type: string
+          enum:
+            - current
+            - incomplete
+        unmeasured_calls:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
         limit_tokens:
           type: number
         used_units:
@@ -20519,7 +20742,7 @@ components:
           $ref: "#/components/schemas/ProcessTerminalReason"
         budget:
           $ref: "#/components/schemas/ProcessBudgetState"
-          description: Token budget of the run, present when the run has one.
+          description: Run budget status, including dollar consumption when configured.
       required:
         - context
         - current_node
@@ -21808,6 +22031,15 @@ components:
             type: string
           description: Compartments — set directly or inherited from collections (union
             across collections).
+        shared:
+          type: boolean
+          description: "Effective shared state: true iff the document is a member of an
+            effectively-shared collection (inherited; sync-managed). Combine
+            with shared_root for full readability."
+        shared_root:
+          type: boolean
+          description: True iff the document was explicitly shared via the API (a root of
+            the project shared space). Never set by the sync.
         inherited_properties:
           type: array
           items:
@@ -23342,6 +23574,7 @@ components:
         - system
         - content
         - agent_runs
+        - shared_content
         - tasks
       description: Logical grouping of roles by the service area that owns them. One
         domain may declare roles applicable to multiple scopes (e.g. the
@@ -23423,6 +23656,23 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/RunAnalyticsResult"
+    RunBudgetCapability:
+      type: object
+      properties:
+        supported:
+          type: boolean
+        source:
+          type: string
+          enum:
+            - provider
+            - estimate
+            - unavailable
+        reason:
+          type: string
+      required:
+        - supported
+        - source
+      additionalProperties: false
     RunCreatePayload:
       type: object
       properties:
@@ -25770,6 +26020,12 @@ components:
           items:
             type: string
           description: Compartments for member documents
+        shared_root:
+          type: boolean
+          description: Explicitly share this collection as a root of the project shared
+            space (listable/readable by non-members via matching shared-content
+            ABAC rules). This is the explicit API share flag — the sync never
+            sets it.
         name:
           type: string
           description: Name of the collection
@@ -25807,6 +26063,12 @@ components:
             type: string
           description: Compartments — set directly or inherited from collections (union
             across collections).
+        shared_root:
+          type: boolean
+          description: Explicitly share this document as a root of the project shared
+            space (readable by non-members via matching shared-content ABAC
+            rules). This is the explicit API share flag — the sync never sets
+            it.
         inherited_properties:
           type: array
           items:
@@ -26179,6 +26441,13 @@ components:
           anyOf:
             - $ref: "#/components/schemas/InferenceProfileId"
             - type: "null"
+        budget:
+          anyOf:
+            - $ref: "#/components/schemas/AgentBudgetConfiguration"
+            - type: "null"
+          description: Project-scoped agent budget override. Null restores the
+            code-defined or project default; omission preserves the saved
+            budget.
       required:
         - inference_profile
       additionalProperties: false
@@ -27165,6 +27434,15 @@ components:
             - high
             - xhigh
             - max
+        thinking_mode:
+          type: string
+          enum:
+            - adaptive
+            - between_tools
+          description: Thinking mode override. Sonnet 5.5 supports between_tools at low,
+            medium, or high effort. It omits display and budget fields; keep
+            effort fixed during the conversation. When unset, existing
+            model-specific thinking behavior is preserved.
         thinking_budget_tokens:
           type: number
         include_thoughts:
@@ -31823,6 +32101,88 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ExecutionEnvironmentCreatePayload"
+    parameters:
+      - name: x-api-version
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          pattern: \S
+          example: "20260803"
+        description: Required Vertesia API version header. Use `20260803` for the
+          current stable API shape.
+        x-vertesia-global-header: true
+  /environments/{envId}/run-budget-capability:
+    get:
+      operationId: GetRunBudgetCapability
+      tags:
+        - Environments
+      summary: Check run budget pricing availability for a selected model
+      description: "**Required permissions:** `account:member`"
+      security:
+        - bearerAuth: []
+        - OAuth2:
+            - account:member
+      parameters:
+        - name: envId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: check_model
+          in: query
+          required: false
+          schema:
+            type: boolean
+            description: False checks only whether estimates are enabled, without consulting
+              model prices.
+          description: False checks only whether estimates are enabled, without consulting
+            model prices.
+        - name: model
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - name: service_tier
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Pricing availability; no billing access required.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RunBudgetCapability"
+        "500":
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Internal Server Error
+                status: 500
+                message: Internal server error.
+        4XX:
+          description: Client error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: Bad Request
+                status: 400
+                message: Request validation failed.
+      x-vertesia-permissions:
+        - account:member
+      x-vertesia-source:
+        file: ../../apps/studio-server/src/api/environments.ts
+        className: EnvironmentResource
+        methodName: runBudgetCapability
     parameters:
       - name: x-api-version
         in: header
@@ -53117,6 +53477,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ContentObjectType"
+        "409":
+          description: A content type with this name already exists in the project.
         "500":
           description: Internal server error.
           content:
@@ -53310,7 +53672,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ContentObjectType"
         "409":
-          description: The content type was changed after the caller read it.
+          description: The content type changed after the caller read it, or its new name
+            is already taken.
         "500":
           description: Internal server error.
           content:

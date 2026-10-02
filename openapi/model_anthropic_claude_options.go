@@ -19,13 +19,15 @@ var _ MappedNullable = &AnthropicClaudeOptions{}
 
 // AnthropicClaudeOptions struct for AnthropicClaudeOptions
 type AnthropicClaudeOptions struct {
-	OptionId             *string  `json:"_option_id,omitempty"`
-	MaxTokens            *float32 `json:"max_tokens,omitempty"`
-	Temperature          *float32 `json:"temperature,omitempty"`
-	TopP                 *float32 `json:"top_p,omitempty"`
-	TopK                 *float32 `json:"top_k,omitempty"`
-	StopSequence         []string `json:"stop_sequence,omitempty"`
-	Effort               *string  `json:"effort,omitempty"`
+	OptionId     *string  `json:"_option_id,omitempty"`
+	MaxTokens    *float32 `json:"max_tokens,omitempty"`
+	Temperature  *float32 `json:"temperature,omitempty"`
+	TopP         *float32 `json:"top_p,omitempty"`
+	TopK         *float32 `json:"top_k,omitempty"`
+	StopSequence []string `json:"stop_sequence,omitempty"`
+	Effort       *string  `json:"effort,omitempty"`
+	// Thinking mode override. Sonnet 5.5 supports between_tools at low, medium, or high effort. It omits display and budget fields; keep effort fixed during the conversation. When unset, existing model-specific thinking behavior is preserved.
+	ThinkingMode         *string  `json:"thinking_mode,omitempty"`
 	ThinkingBudgetTokens *float32 `json:"thinking_budget_tokens,omitempty"`
 	IncludeThoughts      *bool    `json:"include_thoughts,omitempty"`
 	CacheEnabled         *bool    `json:"cache_enabled,omitempty"`
@@ -276,6 +278,38 @@ func (o *AnthropicClaudeOptions) SetEffort(v string) {
 	o.Effort = &v
 }
 
+// GetThinkingMode returns the ThinkingMode field value if set, zero value otherwise.
+func (o *AnthropicClaudeOptions) GetThinkingMode() string {
+	if o == nil || IsNil(o.ThinkingMode) {
+		var ret string
+		return ret
+	}
+	return *o.ThinkingMode
+}
+
+// GetThinkingModeOk returns a tuple with the ThinkingMode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AnthropicClaudeOptions) GetThinkingModeOk() (*string, bool) {
+	if o == nil || IsNil(o.ThinkingMode) {
+		return nil, false
+	}
+	return o.ThinkingMode, true
+}
+
+// HasThinkingMode returns a boolean if a field has been set.
+func (o *AnthropicClaudeOptions) HasThinkingMode() bool {
+	if o != nil && !IsNil(o.ThinkingMode) {
+		return true
+	}
+
+	return false
+}
+
+// SetThinkingMode gets a reference to the given string and assigns it to the ThinkingMode field.
+func (o *AnthropicClaudeOptions) SetThinkingMode(v string) {
+	o.ThinkingMode = &v
+}
+
 // GetThinkingBudgetTokens returns the ThinkingBudgetTokens field value if set, zero value otherwise.
 func (o *AnthropicClaudeOptions) GetThinkingBudgetTokens() float32 {
 	if o == nil || IsNil(o.ThinkingBudgetTokens) {
@@ -448,7 +482,7 @@ func (o AnthropicClaudeOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "effort", "thinking_budget_tokens", "include_thoughts", "cache_enabled", "cache_ttl", "speed"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "effort", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "cache_enabled", "cache_ttl", "speed"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -473,6 +507,9 @@ func (o AnthropicClaudeOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Effort) {
 		toSerialize["effort"] = o.Effort
+	}
+	if !IsNil(o.ThinkingMode) {
+		toSerialize["thinking_mode"] = o.ThinkingMode
 	}
 	if !IsNil(o.ThinkingBudgetTokens) {
 		toSerialize["thinking_budget_tokens"] = o.ThinkingBudgetTokens
@@ -544,7 +581,7 @@ func (o *AnthropicClaudeOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "effort", "thinking_budget_tokens", "include_thoughts", "cache_enabled", "cache_ttl", "speed"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "effort", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "cache_enabled", "cache_ttl", "speed"}) {
 			delete(extra, key)
 		}
 	}

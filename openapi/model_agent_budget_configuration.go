@@ -19,6 +19,11 @@ var _ MappedNullable = &AgentBudgetConfiguration{}
 
 // AgentBudgetConfiguration Weighted token budget for an agent run and its subagent workstreams. A call is charged output × output_token_weight + uncached input × input_token_weight + cached input × cached_input_token_weight.
 type AgentBudgetConfiguration struct {
+	// Run budget mode. An omitted mode preserves weighted-token budgeting.
+	Mode *string `json:"mode,omitempty"`
+	// Soft USD allowance for priced model calls; dollar mode also requires limit_tokens for unpriced calls.
+	LimitUsd                     *float32  `json:"limit_usd,omitempty"`
+	ReminderAtRemainingFractions []float32 `json:"reminder_at_remaining_fractions,omitempty"`
 	// Weighted token budget shared by the run and every subagent workstream it launches. When the run and its workstreams together use this many weighted tokens, the agent gets one final turn without tools to summarize its work, and the run ends. This is a soft limit, not a spending cap: workstreams running concurrently and the final summary turns can go over it. Unset or <=0 means no budget.
 	LimitTokens *float32 `json:"limit_tokens,omitempty"`
 	// Remaining-budget thresholds, in weighted tokens, at which the agent is told how much budget is left. Each threshold is delivered once per context window (again after a checkpoint). Values outside (0, limit_tokens) are ignored. Unset means reminders at 25% and 10% remaining.
@@ -46,6 +51,102 @@ func NewAgentBudgetConfiguration() *AgentBudgetConfiguration {
 func NewAgentBudgetConfigurationWithDefaults() *AgentBudgetConfiguration {
 	this := AgentBudgetConfiguration{}
 	return &this
+}
+
+// GetMode returns the Mode field value if set, zero value otherwise.
+func (o *AgentBudgetConfiguration) GetMode() string {
+	if o == nil || IsNil(o.Mode) {
+		var ret string
+		return ret
+	}
+	return *o.Mode
+}
+
+// GetModeOk returns a tuple with the Mode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentBudgetConfiguration) GetModeOk() (*string, bool) {
+	if o == nil || IsNil(o.Mode) {
+		return nil, false
+	}
+	return o.Mode, true
+}
+
+// HasMode returns a boolean if a field has been set.
+func (o *AgentBudgetConfiguration) HasMode() bool {
+	if o != nil && !IsNil(o.Mode) {
+		return true
+	}
+
+	return false
+}
+
+// SetMode gets a reference to the given string and assigns it to the Mode field.
+func (o *AgentBudgetConfiguration) SetMode(v string) {
+	o.Mode = &v
+}
+
+// GetLimitUsd returns the LimitUsd field value if set, zero value otherwise.
+func (o *AgentBudgetConfiguration) GetLimitUsd() float32 {
+	if o == nil || IsNil(o.LimitUsd) {
+		var ret float32
+		return ret
+	}
+	return *o.LimitUsd
+}
+
+// GetLimitUsdOk returns a tuple with the LimitUsd field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentBudgetConfiguration) GetLimitUsdOk() (*float32, bool) {
+	if o == nil || IsNil(o.LimitUsd) {
+		return nil, false
+	}
+	return o.LimitUsd, true
+}
+
+// HasLimitUsd returns a boolean if a field has been set.
+func (o *AgentBudgetConfiguration) HasLimitUsd() bool {
+	if o != nil && !IsNil(o.LimitUsd) {
+		return true
+	}
+
+	return false
+}
+
+// SetLimitUsd gets a reference to the given float32 and assigns it to the LimitUsd field.
+func (o *AgentBudgetConfiguration) SetLimitUsd(v float32) {
+	o.LimitUsd = &v
+}
+
+// GetReminderAtRemainingFractions returns the ReminderAtRemainingFractions field value if set, zero value otherwise.
+func (o *AgentBudgetConfiguration) GetReminderAtRemainingFractions() []float32 {
+	if o == nil || IsNil(o.ReminderAtRemainingFractions) {
+		var ret []float32
+		return ret
+	}
+	return o.ReminderAtRemainingFractions
+}
+
+// GetReminderAtRemainingFractionsOk returns a tuple with the ReminderAtRemainingFractions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentBudgetConfiguration) GetReminderAtRemainingFractionsOk() ([]float32, bool) {
+	if o == nil || IsNil(o.ReminderAtRemainingFractions) {
+		return nil, false
+	}
+	return o.ReminderAtRemainingFractions, true
+}
+
+// HasReminderAtRemainingFractions returns a boolean if a field has been set.
+func (o *AgentBudgetConfiguration) HasReminderAtRemainingFractions() bool {
+	if o != nil && !IsNil(o.ReminderAtRemainingFractions) {
+		return true
+	}
+
+	return false
+}
+
+// SetReminderAtRemainingFractions gets a reference to the given []float32 and assigns it to the ReminderAtRemainingFractions field.
+func (o *AgentBudgetConfiguration) SetReminderAtRemainingFractions(v []float32) {
+	o.ReminderAtRemainingFractions = v
 }
 
 // GetLimitTokens returns the LimitTokens field value if set, zero value otherwise.
@@ -218,6 +319,15 @@ func (o AgentBudgetConfiguration) MarshalJSON() ([]byte, error) {
 
 func (o AgentBudgetConfiguration) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Mode) {
+		toSerialize["mode"] = o.Mode
+	}
+	if !IsNil(o.LimitUsd) {
+		toSerialize["limit_usd"] = o.LimitUsd
+	}
+	if !IsNil(o.ReminderAtRemainingFractions) {
+		toSerialize["reminder_at_remaining_fractions"] = o.ReminderAtRemainingFractions
+	}
 	if !IsNil(o.LimitTokens) {
 		toSerialize["limit_tokens"] = o.LimitTokens
 	}

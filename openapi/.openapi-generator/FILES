@@ -114,6 +114,8 @@ model_aggregated_tool.go
 model_ai_model.go
 model_ai_model_status.go
 model_allocate_agent_run_budget_payload.go
+model_allocate_agent_run_budget_payload_any_of.go
+model_allocate_agent_run_budget_payload_any_of_1.go
 model_alter_table_operation.go
 model_alter_table_operation_one_of.go
 model_alter_table_operation_one_of_1.go
@@ -742,6 +744,8 @@ model_onboarding_progress.go
 model_open_ai_audio_options.go
 model_open_ai_dalle_options.go
 model_open_ai_gpt_image_options.go
+model_open_ai_image_generation_mask.go
+model_open_ai_image_generation_options.go
 model_open_ai_speech_options.go
 model_open_ai_text_options.go
 model_open_ai_thinking_options.go
@@ -920,6 +924,7 @@ model_run_analytics_group_by.go
 model_run_analytics_query.go
 model_run_analytics_result.go
 model_run_analytics_result_execution_time.go
+model_run_budget_capability.go
 model_run_create_payload.go
 model_run_data_storage_level.go
 model_run_kind.go
