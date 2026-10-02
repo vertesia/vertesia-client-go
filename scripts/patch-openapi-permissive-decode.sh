@@ -227,6 +227,7 @@ for type_name, schema in schemas.items():
         or type_name == 'ExperimentalAgentConversationAcceptedOutputHistoryPage'
         or type_name == 'ExperimentalAgentConversationSourceDescriptor'
         or type_name == 'ExperimentalAgentRoutingControlReceipt'
+        or type_name == 'ExperimentalAdmitAgentGenerationPayload'
         or type_name == 'ExperimentalCanonicalUserMessagePayload'
         or type_name == 'ExperimentalCanonicalToolResultsPayload'
         or type_name == 'AppendRunConversationProgramTurnPayload'
@@ -266,7 +267,7 @@ for filename, (type_name, wire_field, branches) in models.items():
     for branch, values in values_by_branch.items():
         labels = ', '.join(json.dumps(value) for value in values)
         required_checks = ''
-        if type_name == 'ExperimentalAgentRoutingControlReceipt':
+        if type_name in ('ExperimentalAgentRoutingControlReceipt', 'ExperimentalAdmitAgentGenerationPayload'):
             branch_schema = schemas.get(branch)
             if not isinstance(branch_schema, dict) or not isinstance(branch_schema.get('required'), list):
                 raise ValueError(f'{type_name} branch {branch!r} has no required-field contract')
@@ -282,6 +283,28 @@ for filename, (type_name, wire_field, branches) in models.items():
 \t\t\t}}
 \t\t}}
 '''
+            if type_name == 'ExperimentalAdmitAgentGenerationPayload':
+                request_ref = branch_schema.get('properties', {}).get('request', {}).get('$ref')
+                request_schema = schemas.get(request_ref.rsplit('/', 1)[-1]) if isinstance(request_ref, str) else None
+                if not isinstance(request_schema, dict) or not isinstance(request_schema.get('required'), list):
+                    raise ValueError(f'{type_name} branch {branch!r} has no request required-field contract')
+                required_checks += '''\t\tvar requestFields map[string]json.RawMessage
+\t\tif err := json.Unmarshal(requiredFields["request"], &requestFields); err != nil || requestFields == nil {
+\t\t\treturn fmt.Errorf("invalid ExperimentalAdmitAgentGenerationPayload request")
+\t\t}
+'''
+                for required_field in request_schema['required']:
+                    if not isinstance(required_field, str):
+                        raise ValueError(f'{type_name} branch {branch!r} has an invalid request required field')
+                    required_checks += f'''\t\tif raw, present := requestFields[{json.dumps(required_field)}]; !present {{
+\t\t\treturn fmt.Errorf("missing {type_name} request field {required_field}")
+\t\t}} else {{
+\t\t\tvar value any
+\t\t\tif err := json.Unmarshal(raw, &value); err != nil || value == nil {{
+\t\t\t\treturn fmt.Errorf("null or invalid {type_name} request field {required_field}")
+\t\t\t}}
+\t\t}}
+'''
         cases.append(f'''\tcase {labels}:
 {required_checks}
 \t\tselected := &{branch}{{}}
@@ -292,7 +315,7 @@ for filename, (type_name, wire_field, branches) in models.items():
 \t\treturn nil''')
     required_fields_decode = '''\tvar requiredFields map[string]json.RawMessage
 \tif err := json.Unmarshal(data, &requiredFields); err != nil { return err }
-''' if type_name == 'ExperimentalAgentRoutingControlReceipt' else ''
+''' if type_name in ('ExperimentalAgentRoutingControlReceipt', 'ExperimentalAdmitAgentGenerationPayload') else ''
     replacement = f'''func (dst *{type_name}) UnmarshalJSON(data []byte) error {{
 \t*dst = {type_name}{{}}
 {required_fields_decode}
