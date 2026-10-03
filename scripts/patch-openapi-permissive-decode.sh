@@ -232,6 +232,7 @@ for type_name, schema in schemas.items():
         or type_name == 'ExperimentalCanonicalUserMessagePayload'
         or type_name == 'ExperimentalCanonicalToolResultsPayload'
         or type_name == 'ExperimentalCanonicalInteractionExecutionResult'
+        or type_name == 'ExperimentalInitialAuthoringViewResponse'
         or type_name == 'AppendRunConversationProgramTurnPayload'
         or type_name == 'ImportAgentRunConversationArchivePayload'
         or type_name == 'ImportAgentRunConversationArchiveResponse'

@@ -34,6 +34,7 @@ jobs:
           scripts/test-patch-conversation-unions.sh
           scripts/test-patch-experimental-json.sh
           scripts/test-patch-routing-control.sh
+          scripts/test-patch-initial-authoring-view.sh
           scripts/test-patch-canonical-closure.sh
       - name: Vet
         run: go vet ./...
