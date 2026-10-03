@@ -121,3 +121,6 @@ bash "$repo_dir/scripts/test-patch-generation-admission.sh"
 
 # The canonical execution result must reach its optional selected-child binding.
 bash "$repo_dir/scripts/test-patch-canonical-result.sh"
+
+# Inspection wrappers must dispatch six distinct literal statuses and retain strict view closure.
+bash "$repo_dir/scripts/test-patch-run-inspection.sh"
