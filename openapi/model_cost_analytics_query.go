@@ -43,6 +43,8 @@ type CostAnalyticsQuery struct {
 	RunId *string `json:"run_id,omitempty"`
 	// Filter by agent run ID
 	AgentRunId *string `json:"agent_run_id,omitempty"`
+	// Restrict usage to agent runs and their attributed nested/background inference. Excludes standalone interactions and non-agent workflows. Defaults to false.
+	AgentOnly *bool `json:"agent_only,omitempty"`
 	// Filter by interaction id: stored ObjectId or namespaced in-code id
 	InteractionId *string `json:"interaction_id,omitempty"`
 	// Filter by principal (bare user or API key id; matched against the suffix of principal_id)
@@ -490,6 +492,38 @@ func (o *CostAnalyticsQuery) SetAgentRunId(v string) {
 	o.AgentRunId = &v
 }
 
+// GetAgentOnly returns the AgentOnly field value if set, zero value otherwise.
+func (o *CostAnalyticsQuery) GetAgentOnly() bool {
+	if o == nil || IsNil(o.AgentOnly) {
+		var ret bool
+		return ret
+	}
+	return *o.AgentOnly
+}
+
+// GetAgentOnlyOk returns a tuple with the AgentOnly field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CostAnalyticsQuery) GetAgentOnlyOk() (*bool, bool) {
+	if o == nil || IsNil(o.AgentOnly) {
+		return nil, false
+	}
+	return o.AgentOnly, true
+}
+
+// HasAgentOnly returns a boolean if a field has been set.
+func (o *CostAnalyticsQuery) HasAgentOnly() bool {
+	if o != nil && !IsNil(o.AgentOnly) {
+		return true
+	}
+
+	return false
+}
+
+// SetAgentOnly gets a reference to the given bool and assigns it to the AgentOnly field.
+func (o *CostAnalyticsQuery) SetAgentOnly(v bool) {
+	o.AgentOnly = &v
+}
+
 // GetInteractionId returns the InteractionId field value if set, zero value otherwise.
 func (o *CostAnalyticsQuery) GetInteractionId() string {
 	if o == nil || IsNil(o.InteractionId) {
@@ -730,6 +764,9 @@ func (o CostAnalyticsQuery) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.AgentRunId) {
 		toSerialize["agent_run_id"] = o.AgentRunId
+	}
+	if !IsNil(o.AgentOnly) {
+		toSerialize["agent_only"] = o.AgentOnly
 	}
 	if !IsNil(o.InteractionId) {
 		toSerialize["interaction_id"] = o.InteractionId

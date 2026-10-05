@@ -24,6 +24,7 @@ const (
 	AUDITAGGREGATIONDISTINCTFIELD_REQUEST_ID               AuditAggregationDistinctField = "request_id"
 	AUDITAGGREGATIONDISTINCTFIELD_PRINCIPAL_ID             AuditAggregationDistinctField = "principal_id"
 	AUDITAGGREGATIONDISTINCTFIELD_ACTOR_ID                 AuditAggregationDistinctField = "actor_id"
+	AUDITAGGREGATIONDISTINCTFIELD_USER_ID                  AuditAggregationDistinctField = "user_id"
 	AUDITAGGREGATIONDISTINCTFIELD_UNKNOWN_DEFAULT_OPEN_API AuditAggregationDistinctField = "unknown_default_open_api"
 )
 
@@ -33,6 +34,7 @@ var AllowedAuditAggregationDistinctFieldEnumValues = []AuditAggregationDistinctF
 	"request_id",
 	"principal_id",
 	"actor_id",
+	"user_id",
 	"unknown_default_open_api",
 }
 

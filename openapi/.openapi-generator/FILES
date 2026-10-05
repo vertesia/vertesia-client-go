@@ -201,6 +201,14 @@ model_async_execution_result.go
 model_async_interaction_execution_payload.go
 model_audio_result.go
 model_audit_action.go
+model_audit_adoption_active_days.go
+model_audit_adoption_bucket.go
+model_audit_adoption_filter.go
+model_audit_adoption_history.go
+model_audit_adoption_period.go
+model_audit_adoption_project.go
+model_audit_adoption_query.go
+model_audit_adoption_response.go
 model_audit_aggregation_detail_field.go
 model_audit_aggregation_detail_filter.go
 model_audit_aggregation_dimension.go
@@ -217,6 +225,10 @@ model_audit_aggregation_row.go
 model_audit_meter.go
 model_audit_trail_event.go
 model_audit_trail_response.go
+model_audit_usage_bucket.go
+model_audit_usage_counts.go
+model_audit_usage_query.go
+model_audit_usage_response.go
 model_auth_token_response.go
 model_autonomous_run_response.go
 model_aws_configuration.go

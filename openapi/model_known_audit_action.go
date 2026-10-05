@@ -33,6 +33,8 @@ const (
 	KNOWNAUDITACTION_CREDENTIALS_TOTP_GENERATION KnownAuditAction = "credentials_totp_generation"
 	KNOWNAUDITACTION_PUBLISH                     KnownAuditAction = "publish"
 	KNOWNAUDITACTION_UNPUBLISH                   KnownAuditAction = "unpublish"
+	KNOWNAUDITACTION_SEARCH                      KnownAuditAction = "search"
+	KNOWNAUDITACTION_READ                        KnownAuditAction = "read"
 	KNOWNAUDITACTION_INFERENCE                   KnownAuditAction = "inference"
 	KNOWNAUDITACTION_EMBEDDING                   KnownAuditAction = "embedding"
 	KNOWNAUDITACTION_IMAGE_GENERATION            KnownAuditAction = "image_generation"
@@ -55,6 +57,8 @@ var AllowedKnownAuditActionEnumValues = []KnownAuditAction{
 	"credentials_totp_generation",
 	"publish",
 	"unpublish",
+	"search",
+	"read",
 	"inference",
 	"embedding",
 	"image_generation",
