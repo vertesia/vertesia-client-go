@@ -222,6 +222,8 @@ for type_name, schema in schemas.items():
         or type_name == 'ExperimentalCanonicalInteractionInitialState'
         or type_name == 'ExperimentalCanonicalInteractionTurnSelection'
         or type_name == 'ExperimentalAgentConversationStreamEnvelope'
+        or type_name == 'ExperimentalAgentRunStreamEnvelope'
+        or type_name == 'ExperimentalAgentRunUpdatesResponse'
         or type_name == 'ConversationStreamDraftBlock'
         or type_name == 'ConversationStreamEvent'
         or type_name == 'ExperimentalAgentConversationTranscriptPage'

@@ -124,3 +124,6 @@ bash "$repo_dir/scripts/test-patch-canonical-result.sh"
 
 # Inspection wrappers must dispatch six distinct literal statuses and retain strict view closure.
 bash "$repo_dir/scripts/test-patch-run-inspection.sh"
+
+# Host status/control unions and required empty-page cursors share the finite canonical closure.
+bash "$repo_dir/scripts/test-patch-agent-host-envelopes.sh"
