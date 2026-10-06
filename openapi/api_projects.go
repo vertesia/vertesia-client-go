@@ -196,6 +196,8 @@ DeleteProject Delete a project
 
 Deletes a project.
 
+**Required permissions:** `account:admin`
+
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param projectId
 	@return ApiDeleteProjectRequest
