@@ -202,6 +202,8 @@ DeleteProjectFile Delete a file or file prefix
 
 Deletes a single file or, with `prefix=true`, all files under the provided relative project path prefix.
 
+**Required permissions:** Any of `content:write`, `content:delete`, `content:superadmin`
+
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param path
 	@return ApiDeleteProjectFileRequest

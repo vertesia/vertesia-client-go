@@ -1341,7 +1341,7 @@ func (r ApiListZenoMigrationsRequest) Execute() (*MigrationListResponse, *http.R
 /*
 ListZenoMigrations List content migrations
 
-Lists the available synchronous content migrations that can be executed by an authenticated admin API key.
+Lists the available synchronous content migrations that Vertesia staff can execute.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListZenoMigrationsRequest
@@ -1801,7 +1801,7 @@ func (r ApiRunZenoMigrationRequest) Execute() (*RunMigrationResponse, *http.Resp
 /*
 RunZenoMigration Run a content migration
 
-Executes a named synchronous migration. This endpoint requires an authenticated admin API key. `params` is passed through to the migration and its shape is the migration's own.
+Executes a named synchronous migration. Only Vertesia staff can run migrations. `params` is passed through to the migration and its shape is the migration's own.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param name
