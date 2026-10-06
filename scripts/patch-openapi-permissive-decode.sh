@@ -229,6 +229,8 @@ for type_name, schema in schemas.items():
         or type_name == 'ExperimentalAgentConversationTranscriptPage'
         or type_name == 'ExperimentalAgentConversationAcceptedOutputHistoryPage'
         or type_name == 'ExperimentalAgentConversationSourceDescriptor'
+        or type_name == 'ExperimentalAgentConversationUpgradePayload'
+        or type_name == 'ExperimentalAgentConversationUpgradeResponse'
         or type_name == 'ExperimentalAgentRoutingControlReceipt'
         or type_name == 'ExperimentalAdmitAgentGenerationPayload'
         or type_name == 'ExperimentalCanonicalUserMessagePayload'
