@@ -37,7 +37,9 @@ type UserGroup struct {
 	// Compartments — merged with user compartments using array union
 	Compartments []string `json:"compartments,omitempty"`
 	// Projects this group is allowed to be used in. When empty or absent the group is org-wide (usable in any project). When set, the group may only be used to grant permissions in the listed projects.
-	AllowedProjects      []string `json:"allowed_projects,omitempty"`
+	AllowedProjects []string `json:"allowed_projects,omitempty"`
+	// Number of users in the group. Returned by the group listing only.
+	MemberCount          *int32 `json:"member_count,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -434,6 +436,38 @@ func (o *UserGroup) SetAllowedProjects(v []string) {
 	o.AllowedProjects = v
 }
 
+// GetMemberCount returns the MemberCount field value if set, zero value otherwise.
+func (o *UserGroup) GetMemberCount() int32 {
+	if o == nil || IsNil(o.MemberCount) {
+		var ret int32
+		return ret
+	}
+	return *o.MemberCount
+}
+
+// GetMemberCountOk returns a tuple with the MemberCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UserGroup) GetMemberCountOk() (*int32, bool) {
+	if o == nil || IsNil(o.MemberCount) {
+		return nil, false
+	}
+	return o.MemberCount, true
+}
+
+// HasMemberCount returns a boolean if a field has been set.
+func (o *UserGroup) HasMemberCount() bool {
+	if o != nil && !IsNil(o.MemberCount) {
+		return true
+	}
+
+	return false
+}
+
+// SetMemberCount gets a reference to the given int32 and assigns it to the MemberCount field.
+func (o *UserGroup) SetMemberCount(v int32) {
+	o.MemberCount = &v
+}
+
 func (o UserGroup) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -470,6 +504,9 @@ func (o UserGroup) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.AllowedProjects) {
 		toSerialize["allowed_projects"] = o.AllowedProjects
+	}
+	if !IsNil(o.MemberCount) {
+		toSerialize["member_count"] = o.MemberCount
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -532,6 +569,7 @@ func (o *UserGroup) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "clearance")
 		delete(additionalProperties, "compartments")
 		delete(additionalProperties, "allowed_projects")
+		delete(additionalProperties, "member_count")
 		o.AdditionalProperties = additionalProperties
 	}
 
