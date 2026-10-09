@@ -19,12 +19,15 @@ var _ MappedNullable = &BedrockConverseOptions{}
 
 // BedrockConverseOptions struct for BedrockConverseOptions
 type BedrockConverseOptions struct {
-	OptionId        *string  `json:"_option_id,omitempty"`
-	MaxTokens       *float32 `json:"max_tokens,omitempty"`
-	Temperature     *float32 `json:"temperature,omitempty"`
-	TopP            *float32 `json:"top_p,omitempty"`
-	StopSequence    []string `json:"stop_sequence,omitempty"`
-	IncludeThoughts *bool    `json:"include_thoughts,omitempty"`
+	OptionId        *string          `json:"_option_id,omitempty"`
+	MaxTokens       *float32         `json:"max_tokens,omitempty"`
+	Temperature     *float32         `json:"temperature,omitempty"`
+	TopP            *float32         `json:"top_p,omitempty"`
+	StopSequence    []string         `json:"stop_sequence,omitempty"`
+	Effort          *ReasoningEffort `json:"effort,omitempty"`
+	ReasoningEffort *ReasoningEffort `json:"reasoning_effort,omitempty"`
+	Verbosity       *string          `json:"verbosity,omitempty"`
+	IncludeThoughts *bool            `json:"include_thoughts,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
 	ServiceTier *string `json:"service_tier,omitempty"`
 	// AdditionalProperties preserves unknown fields across read-edit-save.
@@ -208,6 +211,102 @@ func (o *BedrockConverseOptions) SetStopSequence(v []string) {
 	o.StopSequence = v
 }
 
+// GetEffort returns the Effort field value if set, zero value otherwise.
+func (o *BedrockConverseOptions) GetEffort() ReasoningEffort {
+	if o == nil || IsNil(o.Effort) {
+		var ret ReasoningEffort
+		return ret
+	}
+	return *o.Effort
+}
+
+// GetEffortOk returns a tuple with the Effort field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BedrockConverseOptions) GetEffortOk() (*ReasoningEffort, bool) {
+	if o == nil || IsNil(o.Effort) {
+		return nil, false
+	}
+	return o.Effort, true
+}
+
+// HasEffort returns a boolean if a field has been set.
+func (o *BedrockConverseOptions) HasEffort() bool {
+	if o != nil && !IsNil(o.Effort) {
+		return true
+	}
+
+	return false
+}
+
+// SetEffort gets a reference to the given ReasoningEffort and assigns it to the Effort field.
+func (o *BedrockConverseOptions) SetEffort(v ReasoningEffort) {
+	o.Effort = &v
+}
+
+// GetReasoningEffort returns the ReasoningEffort field value if set, zero value otherwise.
+func (o *BedrockConverseOptions) GetReasoningEffort() ReasoningEffort {
+	if o == nil || IsNil(o.ReasoningEffort) {
+		var ret ReasoningEffort
+		return ret
+	}
+	return *o.ReasoningEffort
+}
+
+// GetReasoningEffortOk returns a tuple with the ReasoningEffort field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BedrockConverseOptions) GetReasoningEffortOk() (*ReasoningEffort, bool) {
+	if o == nil || IsNil(o.ReasoningEffort) {
+		return nil, false
+	}
+	return o.ReasoningEffort, true
+}
+
+// HasReasoningEffort returns a boolean if a field has been set.
+func (o *BedrockConverseOptions) HasReasoningEffort() bool {
+	if o != nil && !IsNil(o.ReasoningEffort) {
+		return true
+	}
+
+	return false
+}
+
+// SetReasoningEffort gets a reference to the given ReasoningEffort and assigns it to the ReasoningEffort field.
+func (o *BedrockConverseOptions) SetReasoningEffort(v ReasoningEffort) {
+	o.ReasoningEffort = &v
+}
+
+// GetVerbosity returns the Verbosity field value if set, zero value otherwise.
+func (o *BedrockConverseOptions) GetVerbosity() string {
+	if o == nil || IsNil(o.Verbosity) {
+		var ret string
+		return ret
+	}
+	return *o.Verbosity
+}
+
+// GetVerbosityOk returns a tuple with the Verbosity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BedrockConverseOptions) GetVerbosityOk() (*string, bool) {
+	if o == nil || IsNil(o.Verbosity) {
+		return nil, false
+	}
+	return o.Verbosity, true
+}
+
+// HasVerbosity returns a boolean if a field has been set.
+func (o *BedrockConverseOptions) HasVerbosity() bool {
+	if o != nil && !IsNil(o.Verbosity) {
+		return true
+	}
+
+	return false
+}
+
+// SetVerbosity gets a reference to the given string and assigns it to the Verbosity field.
+func (o *BedrockConverseOptions) SetVerbosity(v string) {
+	o.Verbosity = &v
+}
+
 // GetIncludeThoughts returns the IncludeThoughts field value if set, zero value otherwise.
 func (o *BedrockConverseOptions) GetIncludeThoughts() bool {
 	if o == nil || IsNil(o.IncludeThoughts) {
@@ -284,7 +383,7 @@ func (o BedrockConverseOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "include_thoughts", "service_tier"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "effort", "reasoning_effort", "verbosity", "include_thoughts", "service_tier"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -303,6 +402,15 @@ func (o BedrockConverseOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.StopSequence) {
 		toSerialize["stop_sequence"] = o.StopSequence
+	}
+	if !IsNil(o.Effort) {
+		toSerialize["effort"] = o.Effort
+	}
+	if !IsNil(o.ReasoningEffort) {
+		toSerialize["reasoning_effort"] = o.ReasoningEffort
+	}
+	if !IsNil(o.Verbosity) {
+		toSerialize["verbosity"] = o.Verbosity
 	}
 	if !IsNil(o.IncludeThoughts) {
 		toSerialize["include_thoughts"] = o.IncludeThoughts
@@ -365,7 +473,7 @@ func (o *BedrockConverseOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "include_thoughts", "service_tier"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "effort", "reasoning_effort", "verbosity", "include_thoughts", "service_tier"}) {
 			delete(extra, key)
 		}
 	}
