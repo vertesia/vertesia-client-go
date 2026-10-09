@@ -32,6 +32,8 @@ const (
 	TURNEVALUATIONFLAG_FOLLOWUP_AFTER_ANSWER      TurnEvaluationFlag = "followup_after_answer"
 	TURNEVALUATIONFLAG_APPROVAL_DENIED            TurnEvaluationFlag = "approval_denied"
 	TURNEVALUATIONFLAG_CIRCUIT_BREAKER            TurnEvaluationFlag = "circuit_breaker"
+	TURNEVALUATIONFLAG_NO_VISIBLE_ANSWER          TurnEvaluationFlag = "no_visible_answer"
+	TURNEVALUATIONFLAG_ANSWER_IN_TOOL_PREAMBLE    TurnEvaluationFlag = "answer_in_tool_preamble"
 	TURNEVALUATIONFLAG_UNKNOWN_DEFAULT_OPEN_API   TurnEvaluationFlag = "unknown_default_open_api"
 )
 
@@ -49,6 +51,8 @@ var AllowedTurnEvaluationFlagEnumValues = []TurnEvaluationFlag{
 	"followup_after_answer",
 	"approval_denied",
 	"circuit_breaker",
+	"no_visible_answer",
+	"answer_in_tool_preamble",
 	"unknown_default_open_api",
 }
 
