@@ -22,6 +22,8 @@ type AlterTableOperation struct {
 	AlterTableOperationOneOf1 *AlterTableOperationOneOf1
 	AlterTableOperationOneOf2 *AlterTableOperationOneOf2
 	AlterTableOperationOneOf3 *AlterTableOperationOneOf3
+	AlterTableOperationOneOf4 *AlterTableOperationOneOf4
+	AlterTableOperationOneOf5 *AlterTableOperationOneOf5
 }
 
 // AlterTableOperationOneOfAsAlterTableOperation is a convenience function that returns AlterTableOperationOneOf wrapped in AlterTableOperation
@@ -49,6 +51,20 @@ func AlterTableOperationOneOf2AsAlterTableOperation(v *AlterTableOperationOneOf2
 func AlterTableOperationOneOf3AsAlterTableOperation(v *AlterTableOperationOneOf3) AlterTableOperation {
 	return AlterTableOperation{
 		AlterTableOperationOneOf3: v,
+	}
+}
+
+// AlterTableOperationOneOf4AsAlterTableOperation is a convenience function that returns AlterTableOperationOneOf4 wrapped in AlterTableOperation
+func AlterTableOperationOneOf4AsAlterTableOperation(v *AlterTableOperationOneOf4) AlterTableOperation {
+	return AlterTableOperation{
+		AlterTableOperationOneOf4: v,
+	}
+}
+
+// AlterTableOperationOneOf5AsAlterTableOperation is a convenience function that returns AlterTableOperationOneOf5 wrapped in AlterTableOperation
+func AlterTableOperationOneOf5AsAlterTableOperation(v *AlterTableOperationOneOf5) AlterTableOperation {
+	return AlterTableOperation{
+		AlterTableOperationOneOf5: v,
 	}
 }
 
@@ -124,12 +140,48 @@ func (dst *AlterTableOperation) UnmarshalJSON(data []byte) error {
 		dst.AlterTableOperationOneOf3 = nil
 	}
 
+	// try to unmarshal data into AlterTableOperationOneOf4
+	err = newStrictDecoder(data).Decode(&dst.AlterTableOperationOneOf4)
+	if err == nil {
+		jsonAlterTableOperationOneOf4, _ := json.Marshal(dst.AlterTableOperationOneOf4)
+		if string(jsonAlterTableOperationOneOf4) == "{}" { // empty struct
+			dst.AlterTableOperationOneOf4 = nil
+		} else {
+			if err = validator.Validate(dst.AlterTableOperationOneOf4); err != nil {
+				dst.AlterTableOperationOneOf4 = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.AlterTableOperationOneOf4 = nil
+	}
+
+	// try to unmarshal data into AlterTableOperationOneOf5
+	err = newStrictDecoder(data).Decode(&dst.AlterTableOperationOneOf5)
+	if err == nil {
+		jsonAlterTableOperationOneOf5, _ := json.Marshal(dst.AlterTableOperationOneOf5)
+		if string(jsonAlterTableOperationOneOf5) == "{}" { // empty struct
+			dst.AlterTableOperationOneOf5 = nil
+		} else {
+			if err = validator.Validate(dst.AlterTableOperationOneOf5); err != nil {
+				dst.AlterTableOperationOneOf5 = nil
+			} else {
+				match++
+			}
+		}
+	} else {
+		dst.AlterTableOperationOneOf5 = nil
+	}
+
 	if match > 1 { // more than 1 match
 		// reset to nil
 		dst.AlterTableOperationOneOf = nil
 		dst.AlterTableOperationOneOf1 = nil
 		dst.AlterTableOperationOneOf2 = nil
 		dst.AlterTableOperationOneOf3 = nil
+		dst.AlterTableOperationOneOf4 = nil
+		dst.AlterTableOperationOneOf5 = nil
 
 		return fmt.Errorf("data matches more than one schema in oneOf(AlterTableOperation)")
 	} else if match == 1 {
@@ -157,6 +209,14 @@ func (src AlterTableOperation) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.AlterTableOperationOneOf3)
 	}
 
+	if src.AlterTableOperationOneOf4 != nil {
+		return json.Marshal(&src.AlterTableOperationOneOf4)
+	}
+
+	if src.AlterTableOperationOneOf5 != nil {
+		return json.Marshal(&src.AlterTableOperationOneOf5)
+	}
+
 	return nil, nil // no data in oneOf schemas
 }
 
@@ -181,6 +241,14 @@ func (obj *AlterTableOperation) GetActualInstance() interface{} {
 		return obj.AlterTableOperationOneOf3
 	}
 
+	if obj.AlterTableOperationOneOf4 != nil {
+		return obj.AlterTableOperationOneOf4
+	}
+
+	if obj.AlterTableOperationOneOf5 != nil {
+		return obj.AlterTableOperationOneOf5
+	}
+
 	// all schemas are nil
 	return nil
 }
@@ -201,6 +269,14 @@ func (obj AlterTableOperation) GetActualInstanceValue() interface{} {
 
 	if obj.AlterTableOperationOneOf3 != nil {
 		return *obj.AlterTableOperationOneOf3
+	}
+
+	if obj.AlterTableOperationOneOf4 != nil {
+		return *obj.AlterTableOperationOneOf4
+	}
+
+	if obj.AlterTableOperationOneOf5 != nil {
+		return *obj.AlterTableOperationOneOf5
 	}
 
 	// all schemas are nil
