@@ -21,6 +21,7 @@ var _ MappedNullable = &OpenAiTextOptions{}
 type OpenAiTextOptions struct {
 	OptionId         *string                       `json:"_option_id,omitempty"`
 	ImageGeneration  *OpenAiImageGenerationOptions `json:"image_generation,omitempty"`
+	Seed             *float32                      `json:"seed,omitempty"`
 	MaxTokens        *float32                      `json:"max_tokens,omitempty"`
 	Effort           *ReasoningEffort              `json:"effort,omitempty"`
 	ReasoningEffort  *ReasoningEffort              `json:"reasoning_effort,omitempty"`
@@ -118,6 +119,38 @@ func (o *OpenAiTextOptions) HasImageGeneration() bool {
 // SetImageGeneration gets a reference to the given OpenAiImageGenerationOptions and assigns it to the ImageGeneration field.
 func (o *OpenAiTextOptions) SetImageGeneration(v OpenAiImageGenerationOptions) {
 	o.ImageGeneration = &v
+}
+
+// GetSeed returns the Seed field value if set, zero value otherwise.
+func (o *OpenAiTextOptions) GetSeed() float32 {
+	if o == nil || IsNil(o.Seed) {
+		var ret float32
+		return ret
+	}
+	return *o.Seed
+}
+
+// GetSeedOk returns a tuple with the Seed field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiTextOptions) GetSeedOk() (*float32, bool) {
+	if o == nil || IsNil(o.Seed) {
+		return nil, false
+	}
+	return o.Seed, true
+}
+
+// HasSeed returns a boolean if a field has been set.
+func (o *OpenAiTextOptions) HasSeed() bool {
+	if o != nil && !IsNil(o.Seed) {
+		return true
+	}
+
+	return false
+}
+
+// SetSeed gets a reference to the given float32 and assigns it to the Seed field.
+func (o *OpenAiTextOptions) SetSeed(v float32) {
+	o.Seed = &v
 }
 
 // GetMaxTokens returns the MaxTokens field value if set, zero value otherwise.
@@ -516,7 +549,7 @@ func (o OpenAiTextOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "max_tokens", "effort", "reasoning_effort", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "seed", "max_tokens", "effort", "reasoning_effort", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -526,6 +559,9 @@ func (o OpenAiTextOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ImageGeneration) {
 		toSerialize["image_generation"] = o.ImageGeneration
+	}
+	if !IsNil(o.Seed) {
+		toSerialize["seed"] = o.Seed
 	}
 	if !IsNil(o.MaxTokens) {
 		toSerialize["max_tokens"] = o.MaxTokens
@@ -618,7 +654,7 @@ func (o *OpenAiTextOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "max_tokens", "effort", "reasoning_effort", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "seed", "max_tokens", "effort", "reasoning_effort", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
 			delete(extra, key)
 		}
 	}

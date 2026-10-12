@@ -19,13 +19,14 @@ var _ MappedNullable = &BedrockNovaOptions{}
 
 // BedrockNovaOptions struct for BedrockNovaOptions
 type BedrockNovaOptions struct {
-	OptionId        *string  `json:"_option_id,omitempty"`
-	MaxTokens       *float32 `json:"max_tokens,omitempty"`
-	Temperature     *float32 `json:"temperature,omitempty"`
-	TopP            *float32 `json:"top_p,omitempty"`
-	TopK            *float32 `json:"top_k,omitempty"`
-	StopSequence    []string `json:"stop_sequence,omitempty"`
-	IncludeThoughts *bool    `json:"include_thoughts,omitempty"`
+	OptionId        *string          `json:"_option_id,omitempty"`
+	Effort          *ReasoningEffort `json:"effort,omitempty"`
+	MaxTokens       *float32         `json:"max_tokens,omitempty"`
+	Temperature     *float32         `json:"temperature,omitempty"`
+	TopP            *float32         `json:"top_p,omitempty"`
+	TopK            *float32         `json:"top_k,omitempty"`
+	StopSequence    []string         `json:"stop_sequence,omitempty"`
+	IncludeThoughts *bool            `json:"include_thoughts,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
 	ServiceTier *string `json:"service_tier,omitempty"`
 	// AdditionalProperties preserves unknown fields across read-edit-save.
@@ -79,6 +80,38 @@ func (o *BedrockNovaOptions) HasOptionId() bool {
 // SetOptionId gets a reference to the given string and assigns it to the OptionId field.
 func (o *BedrockNovaOptions) SetOptionId(v string) {
 	o.OptionId = &v
+}
+
+// GetEffort returns the Effort field value if set, zero value otherwise.
+func (o *BedrockNovaOptions) GetEffort() ReasoningEffort {
+	if o == nil || IsNil(o.Effort) {
+		var ret ReasoningEffort
+		return ret
+	}
+	return *o.Effort
+}
+
+// GetEffortOk returns a tuple with the Effort field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BedrockNovaOptions) GetEffortOk() (*ReasoningEffort, bool) {
+	if o == nil || IsNil(o.Effort) {
+		return nil, false
+	}
+	return o.Effort, true
+}
+
+// HasEffort returns a boolean if a field has been set.
+func (o *BedrockNovaOptions) HasEffort() bool {
+	if o != nil && !IsNil(o.Effort) {
+		return true
+	}
+
+	return false
+}
+
+// SetEffort gets a reference to the given ReasoningEffort and assigns it to the Effort field.
+func (o *BedrockNovaOptions) SetEffort(v ReasoningEffort) {
+	o.Effort = &v
 }
 
 // GetMaxTokens returns the MaxTokens field value if set, zero value otherwise.
@@ -317,13 +350,16 @@ func (o BedrockNovaOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "include_thoughts", "service_tier"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "effort", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "include_thoughts", "service_tier"}) {
 			toSerialize[key] = value
 		}
 	}
 
 	if !IsNil(o.OptionId) {
 		toSerialize["_option_id"] = o.OptionId
+	}
+	if !IsNil(o.Effort) {
+		toSerialize["effort"] = o.Effort
 	}
 	if !IsNil(o.MaxTokens) {
 		toSerialize["max_tokens"] = o.MaxTokens
@@ -401,7 +437,7 @@ func (o *BedrockNovaOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "include_thoughts", "service_tier"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "effort", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "include_thoughts", "service_tier"}) {
 			delete(extra, key)
 		}
 	}
