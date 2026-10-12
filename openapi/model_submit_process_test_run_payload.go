@@ -22,6 +22,8 @@ var _ MappedNullable = &SubmitProcessTestRunPayload{}
 type SubmitProcessTestRunPayload struct {
 	Process   ProcessTestTarget     `json:"process"`
 	Scenarios []ProcessTestScenario `json:"scenarios"`
+	// Client-chosen key, unique per intended run, that makes this request safe to retry. A repeat of the request with the same key and the same body returns the run the first request started instead of starting another. Reusing a key with a different body is rejected with 409. Keys are scoped to the project and stay bound to their run for as long as it exists; once the run is deleted, the same key starts a new one.
+	IdempotencyKey *string `json:"idempotency_key,omitempty"`
 }
 
 type _SubmitProcessTestRunPayload SubmitProcessTestRunPayload
@@ -93,6 +95,38 @@ func (o *SubmitProcessTestRunPayload) SetScenarios(v []ProcessTestScenario) {
 	o.Scenarios = v
 }
 
+// GetIdempotencyKey returns the IdempotencyKey field value if set, zero value otherwise.
+func (o *SubmitProcessTestRunPayload) GetIdempotencyKey() string {
+	if o == nil || IsNil(o.IdempotencyKey) {
+		var ret string
+		return ret
+	}
+	return *o.IdempotencyKey
+}
+
+// GetIdempotencyKeyOk returns a tuple with the IdempotencyKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SubmitProcessTestRunPayload) GetIdempotencyKeyOk() (*string, bool) {
+	if o == nil || IsNil(o.IdempotencyKey) {
+		return nil, false
+	}
+	return o.IdempotencyKey, true
+}
+
+// HasIdempotencyKey returns a boolean if a field has been set.
+func (o *SubmitProcessTestRunPayload) HasIdempotencyKey() bool {
+	if o != nil && !IsNil(o.IdempotencyKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetIdempotencyKey gets a reference to the given string and assigns it to the IdempotencyKey field.
+func (o *SubmitProcessTestRunPayload) SetIdempotencyKey(v string) {
+	o.IdempotencyKey = &v
+}
+
 func (o SubmitProcessTestRunPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -105,6 +139,9 @@ func (o SubmitProcessTestRunPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["process"] = o.Process
 	toSerialize["scenarios"] = o.Scenarios
+	if !IsNil(o.IdempotencyKey) {
+		toSerialize["idempotency_key"] = o.IdempotencyKey
+	}
 	return toSerialize, nil
 }
 
