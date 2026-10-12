@@ -895,6 +895,7 @@ model_service_account_token_request.go
 model_set_file_metadata_payload.go
 model_set_mcp_api_key_request.go
 model_set_object_embeddings_response.go
+model_set_object_text_payload.go
 model_signal_agent_response.go
 model_signal_event_properties.go
 model_signal_event_properties_sender.go
