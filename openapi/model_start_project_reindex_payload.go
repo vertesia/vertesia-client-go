@@ -12,6 +12,7 @@ package openapi
 
 import (
 	"encoding/json"
+	"time"
 )
 
 // checks if the StartProjectReindexPayload type satisfies the MappedNullable interface at compile time
@@ -24,6 +25,8 @@ type StartProjectReindexPayload struct {
 	Concurrency        *float32 `json:"concurrency,omitempty"`
 	BulkSizeBytes      *float32 `json:"bulk_size_bytes,omitempty"`
 	BulkConcurrency    *float32 `json:"bulk_concurrency,omitempty"`
+	// When set, reindex only documents whose updated_at is at or after this RFC3339/ISO-8601 datetime. Writes in-place into the live index (no new versioned target, no alias swap). Omit for a full reindex into a fresh versioned target.
+	ModifiedSince *time.Time `json:"modified_since,omitempty"`
 }
 
 // NewStartProjectReindexPayload instantiates a new StartProjectReindexPayload object
@@ -203,6 +206,38 @@ func (o *StartProjectReindexPayload) SetBulkConcurrency(v float32) {
 	o.BulkConcurrency = &v
 }
 
+// GetModifiedSince returns the ModifiedSince field value if set, zero value otherwise.
+func (o *StartProjectReindexPayload) GetModifiedSince() time.Time {
+	if o == nil || IsNil(o.ModifiedSince) {
+		var ret time.Time
+		return ret
+	}
+	return *o.ModifiedSince
+}
+
+// GetModifiedSinceOk returns a tuple with the ModifiedSince field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *StartProjectReindexPayload) GetModifiedSinceOk() (*time.Time, bool) {
+	if o == nil || IsNil(o.ModifiedSince) {
+		return nil, false
+	}
+	return o.ModifiedSince, true
+}
+
+// HasModifiedSince returns a boolean if a field has been set.
+func (o *StartProjectReindexPayload) HasModifiedSince() bool {
+	if o != nil && !IsNil(o.ModifiedSince) {
+		return true
+	}
+
+	return false
+}
+
+// SetModifiedSince gets a reference to the given time.Time and assigns it to the ModifiedSince field.
+func (o *StartProjectReindexPayload) SetModifiedSince(v time.Time) {
+	o.ModifiedSince = &v
+}
+
 func (o StartProjectReindexPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -227,6 +262,9 @@ func (o StartProjectReindexPayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.BulkConcurrency) {
 		toSerialize["bulk_concurrency"] = o.BulkConcurrency
+	}
+	if !IsNil(o.ModifiedSince) {
+		toSerialize["modified_since"] = o.ModifiedSince
 	}
 	return toSerialize, nil
 }

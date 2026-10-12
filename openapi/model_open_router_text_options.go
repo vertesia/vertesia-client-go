@@ -19,6 +19,7 @@ var _ MappedNullable = &OpenRouterTextOptions{}
 
 // OpenRouterTextOptions struct for OpenRouterTextOptions
 type OpenRouterTextOptions struct {
+	Seed             *float32         `json:"seed,omitempty"`
 	MaxTokens        *float32         `json:"max_tokens,omitempty"`
 	ToolChoice       *string          `json:"tool_choice,omitempty"`
 	Effort           *ReasoningEffort `json:"effort,omitempty"`
@@ -61,6 +62,38 @@ func NewOpenRouterTextOptions() *OpenRouterTextOptions {
 func NewOpenRouterTextOptionsWithDefaults() *OpenRouterTextOptions {
 	this := OpenRouterTextOptions{}
 	return &this
+}
+
+// GetSeed returns the Seed field value if set, zero value otherwise.
+func (o *OpenRouterTextOptions) GetSeed() float32 {
+	if o == nil || IsNil(o.Seed) {
+		var ret float32
+		return ret
+	}
+	return *o.Seed
+}
+
+// GetSeedOk returns a tuple with the Seed field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenRouterTextOptions) GetSeedOk() (*float32, bool) {
+	if o == nil || IsNil(o.Seed) {
+		return nil, false
+	}
+	return o.Seed, true
+}
+
+// HasSeed returns a boolean if a field has been set.
+func (o *OpenRouterTextOptions) HasSeed() bool {
+	if o != nil && !IsNil(o.Seed) {
+		return true
+	}
+
+	return false
+}
+
+// SetSeed gets a reference to the given float32 and assigns it to the Seed field.
+func (o *OpenRouterTextOptions) SetSeed(v float32) {
+	o.Seed = &v
 }
 
 // GetMaxTokens returns the MaxTokens field value if set, zero value otherwise.
@@ -779,11 +812,14 @@ func (o OpenRouterTextOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"max_tokens", "tool_choice", "effort", "reasoning_effort", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "_option_id", "provider_sort", "provider_order", "provider_only", "provider_ignore", "provider_allow_fallbacks", "provider_require_parameters", "provider_data_collection", "provider_zdr", "provider_quantizations"}) {
+		if !modelOptionsIsKnownField(key, []string{"seed", "max_tokens", "tool_choice", "effort", "reasoning_effort", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "_option_id", "provider_sort", "provider_order", "provider_only", "provider_ignore", "provider_allow_fallbacks", "provider_require_parameters", "provider_data_collection", "provider_zdr", "provider_quantizations"}) {
 			toSerialize[key] = value
 		}
 	}
 
+	if !IsNil(o.Seed) {
+		toSerialize["seed"] = o.Seed
+	}
 	if !IsNil(o.MaxTokens) {
 		toSerialize["max_tokens"] = o.MaxTokens
 	}
@@ -905,7 +941,7 @@ func (o *OpenRouterTextOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"max_tokens", "tool_choice", "effort", "reasoning_effort", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "_option_id", "provider_sort", "provider_order", "provider_only", "provider_ignore", "provider_allow_fallbacks", "provider_require_parameters", "provider_data_collection", "provider_zdr", "provider_quantizations"}) {
+		if modelOptionsIsKnownField(key, []string{"seed", "max_tokens", "tool_choice", "effort", "reasoning_effort", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "_option_id", "provider_sort", "provider_order", "provider_only", "provider_ignore", "provider_allow_fallbacks", "provider_require_parameters", "provider_data_collection", "provider_zdr", "provider_quantizations"}) {
 			delete(extra, key)
 		}
 	}

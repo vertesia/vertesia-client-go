@@ -805,7 +805,7 @@ func (r ApiSearchRunsRequest) Execute() ([]ExecutionRunRef, *http.Response, erro
 /*
 SearchRuns Search runs
 
-Searches execution runs with a structured query body. Filters can include name, status, interaction, environment, model, tags, full-text query, parent runs, linked object, creation range, finish reason, creator, workflow IDs, run IDs, and agent-run status.
+Searches execution runs with a structured query body. Filters can include name, status, interaction, environment, model, tags, parent runs, creation range, finish reason, creator, workflow IDs, run IDs, and agent-run status.
 
 **Required permissions:** `run:read`
 
