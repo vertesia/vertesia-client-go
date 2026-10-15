@@ -349,7 +349,7 @@ DeleteInteraction Delete an interaction
 
 Deletes an interaction from the current project. Pass ?cascade=true to also delete every interaction that lists this one as its parent (forward-only — never deletes ancestors).
 
-**Required permissions:** `interaction:write`
+**Required permissions:** `interaction:delete`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param interactionId
