@@ -34,6 +34,7 @@ const (
 	PROMPTCACHEPATH_FALLBACK_WAIT_TIMEOUT             PromptCachePath = "fallback_wait_timeout"
 	PROMPTCACHEPATH_MINIMUM_TOKEN_REJECTION           PromptCachePath = "minimum_token_rejection"
 	PROMPTCACHEPATH_UNUSABLE_RESOURCE_RECREATED       PromptCachePath = "unusable_resource_recreated"
+	PROMPTCACHEPATH_UNSUPPORTED_MODEL                 PromptCachePath = "unsupported_model"
 	PROMPTCACHEPATH_UNKNOWN_DEFAULT_OPEN_API          PromptCachePath = "unknown_default_open_api"
 )
 
@@ -53,6 +54,7 @@ var AllowedPromptCachePathEnumValues = []PromptCachePath{
 	"fallback_wait_timeout",
 	"minimum_token_rejection",
 	"unusable_resource_recreated",
+	"unsupported_model",
 	"unknown_default_open_api",
 }
 
