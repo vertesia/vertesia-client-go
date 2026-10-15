@@ -347,7 +347,7 @@ func (r ApiDeletePromptRequest) Execute() (*DeleteByIdResult, *http.Response, er
 /*
 DeletePrompt Delete a prompt
 
-Deletes a prompt template from the current project.
+Deletes a prompt template from the current project. A prompt that an interaction still references cannot be deleted; detach it from those interactions first.
 
 **Required permissions:** `interaction:write`
 
