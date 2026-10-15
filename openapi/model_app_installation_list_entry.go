@@ -23,6 +23,7 @@ type AppInstallationListEntry struct {
 	Id            string                        `json:"id"`
 	Project       string                        `json:"project"`
 	OauthApproval *AppInstallationOauthApproval `json:"oauth_approval,omitempty"`
+	OauthClientId *string                       `json:"oauth_client_id,omitempty"`
 	Settings      map[string]interface{}        `json:"settings,omitempty"`
 	// Admin-managed allowlist of tool names permitted for this installation. When undefined, all tools from the app are permitted. When set, only listed tool names are available for agent configuration and execution.
 	ToolAllowlist []string `json:"tool_allowlist,omitempty"`
@@ -141,6 +142,38 @@ func (o *AppInstallationListEntry) HasOauthApproval() bool {
 // SetOauthApproval gets a reference to the given AppInstallationOauthApproval and assigns it to the OauthApproval field.
 func (o *AppInstallationListEntry) SetOauthApproval(v AppInstallationOauthApproval) {
 	o.OauthApproval = &v
+}
+
+// GetOauthClientId returns the OauthClientId field value if set, zero value otherwise.
+func (o *AppInstallationListEntry) GetOauthClientId() string {
+	if o == nil || IsNil(o.OauthClientId) {
+		var ret string
+		return ret
+	}
+	return *o.OauthClientId
+}
+
+// GetOauthClientIdOk returns a tuple with the OauthClientId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationListEntry) GetOauthClientIdOk() (*string, bool) {
+	if o == nil || IsNil(o.OauthClientId) {
+		return nil, false
+	}
+	return o.OauthClientId, true
+}
+
+// HasOauthClientId returns a boolean if a field has been set.
+func (o *AppInstallationListEntry) HasOauthClientId() bool {
+	if o != nil && !IsNil(o.OauthClientId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOauthClientId gets a reference to the given string and assigns it to the OauthClientId field.
+func (o *AppInstallationListEntry) SetOauthClientId(v string) {
+	o.OauthClientId = &v
 }
 
 // GetSettings returns the Settings field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -425,6 +458,9 @@ func (o AppInstallationListEntry) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.OauthApproval) {
 		toSerialize["oauth_approval"] = o.OauthApproval
 	}
+	if !IsNil(o.OauthClientId) {
+		toSerialize["oauth_client_id"] = o.OauthClientId
+	}
 	if o.Settings != nil {
 		toSerialize["settings"] = o.Settings
 	}
@@ -496,6 +532,7 @@ func (o *AppInstallationListEntry) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "project")
 		delete(additionalProperties, "oauth_approval")
+		delete(additionalProperties, "oauth_client_id")
 		delete(additionalProperties, "settings")
 		delete(additionalProperties, "tool_allowlist")
 		delete(additionalProperties, "oauth_bindings")

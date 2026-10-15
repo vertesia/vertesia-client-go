@@ -20,7 +20,8 @@ var _ MappedNullable = &AppManifest{}
 
 // AppManifest struct for AppManifest
 type AppManifest struct {
-	OauthScopes []string `json:"oauth_scopes,omitempty"`
+	OauthScopes []string              `json:"oauth_scopes,omitempty"`
+	OauthClient *AppOAuthClientConfig `json:"oauth_client,omitempty"`
 	// Monotonic edit revision used to detect concurrent updates.
 	EditRevision int32 `json:"edit_revision"`
 	// The name of the app, used as the id in the system. Must be in kebab case (e.g. my-app).
@@ -128,6 +129,38 @@ func (o *AppManifest) HasOauthScopes() bool {
 // SetOauthScopes gets a reference to the given []string and assigns it to the OauthScopes field.
 func (o *AppManifest) SetOauthScopes(v []string) {
 	o.OauthScopes = v
+}
+
+// GetOauthClient returns the OauthClient field value if set, zero value otherwise.
+func (o *AppManifest) GetOauthClient() AppOAuthClientConfig {
+	if o == nil || IsNil(o.OauthClient) {
+		var ret AppOAuthClientConfig
+		return ret
+	}
+	return *o.OauthClient
+}
+
+// GetOauthClientOk returns a tuple with the OauthClient field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppManifest) GetOauthClientOk() (*AppOAuthClientConfig, bool) {
+	if o == nil || IsNil(o.OauthClient) {
+		return nil, false
+	}
+	return o.OauthClient, true
+}
+
+// HasOauthClient returns a boolean if a field has been set.
+func (o *AppManifest) HasOauthClient() bool {
+	if o != nil && !IsNil(o.OauthClient) {
+		return true
+	}
+
+	return false
+}
+
+// SetOauthClient gets a reference to the given AppOAuthClientConfig and assigns it to the OauthClient field.
+func (o *AppManifest) SetOauthClient(v AppOAuthClientConfig) {
+	o.OauthClient = &v
 }
 
 // GetEditRevision returns the EditRevision field value
@@ -898,6 +931,9 @@ func (o AppManifest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.OauthScopes) {
 		toSerialize["oauth_scopes"] = o.OauthScopes
 	}
+	if !IsNil(o.OauthClient) {
+		toSerialize["oauth_client"] = o.OauthClient
+	}
 	toSerialize["edit_revision"] = o.EditRevision
 	toSerialize["name"] = o.Name
 	toSerialize["visibility"] = o.Visibility
@@ -1009,6 +1045,7 @@ func (o *AppManifest) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "oauth_scopes")
+		delete(additionalProperties, "oauth_client")
 		delete(additionalProperties, "edit_revision")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "visibility")

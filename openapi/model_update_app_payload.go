@@ -20,7 +20,8 @@ var _ MappedNullable = &UpdateAppPayload{}
 
 // UpdateAppPayload struct for UpdateAppPayload
 type UpdateAppPayload struct {
-	OauthScopes []string `json:"oauth_scopes,omitempty"`
+	OauthScopes []string              `json:"oauth_scopes,omitempty"`
+	OauthClient *AppOAuthClientConfig `json:"oauth_client,omitempty"`
 	// The name of the app, used as the id in the system. Must be in kebab case (e.g. my-app).
 	Name string `json:"name"`
 	// Visibility level of the app: - \"public\": visible to all accounts - \"private\": visible only to the owning account - \"vertesia\": visible only to Vertesia team members (any project)
@@ -119,6 +120,38 @@ func (o *UpdateAppPayload) HasOauthScopes() bool {
 // SetOauthScopes gets a reference to the given []string and assigns it to the OauthScopes field.
 func (o *UpdateAppPayload) SetOauthScopes(v []string) {
 	o.OauthScopes = v
+}
+
+// GetOauthClient returns the OauthClient field value if set, zero value otherwise.
+func (o *UpdateAppPayload) GetOauthClient() AppOAuthClientConfig {
+	if o == nil || IsNil(o.OauthClient) {
+		var ret AppOAuthClientConfig
+		return ret
+	}
+	return *o.OauthClient
+}
+
+// GetOauthClientOk returns a tuple with the OauthClient field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateAppPayload) GetOauthClientOk() (*AppOAuthClientConfig, bool) {
+	if o == nil || IsNil(o.OauthClient) {
+		return nil, false
+	}
+	return o.OauthClient, true
+}
+
+// HasOauthClient returns a boolean if a field has been set.
+func (o *UpdateAppPayload) HasOauthClient() bool {
+	if o != nil && !IsNil(o.OauthClient) {
+		return true
+	}
+
+	return false
+}
+
+// SetOauthClient gets a reference to the given AppOAuthClientConfig and assigns it to the OauthClient field.
+func (o *UpdateAppPayload) SetOauthClient(v AppOAuthClientConfig) {
+	o.OauthClient = &v
 }
 
 // GetName returns the Name field value
@@ -793,6 +826,9 @@ func (o UpdateAppPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.OauthScopes) {
 		toSerialize["oauth_scopes"] = o.OauthScopes
 	}
+	if !IsNil(o.OauthClient) {
+		toSerialize["oauth_client"] = o.OauthClient
+	}
 	toSerialize["name"] = o.Name
 	toSerialize["visibility"] = o.Visibility
 	toSerialize["title"] = o.Title
@@ -896,6 +932,7 @@ func (o *UpdateAppPayload) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "oauth_scopes")
+		delete(additionalProperties, "oauth_client")
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "visibility")
 		delete(additionalProperties, "title")

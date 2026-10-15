@@ -162,6 +162,7 @@ model_app_manifest_data.go
 model_app_manifest_preview_screenshot.go
 model_app_manifest_source.go
 model_app_manifest_source_git.go
+model_app_o_auth_client_config.go
 model_app_package.go
 model_app_package_event_hook.go
 model_app_package_hooks.go

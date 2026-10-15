@@ -20,6 +20,8 @@ var _ MappedNullable = &OAuthClientCreateResponse{}
 
 // OAuthClientCreateResponse struct for OAuthClientCreateResponse
 type OAuthClientCreateResponse struct {
+	// App associated with this client. Authorization requires an installation explicitly enabling this client and current user app access.
+	AppId                   *string                      `json:"app_id,omitempty"`
 	ClientName              string                       `json:"client_name"`
 	ClientType              OAuthClientType              `json:"client_type"`
 	RedirectUris            []string                     `json:"redirect_uris"`
@@ -74,6 +76,38 @@ func NewOAuthClientCreateResponse(clientName string, clientType OAuthClientType,
 func NewOAuthClientCreateResponseWithDefaults() *OAuthClientCreateResponse {
 	this := OAuthClientCreateResponse{}
 	return &this
+}
+
+// GetAppId returns the AppId field value if set, zero value otherwise.
+func (o *OAuthClientCreateResponse) GetAppId() string {
+	if o == nil || IsNil(o.AppId) {
+		var ret string
+		return ret
+	}
+	return *o.AppId
+}
+
+// GetAppIdOk returns a tuple with the AppId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OAuthClientCreateResponse) GetAppIdOk() (*string, bool) {
+	if o == nil || IsNil(o.AppId) {
+		return nil, false
+	}
+	return o.AppId, true
+}
+
+// HasAppId returns a boolean if a field has been set.
+func (o *OAuthClientCreateResponse) HasAppId() bool {
+	if o != nil && !IsNil(o.AppId) {
+		return true
+	}
+
+	return false
+}
+
+// SetAppId gets a reference to the given string and assigns it to the AppId field.
+func (o *OAuthClientCreateResponse) SetAppId(v string) {
+	o.AppId = &v
 }
 
 // GetClientName returns the ClientName field value
@@ -623,6 +657,9 @@ func (o OAuthClientCreateResponse) MarshalJSON() ([]byte, error) {
 
 func (o OAuthClientCreateResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.AppId) {
+		toSerialize["app_id"] = o.AppId
+	}
 	toSerialize["client_name"] = o.ClientName
 	toSerialize["client_type"] = o.ClientType
 	toSerialize["redirect_uris"] = o.RedirectUris
@@ -712,6 +749,7 @@ func (o *OAuthClientCreateResponse) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "app_id")
 		delete(additionalProperties, "client_name")
 		delete(additionalProperties, "client_type")
 		delete(additionalProperties, "redirect_uris")

@@ -19,6 +19,7 @@ var _ MappedNullable = &AppPackage{}
 
 // AppPackage struct for AppPackage
 type AppPackage struct {
+	OauthClient *AppOAuthClientConfig `json:"oauth_client,omitempty"`
 	// OAuth scopes requested by the app. Users must consent to project permissions.
 	OauthScopes []string `json:"oauth_scopes,omitempty"`
 	// The UI configuration of the app
@@ -65,6 +66,38 @@ func NewAppPackage() *AppPackage {
 func NewAppPackageWithDefaults() *AppPackage {
 	this := AppPackage{}
 	return &this
+}
+
+// GetOauthClient returns the OauthClient field value if set, zero value otherwise.
+func (o *AppPackage) GetOauthClient() AppOAuthClientConfig {
+	if o == nil || IsNil(o.OauthClient) {
+		var ret AppOAuthClientConfig
+		return ret
+	}
+	return *o.OauthClient
+}
+
+// GetOauthClientOk returns a tuple with the OauthClient field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppPackage) GetOauthClientOk() (*AppOAuthClientConfig, bool) {
+	if o == nil || IsNil(o.OauthClient) {
+		return nil, false
+	}
+	return o.OauthClient, true
+}
+
+// HasOauthClient returns a boolean if a field has been set.
+func (o *AppPackage) HasOauthClient() bool {
+	if o != nil && !IsNil(o.OauthClient) {
+		return true
+	}
+
+	return false
+}
+
+// SetOauthClient gets a reference to the given AppOAuthClientConfig and assigns it to the OauthClient field.
+func (o *AppPackage) SetOauthClient(v AppOAuthClientConfig) {
+	o.OauthClient = &v
 }
 
 // GetOauthScopes returns the OauthScopes field value if set, zero value otherwise.
@@ -557,6 +590,9 @@ func (o AppPackage) MarshalJSON() ([]byte, error) {
 
 func (o AppPackage) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.OauthClient) {
+		toSerialize["oauth_client"] = o.OauthClient
+	}
 	if !IsNil(o.OauthScopes) {
 		toSerialize["oauth_scopes"] = o.OauthScopes
 	}
