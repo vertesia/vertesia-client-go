@@ -19,20 +19,20 @@ var _ MappedNullable = &MistralTextOptions{}
 
 // MistralTextOptions struct for MistralTextOptions
 type MistralTextOptions struct {
-	OptionId          *string  `json:"_option_id,omitempty"`
-	MaxTokens         *float32 `json:"max_tokens,omitempty"`
-	Temperature       *float32 `json:"temperature,omitempty"`
-	TopP              *float32 `json:"top_p,omitempty"`
-	PresencePenalty   *float32 `json:"presence_penalty,omitempty"`
-	FrequencyPenalty  *float32 `json:"frequency_penalty,omitempty"`
-	StopSequence      []string `json:"stop_sequence,omitempty"`
-	Effort            *string  `json:"effort,omitempty"`
-	RandomSeed        *int32   `json:"random_seed,omitempty"`
-	SafePrompt        *bool    `json:"safe_prompt,omitempty"`
-	ParallelToolCalls *bool    `json:"parallel_tool_calls,omitempty"`
-	ToolChoice        *string  `json:"tool_choice,omitempty"`
-	PromptMode        *string  `json:"prompt_mode,omitempty"`
-	IncludeThoughts   *bool    `json:"include_thoughts,omitempty"`
+	OptionId          *string          `json:"_option_id,omitempty"`
+	MaxTokens         *float32         `json:"max_tokens,omitempty"`
+	Temperature       *float32         `json:"temperature,omitempty"`
+	TopP              *float32         `json:"top_p,omitempty"`
+	PresencePenalty   *float32         `json:"presence_penalty,omitempty"`
+	FrequencyPenalty  *float32         `json:"frequency_penalty,omitempty"`
+	StopSequence      []string         `json:"stop_sequence,omitempty"`
+	Effort            *ReasoningEffort `json:"effort,omitempty"`
+	RandomSeed        *int32           `json:"random_seed,omitempty"`
+	SafePrompt        *bool            `json:"safe_prompt,omitempty"`
+	ParallelToolCalls *bool            `json:"parallel_tool_calls,omitempty"`
+	ToolChoice        *string          `json:"tool_choice,omitempty"`
+	PromptMode        *string          `json:"prompt_mode,omitempty"`
+	IncludeThoughts   *bool            `json:"include_thoughts,omitempty"`
 	// AdditionalProperties preserves unknown fields across read-edit-save.
 	AdditionalProperties map[string]interface{} `json:"-"`
 }
@@ -279,9 +279,9 @@ func (o *MistralTextOptions) SetStopSequence(v []string) {
 }
 
 // GetEffort returns the Effort field value if set, zero value otherwise.
-func (o *MistralTextOptions) GetEffort() string {
+func (o *MistralTextOptions) GetEffort() ReasoningEffort {
 	if o == nil || IsNil(o.Effort) {
-		var ret string
+		var ret ReasoningEffort
 		return ret
 	}
 	return *o.Effort
@@ -289,7 +289,7 @@ func (o *MistralTextOptions) GetEffort() string {
 
 // GetEffortOk returns a tuple with the Effort field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *MistralTextOptions) GetEffortOk() (*string, bool) {
+func (o *MistralTextOptions) GetEffortOk() (*ReasoningEffort, bool) {
 	if o == nil || IsNil(o.Effort) {
 		return nil, false
 	}
@@ -305,8 +305,8 @@ func (o *MistralTextOptions) HasEffort() bool {
 	return false
 }
 
-// SetEffort gets a reference to the given string and assigns it to the Effort field.
-func (o *MistralTextOptions) SetEffort(v string) {
+// SetEffort gets a reference to the given ReasoningEffort and assigns it to the Effort field.
+func (o *MistralTextOptions) SetEffort(v ReasoningEffort) {
 	o.Effort = &v
 }
 
