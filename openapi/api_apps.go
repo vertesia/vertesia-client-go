@@ -1841,7 +1841,7 @@ func (r ApiGetAppRepoFileRequest) Execute() (*os.File, *http.Response, error) {
 /*
 GetAppRepoFile Read a file from the app git repository
 
-Returns the original bytes of a single file in the app's git repository at a ref (default branch when ref is omitted). Read-only — reads live from the git server without a clone.
+Returns the original bytes of a single file in the app's git repository at a ref (default branch when ref is omitted). Read-only — reads live from the git server without a clone. Served as an attachment to prevent active content rendering on the API origin.
 
 **Required permissions:** `account:member`
 
