@@ -20,8 +20,10 @@ var _ MappedNullable = &AppManifest{}
 
 // AppManifest struct for AppManifest
 type AppManifest struct {
-	OauthScopes []string              `json:"oauth_scopes,omitempty"`
-	OauthClient *AppOAuthClientConfig `json:"oauth_client,omitempty"`
+	// Shared MCP installation parameters available to every collection. Collection-local names must not overlap.
+	Parameters  map[string]McpConnectionParameter `json:"parameters,omitempty"`
+	OauthScopes []string                          `json:"oauth_scopes,omitempty"`
+	OauthClient *AppOAuthClientConfig             `json:"oauth_client,omitempty"`
 	// Monotonic edit revision used to detect concurrent updates.
 	EditRevision int32 `json:"edit_revision"`
 	// The name of the app, used as the id in the system. Must be in kebab case (e.g. my-app).
@@ -97,6 +99,38 @@ func NewAppManifest(editRevision int32, name string, visibility string, title st
 func NewAppManifestWithDefaults() *AppManifest {
 	this := AppManifest{}
 	return &this
+}
+
+// GetParameters returns the Parameters field value if set, zero value otherwise.
+func (o *AppManifest) GetParameters() map[string]McpConnectionParameter {
+	if o == nil || IsNil(o.Parameters) {
+		var ret map[string]McpConnectionParameter
+		return ret
+	}
+	return o.Parameters
+}
+
+// GetParametersOk returns a tuple with the Parameters field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppManifest) GetParametersOk() (map[string]McpConnectionParameter, bool) {
+	if o == nil || IsNil(o.Parameters) {
+		return map[string]McpConnectionParameter{}, false
+	}
+	return o.Parameters, true
+}
+
+// HasParameters returns a boolean if a field has been set.
+func (o *AppManifest) HasParameters() bool {
+	if o != nil && !IsNil(o.Parameters) {
+		return true
+	}
+
+	return false
+}
+
+// SetParameters gets a reference to the given map[string]McpConnectionParameter and assigns it to the Parameters field.
+func (o *AppManifest) SetParameters(v map[string]McpConnectionParameter) {
+	o.Parameters = v
 }
 
 // GetOauthScopes returns the OauthScopes field value if set, zero value otherwise.
@@ -928,6 +962,9 @@ func (o AppManifest) MarshalJSON() ([]byte, error) {
 
 func (o AppManifest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Parameters) {
+		toSerialize["parameters"] = o.Parameters
+	}
 	if !IsNil(o.OauthScopes) {
 		toSerialize["oauth_scopes"] = o.OauthScopes
 	}
@@ -1044,6 +1081,7 @@ func (o *AppManifest) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "parameters")
 		delete(additionalProperties, "oauth_scopes")
 		delete(additionalProperties, "oauth_client")
 		delete(additionalProperties, "edit_revision")

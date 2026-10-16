@@ -152,9 +152,11 @@ model_app_inspection_issue.go
 model_app_inspection_result.go
 model_app_installation.go
 model_app_installation_list_entry.go
+model_app_installation_mcp_configuration.go
 model_app_installation_o_auth_binding.go
 model_app_installation_oauth_approval.go
 model_app_installation_payload.go
+model_app_installation_payload_mcp_shared_parameters_value.go
 model_app_installation_provider_binding.go
 model_app_installation_with_manifest.go
 model_app_manifest.go
@@ -700,10 +702,13 @@ model_markdown_rendition_format.go
 model_mcp_api_key_config.go
 model_mcp_api_key_credential.go
 model_mcp_api_key_status.go
+model_mcp_connection_parameter.go
 model_mcp_o_auth_connect_response.go
 model_mcp_o_auth_disconnect_response.go
 model_mcp_o_auth_token_request.go
 model_mcp_o_auth_token_response.go
+model_mcp_public_parameter.go
+model_mcp_secret_parameter.go
 model_mcp_tool_annotations.go
 model_mcp_tool_collection_object.go
 model_mcpo_auth_config.go

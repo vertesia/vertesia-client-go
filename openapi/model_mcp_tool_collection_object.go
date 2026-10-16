@@ -23,8 +23,11 @@ type MCPToolCollectionObject struct {
 	// The URL endpoint for the tool collection
 	Url string `json:"url"`
 	// Optional authentication type required for this tool collection
-	Auth *ToolCollectionAuthType `json:"auth,omitempty"`
-	Type string                  `json:"type"`
+	Auth       *ToolCollectionAuthType           `json:"auth,omitempty"`
+	Type       string                            `json:"type"`
+	Parameters map[string]McpConnectionParameter `json:"parameters,omitempty"`
+	// HTTP header templates. Reference declared installation parameters with {{name}}. Never embed secrets.
+	Headers map[string]string `json:"headers,omitempty"`
 	// Stable identifier for this collection. Used to key oauth_bindings on AppInstallation — protects against collection renames. Required for new manifests.
 	Id string `json:"id"`
 	// Name for the tool collection. Human-readable label for the collection. Used in UI.
@@ -148,6 +151,70 @@ func (o *MCPToolCollectionObject) GetTypeOk() (*string, bool) {
 // SetType sets field value
 func (o *MCPToolCollectionObject) SetType(v string) {
 	o.Type = v
+}
+
+// GetParameters returns the Parameters field value if set, zero value otherwise.
+func (o *MCPToolCollectionObject) GetParameters() map[string]McpConnectionParameter {
+	if o == nil || IsNil(o.Parameters) {
+		var ret map[string]McpConnectionParameter
+		return ret
+	}
+	return o.Parameters
+}
+
+// GetParametersOk returns a tuple with the Parameters field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MCPToolCollectionObject) GetParametersOk() (map[string]McpConnectionParameter, bool) {
+	if o == nil || IsNil(o.Parameters) {
+		return map[string]McpConnectionParameter{}, false
+	}
+	return o.Parameters, true
+}
+
+// HasParameters returns a boolean if a field has been set.
+func (o *MCPToolCollectionObject) HasParameters() bool {
+	if o != nil && !IsNil(o.Parameters) {
+		return true
+	}
+
+	return false
+}
+
+// SetParameters gets a reference to the given map[string]McpConnectionParameter and assigns it to the Parameters field.
+func (o *MCPToolCollectionObject) SetParameters(v map[string]McpConnectionParameter) {
+	o.Parameters = v
+}
+
+// GetHeaders returns the Headers field value if set, zero value otherwise.
+func (o *MCPToolCollectionObject) GetHeaders() map[string]string {
+	if o == nil || IsNil(o.Headers) {
+		var ret map[string]string
+		return ret
+	}
+	return o.Headers
+}
+
+// GetHeadersOk returns a tuple with the Headers field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MCPToolCollectionObject) GetHeadersOk() (map[string]string, bool) {
+	if o == nil || IsNil(o.Headers) {
+		return map[string]string{}, false
+	}
+	return o.Headers, true
+}
+
+// HasHeaders returns a boolean if a field has been set.
+func (o *MCPToolCollectionObject) HasHeaders() bool {
+	if o != nil && !IsNil(o.Headers) {
+		return true
+	}
+
+	return false
+}
+
+// SetHeaders gets a reference to the given map[string]string and assigns it to the Headers field.
+func (o *MCPToolCollectionObject) SetHeaders(v map[string]string) {
+	o.Headers = v
 }
 
 // GetId returns the Id field value
@@ -421,6 +488,12 @@ func (o MCPToolCollectionObject) ToMap() (map[string]interface{}, error) {
 		toSerialize["auth"] = o.Auth
 	}
 	toSerialize["type"] = o.Type
+	if !IsNil(o.Parameters) {
+		toSerialize["parameters"] = o.Parameters
+	}
+	if !IsNil(o.Headers) {
+		toSerialize["headers"] = o.Headers
+	}
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
 	toSerialize["description"] = o.Description

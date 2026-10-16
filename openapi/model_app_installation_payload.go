@@ -20,8 +20,12 @@ var _ MappedNullable = &AppInstallationPayload{}
 
 // AppInstallationPayload struct for AppInstallationPayload
 type AppInstallationPayload struct {
-	AppId    string                 `json:"app_id"`
-	Settings map[string]interface{} `json:"settings,omitempty"`
+	AppId string `json:"app_id"`
+	// Shared MCP parameter overrides. Omitted values are retained; null clears an override or restores its default.
+	McpSharedParameters map[string]AppInstallationPayloadMcpSharedParametersValue `json:"mcp_shared_parameters,omitempty"`
+	// Installation parameter overrides by MCP collection id. Omit to preserve; null clears an override. Secret inputs are write-only.
+	McpParameters map[string]map[string]AppInstallationPayloadMcpSharedParametersValue `json:"mcp_parameters,omitempty"`
+	Settings      map[string]interface{}                                               `json:"settings,omitempty"`
 	// Per-installation override of the manifest's `access_control` policy. When provided, takes precedence over the manifest default for every access check. Sibling of `settings` — admin-controlled, not part of the app's own settings JSON.  Three send-time semantics on update:  - Field omitted entirely from the payload → leave the existing override unchanged.  - Explicit `null` → clear the override, fall back to the manifest default.  - String enum → set the override to that value.  (On install, the same shape applies; omit or pass `null` to use the manifest default.)
 	AccessControl NullableAppAccessControl `json:"access_control,omitempty"`
 	// OAuth credentials for each collection, keyed by collection.id. Legacy callers may still use collection.name for older manifests. Collected from the user at install time for collections with oauth_config.required_at_install.
@@ -75,6 +79,70 @@ func (o *AppInstallationPayload) GetAppIdOk() (*string, bool) {
 // SetAppId sets field value
 func (o *AppInstallationPayload) SetAppId(v string) {
 	o.AppId = v
+}
+
+// GetMcpSharedParameters returns the McpSharedParameters field value if set, zero value otherwise.
+func (o *AppInstallationPayload) GetMcpSharedParameters() map[string]AppInstallationPayloadMcpSharedParametersValue {
+	if o == nil || IsNil(o.McpSharedParameters) {
+		var ret map[string]AppInstallationPayloadMcpSharedParametersValue
+		return ret
+	}
+	return o.McpSharedParameters
+}
+
+// GetMcpSharedParametersOk returns a tuple with the McpSharedParameters field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationPayload) GetMcpSharedParametersOk() (map[string]AppInstallationPayloadMcpSharedParametersValue, bool) {
+	if o == nil || IsNil(o.McpSharedParameters) {
+		return map[string]AppInstallationPayloadMcpSharedParametersValue{}, false
+	}
+	return o.McpSharedParameters, true
+}
+
+// HasMcpSharedParameters returns a boolean if a field has been set.
+func (o *AppInstallationPayload) HasMcpSharedParameters() bool {
+	if o != nil && !IsNil(o.McpSharedParameters) {
+		return true
+	}
+
+	return false
+}
+
+// SetMcpSharedParameters gets a reference to the given map[string]AppInstallationPayloadMcpSharedParametersValue and assigns it to the McpSharedParameters field.
+func (o *AppInstallationPayload) SetMcpSharedParameters(v map[string]AppInstallationPayloadMcpSharedParametersValue) {
+	o.McpSharedParameters = v
+}
+
+// GetMcpParameters returns the McpParameters field value if set, zero value otherwise.
+func (o *AppInstallationPayload) GetMcpParameters() map[string]map[string]AppInstallationPayloadMcpSharedParametersValue {
+	if o == nil || IsNil(o.McpParameters) {
+		var ret map[string]map[string]AppInstallationPayloadMcpSharedParametersValue
+		return ret
+	}
+	return o.McpParameters
+}
+
+// GetMcpParametersOk returns a tuple with the McpParameters field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationPayload) GetMcpParametersOk() (map[string]map[string]AppInstallationPayloadMcpSharedParametersValue, bool) {
+	if o == nil || IsNil(o.McpParameters) {
+		return map[string]map[string]AppInstallationPayloadMcpSharedParametersValue{}, false
+	}
+	return o.McpParameters, true
+}
+
+// HasMcpParameters returns a boolean if a field has been set.
+func (o *AppInstallationPayload) HasMcpParameters() bool {
+	if o != nil && !IsNil(o.McpParameters) {
+		return true
+	}
+
+	return false
+}
+
+// SetMcpParameters gets a reference to the given map[string]map[string]AppInstallationPayloadMcpSharedParametersValue and assigns it to the McpParameters field.
+func (o *AppInstallationPayload) SetMcpParameters(v map[string]map[string]AppInstallationPayloadMcpSharedParametersValue) {
+	o.McpParameters = v
 }
 
 // GetSettings returns the Settings field value if set, zero value otherwise (both if not set or set to explicit null).
@@ -260,6 +328,12 @@ func (o AppInstallationPayload) MarshalJSON() ([]byte, error) {
 func (o AppInstallationPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["app_id"] = o.AppId
+	if !IsNil(o.McpSharedParameters) {
+		toSerialize["mcp_shared_parameters"] = o.McpSharedParameters
+	}
+	if !IsNil(o.McpParameters) {
+		toSerialize["mcp_parameters"] = o.McpParameters
+	}
 	if o.Settings != nil {
 		toSerialize["settings"] = o.Settings
 	}
@@ -319,6 +393,8 @@ func (o *AppInstallationPayload) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "app_id")
+		delete(additionalProperties, "mcp_shared_parameters")
+		delete(additionalProperties, "mcp_parameters")
 		delete(additionalProperties, "settings")
 		delete(additionalProperties, "access_control")
 		delete(additionalProperties, "oauth_params")

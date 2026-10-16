@@ -20,12 +20,13 @@ var _ MappedNullable = &AppInstallation{}
 
 // AppInstallation struct for AppInstallation
 type AppInstallation struct {
-	Id            string                        `json:"id"`
-	Project       string                        `json:"project"`
-	Manifest      string                        `json:"manifest"`
-	OauthApproval *AppInstallationOauthApproval `json:"oauth_approval,omitempty"`
-	OauthClientId *string                       `json:"oauth_client_id,omitempty"`
-	Settings      map[string]interface{}        `json:"settings,omitempty"`
+	Id               string                           `json:"id"`
+	Project          string                           `json:"project"`
+	Manifest         string                           `json:"manifest"`
+	McpConfiguration *AppInstallationMcpConfiguration `json:"mcp_configuration,omitempty"`
+	OauthApproval    *AppInstallationOauthApproval    `json:"oauth_approval,omitempty"`
+	OauthClientId    *string                          `json:"oauth_client_id,omitempty"`
+	Settings         map[string]interface{}           `json:"settings,omitempty"`
 	// Admin-managed allowlist of tool names permitted for this installation. When undefined, all tools from the app are permitted. When set, only listed tool names are available for agent configuration and execution.
 	ToolAllowlist []string `json:"tool_allowlist,omitempty"`
 	// OAuth bindings created at install time via oauth_config provisioning. Maps collection identity (id or name) → OAuth provider ObjectId. Used by the runtime to resolve the correct OAuth provider without relying on manifest names.
@@ -133,6 +134,38 @@ func (o *AppInstallation) GetManifestOk() (*string, bool) {
 // SetManifest sets field value
 func (o *AppInstallation) SetManifest(v string) {
 	o.Manifest = v
+}
+
+// GetMcpConfiguration returns the McpConfiguration field value if set, zero value otherwise.
+func (o *AppInstallation) GetMcpConfiguration() AppInstallationMcpConfiguration {
+	if o == nil || IsNil(o.McpConfiguration) {
+		var ret AppInstallationMcpConfiguration
+		return ret
+	}
+	return *o.McpConfiguration
+}
+
+// GetMcpConfigurationOk returns a tuple with the McpConfiguration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallation) GetMcpConfigurationOk() (*AppInstallationMcpConfiguration, bool) {
+	if o == nil || IsNil(o.McpConfiguration) {
+		return nil, false
+	}
+	return o.McpConfiguration, true
+}
+
+// HasMcpConfiguration returns a boolean if a field has been set.
+func (o *AppInstallation) HasMcpConfiguration() bool {
+	if o != nil && !IsNil(o.McpConfiguration) {
+		return true
+	}
+
+	return false
+}
+
+// SetMcpConfiguration gets a reference to the given AppInstallationMcpConfiguration and assigns it to the McpConfiguration field.
+func (o *AppInstallation) SetMcpConfiguration(v AppInstallationMcpConfiguration) {
+	o.McpConfiguration = &v
 }
 
 // GetOauthApproval returns the OauthApproval field value if set, zero value otherwise.
@@ -421,6 +454,9 @@ func (o AppInstallation) ToMap() (map[string]interface{}, error) {
 	toSerialize["id"] = o.Id
 	toSerialize["project"] = o.Project
 	toSerialize["manifest"] = o.Manifest
+	if !IsNil(o.McpConfiguration) {
+		toSerialize["mcp_configuration"] = o.McpConfiguration
+	}
 	if !IsNil(o.OauthApproval) {
 		toSerialize["oauth_approval"] = o.OauthApproval
 	}
@@ -494,6 +530,7 @@ func (o *AppInstallation) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "project")
 		delete(additionalProperties, "manifest")
+		delete(additionalProperties, "mcp_configuration")
 		delete(additionalProperties, "oauth_approval")
 		delete(additionalProperties, "oauth_client_id")
 		delete(additionalProperties, "settings")
