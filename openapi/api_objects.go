@@ -3692,7 +3692,7 @@ func (r ApiSetObjectTextRequest) Execute() (*ContentObjectTextResponse, *http.Re
 /*
 SetObjectText Set content object text
 
-Stores the extracted text of a content object as a GCS text artifact. The text is never stored inline in the database; a legacy inline copy is removed. When an etag is provided it is recorded as the object text_etag so extraction can be skipped while the content is unchanged.
+Stores the extracted text of a content object as a GCS text artifact. Text larger than 10 MiB is truncated and ends with an explicit truncation marker. The text is never stored inline in the database; a legacy inline copy is removed. When an etag is provided it is recorded as the object text_etag so extraction can be skipped while the content is unchanged.
 
 **Required permissions:** `content:write`
 
