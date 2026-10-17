@@ -192,10 +192,107 @@ func TestFederationBasicEncodingAndExpiryDuringExchange(t *testing.T) {
 	}
 	f.SubjectTokenProvider = func(context.Context) (string, error) { now = now.Add(time.Minute); return "idp", nil }
 	s := &federationTokenSource{opts: ClientOptions{}, federation: f, now: func() time.Time { return now }}
-	if _, err := s.Token(context.Background()); err == nil {
-		t.Fatal("accepted token whose lifetime elapsed during exchange")
+	if _, err := s.Token(context.Background()); err != nil {
+		t.Fatal("provider delay consumed future token lifetime", err)
 	}
 	if strings.Contains(fmt.Sprintf("%#v", f), "a+b%:secret") {
 		t.Fatal("credentials exposed by formatting")
+	}
+}
+
+func TestFederationRequiresExplicitCustomSTS(t *testing.T) {
+	f := FederationOptions{ConnectionID: "c", ProjectID: "p", Resource: "r", SubjectTokenProvider: func(context.Context) (string, error) {
+		t.Error("provider called before routing validation")
+		return "idp", nil
+	}}
+	for _, host := range []string{"api.example.com", "api.vertesia.io.attacker.test", "api.evilvertesia.io"} {
+		opts := ClientOptions{ServerURL: "https://" + host, StoreURL: "https://store.example.com", Federation: &f}
+		if _, err := NewClient(opts); err == nil {
+			t.Errorf("guessed STS for %s", host)
+		}
+		if _, err := ExchangeFederationToken(context.Background(), opts, f, "idp"); err == nil {
+			t.Errorf("one-shot guessed STS for %s", host)
+		}
+		opts.TokenServerURL = "https://identity.example.com"
+		if _, err := NewClient(opts); err != nil {
+			t.Fatal(err)
+		}
+		f2 := f
+		f2.TokenEndpoint = "https://identity.example.com/tenant/token"
+		opts.TokenServerURL = ""
+		opts.Federation = &f2
+		if _, err := NewClient(opts); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, opts := range []ClientOptions{{}, {Region: "us1", Preview: true}, {Site: "api.us1.harness.vertesia.io"}} {
+		if _, err := federationEndpoint(opts, f); err != nil {
+			t.Fatal(err)
+		}
+	}
+}
+
+func TestFederationWaiterCanCancelWithoutCancellingRenewal(t *testing.T) {
+	started, release := make(chan struct{}), make(chan struct{})
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, federationResponse) }))
+	defer server.Close()
+	f := FederationOptions{ConnectionID: "c", ProjectID: "p", Resource: "r", TokenEndpoint: server.URL, SubjectTokenProvider: func(context.Context) (string, error) { close(started); <-release; return "idp", nil }}
+	source := &federationTokenSource{opts: ClientOptions{}, federation: f, now: time.Now}
+	owner := make(chan error, 1)
+	go func() { _, err := source.Token(context.Background()); owner <- err }()
+	<-started
+	ctx, cancel := context.WithCancel(context.Background())
+	waiter := make(chan error, 1)
+	go func() { _, err := source.Token(ctx); waiter <- err }()
+	cancel()
+	select {
+	case err := <-waiter:
+		if !errors.Is(err, context.Canceled) {
+			t.Fatal(err)
+		}
+	case <-time.After(time.Second):
+		t.Error("waiter ignored cancellation")
+	}
+	close(release)
+	if err := <-owner; err != nil {
+		t.Fatal("waiter canceled owner", err)
+	}
+	if _, err := source.Token(ctx); !errors.Is(err, context.Canceled) {
+		t.Fatal("returned cache for canceled caller")
+	}
+}
+
+func TestFederationSharedExchangeTimingAndBearerValidation(t *testing.T) {
+	var body = federationResponse
+	now := time.Now()
+	// A clock advanced by response-body consumption tests transit time without sleeps.
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, body) }))
+	defer server.Close()
+	f := FederationOptions{ConnectionID: "c", ProjectID: "p", Resource: "r", TokenEndpoint: server.URL, ClientID: "m", ClientAssertionProvider: func(context.Context) (string, error) { now = now.Add(time.Minute); return "proof", nil }}
+	body = strings.Replace(federationResponse, "Bearer", "bearer", 1)
+	clockCalls := 0
+	result, err := exchangeFederationToken(context.Background(), ClientOptions{}, f, "idp", func() time.Time {
+		clockCalls++
+		if clockCalls == 2 {
+			return now.Add(2 * time.Second)
+		}
+		return now
+	})
+	if err != nil || result.ExpiresIn != 28 || result.TokenType != "Bearer" {
+		t.Fatal(result, err)
+	}
+	clockCalls = 0
+	if _, err = exchangeFederationToken(context.Background(), ClientOptions{}, f, "idp", func() time.Time {
+		clockCalls++
+		if clockCalls == 2 {
+			return now.Add(31 * time.Second)
+		}
+		return now
+	}); err == nil {
+		t.Fatal("one-shot accepted expired token")
+	}
+	body = strings.Replace(federationResponse, `"delegated"`, `"bad\ntoken"`, 1)
+	if _, err = ExchangeFederationToken(context.Background(), ClientOptions{}, f, "idp"); err == nil {
+		t.Fatal("accepted invalid Bearer syntax")
 	}
 }

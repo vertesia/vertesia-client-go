@@ -263,3 +263,9 @@ or also set `ClientSecretBasic: true` for `client_secret_basic`. Alternatively s
 `ClientAssertionProvider` for `private_key_jwt` (never both secrets and signed assertions). The latter
 must generate a fresh short-lived assertion with a unique `jti` on every exchange; its single-string
 `aud` is the Vertesia authorization-server issuer from discovery, including the tenant when applicable.
+
+Exchange results report conservative remaining `expires_in` seconds after subtracting the STS
+round trip (rounded up). Time spent obtaining IdP/client assertions does not consume the delegated
+token's lifetime. Already-expired results are rejected in both one-shot and automatic modes.
+Implicit STS routing is limited to recognized Vertesia STS domains; custom `api*` hostnames require
+an explicit STS URL or complete token endpoint, even when their names resemble hosted endpoints.
