@@ -103,7 +103,7 @@ func TestFederationRenewalAndRouting(t *testing.T) {
 }
 
 func TestFederationRejectsAdverseResponses(t *testing.T) {
-	for _, body := range []string{`[]`, `{}`, `not-json`, strings.Replace(federationResponse, `"expires_in":30`, `"expires_in":0`, 1), strings.Replace(federationResponse, `"expires_in":30`, `"expires_in":301`, 1), strings.Replace(federationResponse, `"expires_in":30`, `"expires_in":"30"`, 1), strings.Replace(federationResponse, `"Bearer"`, `"Other"`, 1), strings.Replace(federationResponse, `"delegated"`, `""`, 1), strings.Repeat("x", 65537)} {
+	for _, body := range []string{`[]`, `{}`, `not-json`, strings.Replace(federationResponse, `"expires_in":30`, `"expires_in":0`, 1), strings.Replace(federationResponse, `"expires_in":30`, `"expires_in":86401`, 1), strings.Replace(federationResponse, `"expires_in":30`, `"expires_in":"30"`, 1), strings.Replace(federationResponse, `"Bearer"`, `"Other"`, 1), strings.Replace(federationResponse, `"delegated"`, `""`, 1), strings.Repeat("x", 65537)} {
 		t.Run(fmt.Sprint(len(body), body[:1]), func(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, body) }))
 			defer server.Close()
@@ -294,5 +294,103 @@ func TestFederationSharedExchangeTimingAndBearerValidation(t *testing.T) {
 	body = strings.Replace(federationResponse, `"delegated"`, `"bad\ntoken"`, 1)
 	if _, err = ExchangeFederationToken(context.Background(), ClientOptions{}, f, "idp"); err == nil {
 		t.Fatal("accepted invalid Bearer syntax")
+	}
+}
+
+func TestFederationOAuthErrorsAreInspectableAndRedacted(t *testing.T) {
+	body := `{"error":"invalid_scope","error_description":"secret-idp-token"}`
+	status := 400
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(status); fmt.Fprint(w, body) }))
+	defer server.Close()
+	f := FederationOptions{ConnectionID: "c", ProjectID: "p", Resource: "r", TokenEndpoint: server.URL}
+	for _, code := range []string{"invalid_grant", "invalid_client", "invalid_scope", "unauthorized_client", "invalid_target", "invalid_request", "temporarily_unavailable"} {
+		body = `{"error":"` + code + `","error_description":"secret-idp-token"}`
+		_, err := ExchangeFederationToken(context.Background(), ClientOptions{}, f, "idp")
+		var typed *FederationError
+		if !errors.As(err, &typed) || typed.StatusCode != 400 || typed.OAuthCode != code || strings.Contains(err.Error(), "secret-idp-token") {
+			t.Fatal("lost or leaked OAuth metadata", err)
+		}
+	}
+	status = 503
+	body = `{"error":"secret-idp-token"}`
+	_, err := ExchangeFederationToken(context.Background(), ClientOptions{}, f, "idp")
+	var typed *FederationError
+	if !errors.As(err, &typed) || typed.StatusCode != 503 || typed.OAuthCode != "" || strings.Contains(err.Error(), "secret-idp-token") {
+		t.Fatal("unrecognized code exposed", err)
+	}
+	f.ClientID = "m"
+	f.ClientAssertionProvider = func(context.Context) (string, error) { return "", context.DeadlineExceeded }
+	if _, err := ExchangeFederationToken(context.Background(), ClientOptions{}, f, "idp"); !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatal("lost callback cause", err)
+	}
+}
+
+func TestFederationInvalidates401WithoutReplayAndBacksOff(t *testing.T) {
+	var exchanges, requests atomic.Int32
+	apiStatus := 401
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/oauth/token" {
+			exchanges.Add(1)
+			fmt.Fprint(w, federationResponse)
+			return
+		}
+		requests.Add(1)
+		w.WriteHeader(apiStatus)
+		fmt.Fprint(w, "[]")
+	}))
+	defer server.Close()
+	f := FederationOptions{ConnectionID: "c", ProjectID: "p", Resource: "r", TokenEndpoint: server.URL + "/oauth/token", SubjectTokenProvider: func(context.Context) (string, error) { return "idp", nil }}
+	client, err := NewClient(ClientOptions{ServerURL: server.URL, StoreURL: server.URL, Federation: &f})
+	if err != nil {
+		t.Fatal(err)
+	}
+	res, err := client.Studio.GetConfig().HTTPClient.Post(server.URL+"/write", "application/json", strings.NewReader(`{}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	res.Body.Close()
+	if res.StatusCode != 401 || requests.Load() != 1 || exchanges.Load() != 1 {
+		t.Fatal("401 was replayed")
+	}
+	apiStatus = 200
+	res, err = client.Store.GetConfig().HTTPClient.Get(server.URL + "/read")
+	if err != nil {
+		t.Fatal(err)
+	}
+	res.Body.Close()
+	if requests.Load() != 2 || exchanges.Load() != 2 {
+		t.Fatal("rejected token remained cached")
+	}
+	var attempts int
+	now := time.Now()
+	f.SubjectTokenProvider = func(context.Context) (string, error) { attempts++; return "", errors.New("private callback") }
+	source := &federationTokenSource{opts: ClientOptions{}, federation: f, now: func() time.Time { return now }}
+	for i := 0; i < 10; i++ {
+		_, _ = source.Token(context.Background())
+	}
+	if attempts != 1 {
+		t.Fatal("failure was not briefly cached")
+	}
+	now = now.Add(2 * time.Second)
+	_, _ = source.Token(context.Background())
+	if attempts != 2 {
+		t.Fatal("failure cache did not expire")
+	}
+	source.token = "fresh"
+	source.Invalidate("old")
+	if source.token != "fresh" {
+		t.Fatal("old 401 evicted a newer token")
+	}
+}
+
+func TestFederationAcceptsRaisedAndFractionalLifetimes(t *testing.T) {
+	body := strings.Replace(federationResponse, `"expires_in":30`, `"expires_in":600.75`, 1)
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, body) }))
+	defer server.Close()
+	now := time.Now()
+	f := FederationOptions{ConnectionID: "c", ProjectID: "p", Resource: "r", TokenEndpoint: server.URL}
+	result, err := exchangeFederationToken(context.Background(), ClientOptions{}, f, "idp", func() time.Time { return now })
+	if err != nil || result.ExpiresIn != 600 {
+		t.Fatal(result, err)
 	}
 }

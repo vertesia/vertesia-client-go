@@ -269,3 +269,14 @@ round trip (rounded up). Time spent obtaining IdP/client assertions does not con
 token's lifetime. Already-expired results are rejected in both one-shot and automatic modes.
 Implicit STS routing is limited to recognized Vertesia STS domains; custom `api*` hostnames require
 an explicit STS URL or complete token endpoint, even when their names resemble hosted endpoints.
+
+An API 401 invalidates only the bearer token that request used. The SDK does not replay the request;
+the next call attempts a fresh exchange. Concurrent late 401s do not evict a different newer token.
+Failed automatic exchanges are cached for one second to avoid repeatedly calling the IdP/STS during
+an outage. Finite lifetimes up to one day are accepted, including fractional seconds; returned
+remaining seconds are rounded down. The server's current five-minute cap is not a client limit.
+
+Use `errors.As(err, &federationError)` with `*vertesia.FederationError` to read `StatusCode` and
+`OAuthCode`. Known OAuth codes are allowlisted; descriptions and unknown codes remain redacted.
+`errors.Is`/`errors.Unwrap` can inspect the original callback/transport cause without including it in
+normal error messages. Waiting for another renewal honors the caller's context cancellation.

@@ -546,5 +546,11 @@ func (t *authTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	cloned := req.Clone(req.Context())
 	cloned.Header = req.Header.Clone()
 	cloned.Header.Set("Authorization", "Bearer "+token)
-	return base.RoundTrip(cloned)
+	response, err := base.RoundTrip(cloned)
+	if err == nil && response != nil && response.StatusCode == http.StatusUnauthorized {
+		if source, ok := t.source.(interface{ Invalidate(string) }); ok {
+			source.Invalidate(token)
+		}
+	}
+	return response, err
 }

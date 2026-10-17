@@ -16,6 +16,40 @@ import (
 	"time"
 )
 
+// FederationError exposes sanitized OAuth metadata and an inspectable underlying cause.
+// Error never includes remote bodies or assertion-provider error text.
+type FederationError struct {
+	StatusCode int
+	OAuthCode  string
+	cause      error
+}
+
+func (e *FederationError) Error() string {
+	if e.StatusCode != 0 {
+		if e.OAuthCode != "" {
+			return fmt.Sprintf("federation exchange failed: HTTP %d (%s)", e.StatusCode, e.OAuthCode)
+		}
+		return fmt.Sprintf("federation exchange failed: HTTP %d", e.StatusCode)
+	}
+	return "federation authentication failed"
+}
+func (e *FederationError) Unwrap() error    { return e.cause }
+func (e *FederationError) GoString() string { return e.Error() }
+
+func federationOAuthCode(body []byte) string {
+	var value struct {
+		Error string `json:"error"`
+	}
+	if json.Unmarshal(body, &value) != nil {
+		return ""
+	}
+	switch value.Error {
+	case "invalid_grant", "invalid_client", "invalid_scope", "unauthorized_client", "invalid_target", "invalid_request", "temporarily_unavailable":
+		return value.Error
+	}
+	return ""
+}
+
 // FederationOptions selects an account-owned trust policy and one target project.
 // Use one Client per user, project, resource and scope. Providers must return fresh assertions on renewal.
 type FederationOptions struct {
@@ -114,7 +148,7 @@ func exchangeFederationToken(ctx context.Context, opts ClientOptions, f Federati
 	if f.ClientAssertionProvider != nil {
 		assertion, err := f.ClientAssertionProvider(ctx)
 		if err != nil {
-			return nil, errors.New("client assertion provider failed")
+			return nil, &FederationError{cause: err}
 		}
 		if strings.TrimSpace(assertion) == "" {
 			return nil, errors.New("empty client assertion")
@@ -147,25 +181,40 @@ func exchangeFederationToken(ctx context.Context, opts ClientOptions, f Federati
 		if ctx.Err() != nil {
 			return nil, ctx.Err()
 		}
-		return nil, errors.New("federation exchange request failed")
+		return nil, &FederationError{cause: err}
 	}
 	defer response.Body.Close()
 	if response.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("federation exchange failed: HTTP %d", response.StatusCode)
+		body, _ := io.ReadAll(io.LimitReader(response.Body, 65537))
+		code := ""
+		if len(body) <= 65536 {
+			code = federationOAuthCode(body)
+		}
+		return nil, &FederationError{StatusCode: response.StatusCode, OAuthCode: code}
 	}
 	body, err := io.ReadAll(io.LimitReader(response.Body, 65537))
 	if err != nil || len(body) > 65536 {
 		return nil, errors.New("invalid federation response")
 	}
-	var result FederationToken
-	if json.Unmarshal(body, &result) != nil || !federationBearerToken.MatchString(result.AccessToken) || !strings.EqualFold(result.TokenType, "Bearer") || result.IssuedTokenType != "urn:ietf:params:oauth:token-type:access_token" || result.ExpiresIn < 1 || result.ExpiresIn > 300 {
+	var wire struct {
+		AccessToken     string  `json:"access_token"`
+		TokenType       string  `json:"token_type"`
+		ExpiresIn       float64 `json:"expires_in"`
+		IssuedTokenType string  `json:"issued_token_type"`
+		Scope           string  `json:"scope"`
+	}
+	if err := json.Unmarshal(body, &wire); err != nil {
+		return nil, errors.New("invalid federation token response")
+	}
+	result := FederationToken{AccessToken: wire.AccessToken, TokenType: wire.TokenType, IssuedTokenType: wire.IssuedTokenType, Scope: wire.Scope}
+	if !federationBearerToken.MatchString(result.AccessToken) || !strings.EqualFold(result.TokenType, "Bearer") || result.IssuedTokenType != "urn:ietf:params:oauth:token-type:access_token" || wire.ExpiresIn < 1 || wire.ExpiresIn > 86400 {
 		return nil, errors.New("invalid federation token response")
 	}
 	elapsed := clock().Sub(started)
 	if elapsed < 0 {
 		elapsed = 0
 	}
-	result.ExpiresIn -= int(math.Ceil(elapsed.Seconds()))
+	result.ExpiresIn = int(math.Floor(wire.ExpiresIn - elapsed.Seconds()))
 	if result.ExpiresIn < 1 {
 		return nil, errors.New("federation token expired during exchange")
 	}
@@ -178,6 +227,8 @@ type federationTokenSource struct {
 	federation FederationOptions
 	mu         sync.Mutex
 	inFlight   chan struct{}
+	failure    error
+	retryAt    time.Time
 	token      string
 	renewAt    time.Time
 	now        func() time.Time
@@ -193,6 +244,11 @@ func (s *federationTokenSource) Token(ctx context.Context) (string, error) {
 			token := s.token
 			s.mu.Unlock()
 			return token, nil
+		}
+		if s.failure != nil && s.now().Before(s.retryAt) {
+			failure := s.failure
+			s.mu.Unlock()
+			return "", failure
 		}
 		if done := s.inFlight; done != nil {
 			s.mu.Unlock()
@@ -213,6 +269,12 @@ func (s *federationTokenSource) Token(ctx context.Context) (string, error) {
 			lifetime := time.Duration(ttl) * time.Second
 			s.renewAt = s.now().Add(lifetime - lifetime/10)
 		}
+		if err != nil && !errors.Is(err, context.Canceled) && !errors.Is(err, context.DeadlineExceeded) {
+			s.failure = err
+			s.retryAt = s.now().Add(time.Second)
+		} else {
+			s.failure = nil
+		}
 		s.inFlight = nil
 		close(done)
 		s.mu.Unlock()
@@ -226,7 +288,7 @@ func (s *federationTokenSource) renew(ctx context.Context) (string, int, error) 
 		return "", 0, ctx.Err()
 	}
 	if err != nil {
-		return "", 0, errors.New("IdP token provider failed")
+		return "", 0, &FederationError{cause: err}
 	}
 	result, err := exchangeFederationToken(ctx, s.opts, s.federation, assertion, s.now)
 	if ctx.Err() != nil {
@@ -247,3 +309,13 @@ func (f FederationToken) String() string {
 	return fmt.Sprintf("FederationToken{access token redacted, expires_in:%d}", f.ExpiresIn)
 }
 func (f FederationToken) GoString() string { return f.String() }
+
+// Invalidate drops only the token rejected by this API request; it never replays the request.
+func (s *federationTokenSource) Invalidate(token string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.token == token {
+		s.token = ""
+		s.failure = nil
+	}
+}
