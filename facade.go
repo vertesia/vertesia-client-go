@@ -30,6 +30,8 @@ var (
 
 // ClientOptions configures the high-level Vertesia client.
 type ClientOptions struct {
+	// Federation exchanges fresh IdP assertions and renews tokens automatically.
+	Federation *FederationOptions
 	// Region selects a hosted Vertesia region, for example us1 or eu1.
 	Region string
 	// Preview selects the preview API host for the configured region or global site.
@@ -395,6 +397,20 @@ type bearerTokenSource interface {
 }
 
 func newBearerTokenSource(opts ClientOptions, endpoints clientEndpoints, apiVersion string) (bearerTokenSource, error) {
+	if opts.Federation != nil {
+		if opts.APIKey != "" || opts.Token != "" {
+			return nil, errors.New("Federation, APIKey and Token are mutually exclusive")
+		}
+		f := *opts.Federation
+		if f.SubjectTokenProvider == nil {
+			return nil, errors.New("federation requires SubjectTokenProvider")
+		}
+		if _, err := federationEndpoint(opts, f); err != nil {
+			return nil, err
+		}
+		opts.Federation = nil
+		return &federationTokenSource{opts: opts, federation: f, now: time.Now}, nil
+	}
 	apiKey := strings.TrimSpace(opts.APIKey)
 	token := strings.TrimSpace(opts.Token)
 	if apiKey != "" && token != "" {
