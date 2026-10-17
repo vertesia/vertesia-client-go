@@ -106,6 +106,8 @@ type APIClient struct {
 
 	OAuthProvidersAPI *OAuthProvidersAPIService
 
+	OIDCFederationAPI *OIDCFederationAPIService
+
 	ObjectsAPI *ObjectsAPIService
 
 	PendingAsksAPI *PendingAsksAPIService
@@ -189,6 +191,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.OAuthClientsAPI = (*OAuthClientsAPIService)(&c.common)
 	c.OAuthGrantsAPI = (*OAuthGrantsAPIService)(&c.common)
 	c.OAuthProvidersAPI = (*OAuthProvidersAPIService)(&c.common)
+	c.OIDCFederationAPI = (*OIDCFederationAPIService)(&c.common)
 	c.ObjectsAPI = (*ObjectsAPIService)(&c.common)
 	c.PendingAsksAPI = (*PendingAsksAPIService)(&c.common)
 	c.ProcessesAPI = (*ProcessesAPIService)(&c.common)

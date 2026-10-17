@@ -23,6 +23,7 @@ const (
 	OAUTHTOKENENDPOINTAUTHMETHOD_NONE                     OAuthTokenEndpointAuthMethod = "none"
 	OAUTHTOKENENDPOINTAUTHMETHOD_CLIENT_SECRET_POST       OAuthTokenEndpointAuthMethod = "client_secret_post"
 	OAUTHTOKENENDPOINTAUTHMETHOD_CLIENT_SECRET_BASIC      OAuthTokenEndpointAuthMethod = "client_secret_basic"
+	OAUTHTOKENENDPOINTAUTHMETHOD_PRIVATE_KEY_JWT          OAuthTokenEndpointAuthMethod = "private_key_jwt"
 	OAUTHTOKENENDPOINTAUTHMETHOD_UNKNOWN_DEFAULT_OPEN_API OAuthTokenEndpointAuthMethod = "unknown_default_open_api"
 )
 
@@ -31,6 +32,7 @@ var AllowedOAuthTokenEndpointAuthMethodEnumValues = []OAuthTokenEndpointAuthMeth
 	"none",
 	"client_secret_post",
 	"client_secret_basic",
+	"private_key_jwt",
 	"unknown_default_open_api",
 }
 

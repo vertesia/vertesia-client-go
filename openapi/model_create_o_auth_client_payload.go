@@ -26,6 +26,7 @@ type CreateOAuthClientPayload struct {
 	GrantTypes              []OAuthGrantType              `json:"grant_types,omitempty"`
 	ResponseTypes           []OAuthResponseType           `json:"response_types,omitempty"`
 	TokenEndpointAuthMethod *OAuthTokenEndpointAuthMethod `json:"token_endpoint_auth_method,omitempty"`
+	JwksUri                 *string                       `json:"jwks_uri,omitempty"`
 	AllowedScopes           []string                      `json:"allowed_scopes,omitempty"`
 	DefaultScopes           []string                      `json:"default_scopes,omitempty"`
 	ProjectBindingMode      *OAuthProjectBindingMode      `json:"project_binding_mode,omitempty"`
@@ -231,6 +232,38 @@ func (o *CreateOAuthClientPayload) HasTokenEndpointAuthMethod() bool {
 // SetTokenEndpointAuthMethod gets a reference to the given OAuthTokenEndpointAuthMethod and assigns it to the TokenEndpointAuthMethod field.
 func (o *CreateOAuthClientPayload) SetTokenEndpointAuthMethod(v OAuthTokenEndpointAuthMethod) {
 	o.TokenEndpointAuthMethod = &v
+}
+
+// GetJwksUri returns the JwksUri field value if set, zero value otherwise.
+func (o *CreateOAuthClientPayload) GetJwksUri() string {
+	if o == nil || IsNil(o.JwksUri) {
+		var ret string
+		return ret
+	}
+	return *o.JwksUri
+}
+
+// GetJwksUriOk returns a tuple with the JwksUri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateOAuthClientPayload) GetJwksUriOk() (*string, bool) {
+	if o == nil || IsNil(o.JwksUri) {
+		return nil, false
+	}
+	return o.JwksUri, true
+}
+
+// HasJwksUri returns a boolean if a field has been set.
+func (o *CreateOAuthClientPayload) HasJwksUri() bool {
+	if o != nil && !IsNil(o.JwksUri) {
+		return true
+	}
+
+	return false
+}
+
+// SetJwksUri gets a reference to the given string and assigns it to the JwksUri field.
+func (o *CreateOAuthClientPayload) SetJwksUri(v string) {
+	o.JwksUri = &v
 }
 
 // GetAllowedScopes returns the AllowedScopes field value if set, zero value otherwise.
@@ -482,6 +515,9 @@ func (o CreateOAuthClientPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.TokenEndpointAuthMethod) {
 		toSerialize["token_endpoint_auth_method"] = o.TokenEndpointAuthMethod
 	}
+	if !IsNil(o.JwksUri) {
+		toSerialize["jwks_uri"] = o.JwksUri
+	}
 	if !IsNil(o.AllowedScopes) {
 		toSerialize["allowed_scopes"] = o.AllowedScopes
 	}
@@ -553,6 +589,7 @@ func (o *CreateOAuthClientPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "grant_types")
 		delete(additionalProperties, "response_types")
 		delete(additionalProperties, "token_endpoint_auth_method")
+		delete(additionalProperties, "jwks_uri")
 		delete(additionalProperties, "allowed_scopes")
 		delete(additionalProperties, "default_scopes")
 		delete(additionalProperties, "project_binding_mode")

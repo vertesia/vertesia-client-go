@@ -24,15 +24,18 @@ type UpdateOAuthClientPayload struct {
 	GrantTypes              []OAuthGrantType              `json:"grant_types,omitempty"`
 	ResponseTypes           []OAuthResponseType           `json:"response_types,omitempty"`
 	TokenEndpointAuthMethod *OAuthTokenEndpointAuthMethod `json:"token_endpoint_auth_method,omitempty"`
+	JwksUri                 *string                       `json:"jwks_uri,omitempty"`
 	AllowedScopes           []string                      `json:"allowed_scopes,omitempty"`
 	DefaultScopes           []string                      `json:"default_scopes,omitempty"`
 	Status                  *OAuthClientStatus            `json:"status,omitempty"`
-	ProjectBindingMode      *OAuthProjectBindingMode      `json:"project_binding_mode,omitempty"`
-	FixedProjectId          *string                       `json:"fixed_project_id,omitempty"`
-	RestrictToOwnerAccount  *bool                         `json:"restrict_to_owner_account,omitempty"`
-	ClientSecret            *string                       `json:"client_secret,omitempty"`
-	Metadata                map[string]interface{}        `json:"metadata,omitempty"`
-	AdditionalProperties    map[string]interface{}
+	// Immediately revoke the previous rotation secret while retaining the current secret.
+	RevokePreviousClientSecret *bool                    `json:"revoke_previous_client_secret,omitempty"`
+	ProjectBindingMode         *OAuthProjectBindingMode `json:"project_binding_mode,omitempty"`
+	FixedProjectId             *string                  `json:"fixed_project_id,omitempty"`
+	RestrictToOwnerAccount     *bool                    `json:"restrict_to_owner_account,omitempty"`
+	ClientSecret               *string                  `json:"client_secret,omitempty"`
+	Metadata                   map[string]interface{}   `json:"metadata,omitempty"`
+	AdditionalProperties       map[string]interface{}
 }
 
 type _UpdateOAuthClientPayload UpdateOAuthClientPayload
@@ -214,6 +217,38 @@ func (o *UpdateOAuthClientPayload) SetTokenEndpointAuthMethod(v OAuthTokenEndpoi
 	o.TokenEndpointAuthMethod = &v
 }
 
+// GetJwksUri returns the JwksUri field value if set, zero value otherwise.
+func (o *UpdateOAuthClientPayload) GetJwksUri() string {
+	if o == nil || IsNil(o.JwksUri) {
+		var ret string
+		return ret
+	}
+	return *o.JwksUri
+}
+
+// GetJwksUriOk returns a tuple with the JwksUri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateOAuthClientPayload) GetJwksUriOk() (*string, bool) {
+	if o == nil || IsNil(o.JwksUri) {
+		return nil, false
+	}
+	return o.JwksUri, true
+}
+
+// HasJwksUri returns a boolean if a field has been set.
+func (o *UpdateOAuthClientPayload) HasJwksUri() bool {
+	if o != nil && !IsNil(o.JwksUri) {
+		return true
+	}
+
+	return false
+}
+
+// SetJwksUri gets a reference to the given string and assigns it to the JwksUri field.
+func (o *UpdateOAuthClientPayload) SetJwksUri(v string) {
+	o.JwksUri = &v
+}
+
 // GetAllowedScopes returns the AllowedScopes field value if set, zero value otherwise.
 func (o *UpdateOAuthClientPayload) GetAllowedScopes() []string {
 	if o == nil || IsNil(o.AllowedScopes) {
@@ -308,6 +343,38 @@ func (o *UpdateOAuthClientPayload) HasStatus() bool {
 // SetStatus gets a reference to the given OAuthClientStatus and assigns it to the Status field.
 func (o *UpdateOAuthClientPayload) SetStatus(v OAuthClientStatus) {
 	o.Status = &v
+}
+
+// GetRevokePreviousClientSecret returns the RevokePreviousClientSecret field value if set, zero value otherwise.
+func (o *UpdateOAuthClientPayload) GetRevokePreviousClientSecret() bool {
+	if o == nil || IsNil(o.RevokePreviousClientSecret) {
+		var ret bool
+		return ret
+	}
+	return *o.RevokePreviousClientSecret
+}
+
+// GetRevokePreviousClientSecretOk returns a tuple with the RevokePreviousClientSecret field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateOAuthClientPayload) GetRevokePreviousClientSecretOk() (*bool, bool) {
+	if o == nil || IsNil(o.RevokePreviousClientSecret) {
+		return nil, false
+	}
+	return o.RevokePreviousClientSecret, true
+}
+
+// HasRevokePreviousClientSecret returns a boolean if a field has been set.
+func (o *UpdateOAuthClientPayload) HasRevokePreviousClientSecret() bool {
+	if o != nil && !IsNil(o.RevokePreviousClientSecret) {
+		return true
+	}
+
+	return false
+}
+
+// SetRevokePreviousClientSecret gets a reference to the given bool and assigns it to the RevokePreviousClientSecret field.
+func (o *UpdateOAuthClientPayload) SetRevokePreviousClientSecret(v bool) {
+	o.RevokePreviousClientSecret = &v
 }
 
 // GetProjectBindingMode returns the ProjectBindingMode field value if set, zero value otherwise.
@@ -496,6 +563,9 @@ func (o UpdateOAuthClientPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.TokenEndpointAuthMethod) {
 		toSerialize["token_endpoint_auth_method"] = o.TokenEndpointAuthMethod
 	}
+	if !IsNil(o.JwksUri) {
+		toSerialize["jwks_uri"] = o.JwksUri
+	}
 	if !IsNil(o.AllowedScopes) {
 		toSerialize["allowed_scopes"] = o.AllowedScopes
 	}
@@ -504,6 +574,9 @@ func (o UpdateOAuthClientPayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Status) {
 		toSerialize["status"] = o.Status
+	}
+	if !IsNil(o.RevokePreviousClientSecret) {
+		toSerialize["revoke_previous_client_secret"] = o.RevokePreviousClientSecret
 	}
 	if !IsNil(o.ProjectBindingMode) {
 		toSerialize["project_binding_mode"] = o.ProjectBindingMode
@@ -547,9 +620,11 @@ func (o *UpdateOAuthClientPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "grant_types")
 		delete(additionalProperties, "response_types")
 		delete(additionalProperties, "token_endpoint_auth_method")
+		delete(additionalProperties, "jwks_uri")
 		delete(additionalProperties, "allowed_scopes")
 		delete(additionalProperties, "default_scopes")
 		delete(additionalProperties, "status")
+		delete(additionalProperties, "revoke_previous_client_secret")
 		delete(additionalProperties, "project_binding_mode")
 		delete(additionalProperties, "fixed_project_id")
 		delete(additionalProperties, "restrict_to_owner_account")

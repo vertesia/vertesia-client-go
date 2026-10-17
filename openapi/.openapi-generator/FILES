@@ -28,6 +28,7 @@ api_o_auth_clients.go
 api_o_auth_grants.go
 api_o_auth_providers.go
 api_objects.go
+api_oidc_federation.go
 api_pending_asks.go
 api_processes.go
 api_projects.go
@@ -760,6 +761,8 @@ model_o_auth_registration_source.go
 model_o_auth_response_type.go
 model_o_auth_token_endpoint_auth_method.go
 model_object_search_response.go
+model_oidc_federation_connection.go
+model_oidc_federation_connection_payload.go
 model_onboarding_progress.go
 model_open_ai_audio_options.go
 model_open_ai_dalle_options.go

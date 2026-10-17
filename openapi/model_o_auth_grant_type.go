@@ -20,10 +20,11 @@ type OAuthGrantType string
 
 // List of OAuthGrantType
 const (
-	OAUTHGRANTTYPE_AUTHORIZATION_CODE                           OAuthGrantType = "authorization_code"
-	OAUTHGRANTTYPE_REFRESH_TOKEN                                OAuthGrantType = "refresh_token"
-	OAUTHGRANTTYPE_URN_IETF_PARAMS_OAUTH_GRANT_TYPE_DEVICE_CODE OAuthGrantType = "urn:ietf:params:oauth:grant-type:device_code"
-	OAUTHGRANTTYPE_UNKNOWN_DEFAULT_OPEN_API                     OAuthGrantType = "unknown_default_open_api"
+	OAUTHGRANTTYPE_AUTHORIZATION_CODE                              OAuthGrantType = "authorization_code"
+	OAUTHGRANTTYPE_REFRESH_TOKEN                                   OAuthGrantType = "refresh_token"
+	OAUTHGRANTTYPE_URN_IETF_PARAMS_OAUTH_GRANT_TYPE_DEVICE_CODE    OAuthGrantType = "urn:ietf:params:oauth:grant-type:device_code"
+	OAUTHGRANTTYPE_URN_IETF_PARAMS_OAUTH_GRANT_TYPE_TOKEN_EXCHANGE OAuthGrantType = "urn:ietf:params:oauth:grant-type:token-exchange"
+	OAUTHGRANTTYPE_UNKNOWN_DEFAULT_OPEN_API                        OAuthGrantType = "unknown_default_open_api"
 )
 
 // All allowed values of OAuthGrantType enum
@@ -31,6 +32,7 @@ var AllowedOAuthGrantTypeEnumValues = []OAuthGrantType{
 	"authorization_code",
 	"refresh_token",
 	"urn:ietf:params:oauth:grant-type:device_code",
+	"urn:ietf:params:oauth:grant-type:token-exchange",
 	"unknown_default_open_api",
 }
 
