@@ -20,12 +20,18 @@ var _ MappedNullable = &AppInstallationWithManifest{}
 
 // AppInstallationWithManifest struct for AppInstallationWithManifest
 type AppInstallationWithManifest struct {
-	Id               string                           `json:"id"`
-	Project          string                           `json:"project"`
-	McpConfiguration *AppInstallationMcpConfiguration `json:"mcp_configuration,omitempty"`
-	OauthApproval    *AppInstallationOauthApproval    `json:"oauth_approval,omitempty"`
-	OauthClientId    *string                          `json:"oauth_client_id,omitempty"`
-	Settings         map[string]interface{}           `json:"settings,omitempty"`
+	Id                  string                           `json:"id"`
+	Project             string                           `json:"project"`
+	InstanceKey         *string                          `json:"instance_key,omitempty"`
+	DisplayName         *string                          `json:"display_name,omitempty"`
+	InstallationVersion *float32                         `json:"installation_version,omitempty"`
+	NamespaceOverrides  map[string]string                `json:"namespace_overrides,omitempty"`
+	ReservedNamespaces  []string                         `json:"reserved_namespaces,omitempty"`
+	NamespaceConflicts  []string                         `json:"namespace_conflicts,omitempty"`
+	McpConfiguration    *AppInstallationMcpConfiguration `json:"mcp_configuration,omitempty"`
+	OauthApproval       *AppInstallationOauthApproval    `json:"oauth_approval,omitempty"`
+	OauthClientId       *string                          `json:"oauth_client_id,omitempty"`
+	Settings            map[string]interface{}           `json:"settings,omitempty"`
 	// Admin-managed allowlist of tool names permitted for this installation. When undefined, all tools from the app are permitted. When set, only listed tool names are available for agent configuration and execution.
 	ToolAllowlist []string `json:"tool_allowlist,omitempty"`
 	// OAuth bindings created at install time via oauth_config provisioning. Maps collection identity (id or name) → OAuth provider ObjectId. Used by the runtime to resolve the correct OAuth provider without relying on manifest names.
@@ -112,6 +118,198 @@ func (o *AppInstallationWithManifest) GetProjectOk() (*string, bool) {
 // SetProject sets field value
 func (o *AppInstallationWithManifest) SetProject(v string) {
 	o.Project = v
+}
+
+// GetInstanceKey returns the InstanceKey field value if set, zero value otherwise.
+func (o *AppInstallationWithManifest) GetInstanceKey() string {
+	if o == nil || IsNil(o.InstanceKey) {
+		var ret string
+		return ret
+	}
+	return *o.InstanceKey
+}
+
+// GetInstanceKeyOk returns a tuple with the InstanceKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationWithManifest) GetInstanceKeyOk() (*string, bool) {
+	if o == nil || IsNil(o.InstanceKey) {
+		return nil, false
+	}
+	return o.InstanceKey, true
+}
+
+// HasInstanceKey returns a boolean if a field has been set.
+func (o *AppInstallationWithManifest) HasInstanceKey() bool {
+	if o != nil && !IsNil(o.InstanceKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetInstanceKey gets a reference to the given string and assigns it to the InstanceKey field.
+func (o *AppInstallationWithManifest) SetInstanceKey(v string) {
+	o.InstanceKey = &v
+}
+
+// GetDisplayName returns the DisplayName field value if set, zero value otherwise.
+func (o *AppInstallationWithManifest) GetDisplayName() string {
+	if o == nil || IsNil(o.DisplayName) {
+		var ret string
+		return ret
+	}
+	return *o.DisplayName
+}
+
+// GetDisplayNameOk returns a tuple with the DisplayName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationWithManifest) GetDisplayNameOk() (*string, bool) {
+	if o == nil || IsNil(o.DisplayName) {
+		return nil, false
+	}
+	return o.DisplayName, true
+}
+
+// HasDisplayName returns a boolean if a field has been set.
+func (o *AppInstallationWithManifest) HasDisplayName() bool {
+	if o != nil && !IsNil(o.DisplayName) {
+		return true
+	}
+
+	return false
+}
+
+// SetDisplayName gets a reference to the given string and assigns it to the DisplayName field.
+func (o *AppInstallationWithManifest) SetDisplayName(v string) {
+	o.DisplayName = &v
+}
+
+// GetInstallationVersion returns the InstallationVersion field value if set, zero value otherwise.
+func (o *AppInstallationWithManifest) GetInstallationVersion() float32 {
+	if o == nil || IsNil(o.InstallationVersion) {
+		var ret float32
+		return ret
+	}
+	return *o.InstallationVersion
+}
+
+// GetInstallationVersionOk returns a tuple with the InstallationVersion field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationWithManifest) GetInstallationVersionOk() (*float32, bool) {
+	if o == nil || IsNil(o.InstallationVersion) {
+		return nil, false
+	}
+	return o.InstallationVersion, true
+}
+
+// HasInstallationVersion returns a boolean if a field has been set.
+func (o *AppInstallationWithManifest) HasInstallationVersion() bool {
+	if o != nil && !IsNil(o.InstallationVersion) {
+		return true
+	}
+
+	return false
+}
+
+// SetInstallationVersion gets a reference to the given float32 and assigns it to the InstallationVersion field.
+func (o *AppInstallationWithManifest) SetInstallationVersion(v float32) {
+	o.InstallationVersion = &v
+}
+
+// GetNamespaceOverrides returns the NamespaceOverrides field value if set, zero value otherwise.
+func (o *AppInstallationWithManifest) GetNamespaceOverrides() map[string]string {
+	if o == nil || IsNil(o.NamespaceOverrides) {
+		var ret map[string]string
+		return ret
+	}
+	return o.NamespaceOverrides
+}
+
+// GetNamespaceOverridesOk returns a tuple with the NamespaceOverrides field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationWithManifest) GetNamespaceOverridesOk() (map[string]string, bool) {
+	if o == nil || IsNil(o.NamespaceOverrides) {
+		return map[string]string{}, false
+	}
+	return o.NamespaceOverrides, true
+}
+
+// HasNamespaceOverrides returns a boolean if a field has been set.
+func (o *AppInstallationWithManifest) HasNamespaceOverrides() bool {
+	if o != nil && !IsNil(o.NamespaceOverrides) {
+		return true
+	}
+
+	return false
+}
+
+// SetNamespaceOverrides gets a reference to the given map[string]string and assigns it to the NamespaceOverrides field.
+func (o *AppInstallationWithManifest) SetNamespaceOverrides(v map[string]string) {
+	o.NamespaceOverrides = v
+}
+
+// GetReservedNamespaces returns the ReservedNamespaces field value if set, zero value otherwise.
+func (o *AppInstallationWithManifest) GetReservedNamespaces() []string {
+	if o == nil || IsNil(o.ReservedNamespaces) {
+		var ret []string
+		return ret
+	}
+	return o.ReservedNamespaces
+}
+
+// GetReservedNamespacesOk returns a tuple with the ReservedNamespaces field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationWithManifest) GetReservedNamespacesOk() ([]string, bool) {
+	if o == nil || IsNil(o.ReservedNamespaces) {
+		return nil, false
+	}
+	return o.ReservedNamespaces, true
+}
+
+// HasReservedNamespaces returns a boolean if a field has been set.
+func (o *AppInstallationWithManifest) HasReservedNamespaces() bool {
+	if o != nil && !IsNil(o.ReservedNamespaces) {
+		return true
+	}
+
+	return false
+}
+
+// SetReservedNamespaces gets a reference to the given []string and assigns it to the ReservedNamespaces field.
+func (o *AppInstallationWithManifest) SetReservedNamespaces(v []string) {
+	o.ReservedNamespaces = v
+}
+
+// GetNamespaceConflicts returns the NamespaceConflicts field value if set, zero value otherwise.
+func (o *AppInstallationWithManifest) GetNamespaceConflicts() []string {
+	if o == nil || IsNil(o.NamespaceConflicts) {
+		var ret []string
+		return ret
+	}
+	return o.NamespaceConflicts
+}
+
+// GetNamespaceConflictsOk returns a tuple with the NamespaceConflicts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationWithManifest) GetNamespaceConflictsOk() ([]string, bool) {
+	if o == nil || IsNil(o.NamespaceConflicts) {
+		return nil, false
+	}
+	return o.NamespaceConflicts, true
+}
+
+// HasNamespaceConflicts returns a boolean if a field has been set.
+func (o *AppInstallationWithManifest) HasNamespaceConflicts() bool {
+	if o != nil && !IsNil(o.NamespaceConflicts) {
+		return true
+	}
+
+	return false
+}
+
+// SetNamespaceConflicts gets a reference to the given []string and assigns it to the NamespaceConflicts field.
+func (o *AppInstallationWithManifest) SetNamespaceConflicts(v []string) {
+	o.NamespaceConflicts = v
 }
 
 // GetMcpConfiguration returns the McpConfiguration field value if set, zero value otherwise.
@@ -487,6 +685,24 @@ func (o AppInstallationWithManifest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
 	toSerialize["project"] = o.Project
+	if !IsNil(o.InstanceKey) {
+		toSerialize["instance_key"] = o.InstanceKey
+	}
+	if !IsNil(o.DisplayName) {
+		toSerialize["display_name"] = o.DisplayName
+	}
+	if !IsNil(o.InstallationVersion) {
+		toSerialize["installation_version"] = o.InstallationVersion
+	}
+	if !IsNil(o.NamespaceOverrides) {
+		toSerialize["namespace_overrides"] = o.NamespaceOverrides
+	}
+	if !IsNil(o.ReservedNamespaces) {
+		toSerialize["reserved_namespaces"] = o.ReservedNamespaces
+	}
+	if !IsNil(o.NamespaceConflicts) {
+		toSerialize["namespace_conflicts"] = o.NamespaceConflicts
+	}
 	if !IsNil(o.McpConfiguration) {
 		toSerialize["mcp_configuration"] = o.McpConfiguration
 	}
@@ -566,6 +782,12 @@ func (o *AppInstallationWithManifest) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "project")
+		delete(additionalProperties, "instance_key")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "installation_version")
+		delete(additionalProperties, "namespace_overrides")
+		delete(additionalProperties, "reserved_namespaces")
+		delete(additionalProperties, "namespace_conflicts")
 		delete(additionalProperties, "mcp_configuration")
 		delete(additionalProperties, "oauth_approval")
 		delete(additionalProperties, "oauth_client_id")

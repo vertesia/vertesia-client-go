@@ -20,7 +20,11 @@ var _ MappedNullable = &AppInstallationPayload{}
 
 // AppInstallationPayload struct for AppInstallationPayload
 type AppInstallationPayload struct {
-	AppId string `json:"app_id"`
+	AppId       string  `json:"app_id"`
+	InstanceKey *string `json:"instance_key,omitempty" validate:"regexp=^[a-z][a-z0-9_-]{0,31}$"`
+	// Optional instance label. Send an empty string to clear the saved label; omit to preserve it.
+	DisplayName        *string           `json:"display_name,omitempty"`
+	NamespaceOverrides map[string]string `json:"namespace_overrides,omitempty"`
 	// Shared MCP parameter overrides. Omitted values are retained; null clears an override or restores its default.
 	McpSharedParameters map[string]AppInstallationPayloadMcpSharedParametersValue `json:"mcp_shared_parameters,omitempty"`
 	// Installation parameter overrides by MCP collection id. Omit to preserve; null clears an override. Secret inputs are write-only.
@@ -79,6 +83,102 @@ func (o *AppInstallationPayload) GetAppIdOk() (*string, bool) {
 // SetAppId sets field value
 func (o *AppInstallationPayload) SetAppId(v string) {
 	o.AppId = v
+}
+
+// GetInstanceKey returns the InstanceKey field value if set, zero value otherwise.
+func (o *AppInstallationPayload) GetInstanceKey() string {
+	if o == nil || IsNil(o.InstanceKey) {
+		var ret string
+		return ret
+	}
+	return *o.InstanceKey
+}
+
+// GetInstanceKeyOk returns a tuple with the InstanceKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationPayload) GetInstanceKeyOk() (*string, bool) {
+	if o == nil || IsNil(o.InstanceKey) {
+		return nil, false
+	}
+	return o.InstanceKey, true
+}
+
+// HasInstanceKey returns a boolean if a field has been set.
+func (o *AppInstallationPayload) HasInstanceKey() bool {
+	if o != nil && !IsNil(o.InstanceKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetInstanceKey gets a reference to the given string and assigns it to the InstanceKey field.
+func (o *AppInstallationPayload) SetInstanceKey(v string) {
+	o.InstanceKey = &v
+}
+
+// GetDisplayName returns the DisplayName field value if set, zero value otherwise.
+func (o *AppInstallationPayload) GetDisplayName() string {
+	if o == nil || IsNil(o.DisplayName) {
+		var ret string
+		return ret
+	}
+	return *o.DisplayName
+}
+
+// GetDisplayNameOk returns a tuple with the DisplayName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationPayload) GetDisplayNameOk() (*string, bool) {
+	if o == nil || IsNil(o.DisplayName) {
+		return nil, false
+	}
+	return o.DisplayName, true
+}
+
+// HasDisplayName returns a boolean if a field has been set.
+func (o *AppInstallationPayload) HasDisplayName() bool {
+	if o != nil && !IsNil(o.DisplayName) {
+		return true
+	}
+
+	return false
+}
+
+// SetDisplayName gets a reference to the given string and assigns it to the DisplayName field.
+func (o *AppInstallationPayload) SetDisplayName(v string) {
+	o.DisplayName = &v
+}
+
+// GetNamespaceOverrides returns the NamespaceOverrides field value if set, zero value otherwise.
+func (o *AppInstallationPayload) GetNamespaceOverrides() map[string]string {
+	if o == nil || IsNil(o.NamespaceOverrides) {
+		var ret map[string]string
+		return ret
+	}
+	return o.NamespaceOverrides
+}
+
+// GetNamespaceOverridesOk returns a tuple with the NamespaceOverrides field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationPayload) GetNamespaceOverridesOk() (map[string]string, bool) {
+	if o == nil || IsNil(o.NamespaceOverrides) {
+		return map[string]string{}, false
+	}
+	return o.NamespaceOverrides, true
+}
+
+// HasNamespaceOverrides returns a boolean if a field has been set.
+func (o *AppInstallationPayload) HasNamespaceOverrides() bool {
+	if o != nil && !IsNil(o.NamespaceOverrides) {
+		return true
+	}
+
+	return false
+}
+
+// SetNamespaceOverrides gets a reference to the given map[string]string and assigns it to the NamespaceOverrides field.
+func (o *AppInstallationPayload) SetNamespaceOverrides(v map[string]string) {
+	o.NamespaceOverrides = v
 }
 
 // GetMcpSharedParameters returns the McpSharedParameters field value if set, zero value otherwise.
@@ -328,6 +428,15 @@ func (o AppInstallationPayload) MarshalJSON() ([]byte, error) {
 func (o AppInstallationPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["app_id"] = o.AppId
+	if !IsNil(o.InstanceKey) {
+		toSerialize["instance_key"] = o.InstanceKey
+	}
+	if !IsNil(o.DisplayName) {
+		toSerialize["display_name"] = o.DisplayName
+	}
+	if !IsNil(o.NamespaceOverrides) {
+		toSerialize["namespace_overrides"] = o.NamespaceOverrides
+	}
 	if !IsNil(o.McpSharedParameters) {
 		toSerialize["mcp_shared_parameters"] = o.McpSharedParameters
 	}
@@ -393,6 +502,9 @@ func (o *AppInstallationPayload) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "app_id")
+		delete(additionalProperties, "instance_key")
+		delete(additionalProperties, "display_name")
+		delete(additionalProperties, "namespace_overrides")
 		delete(additionalProperties, "mcp_shared_parameters")
 		delete(additionalProperties, "mcp_parameters")
 		delete(additionalProperties, "settings")

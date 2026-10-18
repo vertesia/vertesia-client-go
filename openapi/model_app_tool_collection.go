@@ -21,7 +21,8 @@ var _ MappedNullable = &AppToolCollection{}
 // AppToolCollection A description of the tools provided by an app
 type AppToolCollection struct {
 	// The collection name
-	Name string `json:"name"`
+	Name         string  `json:"name"`
+	CollectionId *string `json:"collection_id,omitempty"`
 	// Optional collection description
 	Description *string `json:"description,omitempty"`
 	// the tools provided by this collection
@@ -71,6 +72,38 @@ func (o *AppToolCollection) GetNameOk() (*string, bool) {
 // SetName sets field value
 func (o *AppToolCollection) SetName(v string) {
 	o.Name = v
+}
+
+// GetCollectionId returns the CollectionId field value if set, zero value otherwise.
+func (o *AppToolCollection) GetCollectionId() string {
+	if o == nil || IsNil(o.CollectionId) {
+		var ret string
+		return ret
+	}
+	return *o.CollectionId
+}
+
+// GetCollectionIdOk returns a tuple with the CollectionId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppToolCollection) GetCollectionIdOk() (*string, bool) {
+	if o == nil || IsNil(o.CollectionId) {
+		return nil, false
+	}
+	return o.CollectionId, true
+}
+
+// HasCollectionId returns a boolean if a field has been set.
+func (o *AppToolCollection) HasCollectionId() bool {
+	if o != nil && !IsNil(o.CollectionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetCollectionId gets a reference to the given string and assigns it to the CollectionId field.
+func (o *AppToolCollection) SetCollectionId(v string) {
+	o.CollectionId = &v
 }
 
 // GetDescription returns the Description field value if set, zero value otherwise.
@@ -140,6 +173,9 @@ func (o AppToolCollection) MarshalJSON() ([]byte, error) {
 func (o AppToolCollection) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["name"] = o.Name
+	if !IsNil(o.CollectionId) {
+		toSerialize["collection_id"] = o.CollectionId
+	}
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}

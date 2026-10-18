@@ -160,6 +160,7 @@ model_app_installation_payload.go
 model_app_installation_payload_mcp_shared_parameters_value.go
 model_app_installation_provider_binding.go
 model_app_installation_with_manifest.go
+model_app_instance_availability.go
 model_app_manifest.go
 model_app_manifest_data.go
 model_app_manifest_preview_screenshot.go
