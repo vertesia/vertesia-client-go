@@ -222,3 +222,61 @@ declarations with `go/parser` and `go/ast`, applies targeted source edits, and f
 the output with `go/format`. Other unions' validation remains unchanged. Run
 `go test ./...` to exercise the patch against every registered model option family
  without modifying generated files.
+
+## OIDC federation for provisioned users
+
+Use a separate client for each user/project/resource/scope combination. The user must already be
+SCIM-provisioned and the organization must configure an OIDC federation trust policy. This does not
+log in or provision users.
+
+```go
+policy := vertesia.FederationOptions{
+    ConnectionID: "connection-id",
+    ProjectID: "project-id",
+    Resource: "https://api.us1.vertesia.io",
+    SubjectTokenProvider: getFreshIdPToken, // func(context.Context) (string, error)
+    // Scope: "content:read", // omit to use current delegable permissions
+}
+options := vertesia.ClientOptions{Region: "us1", Federation: &policy}
+client, err := vertesia.NewClient(options)
+// Use client.ProjectsAPI, client.ObjectsAPI, etc. as usual.
+
+// Or exchange a fixed assertion once and manage its lifetime yourself:
+issued, err := vertesia.ExchangeFederationToken(ctx, options, policy, idpAssertion)
+// issued.AccessToken, issued.ExpiresIn, issued.Scope
+```
+
+The facade lazily exchanges on the first authenticated request, caches the token across Studio and
+Store clients, and requests a fresh IdP assertion after 90% of its lifetime. Concurrent requests
+serialize renewal. There is no refresh token or background worker, and no automatic replay of API
+writes on a 401. Provider/exchange errors fail the request rather than sending an expired token.
+The callback must obtain a currently valid assertion on each renewal; do not hardcode a long-lived token.
+Federation is mutually exclusive with `APIKey` and `Token`.
+
+`SubjectTokenType` defaults to `urn:ietf:params:oauth:token-type:jwt`; override for ID/access tokens.
+The default token endpoint is the resolved STS URL plus `/oauth/token`. Use `TokenEndpoint` for a
+complete tenant endpoint, or set `TokenServerURL` explicitly for custom split service URLs. Token
+endpoints require HTTPS, except loopback HTTP for local development; redirects are rejected.
+
+Middleware authentication is optional. Set `ClientID` and `ClientSecret` for `client_secret_post`,
+or also set `ClientSecretBasic: true` for `client_secret_basic`. Alternatively set `ClientID` and
+`ClientAssertionProvider` for `private_key_jwt` (never both secrets and signed assertions). The latter
+must generate a fresh short-lived assertion with a unique `jti` on every exchange; its single-string
+`aud` is the Vertesia authorization-server issuer from discovery, including the tenant when applicable.
+
+Exchange results report conservative remaining `expires_in` seconds after subtracting the STS
+round trip (rounded up). Time spent obtaining IdP/client assertions does not consume the delegated
+token's lifetime. Already-expired results are rejected in both one-shot and automatic modes.
+Implicit STS routing is limited to recognized Vertesia STS domains; custom `api*` hostnames require
+an explicit STS URL or complete token endpoint, even when their names resemble hosted endpoints.
+
+An API 401 invalidates only the bearer token that request used. The SDK does not replay the request;
+the next call attempts a fresh exchange. Concurrent late 401s do not evict a different newer token.
+Failed automatic exchanges are cached for one second to avoid repeatedly calling the IdP/STS during
+an outage. Finite lifetimes up to one day are accepted, including fractional seconds; returned
+remaining seconds are rounded down. The server's current five-minute cap is not a client limit.
+
+Use `errors.As(err, &federationError)` with `*vertesia.FederationError` to read `StatusCode` and
+`OAuthCode`. Known OAuth codes are allowlisted; descriptions and unknown codes remain redacted.
+`errors.Is`/`errors.Unwrap` can inspect the original callback/transport cause without including it in
+normal error messages. Waiting for another renewal honors the caller's context cancellation.
