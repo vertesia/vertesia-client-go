@@ -28,6 +28,8 @@ type ErrorResponse struct {
 	Message *string `json:"message,omitempty"`
 	// Optional additional error details.
 	Details *string `json:"details,omitempty"`
+	// Machine-readable code for the specific failure, present when the error carries one, so clients can branch on it without parsing `message`.
+	ErrorCode *string `json:"errorCode,omitempty"`
 }
 
 type _ErrorResponse ErrorResponse
@@ -163,6 +165,38 @@ func (o *ErrorResponse) SetDetails(v string) {
 	o.Details = &v
 }
 
+// GetErrorCode returns the ErrorCode field value if set, zero value otherwise.
+func (o *ErrorResponse) GetErrorCode() string {
+	if o == nil || IsNil(o.ErrorCode) {
+		var ret string
+		return ret
+	}
+	return *o.ErrorCode
+}
+
+// GetErrorCodeOk returns a tuple with the ErrorCode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ErrorResponse) GetErrorCodeOk() (*string, bool) {
+	if o == nil || IsNil(o.ErrorCode) {
+		return nil, false
+	}
+	return o.ErrorCode, true
+}
+
+// HasErrorCode returns a boolean if a field has been set.
+func (o *ErrorResponse) HasErrorCode() bool {
+	if o != nil && !IsNil(o.ErrorCode) {
+		return true
+	}
+
+	return false
+}
+
+// SetErrorCode gets a reference to the given string and assigns it to the ErrorCode field.
+func (o *ErrorResponse) SetErrorCode(v string) {
+	o.ErrorCode = &v
+}
+
 func (o ErrorResponse) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -180,6 +214,9 @@ func (o ErrorResponse) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Details) {
 		toSerialize["details"] = o.Details
+	}
+	if !IsNil(o.ErrorCode) {
+		toSerialize["errorCode"] = o.ErrorCode
 	}
 	return toSerialize, nil
 }
