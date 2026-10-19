@@ -13,6 +13,15 @@ find "$openapi_dir" -name 'model_*.go' -print0 | xargs -0 perl -0pi -e '
   s/decoder := json\.NewDecoder\(bytes\.NewReader\(data\)\)\n\tdecoder\.DisallowUnknownFields\(\)\n\terr = decoder\.Decode\(&([A-Za-z0-9_]+)\)/err = json.Unmarshal(data, &$1)/g;
 '
 
+# gopkg.in/validator.v2 only applies regexp rules to string and *string fields; on any other
+# kind (NullableString, NullableTime, time.Time) it returns ErrUnsupported even when the field
+# is absent. oneOf decoders run validator.Validate on each candidate, so one such tag anywhere in
+# a branch makes that branch unmatchable (every AgentRunResponse failed on config.inference_profile).
+# The server already enforces these patterns, so drop the tags the validator cannot evaluate.
+find "$openapi_dir" -name 'model_*.go' -print0 | xargs -0 perl -pi -e '
+  s{^(\t\w+\s+)(?!\*?string\s)(\S+\s+`[^`]*?)\s+validate:"regexp=(?:[^"\\]|\\.)*"}{$1$2};
+'
+
 if [[ -f "$openapi_dir/utils.go" ]]; then
   perl -0pi -e '
     s#// A wrapper for strict JSON decoding#// A wrapper for JSON decoding used by generated union models#;
