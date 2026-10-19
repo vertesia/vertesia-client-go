@@ -598,7 +598,7 @@ func TestGeneratedGoClientAPIKeyAuthentication(t *testing.T) {
 	}
 }
 
-// Fixture tests cover all union branches even when a live project has no runs of a particular type.
+// Supervised fixtures are optional; require other live branches so empty lists cannot hide decoding failures.
 func TestGeneratedGoClientAgentRunDecoding(t *testing.T) {
 	liveClients(t)
 	for _, runType := range []string{"autonomous", "supervised", "programmatic"} {
@@ -609,6 +609,12 @@ func TestGeneratedGoClientAgentRunDecoding(t *testing.T) {
 			}
 			if listed == nil {
 				t.Fatal("listAgentRuns returned nil")
+			}
+			if len(listed.GetItems()) == 0 {
+				if runType == "supervised" {
+					t.Skip("no live supervised run fixture; decoder covered by offline fixtures")
+				}
+				t.Fatalf("live %s run fixture required to exercise list/detail decoding", runType)
 			}
 			for _, run := range listed.GetItems() {
 				id := requireAgentRunBranch(t, &run, runType)
