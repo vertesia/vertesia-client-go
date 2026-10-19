@@ -2146,7 +2146,7 @@ func (r ApiPublishProcessDefinitionRequest) Execute() (*ProcessDefinition, *http
 /*
 PublishProcessDefinition Publish a process definition
 
-Publishes the latest draft revision for a process definition, optionally attaching tags and a revision label. `confirmed=true` is required, and the endpoint rejects non-head or non-draft revisions.
+Publishes the latest draft revision for a process definition, optionally attaching tags and a revision label. `confirmed=true` is required, and the endpoint rejects non-head or non-draft revisions. With an `idempotency_key`, a repeat of the request that published the revision returns that revision instead of being rejected.
 
 **Required permissions:** `workflow:admin`
 

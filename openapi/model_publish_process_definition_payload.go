@@ -28,6 +28,8 @@ type PublishProcessDefinitionPayload struct {
 	Label *string `json:"label,omitempty"`
 	// Optional publish note.
 	Comment *string `json:"comment,omitempty"`
+	// Client-chosen key that makes this request safe to retry. Publishing is otherwise not idempotent: a repeat of a publish that already succeeded is rejected because the revision is no longer a draft. When the revision was published by a request with the same key and the same body, the repeat returns that revision instead. Reusing the key with a different body is rejected with 409. The key is bound to the revision it published.
+	IdempotencyKey *string `json:"idempotency_key,omitempty"`
 }
 
 type _PublishProcessDefinitionPayload PublishProcessDefinitionPayload
@@ -170,6 +172,38 @@ func (o *PublishProcessDefinitionPayload) SetComment(v string) {
 	o.Comment = &v
 }
 
+// GetIdempotencyKey returns the IdempotencyKey field value if set, zero value otherwise.
+func (o *PublishProcessDefinitionPayload) GetIdempotencyKey() string {
+	if o == nil || IsNil(o.IdempotencyKey) {
+		var ret string
+		return ret
+	}
+	return *o.IdempotencyKey
+}
+
+// GetIdempotencyKeyOk returns a tuple with the IdempotencyKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PublishProcessDefinitionPayload) GetIdempotencyKeyOk() (*string, bool) {
+	if o == nil || IsNil(o.IdempotencyKey) {
+		return nil, false
+	}
+	return o.IdempotencyKey, true
+}
+
+// HasIdempotencyKey returns a boolean if a field has been set.
+func (o *PublishProcessDefinitionPayload) HasIdempotencyKey() bool {
+	if o != nil && !IsNil(o.IdempotencyKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetIdempotencyKey gets a reference to the given string and assigns it to the IdempotencyKey field.
+func (o *PublishProcessDefinitionPayload) SetIdempotencyKey(v string) {
+	o.IdempotencyKey = &v
+}
+
 func (o PublishProcessDefinitionPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -189,6 +223,9 @@ func (o PublishProcessDefinitionPayload) ToMap() (map[string]interface{}, error)
 	}
 	if !IsNil(o.Comment) {
 		toSerialize["comment"] = o.Comment
+	}
+	if !IsNil(o.IdempotencyKey) {
+		toSerialize["idempotency_key"] = o.IdempotencyKey
 	}
 	return toSerialize, nil
 }
