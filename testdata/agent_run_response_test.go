@@ -50,3 +50,49 @@ func TestAgentRunResponseWithExecutionConfig(t *testing.T) {
 		})
 	}
 }
+
+// Supervised and programmatic runs share the same required fields, so the generated
+// trial-and-error decoder matched both and failed with "data matches more than one schema".
+// The union must dispatch on its run_type discriminator instead.
+func TestAgentRunResponseDispatchesByRunType(t *testing.T) {
+	const process = `{
+		"id": "000000000000000000000001",
+		"account": "000000000000000000000002",
+		"project": "000000000000000000000003",
+		"run_kind": "process",
+		"run_type": "RUN_TYPE",
+		"status": "running",
+		"started_by": "user:000000000000000000000004",
+		"started_at": "2026-07-28T11:08:41.127Z",
+		"created_at": "2026-07-28T11:08:41.128Z",
+		"updated_at": "2026-07-29T10:59:13.166Z",
+		"process_definition_snapshot": {"format_version": 1, "process": "triage", "initial": "start",
+			"context": {"schema": {}, "initial": {}}, "nodes": {}},
+		"process_state": {"context": {}, "current_node": "start", "node_history": [], "sequence": 0}
+	}`
+	for _, runType := range []string{"supervised", "programmatic"} {
+		t.Run(runType, func(t *testing.T) {
+			var run AgentRunResponse
+			if err := json.Unmarshal([]byte(strings.Replace(process, "RUN_TYPE", runType, 1)), &run); err != nil {
+				t.Fatal(err)
+			}
+			var got string
+			switch {
+			case run.SupervisedRunResponse != nil && run.ProgrammaticRunResponse == nil && run.AutonomousRunResponse == nil:
+				got = run.SupervisedRunResponse.RunType
+			case run.ProgrammaticRunResponse != nil && run.SupervisedRunResponse == nil && run.AutonomousRunResponse == nil:
+				got = run.ProgrammaticRunResponse.RunType
+			}
+			if got != runType {
+				t.Fatalf("AgentRunResponse resolved to %T, want %s run", run.GetActualInstance(), runType)
+			}
+		})
+	}
+
+	t.Run("unknown run_type", func(t *testing.T) {
+		var run AgentRunResponse
+		if err := json.Unmarshal([]byte(strings.Replace(process, "RUN_TYPE", "future_mode", 1)), &run); err == nil {
+			t.Fatalf("expected an error for an unknown run_type, got %T", run.GetActualInstance())
+		}
+	})
+}

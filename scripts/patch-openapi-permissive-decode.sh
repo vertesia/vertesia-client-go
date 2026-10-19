@@ -56,8 +56,13 @@ find "$openapi_dir" -name 'api_*.go' -print0 | xargs -0 perl -0pi -e '
   s/\tif r\.xApiVersion == nil \{\n(\t\treturn [^\n]+\n)\t\}/\tif r.xApiVersion == nil {\n\t\tversion := a.client.cfg.DefaultHeader["x-api-version"]\n\t\tif version == "" {\n\t$1\t\t}\n\t\tr.xApiVersion = \&version\n\t}/g;
 '
 
-# Permissive object decoding must still honor the CompletionResult discriminator.
+# Permissive object decoding must still honor published union discriminators.
+# AgentRunResponse also needs this because its supervised and programmatic branches
+# share every required field, so trial decoding matches both.
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [[ -f "$openapi_dir/model_completion_result.go" ]]; then
-  go run "$script_dir/patch-completion-result/main.go" -model "$openapi_dir/model_completion_result.go" -spec "$script_dir/../spec/vertesia-openapi.json"
-fi
+for union in CompletionResult:completion_result AgentRunResponse:agent_run_response; do
+  model="$openapi_dir/model_${union#*:}.go"
+  if [[ -f "$model" ]]; then
+    go run "$script_dir/patch-discriminated-union/main.go" -union "${union%%:*}" -model "$model" -spec "$script_dir/../spec/vertesia-openapi.json"
+  fi
+done
