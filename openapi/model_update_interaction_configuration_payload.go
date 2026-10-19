@@ -21,7 +21,7 @@ var _ MappedNullable = &UpdateInteractionConfigurationPayload{}
 // UpdateInteractionConfigurationPayload struct for UpdateInteractionConfigurationPayload
 type UpdateInteractionConfigurationPayload struct {
 	// MongoDB ObjectId of the inference profile.
-	InferenceProfile NullableString `json:"inference_profile" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	InferenceProfile NullableString `json:"inference_profile"`
 	// Project-scoped agent budget override. Null restores the code-defined or project default; omission preserves the saved budget.
 	Budget NullableAgentBudgetConfiguration `json:"budget,omitempty"`
 }

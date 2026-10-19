@@ -23,7 +23,7 @@ type RateLimitRequestPayload struct {
 	Interaction   string  `json:"interaction"`
 	EnvironmentId *string `json:"environment_id,omitempty"`
 	// MongoDB ObjectId of the inference profile.
-	InferenceProfile   NullableString `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	InferenceProfile   NullableString `json:"inference_profile,omitempty"`
 	InheritModelConfig *bool          `json:"inherit_model_config,omitempty"`
 	ModelId            *string        `json:"model_id,omitempty"`
 	// Deprecated: Use rate_limit_id for admission/completion correlation.

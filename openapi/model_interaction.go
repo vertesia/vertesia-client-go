@@ -35,7 +35,7 @@ type Interaction struct {
 	Model              *string                  `json:"model,omitempty"`
 	ModelOptions       *ModelOptions            `json:"model_options,omitempty"`
 	// MongoDB ObjectId of the inference profile.
-	InferenceProfile  NullableString       `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	InferenceProfile  NullableString       `json:"inference_profile,omitempty"`
 	StoreMediaResults *bool                `json:"store_media_results,omitempty"`
 	Restriction       *RunDataStorageLevel `json:"restriction,omitempty"`
 	// Deprecated: This is deprecated. Use CompletionResult.type information instead.

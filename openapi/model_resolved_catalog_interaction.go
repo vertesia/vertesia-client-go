@@ -39,7 +39,7 @@ type ResolvedCatalogInteraction struct {
 	AgentRunnerOptions *AgentRunnerOptions `json:"agent_runner_options,omitempty"`
 	ModelOptions       *ModelOptions       `json:"model_options,omitempty"`
 	// MongoDB ObjectId of the inference profile.
-	InferenceProfile     NullableString                     `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	InferenceProfile     NullableString                     `json:"inference_profile,omitempty"`
 	Prompts              []InCodePrompt                     `json:"prompts"`
 	ExternalId           *string                            `json:"externalId,omitempty"`
 	Runtime              *ResolvedCatalogInteractionRuntime `json:"runtime,omitempty"`

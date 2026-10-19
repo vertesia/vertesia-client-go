@@ -20,7 +20,7 @@ var _ MappedNullable = &ProcessRunConfig{}
 // ProcessRunConfig struct for ProcessRunConfig
 type ProcessRunConfig struct {
 	// Run-level inference profile ID for process LLM nodes and the supervisor. Explicit model settings retain precedence.
-	InferenceProfile NullableString `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	InferenceProfile NullableString `json:"inference_profile,omitempty"`
 	// Execution environment id used by Process LLM nodes and the supervisor.
 	Environment *string `json:"environment,omitempty"`
 	Model       *string `json:"model,omitempty"`

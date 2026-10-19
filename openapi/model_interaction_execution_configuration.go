@@ -21,7 +21,7 @@ var _ MappedNullable = &InteractionExecutionConfiguration{}
 type InteractionExecutionConfiguration struct {
 	Id *string `json:"id,omitempty"`
 	// Select a project inference profile. Null bypasses profile defaults.
-	InferenceProfile NullableString `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	InferenceProfile NullableString `json:"inference_profile,omitempty"`
 	// Treat the supplied environment, model and inference_profile as the caller's settings, inherited as a fallback: the interaction's bound or attached profile, or its own model, replaces them.
 	InheritModelConfig *bool                `json:"inherit_model_config,omitempty"`
 	Environment        *string              `json:"environment,omitempty"`

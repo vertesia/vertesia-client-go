@@ -25,13 +25,13 @@ type DelegationGrant struct {
 	Subject            string       `json:"subject" validate:"regexp=^[a-f0-9]{24}$"`
 	OutputCollectionId string       `json:"output_collection_id" validate:"regexp=^[a-f0-9]{24}$"`
 	PolicyHash         string       `json:"policy_hash" validate:"regexp=^[a-f0-9]{64}$"`
-	ExpiresAt          NullableTime `json:"expires_at" validate:"regexp=^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$"`
+	ExpiresAt          NullableTime `json:"expires_at"`
 	Id                 string       `json:"id" validate:"regexp=^[a-f0-9]{24}$"`
 	AccountId          string       `json:"account_id" validate:"regexp=^[a-f0-9]{24}$"`
 	ProjectId          string       `json:"project_id" validate:"regexp=^[a-f0-9]{24}$"`
 	Granter            string       `json:"granter" validate:"regexp=^[a-f0-9]{24}$"`
-	CreatedAt          time.Time    `json:"created_at" validate:"regexp=^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$"`
-	RevokedAt          NullableTime `json:"revoked_at" validate:"regexp=^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$"`
+	CreatedAt          time.Time    `json:"created_at"`
+	RevokedAt          NullableTime `json:"revoked_at"`
 }
 
 type _DelegationGrant DelegationGrant
