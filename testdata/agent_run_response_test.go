@@ -89,10 +89,18 @@ func TestAgentRunResponseDispatchesByRunType(t *testing.T) {
 		})
 	}
 
-	t.Run("unknown run_type", func(t *testing.T) {
-		var run AgentRunResponse
-		if err := json.Unmarshal([]byte(strings.Replace(process, "RUN_TYPE", "future_mode", 1)), &run); err == nil {
-			t.Fatalf("expected an error for an unknown run_type, got %T", run.GetActualInstance())
+	// Reuse a populated union to ensure errors also clear stale branch pointers.
+	var run AgentRunResponse
+	for _, tag := range []string{`"future_mode"`, `null`, `42`, `""`} {
+		if err := json.Unmarshal([]byte(strings.Replace(process, "RUN_TYPE", "supervised", 1)), &run); err != nil {
+			t.Fatal(err)
 		}
-	})
+		body := strings.Replace(process, `"RUN_TYPE"`, tag, 1)
+		if err := json.Unmarshal([]byte(body), &run); err == nil {
+			t.Fatalf("accepted invalid run_type %s", tag)
+		}
+		if run.GetActualInstance() != nil {
+			t.Fatal("retained a stale agent-run branch after a decoding error")
+		}
+	}
 }
