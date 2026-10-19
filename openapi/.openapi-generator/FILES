@@ -129,7 +129,6 @@ model_analytics_axis.go
 model_answer_process_task_payload.go
 model_anthropic_claude_options.go
 model_api_key.go
-model_api_key_read_response.go
 model_api_key_token_request.go
 model_api_key_types.go
 model_api_key_with_value.go

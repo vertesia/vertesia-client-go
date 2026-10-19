@@ -324,7 +324,6 @@ type ApiGetApiKeyRequest struct {
 	ApiService  *APIKeysAPIService
 	keyId       string
 	xApiVersion *string
-	withValue   *bool
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
@@ -333,19 +332,14 @@ func (r ApiGetApiKeyRequest) XApiVersion(xApiVersion string) ApiGetApiKeyRequest
 	return r
 }
 
-func (r ApiGetApiKeyRequest) WithValue(withValue bool) ApiGetApiKeyRequest {
-	r.withValue = &withValue
-	return r
-}
-
-func (r ApiGetApiKeyRequest) Execute() (*ApiKeyReadResponse, *http.Response, error) {
+func (r ApiGetApiKeyRequest) Execute() (*ApiKey, *http.Response, error) {
 	return r.ApiService.GetApiKeyExecute(r)
 }
 
 /*
 GetApiKey Retrieve an API key
 
-Retrieves API key metadata and optionally the raw key value when it is still retrievable.
+Retrieves API key metadata. The raw key value is returned only once, on creation.
 
 **Required permissions:** `api_key:read`
 
@@ -363,13 +357,13 @@ func (a *APIKeysAPIService) GetApiKey(ctx context.Context, keyId string) ApiGetA
 
 // Execute executes the request
 //
-//	@return ApiKeyReadResponse
-func (a *APIKeysAPIService) GetApiKeyExecute(r ApiGetApiKeyRequest) (*ApiKeyReadResponse, *http.Response, error) {
+//	@return ApiKey
+func (a *APIKeysAPIService) GetApiKeyExecute(r ApiGetApiKeyRequest) (*ApiKey, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue *ApiKeyReadResponse
+		localVarReturnValue *ApiKey
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "APIKeysAPIService.GetApiKey")
@@ -394,9 +388,6 @@ func (a *APIKeysAPIService) GetApiKeyExecute(r ApiGetApiKeyRequest) (*ApiKeyRead
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
-	if r.withValue != nil {
-		parameterAddToHeaderOrQuery(localVarQueryParams, "withValue", r.withValue, "form", "")
-	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
