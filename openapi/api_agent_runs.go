@@ -1129,7 +1129,7 @@ func (r ApiGetAgentRunArtifactRequest) Execute() (*AgentArtifactUrlResponse, *ht
 /*
 GetAgentRunArtifact Get an agent run artifact
 
-Downloads an artifact or returns a signed download URL when `url=1` is supplied.
+Returns a signed download URL as JSON when `url=1` is supplied, and otherwise streams the artifact bytes as `application/octet-stream`. Prefer `url=1` and download from the signed URL.
 
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
@@ -1200,7 +1200,7 @@ func (a *AgentRunsAPIService) GetAgentRunArtifactExecute(r ApiGetAgentRunArtifac
 	}
 
 	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
+	localVarHTTPHeaderAccepts := []string{"application/json", "application/octet-stream"}
 
 	// set Accept header
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
