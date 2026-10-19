@@ -13,7 +13,6 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // AgentRunResponse - struct for AgentRunResponse
@@ -46,70 +45,37 @@ func SupervisedRunResponseAsAgentRunResponse(v *SupervisedRunResponse) AgentRunR
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *AgentRunResponse) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into AutonomousRunResponse
-	err = newStrictDecoder(data).Decode(&dst.AutonomousRunResponse)
-	if err == nil {
-		jsonAutonomousRunResponse, _ := json.Marshal(dst.AutonomousRunResponse)
-		if string(jsonAutonomousRunResponse) == "{}" { // empty struct
-			dst.AutonomousRunResponse = nil
-		} else {
-			if err = validator.Validate(dst.AutonomousRunResponse); err != nil {
-				dst.AutonomousRunResponse = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.AutonomousRunResponse = nil
+	*dst = AgentRunResponse{}
+	var tag struct {
+		Discriminator string `json:"run_type"`
 	}
-
-	// try to unmarshal data into ProgrammaticRunResponse
-	err = newStrictDecoder(data).Decode(&dst.ProgrammaticRunResponse)
-	if err == nil {
-		jsonProgrammaticRunResponse, _ := json.Marshal(dst.ProgrammaticRunResponse)
-		if string(jsonProgrammaticRunResponse) == "{}" { // empty struct
-			dst.ProgrammaticRunResponse = nil
-		} else {
-			if err = validator.Validate(dst.ProgrammaticRunResponse); err != nil {
-				dst.ProgrammaticRunResponse = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ProgrammaticRunResponse = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into SupervisedRunResponse
-	err = newStrictDecoder(data).Decode(&dst.SupervisedRunResponse)
-	if err == nil {
-		jsonSupervisedRunResponse, _ := json.Marshal(dst.SupervisedRunResponse)
-		if string(jsonSupervisedRunResponse) == "{}" { // empty struct
-			dst.SupervisedRunResponse = nil
-		} else {
-			if err = validator.Validate(dst.SupervisedRunResponse); err != nil {
-				dst.SupervisedRunResponse = nil
-			} else {
-				match++
-			}
+	switch tag.Discriminator {
+	case "autonomous":
+		var value AutonomousRunResponse
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.SupervisedRunResponse = nil
-	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.AutonomousRunResponse = nil
-		dst.ProgrammaticRunResponse = nil
-		dst.SupervisedRunResponse = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(AgentRunResponse)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(AgentRunResponse)")
+		dst.AutonomousRunResponse = &value
+		return nil
+	case "supervised":
+		var value SupervisedRunResponse
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		dst.SupervisedRunResponse = &value
+		return nil
+	case "programmatic":
+		var value ProgrammaticRunResponse
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		dst.ProgrammaticRunResponse = &value
+		return nil
+	default:
+		return fmt.Errorf("unknown AgentRunResponse run_type %q", tag.Discriminator)
 	}
 }
 

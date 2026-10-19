@@ -71,12 +71,12 @@ func VideoResultAsCompletionResult(v *VideoResult) CompletionResult {
 func (dst *CompletionResult) UnmarshalJSON(data []byte) error {
 	*dst = CompletionResult{}
 	var tag struct {
-		Type string `json:"type"`
+		Discriminator string `json:"type"`
 	}
 	if err := json.Unmarshal(data, &tag); err != nil {
 		return err
 	}
-	switch tag.Type {
+	switch tag.Discriminator {
 	case "text":
 		var value TextResult
 		if err := json.Unmarshal(data, &value); err != nil {
@@ -120,7 +120,7 @@ func (dst *CompletionResult) UnmarshalJSON(data []byte) error {
 		dst.AudioResult = &value
 		return nil
 	default:
-		return fmt.Errorf("unknown CompletionResult type %q", tag.Type)
+		return fmt.Errorf("unknown CompletionResult type %q", tag.Discriminator)
 	}
 }
 
