@@ -21,6 +21,7 @@ const (
 	defaultAPIVersion   = "20260803"
 	tokenRefreshWindow  = time.Minute
 	tokenIssueOperation = "TokenServiceAPIService.IssueToken"
+	apiKeyTokenType     = "apikey"
 )
 
 var (
@@ -470,7 +471,10 @@ func (s *apiKeyTokenSource) Token(ctx context.Context) (string, error) {
 	cfg := newGeneratedConfig(s.tokenServerURL, s.tokenServerURL, s.httpClient, s.apiVersion)
 	client := openapi.NewAPIClient(cfg)
 	tokenCtx := context.WithValue(ctx, openapi.ContextAccessToken, s.apiKey)
-	issued, _, err := client.TokenServiceAPI.IssueToken(tokenCtx).Execute()
+	// Send the body explicitly: without one the generated client serializes its nil request as a
+	// JSON null, which STS validates against IssueTokenRequest and rejects.
+	request := openapi.ApiKeyTokenRequestAsIssueTokenRequest(openapi.NewApiKeyTokenRequest(apiKeyTokenType, s.apiKey))
+	issued, _, err := client.TokenServiceAPI.IssueToken(tokenCtx).IssueTokenRequest(request).Execute()
 	if err != nil {
 		return "", err
 	}

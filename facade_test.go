@@ -268,6 +268,14 @@ func TestNewClientExchangesSecretKeyForGeneratedClients(t *testing.T) {
 		if got := r.Header.Get("x-api-version"); got != "20260101" {
 			t.Fatalf("STS x-api-version = %q", got)
 		}
+		// STS validates a present body against IssueTokenRequest, so a JSON null is rejected.
+		var body map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatalf("decode STS request body: %v", err)
+		}
+		if body["type"] != "apikey" || body["key"] != "sk-test" {
+			t.Fatalf("STS request body = %#v, want an apikey token request", body)
+		}
 		writeIssueTokenResponse(t, w, issuedToken, 3600)
 	}))
 	defer stsServer.Close()
