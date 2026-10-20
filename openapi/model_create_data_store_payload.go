@@ -20,8 +20,8 @@ var _ MappedNullable = &CreateDataStorePayload{}
 
 // CreateDataStorePayload Payload for creating a new data store.
 type CreateDataStorePayload struct {
-	// Store name (unique within project)
-	Name string `json:"name"`
+	// Store name (unique within project). 1 to 128 characters; must not contain `/`, `\\` or control characters, start with a dot, or start or end with a space.
+	Name string `json:"name" validate:"regexp=^[^\\\\x00-\\\\x20\\\\x7f-\\\\x9f\\/\\\\\\\\.](?:[^\\\\x00-\\\\x1f\\\\x7f-\\\\x9f\\/\\\\\\\\]*[^\\\\x00-\\\\x20\\\\x7f-\\\\x9f\\/\\\\\\\\])?$"`
 	// Store description
 	Description *string `json:"description,omitempty"`
 	// Tags for organization
