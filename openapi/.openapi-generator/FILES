@@ -147,6 +147,8 @@ model_app_event_delivery_target.go
 model_app_event_delivery_target_input.go
 model_app_event_subscription_definition.go
 model_app_git_source_config.go
+model_app_git_source_provider.go
+model_app_github_repository_creation.go
 model_app_inspection_capability_report.go
 model_app_inspection_issue.go
 model_app_inspection_result.go
@@ -181,6 +183,7 @@ model_app_repo_tree_entry.go
 model_app_scaffold_module.go
 model_app_scaffold_progress.go
 model_app_scaffold_progress_status.go
+model_app_scaffold_source_mode.go
 model_app_session_token_request.go
 model_app_session_token_response.go
 model_app_source_config.go
