@@ -13,7 +13,6 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // BulkOperationResponse - struct for BulkOperationResponse
@@ -54,88 +53,44 @@ func BulkOperationResultAsBulkOperationResponse(v *BulkOperationResult) BulkOper
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *BulkOperationResponse) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into BulkObjectCreateResult
-	err = newStrictDecoder(data).Decode(&dst.BulkObjectCreateResult)
-	if err == nil {
-		jsonBulkObjectCreateResult, _ := json.Marshal(dst.BulkObjectCreateResult)
-		if string(jsonBulkObjectCreateResult) == "{}" { // empty struct
-			dst.BulkObjectCreateResult = nil
-		} else {
-			if err = validator.Validate(dst.BulkObjectCreateResult); err != nil {
-				dst.BulkObjectCreateResult = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.BulkObjectCreateResult = nil
+	*dst = BulkOperationResponse{}
+	var tag struct {
+		Discriminator string `json:"operation"`
 	}
-
-	// try to unmarshal data into BulkObjectDeleteResult
-	err = newStrictDecoder(data).Decode(&dst.BulkObjectDeleteResult)
-	if err == nil {
-		jsonBulkObjectDeleteResult, _ := json.Marshal(dst.BulkObjectDeleteResult)
-		if string(jsonBulkObjectDeleteResult) == "{}" { // empty struct
-			dst.BulkObjectDeleteResult = nil
-		} else {
-			if err = validator.Validate(dst.BulkObjectDeleteResult); err != nil {
-				dst.BulkObjectDeleteResult = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.BulkObjectDeleteResult = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into BulkObjectUpdateResult
-	err = newStrictDecoder(data).Decode(&dst.BulkObjectUpdateResult)
-	if err == nil {
-		jsonBulkObjectUpdateResult, _ := json.Marshal(dst.BulkObjectUpdateResult)
-		if string(jsonBulkObjectUpdateResult) == "{}" { // empty struct
-			dst.BulkObjectUpdateResult = nil
-		} else {
-			if err = validator.Validate(dst.BulkObjectUpdateResult); err != nil {
-				dst.BulkObjectUpdateResult = nil
-			} else {
-				match++
-			}
+	switch tag.Discriminator {
+	case "generic":
+		var value BulkOperationResult
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.BulkObjectUpdateResult = nil
-	}
-
-	// try to unmarshal data into BulkOperationResult
-	err = newStrictDecoder(data).Decode(&dst.BulkOperationResult)
-	if err == nil {
-		jsonBulkOperationResult, _ := json.Marshal(dst.BulkOperationResult)
-		if string(jsonBulkOperationResult) == "{}" { // empty struct
-			dst.BulkOperationResult = nil
-		} else {
-			if err = validator.Validate(dst.BulkOperationResult); err != nil {
-				dst.BulkOperationResult = nil
-			} else {
-				match++
-			}
+		dst.BulkOperationResult = &value
+		return nil
+	case "create":
+		var value BulkObjectCreateResult
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.BulkOperationResult = nil
-	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.BulkObjectCreateResult = nil
-		dst.BulkObjectDeleteResult = nil
-		dst.BulkObjectUpdateResult = nil
-		dst.BulkOperationResult = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(BulkOperationResponse)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(BulkOperationResponse)")
+		dst.BulkObjectCreateResult = &value
+		return nil
+	case "update":
+		var value BulkObjectUpdateResult
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		dst.BulkObjectUpdateResult = &value
+		return nil
+	case "delete":
+		var value BulkObjectDeleteResult
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		dst.BulkObjectDeleteResult = &value
+		return nil
+	default:
+		return fmt.Errorf("unknown BulkOperationResponse operation %q", tag.Discriminator)
 	}
 }
 

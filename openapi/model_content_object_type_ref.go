@@ -13,7 +13,6 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // ContentObjectTypeRef - struct for ContentObjectTypeRef
@@ -38,52 +37,30 @@ func StoredTypeRefAsContentObjectTypeRef(v *StoredTypeRef) ContentObjectTypeRef 
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *ContentObjectTypeRef) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into InCodeTypeRef
-	err = newStrictDecoder(data).Decode(&dst.InCodeTypeRef)
-	if err == nil {
-		jsonInCodeTypeRef, _ := json.Marshal(dst.InCodeTypeRef)
-		if string(jsonInCodeTypeRef) == "{}" { // empty struct
-			dst.InCodeTypeRef = nil
-		} else {
-			if err = validator.Validate(dst.InCodeTypeRef); err != nil {
-				dst.InCodeTypeRef = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.InCodeTypeRef = nil
+	*dst = ContentObjectTypeRef{}
+	var tag struct {
+		Discriminator string `json:"ref_type"`
 	}
-
-	// try to unmarshal data into StoredTypeRef
-	err = newStrictDecoder(data).Decode(&dst.StoredTypeRef)
-	if err == nil {
-		jsonStoredTypeRef, _ := json.Marshal(dst.StoredTypeRef)
-		if string(jsonStoredTypeRef) == "{}" { // empty struct
-			dst.StoredTypeRef = nil
-		} else {
-			if err = validator.Validate(dst.StoredTypeRef); err != nil {
-				dst.StoredTypeRef = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.StoredTypeRef = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.InCodeTypeRef = nil
-		dst.StoredTypeRef = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(ContentObjectTypeRef)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(ContentObjectTypeRef)")
+	switch tag.Discriminator {
+	case "stored":
+		var value StoredTypeRef
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		dst.StoredTypeRef = &value
+		return nil
+	case "incode":
+		var value InCodeTypeRef
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		dst.InCodeTypeRef = &value
+		return nil
+	default:
+		return fmt.Errorf("unknown ContentObjectTypeRef ref_type %q", tag.Discriminator)
 	}
 }
 
