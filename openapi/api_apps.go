@@ -1052,6 +1052,156 @@ func (a *AppsAPIService) DeleteMcpCollectionApiKeyExecute(r ApiDeleteMcpCollecti
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiExchangeAppGithubAuthorizationRequest struct {
+	ctx                                   context.Context
+	ApiService                            *AppsAPIService
+	xApiVersion                           *string
+	exchangeAppGithubAuthorizationRequest *ExchangeAppGithubAuthorizationRequest
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiExchangeAppGithubAuthorizationRequest) XApiVersion(xApiVersion string) ApiExchangeAppGithubAuthorizationRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiExchangeAppGithubAuthorizationRequest) ExchangeAppGithubAuthorizationRequest(exchangeAppGithubAuthorizationRequest ExchangeAppGithubAuthorizationRequest) ApiExchangeAppGithubAuthorizationRequest {
+	r.exchangeAppGithubAuthorizationRequest = &exchangeAppGithubAuthorizationRequest
+	return r
+}
+
+func (r ApiExchangeAppGithubAuthorizationRequest) Execute() (*ExchangeAppGithubAuthorizationResponse, *http.Response, error) {
+	return r.ApiService.ExchangeAppGithubAuthorizationExecute(r)
+}
+
+/*
+ExchangeAppGithubAuthorization Verify GitHub App installations visible to the current user
+
+**Required permissions:** `app:manage`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiExchangeAppGithubAuthorizationRequest
+*/
+func (a *AppsAPIService) ExchangeAppGithubAuthorization(ctx context.Context) ApiExchangeAppGithubAuthorizationRequest {
+	return ApiExchangeAppGithubAuthorizationRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return ExchangeAppGithubAuthorizationResponse
+func (a *AppsAPIService) ExchangeAppGithubAuthorizationExecute(r ApiExchangeAppGithubAuthorizationRequest) (*ExchangeAppGithubAuthorizationResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ExchangeAppGithubAuthorizationResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AppsAPIService.ExchangeAppGithubAuthorization")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/apps/source-providers/github/exchange"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+	if r.exchangeAppGithubAuthorizationRequest == nil {
+		return localVarReturnValue, nil, reportError("exchangeAppGithubAuthorizationRequest is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.exchangeAppGithubAuthorizationRequest
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiGetAppBuildProgressRequest struct {
 	ctx         context.Context
 	ApiService  *AppsAPIService
@@ -1278,6 +1428,336 @@ func (a *AppsAPIService) GetAppDevelopmentTaskExecute(r ApiGetAppDevelopmentTask
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetAppGithubConfigurationRequest struct {
+	ctx         context.Context
+	ApiService  *AppsAPIService
+	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiGetAppGithubConfigurationRequest) XApiVersion(xApiVersion string) ApiGetAppGithubConfigurationRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiGetAppGithubConfigurationRequest) Execute() (*AppGithubConfiguration, *http.Response, error) {
+	return r.ApiService.GetAppGithubConfigurationExecute(r)
+}
+
+/*
+GetAppGithubConfiguration Get App Builder GitHub provider configuration
+
+**Required permissions:** `app:manage`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetAppGithubConfigurationRequest
+*/
+func (a *AppsAPIService) GetAppGithubConfiguration(ctx context.Context) ApiGetAppGithubConfigurationRequest {
+	return ApiGetAppGithubConfigurationRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return AppGithubConfiguration
+func (a *AppsAPIService) GetAppGithubConfigurationExecute(r ApiGetAppGithubConfigurationRequest) (*AppGithubConfiguration, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *AppGithubConfiguration
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AppsAPIService.GetAppGithubConfiguration")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/apps/source-providers/github"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetAppGithubRepositorySetupRequest struct {
+	ctx            context.Context
+	ApiService     *AppsAPIService
+	connectionId   *string
+	installationId *string
+	repository     *string
+	branch         *string
+	xApiVersion    *string
+}
+
+func (r ApiGetAppGithubRepositorySetupRequest) ConnectionId(connectionId string) ApiGetAppGithubRepositorySetupRequest {
+	r.connectionId = &connectionId
+	return r
+}
+
+func (r ApiGetAppGithubRepositorySetupRequest) InstallationId(installationId string) ApiGetAppGithubRepositorySetupRequest {
+	r.installationId = &installationId
+	return r
+}
+
+func (r ApiGetAppGithubRepositorySetupRequest) Repository(repository string) ApiGetAppGithubRepositorySetupRequest {
+	r.repository = &repository
+	return r
+}
+
+func (r ApiGetAppGithubRepositorySetupRequest) Branch(branch string) ApiGetAppGithubRepositorySetupRequest {
+	r.branch = &branch
+	return r
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiGetAppGithubRepositorySetupRequest) XApiVersion(xApiVersion string) ApiGetAppGithubRepositorySetupRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiGetAppGithubRepositorySetupRequest) Execute() (*AppGithubRepositorySetup, *http.Response, error) {
+	return r.ApiService.GetAppGithubRepositorySetupExecute(r)
+}
+
+/*
+GetAppGithubRepositorySetup Inspect branches in a verified GitHub repository
+
+**Required permissions:** `app:manage`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetAppGithubRepositorySetupRequest
+*/
+func (a *AppsAPIService) GetAppGithubRepositorySetup(ctx context.Context) ApiGetAppGithubRepositorySetupRequest {
+	return ApiGetAppGithubRepositorySetupRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return AppGithubRepositorySetup
+func (a *AppsAPIService) GetAppGithubRepositorySetupExecute(r ApiGetAppGithubRepositorySetupRequest) (*AppGithubRepositorySetup, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *AppGithubRepositorySetup
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AppsAPIService.GetAppGithubRepositorySetup")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/apps/source-providers/github/repository-setup"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.connectionId == nil {
+		return localVarReturnValue, nil, reportError("connectionId is required and must be specified")
+	}
+	if strlen(*r.connectionId) < 1 {
+		return localVarReturnValue, nil, reportError("connectionId must have at least 1 elements")
+	}
+	if r.installationId == nil {
+		return localVarReturnValue, nil, reportError("installationId is required and must be specified")
+	}
+	if strlen(*r.installationId) < 1 {
+		return localVarReturnValue, nil, reportError("installationId must have at least 1 elements")
+	}
+	if r.repository == nil {
+		return localVarReturnValue, nil, reportError("repository is required and must be specified")
+	}
+	if strlen(*r.repository) < 1 {
+		return localVarReturnValue, nil, reportError("repository must have at least 1 elements")
+	}
+	if r.branch == nil {
+		return localVarReturnValue, nil, reportError("branch is required and must be specified")
+	}
+	if strlen(*r.branch) < 1 {
+		return localVarReturnValue, nil, reportError("branch must have at least 1 elements")
+	}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	parameterAddToHeaderOrQuery(localVarQueryParams, "connection_id", r.connectionId, "form", "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "installation_id", r.installationId, "form", "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "repository", r.repository, "form", "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "branch", r.branch, "form", "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -3997,6 +4477,171 @@ func (a *AppsAPIService) ListAppDevelopmentTasksExecute(r ApiListAppDevelopmentT
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiListAppGithubRepositoriesRequest struct {
+	ctx            context.Context
+	ApiService     *AppsAPIService
+	connectionId   *string
+	installationId *string
+	xApiVersion    *string
+}
+
+func (r ApiListAppGithubRepositoriesRequest) ConnectionId(connectionId string) ApiListAppGithubRepositoriesRequest {
+	r.connectionId = &connectionId
+	return r
+}
+
+func (r ApiListAppGithubRepositoriesRequest) InstallationId(installationId string) ApiListAppGithubRepositoriesRequest {
+	r.installationId = &installationId
+	return r
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListAppGithubRepositoriesRequest) XApiVersion(xApiVersion string) ApiListAppGithubRepositoriesRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiListAppGithubRepositoriesRequest) Execute() (*AppGithubRepositoryList, *http.Response, error) {
+	return r.ApiService.ListAppGithubRepositoriesExecute(r)
+}
+
+/*
+ListAppGithubRepositories List repositories accessible to a verified GitHub App installation
+
+**Required permissions:** `app:manage`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListAppGithubRepositoriesRequest
+*/
+func (a *AppsAPIService) ListAppGithubRepositories(ctx context.Context) ApiListAppGithubRepositoriesRequest {
+	return ApiListAppGithubRepositoriesRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return AppGithubRepositoryList
+func (a *AppsAPIService) ListAppGithubRepositoriesExecute(r ApiListAppGithubRepositoriesRequest) (*AppGithubRepositoryList, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *AppGithubRepositoryList
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AppsAPIService.ListAppGithubRepositories")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/apps/source-providers/github/repositories"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.connectionId == nil {
+		return localVarReturnValue, nil, reportError("connectionId is required and must be specified")
+	}
+	if strlen(*r.connectionId) < 1 {
+		return localVarReturnValue, nil, reportError("connectionId must have at least 1 elements")
+	}
+	if r.installationId == nil {
+		return localVarReturnValue, nil, reportError("installationId is required and must be specified")
+	}
+	if strlen(*r.installationId) < 1 {
+		return localVarReturnValue, nil, reportError("installationId must have at least 1 elements")
+	}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	parameterAddToHeaderOrQuery(localVarQueryParams, "connection_id", r.connectionId, "form", "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "installation_id", r.installationId, "form", "")
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiListAppInstallationProjectsRequest struct {
 	ctx         context.Context
 	ApiService  *AppsAPIService
@@ -5811,6 +6456,145 @@ func (a *AppsAPIService) StartAppDevelopmentTaskExecute(r ApiStartAppDevelopment
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiStartAppGithubAuthorizationRequest struct {
+	ctx         context.Context
+	ApiService  *AppsAPIService
+	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiStartAppGithubAuthorizationRequest) XApiVersion(xApiVersion string) ApiStartAppGithubAuthorizationRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiStartAppGithubAuthorizationRequest) Execute() (*StartAppGithubAuthorizationResponse, *http.Response, error) {
+	return r.ApiService.StartAppGithubAuthorizationExecute(r)
+}
+
+/*
+StartAppGithubAuthorization Start GitHub authorization for an App Builder source
+
+**Required permissions:** `app:manage`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiStartAppGithubAuthorizationRequest
+*/
+func (a *AppsAPIService) StartAppGithubAuthorization(ctx context.Context) ApiStartAppGithubAuthorizationRequest {
+	return ApiStartAppGithubAuthorizationRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return StartAppGithubAuthorizationResponse
+func (a *AppsAPIService) StartAppGithubAuthorizationExecute(r ApiStartAppGithubAuthorizationRequest) (*StartAppGithubAuthorizationResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *StartAppGithubAuthorizationResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AppsAPIService.StartAppGithubAuthorization")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/apps/source-providers/github/authorize"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiStartAppScaffoldRequest struct {
 	ctx                     context.Context
 	ApiService              *AppsAPIService
@@ -5836,7 +6620,7 @@ func (r ApiStartAppScaffoldRequest) Execute() (*StartAppScaffoldResponse, *http.
 /*
 StartAppScaffold Start an app scaffold
 
-Starts a Temporal workflow that creates a source-backed Vertesia app, scaffolds selected template modules, pushes the source to Vertesia git, and optionally starts an initial version build.
+Starts a Temporal workflow that creates a source-backed Vertesia app, prepares the selected source repository, and optionally starts an initial version build.
 
 **Required permissions:** `app:manage`
 
