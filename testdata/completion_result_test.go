@@ -62,3 +62,54 @@ func TestCompletionResultDiscriminator(t *testing.T) {
 		}
 	}
 }
+
+func TestContentTypeRefDiscriminator(t *testing.T) {
+	var result ContentObjectTypeRef
+	for _, tc := range []struct{ body, branch string }{
+		{`{"ref_type":"stored","id":"000000000000000000000001","name":"Default","future":true}`, "StoredTypeRef"},
+		{`{"ref_type":"incode","id":"sys:Invoice","name":"Invoice"}`, "InCodeTypeRef"},
+	} {
+		if err := json.Unmarshal([]byte(tc.body), &result); err != nil {
+			t.Fatal(err)
+		}
+		assertSingleBranch(t, result, tc.branch)
+	}
+	for _, body := range []string{`{}`, `null`, `{"ref_type":"future"}`, `{"ref_type":42}`, `{"ref_type":"stored"}`, `{"ref_type":"incode","id":false,"name":"Invoice"}`} {
+		if err := json.Unmarshal([]byte(body), &result); err == nil {
+			t.Fatalf("accepted invalid type ref: %s", body)
+		}
+		assertSingleBranch(t, result, "")
+	}
+}
+
+func TestBulkOperationDiscriminator(t *testing.T) {
+	var result BulkOperationResponse
+	for _, tc := range []struct{ body, branch string }{
+		{`{"operation":"generic","status":"completed","future":true}`, "BulkOperationResult"},
+		{`{"operation":"create","status":"completed","created":0,"objects":[],"failed":[]}`, "BulkObjectCreateResult"},
+		{`{"operation":"update","status":"completed","updated":0,"failed":[]}`, "BulkObjectUpdateResult"},
+		{`{"operation":"delete","status":"completed","deleted":0,"failed":[]}`, "BulkObjectDeleteResult"},
+	} {
+		if err := json.Unmarshal([]byte(tc.body), &result); err != nil {
+			t.Fatal(err)
+		}
+		assertSingleBranch(t, result, tc.branch)
+	}
+	for _, body := range []string{`{}`, `null`, `{"operation":"future"}`, `{"operation":false}`, `{"operation":"update","status":"completed"}`, `{"operation":"delete","status":"completed","deleted":"bad","failed":[]}`} {
+		if err := json.Unmarshal([]byte(body), &result); err == nil {
+			t.Fatalf("accepted invalid bulk result: %s", body)
+		}
+		assertSingleBranch(t, result, "")
+	}
+}
+
+func assertSingleBranch(t *testing.T, result interface{}, branch string) {
+	t.Helper()
+	value := reflect.ValueOf(result)
+	for i := 0; i < value.NumField(); i++ {
+		name := value.Type().Field(i).Name
+		if value.Field(i).IsNil() != (name != branch) {
+			t.Fatalf("wrong branch %s, wanted only %q", name, branch)
+		}
+	}
+}

@@ -152,6 +152,11 @@ go test ./...
 Without `VERTESIA_LIVE_TESTS=1`, live integration tests are skipped even when a
 local `.env` file exists.
 
+The live test project must contain an autonomous run and a programmatic run so
+agent-run list and detail decoding are exercised. Missing fixtures fail those
+checks. A missing supervised run is reported as an explicit skip; offline
+fixtures always verify all three run types.
+
 The `.env` file is for local development only and should not be committed.
 
 ## Generation

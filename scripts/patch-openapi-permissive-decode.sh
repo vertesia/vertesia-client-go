@@ -60,7 +60,7 @@ find "$openapi_dir" -name 'api_*.go' -print0 | xargs -0 perl -0pi -e '
 # AgentRunResponse also needs this because its supervised and programmatic branches
 # share every required field, so trial decoding matches both.
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-for union in CompletionResult:completion_result AgentRunResponse:agent_run_response; do
+for union in CompletionResult:completion_result AgentRunResponse:agent_run_response ContentObjectTypeRef:content_object_type_ref BulkOperationResponse:bulk_operation_response; do
   model="$openapi_dir/model_${union#*:}.go"
   if [[ -f "$model" ]]; then
     go run "$script_dir/patch-discriminated-union/main.go" -union "${union%%:*}" -model "$model" -spec "$script_dir/../spec/vertesia-openapi.json"

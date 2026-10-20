@@ -7,6 +7,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"image"
 	"image/color"
@@ -18,6 +19,7 @@ import (
 	"testing"
 	"time"
 
+	vertesia "github.com/vertesia/vertesia-client-go"
 	. "github.com/vertesia/vertesia-client-go/openapi"
 )
 
@@ -170,20 +172,19 @@ func TestMain(m *testing.M) {
 			}
 			fmt.Fprintln(os.Stderr, "skipping live OpenAPI client integration tests: VERTESIA_API_KEY is missing, invalid, or a placeholder")
 		} else {
-			stsURL := env("VERTESIA_STS_URL", defaultSTSURL)
-			stsClient, stsCtx := configuredClient(stsURL, apiKey)
-			token, _, err := stsClient.TokenServiceAPI.IssueToken(stsCtx).Execute()
+			client, err := vertesia.NewClient(vertesia.ClientOptions{
+				APIKey:         apiKey,
+				ServerURL:      env("VERTESIA_STUDIO_URL", defaultStudioURL),
+				StoreURL:       env("VERTESIA_ZENO_URL", defaultZenoURL),
+				TokenServerURL: env("VERTESIA_STS_URL", defaultSTSURL),
+				HTTPClient:     &http.Client{Timeout: 180 * time.Second},
+			})
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "failed to issue OpenAPI test token: %v\n", err)
+				fmt.Fprintf(os.Stderr, "failed to configure live test client: %v\n", err)
 				os.Exit(1)
 			}
-			if token == nil || token.GetToken() == "" {
-				fmt.Fprintln(os.Stderr, "STS returned an empty OpenAPI test token")
-				os.Exit(1)
-			}
-
-			studioClient, studioCtx = configuredClient(env("VERTESIA_STUDIO_URL", defaultStudioURL), token.GetToken())
-			zenoClient, zenoCtx = configuredClient(env("VERTESIA_ZENO_URL", defaultZenoURL), token.GetToken())
+			studioClient, studioCtx = client.Studio, context.Background()
+			zenoClient, zenoCtx = client.Store, context.Background()
 		}
 	}
 
@@ -244,20 +245,14 @@ func resolveProjectID(t *testing.T) string {
 
 func defaultContentTypeID(t *testing.T) string {
 	t.Helper()
-	types, _, err := zenoClient.ContentObjectTypesAPI.ListContentObjectTypes(zenoCtx).
-		Name("Default").
-		Chunkable(true).
-		Layout(true).
-		Schema(true).
-		Limit(10).
-		Execute()
+	contentType, _, err := zenoClient.ContentObjectTypesAPI.GetContentObjectTypeByName(zenoCtx, "Default").Execute()
 	if err != nil {
-		t.Fatalf("listContentObjectTypes failed: %v", err)
+		t.Fatalf("getContentObjectTypeByName(Default) failed: %v", err)
 	}
-	if len(types) == 0 || types[0].GetId() == "" {
-		t.Skip("no Default content object type available")
+	if contentType == nil || contentType.GetId() == "" {
+		t.Fatal("Default content object type returned no id")
 	}
-	return types[0].GetId()
+	return contentType.GetId()
 }
 
 func TestGeneratedGoClientReadEndpoints(t *testing.T) {
@@ -316,9 +311,14 @@ func TestGeneratedGoClientPromptInteractionLifecycle(t *testing.T) {
 	promptPayload := NewPromptTemplateCreatePayload(
 		uniqueName("go-openapi-prompt"),
 		PROMPTROLE_USER,
-		"Answer with a short greeting for <%= name %>.",
+		`return "Answer with a short greeting for " + name.trim() + ".";`,
 		TEMPLATETYPE_JST,
 	)
+	promptPayload.SetInputSchema(JSONSchema{
+		Type:       "object",
+		Properties: map[string]JSONSchema{"name": {Type: "string"}},
+		Required:   []string{"name"},
+	})
 	prompt, ok, err := optional(func() (*PromptTemplate, *http.Response, error) {
 		return studioClient.PromptTemplatesAPI.CreatePrompt(studioCtx).
 			PromptTemplateCreatePayload(*promptPayload).
@@ -335,14 +335,19 @@ func TestGeneratedGoClientPromptInteractionLifecycle(t *testing.T) {
 	}
 	createdPrompts = append(createdPrompts, prompt.GetId())
 
+	// Missing template data must surface as an API error, not a successful empty rendering.
+	_, response, renderErr := studioClient.PromptTemplatesAPI.RenderPrompt(studioCtx, prompt.GetId()).
+		RequestBody(map[string]interface{}{}).Execute()
+	requireAPIError(t, response, renderErr, http.StatusUnprocessableEntity)
+
 	rendered, _, err := studioClient.PromptTemplatesAPI.RenderPrompt(studioCtx, prompt.GetId()).
 		RequestBody(map[string]interface{}{"name": "Vertesia"}).
 		Execute()
 	if err != nil {
 		t.Fatalf("renderPrompt failed: %v", err)
 	}
-	if rendered == nil || rendered.GetRendered() == "" {
-		t.Fatal("renderPrompt returned no rendered output")
+	if rendered == nil || rendered.GetRendered() != "Answer with a short greeting for Vertesia." {
+		t.Fatal("renderPrompt returned unexpected output")
 	}
 
 	interactionPayloadJSON, err := json.Marshal(map[string]interface{}{
@@ -375,14 +380,10 @@ func TestGeneratedGoClientPromptInteractionLifecycle(t *testing.T) {
 
 	execPayload := NewInteractionExecutionPayload()
 	execPayload.SetData(map[string]interface{}{"name": "Vertesia"})
-	execResult, resp, err := studioClient.InteractionsAPI.ExecuteInteraction(studioCtx, interaction.GetId()).
+	execResult, _, err := studioClient.InteractionsAPI.ExecuteInteraction(studioCtx, interaction.GetId()).
 		InteractionExecutionPayload(*execPayload).
 		Execute()
 	if err != nil {
-		if resp != nil && resp.StatusCode >= 200 && resp.StatusCode < 300 &&
-			strings.Contains(err.Error(), "data matches more than one schema") {
-			return
-		}
 		t.Fatalf("executeInteraction failed: %v", err)
 	}
 	if execResult == nil || (execResult.GetStatus() != EXECUTIONRUNSTATUS_COMPLETED && execResult.GetStatus() != EXECUTIONRUNSTATUS_FAILED) {
@@ -541,4 +542,111 @@ func TestGeneratedGoClientRequestShapes(t *testing.T) {
 	if err != nil {
 		t.Fatalf("runBulkContentOperation request shape failed before API response: %v", err)
 	}
+}
+
+// Verify both the Go error and the server's JSON error envelope, so transport/decoder failures cannot pass.
+func requireAPIError(t *testing.T, response *http.Response, err error, status int) {
+	t.Helper()
+	if err == nil {
+		t.Fatalf("expected HTTP %d error, got success", status)
+	}
+	if response == nil {
+		t.Fatalf("expected HTTP %d response, got transport error: %v", status, err)
+	}
+	if response.StatusCode != status {
+		t.Fatalf("expected HTTP %d, got HTTP %d: %v", status, response.StatusCode, err)
+	}
+	var apiError *GenericOpenAPIError
+	if !errors.As(err, &apiError) {
+		t.Fatalf("expected GenericOpenAPIError, got %T", err)
+	}
+	var body ErrorResponse
+	if err := json.Unmarshal(apiError.Body(), &body); err != nil {
+		t.Fatalf("invalid API error envelope: %v", err)
+	}
+	if body.GetStatus() != int32(status) || body.GetError() == "" {
+		t.Fatalf("unexpected error envelope: status=%d error=%q", body.GetStatus(), body.GetError())
+	}
+}
+
+func TestGeneratedGoClientExpectedErrors(t *testing.T) {
+	liveClients(t)
+	t.Run("unauthorized", func(t *testing.T) {
+		client, ctx := configuredClient(env("VERTESIA_STUDIO_URL", defaultStudioURL), "invalid-integration-test-token")
+		_, response, err := client.AccountsAPI.GetCurrentAccount(ctx).Execute()
+		requireAPIError(t, response, err, http.StatusUnauthorized)
+	})
+	t.Run("missing prompt", func(t *testing.T) {
+		_, response, err := studioClient.PromptTemplatesAPI.GetPrompt(studioCtx, "000000000000000000000000").Execute()
+		requireAPIError(t, response, err, http.StatusNotFound)
+	})
+	t.Run("missing content type", func(t *testing.T) {
+		_, response, err := zenoClient.ContentObjectTypesAPI.GetContentObjectTypeByName(zenoCtx, uniqueName("missing-type")).Execute()
+		requireAPIError(t, response, err, http.StatusNotFound)
+	})
+}
+
+// The live suite authenticates through NewClient, including its explicit API-key token request (#31).
+func TestGeneratedGoClientAPIKeyAuthentication(t *testing.T) {
+	liveClients(t)
+	account, _, err := studioClient.AccountsAPI.GetCurrentAccount(studioCtx).Execute()
+	if err != nil {
+		t.Fatalf("API-key facade authentication failed: %v", err)
+	}
+	if account == nil || account.GetId() == "" {
+		t.Fatal("authenticated account returned no id")
+	}
+}
+
+// Supervised fixtures are optional; require other live branches so empty lists cannot hide decoding failures.
+func TestGeneratedGoClientAgentRunDecoding(t *testing.T) {
+	liveClients(t)
+	for _, runType := range []string{"autonomous", "supervised", "programmatic"} {
+		t.Run(runType, func(t *testing.T) {
+			listed, _, err := zenoClient.AgentRunsAPI.ListAgentRuns(zenoCtx).RunType([]string{runType}).Limit(1).Execute()
+			if err != nil {
+				t.Fatalf("listAgentRuns failed: %v", err)
+			}
+			if listed == nil {
+				t.Fatal("listAgentRuns returned nil")
+			}
+			if len(listed.GetItems()) == 0 {
+				if runType == "supervised" {
+					t.Skip("no live supervised run fixture; decoder covered by offline fixtures")
+				}
+				t.Fatalf("live %s run fixture required to exercise list/detail decoding", runType)
+			}
+			for _, run := range listed.GetItems() {
+				id := requireAgentRunBranch(t, &run, runType)
+				detail, _, err := zenoClient.AgentRunsAPI.GetAgentRun(zenoCtx, id).Execute()
+				if err != nil {
+					t.Fatalf("getAgentRun failed: %v", err)
+				}
+				if requireAgentRunBranch(t, detail, runType) != id {
+					t.Fatal("getAgentRun returned a different run")
+				}
+			}
+			t.Logf("decoded %d live %s runs; all branches also covered by offline fixtures", len(listed.GetItems()), runType)
+		})
+	}
+}
+
+func requireAgentRunBranch(t *testing.T, run *AgentRunResponse, runType string) string {
+	t.Helper()
+	if run == nil {
+		t.Fatal("agent run returned nil")
+	}
+	var id string
+	switch {
+	case runType == "autonomous" && run.AutonomousRunResponse != nil && run.SupervisedRunResponse == nil && run.ProgrammaticRunResponse == nil:
+		id = run.AutonomousRunResponse.GetId()
+	case runType == "supervised" && run.SupervisedRunResponse != nil && run.AutonomousRunResponse == nil && run.ProgrammaticRunResponse == nil:
+		id = run.SupervisedRunResponse.GetId()
+	case runType == "programmatic" && run.ProgrammaticRunResponse != nil && run.AutonomousRunResponse == nil && run.SupervisedRunResponse == nil:
+		id = run.ProgrammaticRunResponse.GetId()
+	}
+	if id == "" {
+		t.Fatalf("expected exactly one %s agent-run branch with an id", runType)
+	}
+	return id
 }
