@@ -90,7 +90,9 @@ type CreateAgentRunPayload struct {
 	// Enable debug mode for verbose logging
 	DebugMode *bool `json:"debug_mode,omitempty"`
 	// Principal ref of the user who initiated the run (for server-to-server forwarding)
-	StartedBy            *string `json:"started_by,omitempty"`
+	StartedBy *string `json:"started_by,omitempty"`
+	// Client-chosen key, unique per intended run, that makes this request safe to retry. A repeat of the request with the same key and the same body returns the agent run the first request started instead of starting another. Reusing a key with a different body is rejected with 409, and a repeat that arrives while the first request is still starting the run may be answered with 503 and `Retry-After`. Keys are scoped to the project and stay bound to their run for as long as it exists; once the run is deleted, the same key starts a new one.
+	IdempotencyKey       *string `json:"idempotency_key,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -1229,6 +1231,38 @@ func (o *CreateAgentRunPayload) SetStartedBy(v string) {
 	o.StartedBy = &v
 }
 
+// GetIdempotencyKey returns the IdempotencyKey field value if set, zero value otherwise.
+func (o *CreateAgentRunPayload) GetIdempotencyKey() string {
+	if o == nil || IsNil(o.IdempotencyKey) {
+		var ret string
+		return ret
+	}
+	return *o.IdempotencyKey
+}
+
+// GetIdempotencyKeyOk returns a tuple with the IdempotencyKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAgentRunPayload) GetIdempotencyKeyOk() (*string, bool) {
+	if o == nil || IsNil(o.IdempotencyKey) {
+		return nil, false
+	}
+	return o.IdempotencyKey, true
+}
+
+// HasIdempotencyKey returns a boolean if a field has been set.
+func (o *CreateAgentRunPayload) HasIdempotencyKey() bool {
+	if o != nil && !IsNil(o.IdempotencyKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetIdempotencyKey gets a reference to the given string and assigns it to the IdempotencyKey field.
+func (o *CreateAgentRunPayload) SetIdempotencyKey(v string) {
+	o.IdempotencyKey = &v
+}
+
 func (o CreateAgentRunPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -1342,6 +1376,9 @@ func (o CreateAgentRunPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.StartedBy) {
 		toSerialize["started_by"] = o.StartedBy
 	}
+	if !IsNil(o.IdempotencyKey) {
+		toSerialize["idempotency_key"] = o.IdempotencyKey
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -1420,6 +1457,7 @@ func (o *CreateAgentRunPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "notify_endpoints")
 		delete(additionalProperties, "debug_mode")
 		delete(additionalProperties, "started_by")
+		delete(additionalProperties, "idempotency_key")
 		o.AdditionalProperties = additionalProperties
 	}
 

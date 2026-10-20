@@ -49,7 +49,9 @@ type AsyncConversationExecutionPayload struct {
 	Type            string                  `json:"type"`
 	// An array of endpoint URLs to be notified upon execution
 	NotifyEndpoints []string `json:"notify_endpoints,omitempty"`
-	TaskQueue       *string  `json:"task_queue,omitempty"`
+	// Client-chosen key, unique per intended run, that makes this request safe to retry. A repeat of the request with the same key and the same body returns the agent run the first request started instead of starting another. Reusing a key with a different body is rejected with 409, and a repeat that arrives while the first request is still starting the run may be answered with 503 and `Retry-After`. Keys are scoped to the project and stay bound to their run for as long as it exists; once the run is deleted, the same key starts a new one.
+	IdempotencyKey *string `json:"idempotency_key,omitempty"`
+	TaskQueue      *string `json:"task_queue,omitempty"`
 	// Effective tool approval mode for interactive agent conversations.
 	ToolApprovalMode *AgentToolApprovalMode `json:"tool_approval_mode,omitempty"`
 	// Visibility determine if the conversation should be seen by the user only or by anyone with access to the project If not specified, the default is project
@@ -705,6 +707,38 @@ func (o *AsyncConversationExecutionPayload) HasNotifyEndpoints() bool {
 // SetNotifyEndpoints gets a reference to the given []string and assigns it to the NotifyEndpoints field.
 func (o *AsyncConversationExecutionPayload) SetNotifyEndpoints(v []string) {
 	o.NotifyEndpoints = v
+}
+
+// GetIdempotencyKey returns the IdempotencyKey field value if set, zero value otherwise.
+func (o *AsyncConversationExecutionPayload) GetIdempotencyKey() string {
+	if o == nil || IsNil(o.IdempotencyKey) {
+		var ret string
+		return ret
+	}
+	return *o.IdempotencyKey
+}
+
+// GetIdempotencyKeyOk returns a tuple with the IdempotencyKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AsyncConversationExecutionPayload) GetIdempotencyKeyOk() (*string, bool) {
+	if o == nil || IsNil(o.IdempotencyKey) {
+		return nil, false
+	}
+	return o.IdempotencyKey, true
+}
+
+// HasIdempotencyKey returns a boolean if a field has been set.
+func (o *AsyncConversationExecutionPayload) HasIdempotencyKey() bool {
+	if o != nil && !IsNil(o.IdempotencyKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetIdempotencyKey gets a reference to the given string and assigns it to the IdempotencyKey field.
+func (o *AsyncConversationExecutionPayload) SetIdempotencyKey(v string) {
+	o.IdempotencyKey = &v
 }
 
 // GetTaskQueue returns the TaskQueue field value if set, zero value otherwise.
@@ -1759,6 +1793,9 @@ func (o AsyncConversationExecutionPayload) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.NotifyEndpoints) {
 		toSerialize["notify_endpoints"] = o.NotifyEndpoints
 	}
+	if !IsNil(o.IdempotencyKey) {
+		toSerialize["idempotency_key"] = o.IdempotencyKey
+	}
 	if !IsNil(o.TaskQueue) {
 		toSerialize["task_queue"] = o.TaskQueue
 	}
@@ -1914,6 +1951,7 @@ func (o *AsyncConversationExecutionPayload) UnmarshalJSON(data []byte) (err erro
 		delete(additionalProperties, "asyncCompletion")
 		delete(additionalProperties, "type")
 		delete(additionalProperties, "notify_endpoints")
+		delete(additionalProperties, "idempotency_key")
 		delete(additionalProperties, "task_queue")
 		delete(additionalProperties, "tool_approval_mode")
 		delete(additionalProperties, "visibility")
