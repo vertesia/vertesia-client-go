@@ -27,3 +27,7 @@ _testmain.go
 .DS_Store
 /vertesia-openapi.json
 /vertesia-openapi.yaml
+
+# Python release tooling
+__pycache__/
+*.pyc

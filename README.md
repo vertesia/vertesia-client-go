@@ -200,10 +200,14 @@ git add openapi spec go.mod go.sum
 
 ## Release
 
-Releases are created from git tags. The release workflow runs tests against the
-preview environment, verifies the tag matches the OpenAPI spec `info.version`
-and generator `packageVersion`, creates an annotated tag, and publishes a GitHub
-Release.
+The Release workflow validates and tests an immutable source commit, creates its
+annotated tag, and creates or resumes the GitHub Release. Use `release/X.Y` for
+stable versions such as `v1.6.0`, or `main` for dev versions such as
+`v1.6.0-dev.20261021.123456Z`. Dev releases are marked as prereleases.
+`dry_run=true` (the default) tests without publishing. Optional `source_sha`
+pins the exact tested commit; retries never replace a tag at another commit.
+Live API tests run during upstream synchronization, before publication.
+
 ### Generated API version headers
 
 Generated request validation uses the configured `x-api-version` default when no per-request version is set. Explicit request versions take precedence; a raw client with neither still rejects the missing version. Default headers are added only when the request does not already contain the header.

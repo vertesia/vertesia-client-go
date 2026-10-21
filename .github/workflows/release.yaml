@@ -1,95 +1,74 @@
 name: Release
+run-name: ${{ inputs.request_id || github.workflow }}
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: Release version, for example v1.2.3
+        description: vX.Y.Z or vX.Y.Z-dev.YYYYMMDD.HHMMSSZ
         required: true
         type: string
+      source_sha:
+        description: Optional immutable synchronized source commit
+        type: string
+        default: ""
+      request_id:
+        description: Optional caller correlation ID
+        type: string
+        default: ""
+      dry_run:
+        description: Validate, test and build without creating tags or publishing
+        type: boolean
+        default: true
       prerelease:
-        description: Mark the GitHub Release as a prerelease
-        required: false
+        description: Mark the GitHub release as a prerelease; dev versions always are
         type: boolean
         default: false
 
 concurrency:
-  group: ${{ github.workflow }}-${{ inputs.version }}
+  group: release-${{ github.ref }}
   cancel-in-progress: false
 
 permissions: {}
 
+env:
+  RELEASE_VERSION: ${{ inputs.version }}
+  SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
+  MARK_PRERELEASE: ${{ inputs.prerelease }}
+  VERTESIA_LIVE_TESTS: "0"
+
 jobs:
   release:
-    name: Release
+    name: Release SDK
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
-      contents: write # Create the release tag and GitHub Release.
+      contents: write # Create or verify the immutable source tag and GitHub release.
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ env.SOURCE_SHA }}
           fetch-depth: 0
           persist-credentials: false
-
-      - name: Validate version
-        id: version
-        shell: bash
-        env:
-          RELEASE_VERSION: ${{ inputs.version }}
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Test release contract
+        run: python3 -m unittest discover -s scripts -p test_release_cohort.py
+      - name: Validate cohort
+        run: python3 scripts/release_cohort.py validate --lang go
+      - name: Test SDK
         run: |
-          version="$RELEASE_VERSION"
-          if [[ ! "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
-            echo "Version must be semver with a leading v, for example v1.2.3" >&2
-            exit 1
-          fi
-          if git rev-parse "$version" >/dev/null 2>&1; then
-            echo "Tag $version already exists" >&2
-            exit 1
-          fi
-          package_version="${version#v}"
-          spec_version="$(jq -r '.info.version' spec/vertesia-openapi.json)"
-          if [[ "$spec_version" != "$package_version" ]]; then
-            echo "OpenAPI spec info.version is $spec_version, want $package_version" >&2
-            exit 1
-          fi
-          configured_version="$(awk -F': ' '/packageVersion:/ {print $2}' openapi-generator-config.yaml | tr -d '\"')"
-          if [[ "$configured_version" != "$package_version" ]]; then
-            echo "openapi-generator-config.yaml packageVersion is $configured_version, want OpenAPI spec info.version $package_version" >&2
-            exit 1
-          fi
-          echo "tag=$version" >> "$GITHUB_OUTPUT"
-
-      - name: Create tag
+          go test ./...
+          go vet ./...
+      - name: Create immutable source tag
+        if: inputs.dry_run == false
         env:
           GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-          TAG: ${{ steps.version.outputs.tag }}
-          TARGET_SHA: ${{ github.sha }}
-        shell: bash
-        run: |
-          tag_sha="$(gh api "repos/$REPOSITORY/git/tags" \
-            -f tag="$TAG" \
-            -f message="$TAG" \
-            -f object="$TARGET_SHA" \
-            -f type=commit \
-            --jq .sha)"
-          gh api "repos/$REPOSITORY/git/refs" \
-            -f ref="refs/tags/$TAG" \
-            -f sha="$tag_sha"
-
-      - name: Create GitHub Release
+        run: python3 scripts/release_cohort.py tag --lang go
+      - name: Create or resume GitHub release
+        if: inputs.dry_run == false
         env:
           GH_TOKEN: ${{ github.token }}
-          PRERELEASE: ${{ inputs.prerelease }}
-          TAG: ${{ steps.version.outputs.tag }}
-        shell: bash
-        run: |
-          prerelease_flag=()
-          if [[ "$PRERELEASE" == "true" ]]; then
-            prerelease_flag=(--prerelease)
-          fi
-          gh release create "$TAG" \
-            --title "$TAG" \
-            --generate-notes \
-            "${prerelease_flag[@]}"
+        run: python3 scripts/release_cohort.py release --lang go
