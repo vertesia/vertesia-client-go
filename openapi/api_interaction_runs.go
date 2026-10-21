@@ -305,10 +305,17 @@ func (a *InteractionRunsAPIService) DeleteRunExecute(r ApiDeleteRunRequest) (*De
 }
 
 type ApiGetRunRequest struct {
-	ctx         context.Context
-	ApiService  *InteractionRunsAPIService
-	runId       string
-	xApiVersion *string
+	ctx           context.Context
+	ApiService    *InteractionRunsAPIService
+	runId         string
+	includePrompt *bool
+	xApiVersion   *string
+}
+
+// Whether the run includes the rendered &#x60;prompt&#x60; sent to the model. Defaults to true. Pass false when the caller does not read the prompt: it can be large (for example when media is inlined), and it is then not loaded from storage.
+func (r ApiGetRunRequest) IncludePrompt(includePrompt bool) ApiGetRunRequest {
+	r.includePrompt = &includePrompt
+	return r
 }
 
 // Optional Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
@@ -363,6 +370,9 @@ func (a *InteractionRunsAPIService) GetRunExecute(r ApiGetRunRequest) (*Executio
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
+	if r.includePrompt != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "include_prompt", r.includePrompt, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
