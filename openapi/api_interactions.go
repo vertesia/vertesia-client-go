@@ -930,6 +930,7 @@ type ApiExecuteInteractionByEndpointRequest struct {
 	xApiVersion                 *string
 	interactionExecutionPayload *InteractionExecutionPayload
 	tag                         *string
+	includePrompt               *bool
 	xInteractionTag             *string
 }
 
@@ -946,6 +947,12 @@ func (r ApiExecuteInteractionByEndpointRequest) InteractionExecutionPayload(inte
 
 func (r ApiExecuteInteractionByEndpointRequest) Tag(tag string) ApiExecuteInteractionByEndpointRequest {
 	r.tag = &tag
+	return r
+}
+
+// Whether the synchronous execution result includes the rendered &#x60;prompt&#x60; sent to the model. Defaults to true. Pass false when the caller does not read the prompt: it can be large (for example when media is inlined). It is still stored with the run unless run data storage is restricted.
+func (r ApiExecuteInteractionByEndpointRequest) IncludePrompt(includePrompt bool) ApiExecuteInteractionByEndpointRequest {
+	r.includePrompt = &includePrompt
 	return r
 }
 
@@ -1015,6 +1022,9 @@ func (a *InteractionsAPIService) ExecuteInteractionByEndpointExecute(r ApiExecut
 
 	if r.tag != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "tag", r.tag, "form", "")
+	}
+	if r.includePrompt != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "include_prompt", r.includePrompt, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
@@ -1102,6 +1112,7 @@ type ApiExecuteNamedInteractionRequest struct {
 	ApiService                       *InteractionsAPIService
 	xApiVersion                      *string
 	namedInteractionExecutionPayload *NamedInteractionExecutionPayload
+	includePrompt                    *bool
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
@@ -1112,6 +1123,12 @@ func (r ApiExecuteNamedInteractionRequest) XApiVersion(xApiVersion string) ApiEx
 
 func (r ApiExecuteNamedInteractionRequest) NamedInteractionExecutionPayload(namedInteractionExecutionPayload NamedInteractionExecutionPayload) ApiExecuteNamedInteractionRequest {
 	r.namedInteractionExecutionPayload = &namedInteractionExecutionPayload
+	return r
+}
+
+// Whether the synchronous execution result includes the rendered &#x60;prompt&#x60; sent to the model. Defaults to true. Pass false when the caller does not read the prompt: it can be large (for example when media is inlined). It is still stored with the run unless run data storage is restricted.
+func (r ApiExecuteNamedInteractionRequest) IncludePrompt(includePrompt bool) ApiExecuteNamedInteractionRequest {
+	r.includePrompt = &includePrompt
 	return r
 }
 
@@ -1171,6 +1188,9 @@ func (a *InteractionsAPIService) ExecuteNamedInteractionExecute(r ApiExecuteName
 		return localVarReturnValue, nil, reportError("namedInteractionExecutionPayload is required and must be specified")
 	}
 
+	if r.includePrompt != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "include_prompt", r.includePrompt, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
