@@ -58,6 +58,8 @@ type AppManifest struct {
 	EndpointOverrides map[string]string `json:"endpoint_overrides,omitempty"`
 	// Optional app version string (e.g. \"1.0.0\") — informational.
 	Version *string `json:"version,omitempty"`
+	// Vertesia-managed mapping from stable deployment aliases to immutable AppGen versions.
+	DeploymentAliases map[string]AppDeploymentAliasTarget `json:"deployment_aliases,omitempty"`
 	// Source metadata for generated or synced app manifests.
 	Source *AppManifestSource `json:"source,omitempty"`
 	// Free-form tags used for classification and filtering. Platform apps carry `\"system\"` so UIs can skip install/uninstall/manage-permission controls that don't apply to synthetic installations.
@@ -752,6 +754,38 @@ func (o *AppManifest) SetVersion(v string) {
 	o.Version = &v
 }
 
+// GetDeploymentAliases returns the DeploymentAliases field value if set, zero value otherwise.
+func (o *AppManifest) GetDeploymentAliases() map[string]AppDeploymentAliasTarget {
+	if o == nil || IsNil(o.DeploymentAliases) {
+		var ret map[string]AppDeploymentAliasTarget
+		return ret
+	}
+	return o.DeploymentAliases
+}
+
+// GetDeploymentAliasesOk returns a tuple with the DeploymentAliases field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppManifest) GetDeploymentAliasesOk() (map[string]AppDeploymentAliasTarget, bool) {
+	if o == nil || IsNil(o.DeploymentAliases) {
+		return map[string]AppDeploymentAliasTarget{}, false
+	}
+	return o.DeploymentAliases, true
+}
+
+// HasDeploymentAliases returns a boolean if a field has been set.
+func (o *AppManifest) HasDeploymentAliases() bool {
+	if o != nil && !IsNil(o.DeploymentAliases) {
+		return true
+	}
+
+	return false
+}
+
+// SetDeploymentAliases gets a reference to the given map[string]AppDeploymentAliasTarget and assigns it to the DeploymentAliases field.
+func (o *AppManifest) SetDeploymentAliases(v map[string]AppDeploymentAliasTarget) {
+	o.DeploymentAliases = v
+}
+
 // GetSource returns the Source field value if set, zero value otherwise.
 func (o *AppManifest) GetSource() AppManifestSource {
 	if o == nil || IsNil(o.Source) {
@@ -1014,6 +1048,9 @@ func (o AppManifest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Version) {
 		toSerialize["version"] = o.Version
 	}
+	if !IsNil(o.DeploymentAliases) {
+		toSerialize["deployment_aliases"] = o.DeploymentAliases
+	}
 	if !IsNil(o.Source) {
 		toSerialize["source"] = o.Source
 	}
@@ -1103,6 +1140,7 @@ func (o *AppManifest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "endpoint")
 		delete(additionalProperties, "endpoint_overrides")
 		delete(additionalProperties, "version")
+		delete(additionalProperties, "deployment_aliases")
 		delete(additionalProperties, "source")
 		delete(additionalProperties, "tags")
 		delete(additionalProperties, "access_control")

@@ -24,6 +24,155 @@ import (
 // AppsAPIService AppsAPI service
 type AppsAPIService service
 
+type ApiAssignAppVersionAliasRequest struct {
+	ctx         context.Context
+	ApiService  *AppsAPIService
+	id          string
+	alias       string
+	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiAssignAppVersionAliasRequest) XApiVersion(xApiVersion string) ApiAssignAppVersionAliasRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiAssignAppVersionAliasRequest) Execute() (*AppVersionRecord, *http.Response, error) {
+	return r.ApiService.AssignAppVersionAliasExecute(r)
+}
+
+/*
+AssignAppVersionAlias Assign a deployment alias to an app version
+
+Atomically assigns or moves one stable deployment alias to this immutable app version. This does not change the promoted version.
+
+**Required permissions:** `app:manage`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param id
+	@param alias
+	@return ApiAssignAppVersionAliasRequest
+*/
+func (a *AppsAPIService) AssignAppVersionAlias(ctx context.Context, id string, alias string) ApiAssignAppVersionAliasRequest {
+	return ApiAssignAppVersionAliasRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+		alias:      alias,
+	}
+}
+
+// Execute executes the request
+//
+//	@return AppVersionRecord
+func (a *AppsAPIService) AssignAppVersionAliasExecute(r ApiAssignAppVersionAliasRequest) (*AppVersionRecord, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *AppVersionRecord
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AppsAPIService.AssignAppVersionAlias")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/apps/versions/{id}/aliases/{alias}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(parameterValueToString(r.id, "id")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"alias"+"}", url.PathEscape(parameterValueToString(r.alias, "alias")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiCommitAppRepoDocumentsRequest struct {
 	ctx         context.Context
 	ApiService  *AppsAPIService
@@ -466,6 +615,162 @@ func (a *AppsAPIService) CreateAppRepoBranchExecute(r ApiCreateAppRepoBranchRequ
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiCreateAppVersionLaunchRequest struct {
+	ctx                           context.Context
+	ApiService                    *AppsAPIService
+	id                            string
+	xApiVersion                   *string
+	createAppVersionLaunchRequest *CreateAppVersionLaunchRequest
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiCreateAppVersionLaunchRequest) XApiVersion(xApiVersion string) ApiCreateAppVersionLaunchRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiCreateAppVersionLaunchRequest) CreateAppVersionLaunchRequest(createAppVersionLaunchRequest CreateAppVersionLaunchRequest) ApiCreateAppVersionLaunchRequest {
+	r.createAppVersionLaunchRequest = &createAppVersionLaunchRequest
+	return r
+}
+
+func (r ApiCreateAppVersionLaunchRequest) Execute() (*CreateAppVersionLaunchResponse, *http.Response, error) {
+	return r.ApiService.CreateAppVersionLaunchExecute(r)
+}
+
+/*
+CreateAppVersionLaunch Create an advanced app version launch
+
+Creates a short-lived launch selector for an immutable app version. Temporary settings override the selected project installation only for requests carrying that selector.
+
+**Required permissions:** `app:manage`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param id
+	@return ApiCreateAppVersionLaunchRequest
+*/
+func (a *AppsAPIService) CreateAppVersionLaunch(ctx context.Context, id string) ApiCreateAppVersionLaunchRequest {
+	return ApiCreateAppVersionLaunchRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CreateAppVersionLaunchResponse
+func (a *AppsAPIService) CreateAppVersionLaunchExecute(r ApiCreateAppVersionLaunchRequest) (*CreateAppVersionLaunchResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CreateAppVersionLaunchResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AppsAPIService.CreateAppVersionLaunch")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/apps/versions/{id}/launches"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(parameterValueToString(r.id, "id")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+	if r.createAppVersionLaunchRequest == nil {
+		return localVarReturnValue, nil, reportError("createAppVersionLaunchRequest is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.createAppVersionLaunchRequest
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiDeleteAppRequest struct {
 	ctx         context.Context
 	ApiService  *AppsAPIService
@@ -631,7 +936,7 @@ func (r ApiDeleteAppVersionRequest) Execute() (*DeleteAppVersionResponse, *http.
 /*
 DeleteAppVersion Delete an app version
 
-Deletes an unpromoted app version and its stored build artifacts.
+Deletes an unpromoted, unaliased app version and its stored build artifacts.
 
 **Required permissions:** `app:manage`
 
@@ -2421,11 +2726,12 @@ func (a *AppsAPIService) GetAppInstanceAvailabilityExecute(r ApiGetAppInstanceAv
 }
 
 type ApiGetAppPackageRequest struct {
-	ctx         context.Context
-	ApiService  *AppsAPIService
-	id          string
-	xApiVersion *string
-	scope       *[]string
+	ctx             context.Context
+	ApiService      *AppsAPIService
+	id              string
+	xApiVersion     *string
+	scope           *[]string
+	deploymentAlias *string
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
@@ -2437,6 +2743,12 @@ func (r ApiGetAppPackageRequest) XApiVersion(xApiVersion string) ApiGetAppPackag
 // Which capabilities to include in the returned package. Defaults to &#x60;all&#x60;. Comma-joined (&#x60;?scope&#x3D;ui,tools&#x60;) or repeated.
 func (r ApiGetAppPackageRequest) Scope(scope []string) ApiGetAppPackageRequest {
 	r.scope = &scope
+	return r
+}
+
+// Resolve the package from this named deployment. Used before installation to load the selected deployment configuration.
+func (r ApiGetAppPackageRequest) DeploymentAlias(deploymentAlias string) ApiGetAppPackageRequest {
+	r.deploymentAlias = &deploymentAlias
 	return r
 }
 
@@ -2506,6 +2818,9 @@ func (a *AppsAPIService) GetAppPackageExecute(r ApiGetAppPackageRequest) (*AppPa
 		} else {
 			parameterAddToHeaderOrQuery(localVarQueryParams, "scope", t, "form", "multi")
 		}
+	}
+	if r.deploymentAlias != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "deployment_alias", r.deploymentAlias, "form", "")
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
@@ -5244,6 +5559,151 @@ func (a *AppsAPIService) ListAppInstallationsExecute(r ApiListAppInstallationsRe
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiListAppVersionLaunchTargetsRequest struct {
+	ctx         context.Context
+	ApiService  *AppsAPIService
+	id          string
+	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListAppVersionLaunchTargetsRequest) XApiVersion(xApiVersion string) ApiListAppVersionLaunchTargetsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiListAppVersionLaunchTargetsRequest) Execute() ([]AppVersionLaunchTarget, *http.Response, error) {
+	return r.ApiService.ListAppVersionLaunchTargetsExecute(r)
+}
+
+/*
+ListAppVersionLaunchTargets List projects available for an advanced app version launch
+
+Returns projects in the current account that the caller can access and where this application is already installed.
+
+**Required permissions:** `app:manage`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param id
+	@return ApiListAppVersionLaunchTargetsRequest
+*/
+func (a *AppsAPIService) ListAppVersionLaunchTargets(ctx context.Context, id string) ApiListAppVersionLaunchTargetsRequest {
+	return ApiListAppVersionLaunchTargetsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+// Execute executes the request
+//
+//	@return []AppVersionLaunchTarget
+func (a *AppsAPIService) ListAppVersionLaunchTargetsExecute(r ApiListAppVersionLaunchTargetsRequest) ([]AppVersionLaunchTarget, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []AppVersionLaunchTarget
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AppsAPIService.ListAppVersionLaunchTargets")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/apps/versions/{id}/launch-targets"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(parameterValueToString(r.id, "id")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiListAppVersionsRequest struct {
 	ctx         context.Context
 	ApiService  *AppsAPIService
@@ -5731,6 +6191,155 @@ func (a *AppsAPIService) RebuildAppVersionExecute(r ApiRebuildAppVersionRequest)
 
 	localVarPath := localBasePath + "/apps/versions/{id}/rebuild"
 	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(parameterValueToString(r.id, "id")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiRemoveAppVersionAliasRequest struct {
+	ctx         context.Context
+	ApiService  *AppsAPIService
+	id          string
+	alias       string
+	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiRemoveAppVersionAliasRequest) XApiVersion(xApiVersion string) ApiRemoveAppVersionAliasRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiRemoveAppVersionAliasRequest) Execute() (*AppVersionRecord, *http.Response, error) {
+	return r.ApiService.RemoveAppVersionAliasExecute(r)
+}
+
+/*
+RemoveAppVersionAlias Remove a deployment alias from an app version
+
+Removes the alias only if it still points to this version, so a stale client cannot remove an alias that was reassigned elsewhere.
+
+**Required permissions:** `app:manage`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param id
+	@param alias
+	@return ApiRemoveAppVersionAliasRequest
+*/
+func (a *AppsAPIService) RemoveAppVersionAlias(ctx context.Context, id string, alias string) ApiRemoveAppVersionAliasRequest {
+	return ApiRemoveAppVersionAliasRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+		alias:      alias,
+	}
+}
+
+// Execute executes the request
+//
+//	@return AppVersionRecord
+func (a *AppsAPIService) RemoveAppVersionAliasExecute(r ApiRemoveAppVersionAliasRequest) (*AppVersionRecord, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *AppVersionRecord
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AppsAPIService.RemoveAppVersionAlias")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/apps/versions/{id}/aliases/{alias}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(parameterValueToString(r.id, "id")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"alias"+"}", url.PathEscape(parameterValueToString(r.alias, "alias")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}

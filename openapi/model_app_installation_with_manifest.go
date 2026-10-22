@@ -20,18 +20,20 @@ var _ MappedNullable = &AppInstallationWithManifest{}
 
 // AppInstallationWithManifest struct for AppInstallationWithManifest
 type AppInstallationWithManifest struct {
-	Id                  string                           `json:"id"`
-	Project             string                           `json:"project"`
-	InstanceKey         *string                          `json:"instance_key,omitempty"`
-	DisplayName         *string                          `json:"display_name,omitempty"`
-	InstallationVersion *float32                         `json:"installation_version,omitempty"`
-	NamespaceOverrides  map[string]string                `json:"namespace_overrides,omitempty"`
-	ReservedNamespaces  []string                         `json:"reserved_namespaces,omitempty"`
-	NamespaceConflicts  []string                         `json:"namespace_conflicts,omitempty"`
-	McpConfiguration    *AppInstallationMcpConfiguration `json:"mcp_configuration,omitempty"`
-	OauthApproval       *AppInstallationOauthApproval    `json:"oauth_approval,omitempty"`
-	OauthClientId       *string                          `json:"oauth_client_id,omitempty"`
-	Settings            map[string]interface{}           `json:"settings,omitempty"`
+	Id                  string            `json:"id"`
+	Project             string            `json:"project"`
+	InstanceKey         *string           `json:"instance_key,omitempty"`
+	DisplayName         *string           `json:"display_name,omitempty"`
+	InstallationVersion *float32          `json:"installation_version,omitempty"`
+	NamespaceOverrides  map[string]string `json:"namespace_overrides,omitempty"`
+	ReservedNamespaces  []string          `json:"reserved_namespaces,omitempty"`
+	NamespaceConflicts  []string          `json:"namespace_conflicts,omitempty"`
+	// Stable deployment alias selected for this installation. The alias is resolved to its current immutable app version at request time.
+	DeploymentAlias  *string                          `json:"deployment_alias,omitempty" validate:"regexp=^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"`
+	McpConfiguration *AppInstallationMcpConfiguration `json:"mcp_configuration,omitempty"`
+	OauthApproval    *AppInstallationOauthApproval    `json:"oauth_approval,omitempty"`
+	OauthClientId    *string                          `json:"oauth_client_id,omitempty"`
+	Settings         map[string]interface{}           `json:"settings,omitempty"`
 	// Admin-managed allowlist of tool names permitted for this installation. When undefined, all tools from the app are permitted. When set, only listed tool names are available for agent configuration and execution.
 	ToolAllowlist []string `json:"tool_allowlist,omitempty"`
 	// OAuth bindings created at install time via oauth_config provisioning. Maps collection identity (id or name) → OAuth provider ObjectId. Used by the runtime to resolve the correct OAuth provider without relying on manifest names.
@@ -310,6 +312,38 @@ func (o *AppInstallationWithManifest) HasNamespaceConflicts() bool {
 // SetNamespaceConflicts gets a reference to the given []string and assigns it to the NamespaceConflicts field.
 func (o *AppInstallationWithManifest) SetNamespaceConflicts(v []string) {
 	o.NamespaceConflicts = v
+}
+
+// GetDeploymentAlias returns the DeploymentAlias field value if set, zero value otherwise.
+func (o *AppInstallationWithManifest) GetDeploymentAlias() string {
+	if o == nil || IsNil(o.DeploymentAlias) {
+		var ret string
+		return ret
+	}
+	return *o.DeploymentAlias
+}
+
+// GetDeploymentAliasOk returns a tuple with the DeploymentAlias field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationWithManifest) GetDeploymentAliasOk() (*string, bool) {
+	if o == nil || IsNil(o.DeploymentAlias) {
+		return nil, false
+	}
+	return o.DeploymentAlias, true
+}
+
+// HasDeploymentAlias returns a boolean if a field has been set.
+func (o *AppInstallationWithManifest) HasDeploymentAlias() bool {
+	if o != nil && !IsNil(o.DeploymentAlias) {
+		return true
+	}
+
+	return false
+}
+
+// SetDeploymentAlias gets a reference to the given string and assigns it to the DeploymentAlias field.
+func (o *AppInstallationWithManifest) SetDeploymentAlias(v string) {
+	o.DeploymentAlias = &v
 }
 
 // GetMcpConfiguration returns the McpConfiguration field value if set, zero value otherwise.
@@ -703,6 +737,9 @@ func (o AppInstallationWithManifest) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.NamespaceConflicts) {
 		toSerialize["namespace_conflicts"] = o.NamespaceConflicts
 	}
+	if !IsNil(o.DeploymentAlias) {
+		toSerialize["deployment_alias"] = o.DeploymentAlias
+	}
 	if !IsNil(o.McpConfiguration) {
 		toSerialize["mcp_configuration"] = o.McpConfiguration
 	}
@@ -788,6 +825,7 @@ func (o *AppInstallationWithManifest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "namespace_overrides")
 		delete(additionalProperties, "reserved_namespaces")
 		delete(additionalProperties, "namespace_conflicts")
+		delete(additionalProperties, "deployment_alias")
 		delete(additionalProperties, "mcp_configuration")
 		delete(additionalProperties, "oauth_approval")
 		delete(additionalProperties, "oauth_client_id")

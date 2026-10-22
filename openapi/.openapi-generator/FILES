@@ -140,6 +140,7 @@ model_app_build_trigger.go
 model_app_capabilities.go
 model_app_dashboard_definition.go
 model_app_delete_summary.go
+model_app_deployment_alias_target.go
 model_app_development_task.go
 model_app_development_task_details.go
 model_app_development_task_list.go
@@ -200,6 +201,7 @@ model_app_ui_nav_item.go
 model_app_version_git_ref_type.go
 model_app_version_git_source.go
 model_app_version_kind.go
+model_app_version_launch_target.go
 model_app_version_record.go
 model_app_version_state.go
 model_app_version_storage.go
@@ -390,6 +392,8 @@ model_count_result.go
 model_create_account_api_key_payload.go
 model_create_agent_run_payload.go
 model_create_api_key_payload.go
+model_create_app_version_launch_request.go
+model_create_app_version_launch_response.go
 model_create_collection_payload.go
 model_create_content_object_payload.go
 model_create_content_object_payload_tokens.go

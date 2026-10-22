@@ -20,8 +20,10 @@ var _ MappedNullable = &AppInstallationPayload{}
 
 // AppInstallationPayload struct for AppInstallationPayload
 type AppInstallationPayload struct {
-	AppId       string  `json:"app_id"`
-	InstanceKey *string `json:"instance_key,omitempty" validate:"regexp=^[a-z][a-z0-9_-]{0,31}$"`
+	AppId string `json:"app_id"`
+	// Optional stable deployment alias to follow for this installation instead of the app's promoted version.
+	DeploymentAlias *string `json:"deployment_alias,omitempty" validate:"regexp=^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"`
+	InstanceKey     *string `json:"instance_key,omitempty" validate:"regexp=^[a-z][a-z0-9_-]{0,31}$"`
 	// Optional instance label. Send an empty string to clear the saved label; omit to preserve it.
 	DisplayName        *string           `json:"display_name,omitempty"`
 	NamespaceOverrides map[string]string `json:"namespace_overrides,omitempty"`
@@ -83,6 +85,38 @@ func (o *AppInstallationPayload) GetAppIdOk() (*string, bool) {
 // SetAppId sets field value
 func (o *AppInstallationPayload) SetAppId(v string) {
 	o.AppId = v
+}
+
+// GetDeploymentAlias returns the DeploymentAlias field value if set, zero value otherwise.
+func (o *AppInstallationPayload) GetDeploymentAlias() string {
+	if o == nil || IsNil(o.DeploymentAlias) {
+		var ret string
+		return ret
+	}
+	return *o.DeploymentAlias
+}
+
+// GetDeploymentAliasOk returns a tuple with the DeploymentAlias field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationPayload) GetDeploymentAliasOk() (*string, bool) {
+	if o == nil || IsNil(o.DeploymentAlias) {
+		return nil, false
+	}
+	return o.DeploymentAlias, true
+}
+
+// HasDeploymentAlias returns a boolean if a field has been set.
+func (o *AppInstallationPayload) HasDeploymentAlias() bool {
+	if o != nil && !IsNil(o.DeploymentAlias) {
+		return true
+	}
+
+	return false
+}
+
+// SetDeploymentAlias gets a reference to the given string and assigns it to the DeploymentAlias field.
+func (o *AppInstallationPayload) SetDeploymentAlias(v string) {
+	o.DeploymentAlias = &v
 }
 
 // GetInstanceKey returns the InstanceKey field value if set, zero value otherwise.
@@ -428,6 +462,9 @@ func (o AppInstallationPayload) MarshalJSON() ([]byte, error) {
 func (o AppInstallationPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["app_id"] = o.AppId
+	if !IsNil(o.DeploymentAlias) {
+		toSerialize["deployment_alias"] = o.DeploymentAlias
+	}
 	if !IsNil(o.InstanceKey) {
 		toSerialize["instance_key"] = o.InstanceKey
 	}
@@ -502,6 +539,7 @@ func (o *AppInstallationPayload) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "app_id")
+		delete(additionalProperties, "deployment_alias")
 		delete(additionalProperties, "instance_key")
 		delete(additionalProperties, "display_name")
 		delete(additionalProperties, "namespace_overrides")

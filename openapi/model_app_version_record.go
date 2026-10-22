@@ -20,16 +20,18 @@ var _ MappedNullable = &AppVersionRecord{}
 
 // AppVersionRecord struct for AppVersionRecord
 type AppVersionRecord struct {
-	Id         string            `json:"id"`
-	Account    string            `json:"account"`
-	Project    string            `json:"project"`
-	App        *string           `json:"app,omitempty"`
-	AppId      string            `json:"app_id"`
-	AppName    string            `json:"app_name"`
-	VersionId  string            `json:"version_id"`
-	Kind       AppVersionKind    `json:"kind"`
-	State      AppVersionState   `json:"state"`
-	Promoted   *bool             `json:"promoted,omitempty"`
+	Id        string          `json:"id"`
+	Account   string          `json:"account"`
+	Project   string          `json:"project"`
+	App       *string         `json:"app,omitempty"`
+	AppId     string          `json:"app_id"`
+	AppName   string          `json:"app_name"`
+	VersionId string          `json:"version_id"`
+	Kind      AppVersionKind  `json:"kind"`
+	State     AppVersionState `json:"state"`
+	Promoted  *bool           `json:"promoted,omitempty"`
+	// Deployment aliases that currently resolve to this immutable version.
+	Aliases    []string          `json:"aliases,omitempty"`
 	Target     *AppVersionTarget `json:"target,omitempty"`
 	AgentRunId *string           `json:"agent_run_id,omitempty"`
 	// Development task that produced this version, when built by the app assistant.
@@ -343,6 +345,38 @@ func (o *AppVersionRecord) HasPromoted() bool {
 // SetPromoted gets a reference to the given bool and assigns it to the Promoted field.
 func (o *AppVersionRecord) SetPromoted(v bool) {
 	o.Promoted = &v
+}
+
+// GetAliases returns the Aliases field value if set, zero value otherwise.
+func (o *AppVersionRecord) GetAliases() []string {
+	if o == nil || IsNil(o.Aliases) {
+		var ret []string
+		return ret
+	}
+	return o.Aliases
+}
+
+// GetAliasesOk returns a tuple with the Aliases field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppVersionRecord) GetAliasesOk() ([]string, bool) {
+	if o == nil || IsNil(o.Aliases) {
+		return nil, false
+	}
+	return o.Aliases, true
+}
+
+// HasAliases returns a boolean if a field has been set.
+func (o *AppVersionRecord) HasAliases() bool {
+	if o != nil && !IsNil(o.Aliases) {
+		return true
+	}
+
+	return false
+}
+
+// SetAliases gets a reference to the given []string and assigns it to the Aliases field.
+func (o *AppVersionRecord) SetAliases(v []string) {
+	o.Aliases = v
 }
 
 // GetTarget returns the Target field value if set, zero value otherwise.
@@ -1090,6 +1124,9 @@ func (o AppVersionRecord) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Promoted) {
 		toSerialize["promoted"] = o.Promoted
 	}
+	if !IsNil(o.Aliases) {
+		toSerialize["aliases"] = o.Aliases
+	}
 	if !IsNil(o.Target) {
 		toSerialize["target"] = o.Target
 	}
@@ -1217,6 +1254,7 @@ func (o *AppVersionRecord) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "kind")
 		delete(additionalProperties, "state")
 		delete(additionalProperties, "promoted")
+		delete(additionalProperties, "aliases")
 		delete(additionalProperties, "target")
 		delete(additionalProperties, "agent_run_id")
 		delete(additionalProperties, "development_task_id")
