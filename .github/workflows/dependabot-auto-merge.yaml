@@ -1,0 +1,41 @@
+name: Dependabot Auto Merge
+on:
+  repository_dispatch:
+    types: [ci-approved-dependabot]
+permissions: {}
+jobs:
+  auto-merge:
+    name: Merge tested Dependabot update
+    runs-on: ubuntu-slim
+    environment: renovate-automerge
+    timeout-minutes: 10
+    concurrency:
+      group: dependabot-merge-${{ github.event.client_payload.pr_number }}
+      cancel-in-progress: false
+      queue: max
+    permissions:
+      contents: read # Read trusted default-branch policy only.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.workflow_sha }}
+          persist-credentials: false
+          sparse-checkout: .github/bin
+      - name: Generate merge token
+        id: token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.APP_VERTESIA_RENOVATE_AUTOMERGE_CLIENT_ID }}
+          private-key: ${{ secrets.APP_VERTESIA_RENOVATE_AUTOMERGE_PEM }}
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Approve and merge the tested revision
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.client_payload.pr_number }}
+          HEAD_BRANCH: ${{ github.event.client_payload.head_branch }}
+          HEAD_SHA: ${{ github.event.client_payload.head_sha }}
+          BASE_REF: ${{ github.event.client_payload.base_ref }}
+          BASE_SHA: ${{ github.event.client_payload.base_sha }}
+        run: node .github/bin/dependabot-merge.mjs
