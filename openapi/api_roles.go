@@ -179,7 +179,7 @@ func (r ApiListSystemRolesRequest) Execute() ([]SystemRoleDefinition, *http.Resp
 /*
 ListSystemRoles List system roles
 
-Lists system-domain roles only. Permissions are `Permission` enum values — suited for client-side permission gating (button visibility, route guards). ABAC roles are excluded and must be consumed via the JWT `content_security` claim at the data layer.
+Lists system-domain roles only. Permissions are `Permission` enum values — suited for client-side permission gating (button visibility, route guards). ABAC roles are excluded and must be consumed via the JWT `abac` claim at the data layer.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListSystemRolesRequest
