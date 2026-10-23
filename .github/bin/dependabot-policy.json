@@ -1,0 +1,8 @@
+{
+    "group": "gomod-minor-patch",
+    "ecosystem": "go_modules",
+    "files": [
+        "go.mod",
+        "go.sum"
+    ]
+}
