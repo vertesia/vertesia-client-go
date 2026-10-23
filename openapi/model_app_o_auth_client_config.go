@@ -21,7 +21,7 @@ var _ MappedNullable = &AppOAuthClientConfig{}
 // AppOAuthClientConfig Standalone public PKCE OAuth. The publisher manifest provisions one app-managed registration with these exact callback URLs.
 type AppOAuthClientConfig struct {
 	RedirectUris []string `json:"redirect_uris"`
-	// Show user consent before authorizing this app. Defaults to true. Disabling the prompt applies only within the publisher organization. Other organizations and loopback callbacks always require consent. Installation, app access, scope and project-policy enforcement are preserved.
+	// Deprecated compatibility field. Vertesia-managed apps are authorized by project installation approval, while generic third-party OAuth clients retain per-user consent.
 	RequireConsent *bool `json:"require_consent,omitempty"`
 }
 

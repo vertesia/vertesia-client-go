@@ -34,6 +34,8 @@ type AppInstallationPayload struct {
 	Settings      map[string]interface{}                                               `json:"settings,omitempty"`
 	// Per-installation override of the manifest's `access_control` policy. When provided, takes precedence over the manifest default for every access check. Sibling of `settings` — admin-controlled, not part of the app's own settings JSON.  Three send-time semantics on update:  - Field omitted entirely from the payload → leave the existing override unchanged.  - Explicit `null` → clear the override, fall back to the manifest default.  - String enum → set the override to that value.  (On install, the same shape applies; omit or pass `null` to use the manifest default.)
 	AccessControl NullableAppAccessControl `json:"access_control,omitempty"`
+	// OAuth scopes approved by the project manager during installation. The server records the approving user and timestamp; omitted defaults to all scopes requested by the selected deployment.
+	ApprovedScopes []string `json:"approved_scopes,omitempty"`
 	// OAuth credentials for each collection, keyed by collection.id. Legacy callers may still use collection.name for older manifests. Collected from the user at install time for collections with oauth_config.required_at_install.
 	OauthParams map[string]OAuthClientCredentials `json:"oauth_params,omitempty"`
 	// OAuth credentials for named providers, keyed by the provider key from oauth_providers. Collected from the user at install time for providers with required_at_install. Separate from oauth_params to avoid key collisions between provider keys and collection ids.
@@ -355,6 +357,38 @@ func (o *AppInstallationPayload) UnsetAccessControl() {
 	o.AccessControl.Unset()
 }
 
+// GetApprovedScopes returns the ApprovedScopes field value if set, zero value otherwise.
+func (o *AppInstallationPayload) GetApprovedScopes() []string {
+	if o == nil || IsNil(o.ApprovedScopes) {
+		var ret []string
+		return ret
+	}
+	return o.ApprovedScopes
+}
+
+// GetApprovedScopesOk returns a tuple with the ApprovedScopes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationPayload) GetApprovedScopesOk() ([]string, bool) {
+	if o == nil || IsNil(o.ApprovedScopes) {
+		return nil, false
+	}
+	return o.ApprovedScopes, true
+}
+
+// HasApprovedScopes returns a boolean if a field has been set.
+func (o *AppInstallationPayload) HasApprovedScopes() bool {
+	if o != nil && !IsNil(o.ApprovedScopes) {
+		return true
+	}
+
+	return false
+}
+
+// SetApprovedScopes gets a reference to the given []string and assigns it to the ApprovedScopes field.
+func (o *AppInstallationPayload) SetApprovedScopes(v []string) {
+	o.ApprovedScopes = v
+}
+
 // GetOauthParams returns the OauthParams field value if set, zero value otherwise.
 func (o *AppInstallationPayload) GetOauthParams() map[string]OAuthClientCredentials {
 	if o == nil || IsNil(o.OauthParams) {
@@ -486,6 +520,9 @@ func (o AppInstallationPayload) ToMap() (map[string]interface{}, error) {
 	if o.AccessControl.IsSet() {
 		toSerialize["access_control"] = o.AccessControl.Get()
 	}
+	if !IsNil(o.ApprovedScopes) {
+		toSerialize["approved_scopes"] = o.ApprovedScopes
+	}
 	if !IsNil(o.OauthParams) {
 		toSerialize["oauth_params"] = o.OauthParams
 	}
@@ -547,6 +584,7 @@ func (o *AppInstallationPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "mcp_parameters")
 		delete(additionalProperties, "settings")
 		delete(additionalProperties, "access_control")
+		delete(additionalProperties, "approved_scopes")
 		delete(additionalProperties, "oauth_params")
 		delete(additionalProperties, "oauth_provider_params")
 		delete(additionalProperties, "api_key_params")
