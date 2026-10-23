@@ -1,0 +1,48 @@
+{
+    "test.yaml": {
+        "jobs": [
+            {
+                "name": "^Test$",
+                "steps": [
+                    "Test",
+                    "Vet"
+                ],
+                "example": "Test"
+            }
+        ]
+    },
+    "generated-code-guard.yaml": {
+        "jobs": [
+            {
+                "name": "^Generated\\ Code\\ Guard$",
+                "steps": [
+                    "Reject generated OpenAPI changes in PRs"
+                ],
+                "example": "Generated Code Guard"
+            }
+        ]
+    },
+    "zizmor.yaml": {
+        "jobs": [
+            {
+                "name": "^zizmor$",
+                "steps": [
+                    "Run zizmor",
+                    "Upload SARIF"
+                ],
+                "example": "zizmor"
+            }
+        ]
+    },
+    "ci-policy.yaml": {
+        "jobs": [
+            {
+                "name": "^CI policy tests$",
+                "steps": [
+                    "Test approval and merge policy"
+                ],
+                "example": "CI policy tests"
+            }
+        ]
+    }
+}
