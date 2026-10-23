@@ -20,7 +20,7 @@ var _ MappedNullable = &AppPackage{}
 // AppPackage struct for AppPackage
 type AppPackage struct {
 	OauthClient *AppOAuthClientConfig `json:"oauth_client,omitempty"`
-	// OAuth scopes requested by the app. Users must consent to project permissions.
+	// Scopes requested by app code. These do not replace the publisher-managed permission ceiling in the app manifest.
 	OauthScopes []string `json:"oauth_scopes,omitempty"`
 	// The UI configuration of the app
 	Ui *AppUIConfig `json:"ui,omitempty"`

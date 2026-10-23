@@ -20,7 +20,7 @@ var _ MappedNullable = &OAuthClient{}
 
 // OAuthClient struct for OAuthClient
 type OAuthClient struct {
-	// App associated with this client. Authorization requires an installation explicitly enabling this client and current user app access.
+	// App managing this client. Generic updates and deletion are prohibited; configure it through the app. Authorization requires a current installation and user app access.
 	AppId                   *string                      `json:"app_id,omitempty"`
 	ClientName              string                       `json:"client_name"`
 	ClientType              OAuthClientType              `json:"client_type"`

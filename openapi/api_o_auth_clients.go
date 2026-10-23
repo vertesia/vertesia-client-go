@@ -47,9 +47,9 @@ func (r ApiCreateOAuthClientRequest) Execute() (*OAuthClientCreateResponse, *htt
 /*
 CreateOAuthClient Create an OAuth client
 
-Creates a new OAuth client and returns the generated client secret for confidential clients.
+Creates an OAuth client and returns any generated client secret. Project-admin clients are fixed to the current project and owning account.
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `project:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiCreateOAuthClientRequest
@@ -196,7 +196,7 @@ DeleteOAuthClient Delete an OAuth client
 
 Deletes an OAuth client and associated authorization artifacts.
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `project:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param clientId
@@ -341,7 +341,7 @@ GetOAuthClient Retrieve an OAuth client
 
 Retrieves an OAuth client by client ID.
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `project:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param clientId
@@ -483,9 +483,9 @@ func (r ApiGetOAuthClientScopeMetadataRequest) Execute() (*OAuthClientScopeMetad
 /*
 GetOAuthClientScopeMetadata Retrieve OAuth client scope metadata
 
-Returns the OAuth scopes supported by the Vertesia OAuth server for client configuration.
+Returns configurable OAuth scopes. Project admins receive only project permissions they hold and standard identity/session scopes.
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `project:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiGetOAuthClientScopeMetadataRequest
@@ -624,9 +624,9 @@ func (r ApiListOAuthClientsRequest) Execute() ([]OAuthClient, *http.Response, er
 /*
 ListOAuthClients List OAuth clients
 
-Lists OAuth clients registered with the Vertesia OAuth server.
+Organization admins see all account clients; project admins see standalone clients restricted to their current project whose stored scopes are within their own permissions.
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `project:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListOAuthClientsRequest
@@ -772,9 +772,9 @@ func (r ApiUpdateOAuthClientRequest) Execute() (*OAuthClient, *http.Response, er
 /*
 UpdateOAuthClient Update an OAuth client
 
-Updates an existing OAuth client.
+Updates an OAuth client. Project admins cannot change its project binding or widen organization access; app-managed clients must be configured through their app.
 
-**Required permissions:** `account:admin`
+**Required permissions:** Any of `account:admin`, `project:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param clientId
@@ -844,6 +844,160 @@ func (a *OAuthClientsAPIService) UpdateOAuthClientExecute(r ApiUpdateOAuthClient
 	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
 	// body params
 	localVarPostBody = r.updateOAuthClientPayload
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiUpdateOAuthClientStatusRequest struct {
+	ctx                            context.Context
+	ApiService                     *OAuthClientsAPIService
+	clientId                       string
+	xApiVersion                    *string
+	updateOAuthClientStatusPayload *UpdateOAuthClientStatusPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateOAuthClientStatusRequest) XApiVersion(xApiVersion string) ApiUpdateOAuthClientStatusRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiUpdateOAuthClientStatusRequest) UpdateOAuthClientStatusPayload(updateOAuthClientStatusPayload UpdateOAuthClientStatusPayload) ApiUpdateOAuthClientStatusRequest {
+	r.updateOAuthClientStatusPayload = &updateOAuthClientStatusPayload
+	return r
+}
+
+func (r ApiUpdateOAuthClientStatusRequest) Execute() (*OAuthClient, *http.Response, error) {
+	return r.ApiService.UpdateOAuthClientStatusExecute(r)
+}
+
+/*
+UpdateOAuthClientStatus Enable or disable an OAuth client
+
+**Required permissions:** Any of `account:admin`, `project:admin`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param clientId
+	@return ApiUpdateOAuthClientStatusRequest
+*/
+func (a *OAuthClientsAPIService) UpdateOAuthClientStatus(ctx context.Context, clientId string) ApiUpdateOAuthClientStatusRequest {
+	return ApiUpdateOAuthClientStatusRequest{
+		ApiService: a,
+		ctx:        ctx,
+		clientId:   clientId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return OAuthClient
+func (a *OAuthClientsAPIService) UpdateOAuthClientStatusExecute(r ApiUpdateOAuthClientStatusRequest) (*OAuthClient, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *OAuthClient
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "OAuthClientsAPIService.UpdateOAuthClientStatus")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/oauth-clients/{client_id}/status"
+	localVarPath = strings.Replace(localVarPath, "{"+"client_id"+"}", url.PathEscape(parameterValueToString(r.clientId, "clientId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+	if r.updateOAuthClientStatusPayload == nil {
+		return localVarReturnValue, nil, reportError("updateOAuthClientStatusPayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.updateOAuthClientStatusPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

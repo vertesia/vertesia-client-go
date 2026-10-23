@@ -18,9 +18,11 @@ import (
 // checks if the AppOAuthClientConfig type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &AppOAuthClientConfig{}
 
-// AppOAuthClientConfig Standalone public PKCE OAuth. Installation automatically provisions an app client with these exact callback URLs.
+// AppOAuthClientConfig Standalone public PKCE OAuth. The publisher manifest provisions one app-managed registration with these exact callback URLs.
 type AppOAuthClientConfig struct {
 	RedirectUris []string `json:"redirect_uris"`
+	// Show user consent before authorizing this app. Defaults to true. Disabling the prompt applies only within the publisher organization. Other organizations and loopback callbacks always require consent. Installation, app access, scope and project-policy enforcement are preserved.
+	RequireConsent *bool `json:"require_consent,omitempty"`
 }
 
 type _AppOAuthClientConfig AppOAuthClientConfig
@@ -67,6 +69,38 @@ func (o *AppOAuthClientConfig) SetRedirectUris(v []string) {
 	o.RedirectUris = v
 }
 
+// GetRequireConsent returns the RequireConsent field value if set, zero value otherwise.
+func (o *AppOAuthClientConfig) GetRequireConsent() bool {
+	if o == nil || IsNil(o.RequireConsent) {
+		var ret bool
+		return ret
+	}
+	return *o.RequireConsent
+}
+
+// GetRequireConsentOk returns a tuple with the RequireConsent field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppOAuthClientConfig) GetRequireConsentOk() (*bool, bool) {
+	if o == nil || IsNil(o.RequireConsent) {
+		return nil, false
+	}
+	return o.RequireConsent, true
+}
+
+// HasRequireConsent returns a boolean if a field has been set.
+func (o *AppOAuthClientConfig) HasRequireConsent() bool {
+	if o != nil && !IsNil(o.RequireConsent) {
+		return true
+	}
+
+	return false
+}
+
+// SetRequireConsent gets a reference to the given bool and assigns it to the RequireConsent field.
+func (o *AppOAuthClientConfig) SetRequireConsent(v bool) {
+	o.RequireConsent = &v
+}
+
 func (o AppOAuthClientConfig) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -78,6 +112,9 @@ func (o AppOAuthClientConfig) MarshalJSON() ([]byte, error) {
 func (o AppOAuthClientConfig) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["redirect_uris"] = o.RedirectUris
+	if !IsNil(o.RequireConsent) {
+		toSerialize["require_consent"] = o.RequireConsent
+	}
 	return toSerialize, nil
 }
 

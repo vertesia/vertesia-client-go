@@ -21,9 +21,10 @@ var _ MappedNullable = &AppManifest{}
 // AppManifest struct for AppManifest
 type AppManifest struct {
 	// Shared MCP installation parameters available to every collection. Collection-local names must not overlap.
-	Parameters  map[string]McpConnectionParameter `json:"parameters,omitempty"`
-	OauthScopes []string                          `json:"oauth_scopes,omitempty"`
-	OauthClient *AppOAuthClientConfig             `json:"oauth_client,omitempty"`
+	Parameters map[string]McpConnectionParameter `json:"parameters,omitempty"`
+	// Publisher-managed maximum OAuth scopes this app may request. App code and version promotion cannot expand this permission ceiling.
+	OauthScopes []string              `json:"oauth_scopes,omitempty"`
+	OauthClient *AppOAuthClientConfig `json:"oauth_client,omitempty"`
 	// Monotonic edit revision used to detect concurrent updates.
 	EditRevision int32 `json:"edit_revision"`
 	// The name of the app, used as the id in the system. Must be in kebab case (e.g. my-app).

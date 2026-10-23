@@ -21,9 +21,10 @@ var _ MappedNullable = &UpdateAppPayload{}
 // UpdateAppPayload struct for UpdateAppPayload
 type UpdateAppPayload struct {
 	// Shared MCP installation parameters available to every collection. Collection-local names must not overlap.
-	Parameters  map[string]McpConnectionParameter `json:"parameters,omitempty"`
-	OauthScopes []string                          `json:"oauth_scopes,omitempty"`
-	OauthClient *AppOAuthClientConfig             `json:"oauth_client,omitempty"`
+	Parameters map[string]McpConnectionParameter `json:"parameters,omitempty"`
+	// Publisher-managed maximum OAuth scopes this app may request. App code and version promotion cannot expand this permission ceiling.
+	OauthScopes []string              `json:"oauth_scopes,omitempty"`
+	OauthClient *AppOAuthClientConfig `json:"oauth_client,omitempty"`
 	// The name of the app, used as the id in the system. Must be in kebab case (e.g. my-app).
 	Name string `json:"name"`
 	// Visibility level of the app: - \"public\": visible to all accounts - \"private\": visible only to the owning account - \"vertesia\": visible only to Vertesia team members (any project)
