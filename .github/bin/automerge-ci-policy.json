@@ -14,11 +14,11 @@
     "generated-code-guard.yaml": {
         "jobs": [
             {
-                "name": "^Generated code guard$",
+                "name": "^Generated\\ Code\\ Guard$",
                 "steps": [
                     "Reject generated OpenAPI changes in PRs"
                 ],
-                "example": "Generated code guard"
+                "example": "Generated Code Guard"
             }
         ]
     },
