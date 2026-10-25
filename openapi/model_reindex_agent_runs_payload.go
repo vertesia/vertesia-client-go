@@ -19,7 +19,7 @@ var _ MappedNullable = &ReindexAgentRunsPayload{}
 
 // ReindexAgentRunsPayload struct for ReindexAgentRunsPayload
 type ReindexAgentRunsPayload struct {
-	// Drop any existing agent-runs index/alias family and recreate the stable concrete index before indexing. Defaults to true.
+	// Rebuild into a new index and switch searches to it once it is filled, so searches keep working during the rebuild; when false, index into the current index in place. Defaults to true.
 	RecreateIndex *bool `json:"recreate_index,omitempty"`
 	// Number of MongoDB records to scan per batch. Defaults to 500.
 	BatchSize *float32 `json:"batch_size,omitempty"`
