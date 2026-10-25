@@ -1651,7 +1651,7 @@ func (r ApiReindexAgentRunsRequest) Execute() (*ReindexAgentRunsResponse, *http.
 /*
 ReindexAgentRuns Reindex agent runs
 
-Rebuilds the current project agent-run Elasticsearch index directly from MongoDB. By default this recreates the stable agent-runs index before indexing.
+Rebuilds the current project agent-run Elasticsearch index directly from MongoDB. By default it rebuilds into a new index and swaps searches to it once filled, so searches keep working during the rebuild.
 
 **Required permissions:** `content:admin`
 
