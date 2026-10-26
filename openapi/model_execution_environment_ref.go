@@ -27,11 +27,13 @@ type ExecutionEnvironmentRef struct {
 	DefaultModel    *string            `json:"default_model,omitempty"`
 	EndpointUrl     *string            `json:"endpoint_url,omitempty"`
 	AllowedProjects []string           `json:"allowed_projects,omitempty"`
-	Account         string             `json:"account"`
-	CreatedBy       string             `json:"created_by"`
-	UpdatedBy       string             `json:"updated_by"`
-	CreatedAt       string             `json:"created_at"`
-	UpdatedAt       string             `json:"updated_at"`
+	// True when Vertesia manages this environment and supplies its inference credential. Only Vertesia staff can change its name, description, provider, endpoint or credential, or delete it, and its configuration and settings are locked; account administrators can still change its default model, enabled models and allowed projects. Absent on every other environment.
+	Managed   *bool  `json:"managed,omitempty"`
+	Account   string `json:"account"`
+	CreatedBy string `json:"created_by"`
+	UpdatedBy string `json:"updated_by"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
 }
 
 type _ExecutionEnvironmentRef ExecutionEnvironmentRef
@@ -261,6 +263,38 @@ func (o *ExecutionEnvironmentRef) SetAllowedProjects(v []string) {
 	o.AllowedProjects = v
 }
 
+// GetManaged returns the Managed field value if set, zero value otherwise.
+func (o *ExecutionEnvironmentRef) GetManaged() bool {
+	if o == nil || IsNil(o.Managed) {
+		var ret bool
+		return ret
+	}
+	return *o.Managed
+}
+
+// GetManagedOk returns a tuple with the Managed field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExecutionEnvironmentRef) GetManagedOk() (*bool, bool) {
+	if o == nil || IsNil(o.Managed) {
+		return nil, false
+	}
+	return o.Managed, true
+}
+
+// HasManaged returns a boolean if a field has been set.
+func (o *ExecutionEnvironmentRef) HasManaged() bool {
+	if o != nil && !IsNil(o.Managed) {
+		return true
+	}
+
+	return false
+}
+
+// SetManaged gets a reference to the given bool and assigns it to the Managed field.
+func (o *ExecutionEnvironmentRef) SetManaged(v bool) {
+	o.Managed = &v
+}
+
 // GetAccount returns the Account field value
 func (o *ExecutionEnvironmentRef) GetAccount() string {
 	if o == nil {
@@ -405,6 +439,9 @@ func (o ExecutionEnvironmentRef) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.AllowedProjects) {
 		toSerialize["allowed_projects"] = o.AllowedProjects
+	}
+	if !IsNil(o.Managed) {
+		toSerialize["managed"] = o.Managed
 	}
 	toSerialize["account"] = o.Account
 	toSerialize["created_by"] = o.CreatedBy

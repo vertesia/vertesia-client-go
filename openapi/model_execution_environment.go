@@ -35,10 +35,12 @@ type ExecutionEnvironment struct {
 	Settings        *ExecutionEnvironmentSettings `json:"settings,omitempty"`
 	Account         string                        `json:"account"`
 	AllowedProjects []string                      `json:"allowed_projects,omitempty"`
-	CreatedBy       string                        `json:"created_by"`
-	UpdatedBy       string                        `json:"updated_by"`
-	CreatedAt       string                        `json:"created_at"`
-	UpdatedAt       string                        `json:"updated_at"`
+	// True when Vertesia manages this environment and supplies its inference credential. Only Vertesia staff can change its name, description, provider, endpoint or credential, or delete it, and its configuration and settings are locked; account administrators can still change its default model, enabled models and allowed projects. Absent on every other environment.
+	Managed   *bool  `json:"managed,omitempty"`
+	CreatedBy string `json:"created_by"`
+	UpdatedBy string `json:"updated_by"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
 }
 
 type _ExecutionEnvironment ExecutionEnvironment
@@ -453,6 +455,38 @@ func (o *ExecutionEnvironment) SetAllowedProjects(v []string) {
 	o.AllowedProjects = v
 }
 
+// GetManaged returns the Managed field value if set, zero value otherwise.
+func (o *ExecutionEnvironment) GetManaged() bool {
+	if o == nil || IsNil(o.Managed) {
+		var ret bool
+		return ret
+	}
+	return *o.Managed
+}
+
+// GetManagedOk returns a tuple with the Managed field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExecutionEnvironment) GetManagedOk() (*bool, bool) {
+	if o == nil || IsNil(o.Managed) {
+		return nil, false
+	}
+	return o.Managed, true
+}
+
+// HasManaged returns a boolean if a field has been set.
+func (o *ExecutionEnvironment) HasManaged() bool {
+	if o != nil && !IsNil(o.Managed) {
+		return true
+	}
+
+	return false
+}
+
+// SetManaged gets a reference to the given bool and assigns it to the Managed field.
+func (o *ExecutionEnvironment) SetManaged(v bool) {
+	o.Managed = &v
+}
+
 // GetCreatedBy returns the CreatedBy field value
 func (o *ExecutionEnvironment) GetCreatedBy() string {
 	if o == nil {
@@ -589,6 +623,9 @@ func (o ExecutionEnvironment) ToMap() (map[string]interface{}, error) {
 	toSerialize["account"] = o.Account
 	if !IsNil(o.AllowedProjects) {
 		toSerialize["allowed_projects"] = o.AllowedProjects
+	}
+	if !IsNil(o.Managed) {
+		toSerialize["managed"] = o.Managed
 	}
 	toSerialize["created_by"] = o.CreatedBy
 	toSerialize["updated_by"] = o.UpdatedBy
