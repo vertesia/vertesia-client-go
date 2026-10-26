@@ -431,6 +431,9 @@ model_dashboard_elasticsearch_dsl.go
 model_dashboard_elasticsearch_result_mapping.go
 model_dashboard_elasticsearch_result_mapping_one_of.go
 model_dashboard_elasticsearch_result_mapping_one_of_1.go
+model_dashboard_export.go
+model_dashboard_export_error.go
+model_dashboard_export_status.go
 model_dashboard_item.go
 model_dashboard_layout.go
 model_dashboard_panel.go
@@ -584,6 +587,8 @@ model_execution_run_workflow.go
 model_execution_token_usage.go
 model_export_content_objects_filter.go
 model_export_content_objects_include_options.go
+model_export_dashboard_payload.go
+model_export_dashboard_preview_payload.go
 model_export_properties_payload.go
 model_export_properties_response.go
 model_exported_prompt_template_ref.go

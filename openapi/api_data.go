@@ -1702,6 +1702,322 @@ func (a *DataAPIService) DeleteDataStoreTableExecute(r ApiDeleteDataStoreTableRe
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiExportDashboardRequest struct {
+	ctx                    context.Context
+	ApiService             *DataAPIService
+	storeId                string
+	dashboardId            string
+	xApiVersion            *string
+	exportDashboardPayload *ExportDashboardPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiExportDashboardRequest) XApiVersion(xApiVersion string) ApiExportDashboardRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiExportDashboardRequest) ExportDashboardPayload(exportDashboardPayload ExportDashboardPayload) ApiExportDashboardRequest {
+	r.exportDashboardPayload = &exportDashboardPayload
+	return r
+}
+
+func (r ApiExportDashboardRequest) Execute() (*DashboardExport, *http.Response, error) {
+	return r.ApiService.ExportDashboardExecute(r)
+}
+
+/*
+ExportDashboard Export a dashboard as an image
+
+Starts rendering the saved dashboard to PNG with fresh query results, and returns the `running` export. Poll GET /data/{storeId}/dashboards/exports/{exportId} until it is `completed` or `failed`. Every export creates a new image, so earlier URLs keep showing what they were issued for. The dashboard's `last_rendered_at` is set once the image is uploaded.
+
+**Required permissions:** `content:read`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param storeId
+	@param dashboardId
+	@return ApiExportDashboardRequest
+*/
+func (a *DataAPIService) ExportDashboard(ctx context.Context, storeId string, dashboardId string) ApiExportDashboardRequest {
+	return ApiExportDashboardRequest{
+		ApiService:  a,
+		ctx:         ctx,
+		storeId:     storeId,
+		dashboardId: dashboardId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return DashboardExport
+func (a *DataAPIService) ExportDashboardExecute(r ApiExportDashboardRequest) (*DashboardExport, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DashboardExport
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DataAPIService.ExportDashboard")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/data/{storeId}/dashboards/{dashboardId}/export"
+	localVarPath = strings.Replace(localVarPath, "{"+"storeId"+"}", url.PathEscape(parameterValueToString(r.storeId, "storeId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"dashboardId"+"}", url.PathEscape(parameterValueToString(r.dashboardId, "dashboardId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+	if r.exportDashboardPayload == nil {
+		return localVarReturnValue, nil, reportError("exportDashboardPayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.exportDashboardPayload
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiExportDashboardPreviewRequest struct {
+	ctx                           context.Context
+	ApiService                    *DataAPIService
+	storeId                       string
+	xApiVersion                   *string
+	exportDashboardPreviewPayload *ExportDashboardPreviewPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiExportDashboardPreviewRequest) XApiVersion(xApiVersion string) ApiExportDashboardPreviewRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiExportDashboardPreviewRequest) ExportDashboardPreviewPayload(exportDashboardPreviewPayload ExportDashboardPreviewPayload) ApiExportDashboardPreviewRequest {
+	r.exportDashboardPreviewPayload = &exportDashboardPreviewPayload
+	return r
+}
+
+func (r ApiExportDashboardPreviewRequest) Execute() (*DashboardExport, *http.Response, error) {
+	return r.ApiService.ExportDashboardPreviewExecute(r)
+}
+
+/*
+ExportDashboardPreview Export an unsaved dashboard as an image
+
+Starts rendering the rows of a SQL query with a Vega-Lite spec as a PNG, and returns the `running` export. Poll GET /data/{storeId}/dashboards/exports/{exportId} until it is `completed`, with a signed URL to the image, or `failed`, with the reason. Nothing is saved: use it to check a dashboard before creating it.
+
+**Required permissions:** `content:read`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param storeId
+	@return ApiExportDashboardPreviewRequest
+*/
+func (a *DataAPIService) ExportDashboardPreview(ctx context.Context, storeId string) ApiExportDashboardPreviewRequest {
+	return ApiExportDashboardPreviewRequest{
+		ApiService: a,
+		ctx:        ctx,
+		storeId:    storeId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return DashboardExport
+func (a *DataAPIService) ExportDashboardPreviewExecute(r ApiExportDashboardPreviewRequest) (*DashboardExport, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DashboardExport
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DataAPIService.ExportDashboardPreview")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/data/{storeId}/dashboards/export"
+	localVarPath = strings.Replace(localVarPath, "{"+"storeId"+"}", url.PathEscape(parameterValueToString(r.storeId, "storeId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+	if r.exportDashboardPreviewPayload == nil {
+		return localVarReturnValue, nil, reportError("exportDashboardPreviewPayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.exportDashboardPreviewPayload
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiGetDashboardRequest struct {
 	ctx         context.Context
 	ApiService  *DataAPIService
@@ -1760,6 +2076,155 @@ func (a *DataAPIService) GetDashboardExecute(r ApiGetDashboardRequest) (*Dashboa
 	localVarPath := localBasePath + "/data/{storeId}/dashboards/{dashboardId}"
 	localVarPath = strings.Replace(localVarPath, "{"+"storeId"+"}", url.PathEscape(parameterValueToString(r.storeId, "storeId")), -1)
 	localVarPath = strings.Replace(localVarPath, "{"+"dashboardId"+"}", url.PathEscape(parameterValueToString(r.dashboardId, "dashboardId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetDashboardExportRequest struct {
+	ctx         context.Context
+	ApiService  *DataAPIService
+	storeId     string
+	exportId    string
+	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiGetDashboardExportRequest) XApiVersion(xApiVersion string) ApiGetDashboardExportRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiGetDashboardExportRequest) Execute() (*DashboardExport, *http.Response, error) {
+	return r.ApiService.GetDashboardExportExecute(r)
+}
+
+/*
+GetDashboardExport Get a dashboard export
+
+Returns the status of an export. A `completed` export carries a freshly signed URL to the image; a `failed` one carries the reason and whether starting it again may succeed.
+
+**Required permissions:** `content:read`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param storeId
+	@param exportId
+	@return ApiGetDashboardExportRequest
+*/
+func (a *DataAPIService) GetDashboardExport(ctx context.Context, storeId string, exportId string) ApiGetDashboardExportRequest {
+	return ApiGetDashboardExportRequest{
+		ApiService: a,
+		ctx:        ctx,
+		storeId:    storeId,
+		exportId:   exportId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return DashboardExport
+func (a *DataAPIService) GetDashboardExportExecute(r ApiGetDashboardExportRequest) (*DashboardExport, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *DashboardExport
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DataAPIService.GetDashboardExport")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/data/{storeId}/dashboards/exports/{exportId}"
+	localVarPath = strings.Replace(localVarPath, "{"+"storeId"+"}", url.PathEscape(parameterValueToString(r.storeId, "storeId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"exportId"+"}", url.PathEscape(parameterValueToString(r.exportId, "exportId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
