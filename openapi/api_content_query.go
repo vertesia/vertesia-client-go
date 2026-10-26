@@ -49,7 +49,7 @@ ExecuteContentQuery Execute a SQL, ES|QL, or Elasticsearch DSL content query
 # Execute a query against the project's Elasticsearch index
 
 Security filtering is automatically applied based on the authenticated user's principals.
-For SQL/ES|QL, a WHERE clause is injected.
+SQL and ES|QL may only read the project index (`FROM content`).
 For DSL, a filter clause is added.
 
 **Required permissions:** `content:read`
