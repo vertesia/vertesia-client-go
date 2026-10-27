@@ -49,7 +49,7 @@ type AsyncConversationExecutionPayload struct {
 	Type            string                  `json:"type"`
 	// An array of endpoint URLs to be notified upon execution
 	NotifyEndpoints []string `json:"notify_endpoints,omitempty"`
-	// Client-chosen key, unique per intended run, that makes this request safe to retry. A repeat of the request with the same key and the same body returns the agent run the first request started instead of starting another. Reusing a key with a different body is rejected with 409, and a repeat that arrives while the first request is still starting the run may be answered with 503 and `Retry-After`. Keys are scoped to the project and stay bound to their run for as long as it exists; once the run is deleted, the same key starts a new one.
+	// Client-chosen key, unique per intended run, that makes this request safe to retry. A repeat of the request with the same key and the same body returns the agent run the first request started instead of starting another. Reusing a key with a different body is rejected with 422, and a repeat that arrives while the first request is still starting the run may be answered with 503 and `Retry-After`. Keys are scoped to the project and stay bound to their run for as long as it exists; once the run is deleted, the same key starts a new one.
 	IdempotencyKey *string `json:"idempotency_key,omitempty"`
 	TaskQueue      *string `json:"task_queue,omitempty"`
 	// Effective tool approval mode for interactive agent conversations.

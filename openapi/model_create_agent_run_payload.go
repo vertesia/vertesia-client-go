@@ -91,7 +91,7 @@ type CreateAgentRunPayload struct {
 	DebugMode *bool `json:"debug_mode,omitempty"`
 	// Principal ref of the user who initiated the run (for server-to-server forwarding)
 	StartedBy *string `json:"started_by,omitempty"`
-	// Client-chosen key, unique per intended run, that makes this request safe to retry. A repeat of the request with the same key and the same body returns the agent run the first request started instead of starting another. Reusing a key with a different body is rejected with 409, and a repeat that arrives while the first request is still starting the run may be answered with 503 and `Retry-After`. Keys are scoped to the project and stay bound to their run for as long as it exists; once the run is deleted, the same key starts a new one.
+	// Client-chosen key, unique per intended run, that makes this request safe to retry. A repeat of the request with the same key and the same body returns the agent run the first request started instead of starting another. Reusing a key with a different body is rejected with 422, and a repeat that arrives while the first request is still starting the run may be answered with 503 and `Retry-After`. Keys are scoped to the project and stay bound to their run for as long as it exists; once the run is deleted, the same key starts a new one.
 	IdempotencyKey       *string `json:"idempotency_key,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

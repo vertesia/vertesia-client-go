@@ -22,7 +22,7 @@ var _ MappedNullable = &SubmitProcessTestRunPayload{}
 type SubmitProcessTestRunPayload struct {
 	Process   ProcessTestTarget     `json:"process"`
 	Scenarios []ProcessTestScenario `json:"scenarios"`
-	// Client-chosen key, unique per intended run, that makes this request safe to retry. A repeat of the request with the same key and the same body returns the run the first request started instead of starting another. Reusing a key with a different body is rejected with 409. Keys are scoped to the project and stay bound to their run for as long as it exists; once the run is deleted, the same key starts a new one.
+	// Client-chosen key, unique per intended run, that makes this request safe to retry. A repeat of the request with the same key and the same body returns the run the first request started instead of starting another. Reusing a key with a different body is rejected with 422. Keys are scoped to the project and stay bound to their run for as long as it exists; once the run is deleted, the same key starts a new one.
 	IdempotencyKey *string `json:"idempotency_key,omitempty"`
 }
 

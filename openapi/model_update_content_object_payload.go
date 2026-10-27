@@ -67,11 +67,14 @@ type UpdateContentObjectPayload struct {
 	// Identifier of the user who last modified the object
 	UpdatedBy *string `json:"updated_by,omitempty"`
 	// Identifier of the user who created the object
-	CreatedBy         *string                `json:"created_by,omitempty"`
-	Id                *string                `json:"id,omitempty"`
-	Type              *string                `json:"type,omitempty"`
-	GenerationRunInfo *GenerationRunMetadata `json:"generation_run_info,omitempty"`
+	CreatedBy            *string                `json:"created_by,omitempty"`
+	Id                   *string                `json:"id,omitempty"`
+	Type                 *string                `json:"type,omitempty"`
+	GenerationRunInfo    *GenerationRunMetadata `json:"generation_run_info,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateContentObjectPayload UpdateContentObjectPayload
 
 // NewUpdateContentObjectPayload instantiates a new UpdateContentObjectPayload object
 // This constructor will assign default values to properties that have it defined,
@@ -1220,7 +1223,64 @@ func (o UpdateContentObjectPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.GenerationRunInfo) {
 		toSerialize["generation_run_info"] = o.GenerationRunInfo
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateContentObjectPayload) UnmarshalJSON(data []byte) (err error) {
+	varUpdateContentObjectPayload := _UpdateContentObjectPayload{}
+
+	err = json.Unmarshal(data, &varUpdateContentObjectPayload)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateContentObjectPayload(varUpdateContentObjectPayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "text")
+		delete(additionalProperties, "text_etag")
+		delete(additionalProperties, "embeddings")
+		delete(additionalProperties, "parts")
+		delete(additionalProperties, "parts_etag")
+		delete(additionalProperties, "transcript")
+		delete(additionalProperties, "security")
+		delete(additionalProperties, "sensitivity")
+		delete(additionalProperties, "compartments")
+		delete(additionalProperties, "shared_root")
+		delete(additionalProperties, "inherited_properties")
+		delete(additionalProperties, "parent")
+		delete(additionalProperties, "location")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "content")
+		delete(additionalProperties, "external_id")
+		delete(additionalProperties, "properties")
+		delete(additionalProperties, "metadata")
+		delete(additionalProperties, "tokens")
+		delete(additionalProperties, "revision")
+		delete(additionalProperties, "is_deleted")
+		delete(additionalProperties, "is_locked")
+		delete(additionalProperties, "score")
+		delete(additionalProperties, "user_permissions")
+		delete(additionalProperties, "name")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "tags")
+		delete(additionalProperties, "updated_by")
+		delete(additionalProperties, "created_by")
+		delete(additionalProperties, "id")
+		delete(additionalProperties, "type")
+		delete(additionalProperties, "generation_run_info")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateContentObjectPayload struct {

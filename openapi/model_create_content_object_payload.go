@@ -67,10 +67,12 @@ type CreateContentObjectPayload struct {
 	// Identifier of the user who last modified the object
 	UpdatedBy *string `json:"updated_by,omitempty"`
 	// Identifier of the user who created the object
-	CreatedBy            *string                `json:"created_by,omitempty"`
-	Id                   *string                `json:"id,omitempty"`
-	Type                 *string                `json:"type,omitempty"`
-	GenerationRunInfo    *GenerationRunMetadata `json:"generation_run_info,omitempty"`
+	CreatedBy         *string                `json:"created_by,omitempty"`
+	Id                *string                `json:"id,omitempty"`
+	Type              *string                `json:"type,omitempty"`
+	GenerationRunInfo *GenerationRunMetadata `json:"generation_run_info,omitempty"`
+	// Client-chosen key, unique per intended object, that makes this request safe to retry. A repeat of the request with the same key, body, collection and processing priority returns the object the first request created instead of creating another. Reusing a key with different input is rejected with 409. Keys are scoped to the project and stay bound to their object for as long as it exists.
+	IdempotencyKey       *string `json:"idempotency_key,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -1117,6 +1119,38 @@ func (o *CreateContentObjectPayload) SetGenerationRunInfo(v GenerationRunMetadat
 	o.GenerationRunInfo = &v
 }
 
+// GetIdempotencyKey returns the IdempotencyKey field value if set, zero value otherwise.
+func (o *CreateContentObjectPayload) GetIdempotencyKey() string {
+	if o == nil || IsNil(o.IdempotencyKey) {
+		var ret string
+		return ret
+	}
+	return *o.IdempotencyKey
+}
+
+// GetIdempotencyKeyOk returns a tuple with the IdempotencyKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateContentObjectPayload) GetIdempotencyKeyOk() (*string, bool) {
+	if o == nil || IsNil(o.IdempotencyKey) {
+		return nil, false
+	}
+	return o.IdempotencyKey, true
+}
+
+// HasIdempotencyKey returns a boolean if a field has been set.
+func (o *CreateContentObjectPayload) HasIdempotencyKey() bool {
+	if o != nil && !IsNil(o.IdempotencyKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetIdempotencyKey gets a reference to the given string and assigns it to the IdempotencyKey field.
+func (o *CreateContentObjectPayload) SetIdempotencyKey(v string) {
+	o.IdempotencyKey = &v
+}
+
 func (o CreateContentObjectPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -1223,6 +1257,9 @@ func (o CreateContentObjectPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.GenerationRunInfo) {
 		toSerialize["generation_run_info"] = o.GenerationRunInfo
 	}
+	if !IsNil(o.IdempotencyKey) {
+		toSerialize["idempotency_key"] = o.IdempotencyKey
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -1277,6 +1314,7 @@ func (o *CreateContentObjectPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "type")
 		delete(additionalProperties, "generation_run_info")
+		delete(additionalProperties, "idempotency_key")
 		o.AdditionalProperties = additionalProperties
 	}
 
