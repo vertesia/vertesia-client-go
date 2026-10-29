@@ -25,6 +25,7 @@ type OpenAiTextOptions struct {
 	MaxTokens        *float32                      `json:"max_tokens,omitempty"`
 	Effort           *ReasoningEffort              `json:"effort,omitempty"`
 	ReasoningEffort  *ReasoningEffort              `json:"reasoning_effort,omitempty"`
+	Verbosity        *string                       `json:"verbosity,omitempty"`
 	Temperature      *float32                      `json:"temperature,omitempty"`
 	TopP             *float32                      `json:"top_p,omitempty"`
 	PresencePenalty  *float32                      `json:"presence_penalty,omitempty"`
@@ -247,6 +248,38 @@ func (o *OpenAiTextOptions) HasReasoningEffort() bool {
 // SetReasoningEffort gets a reference to the given ReasoningEffort and assigns it to the ReasoningEffort field.
 func (o *OpenAiTextOptions) SetReasoningEffort(v ReasoningEffort) {
 	o.ReasoningEffort = &v
+}
+
+// GetVerbosity returns the Verbosity field value if set, zero value otherwise.
+func (o *OpenAiTextOptions) GetVerbosity() string {
+	if o == nil || IsNil(o.Verbosity) {
+		var ret string
+		return ret
+	}
+	return *o.Verbosity
+}
+
+// GetVerbosityOk returns a tuple with the Verbosity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiTextOptions) GetVerbosityOk() (*string, bool) {
+	if o == nil || IsNil(o.Verbosity) {
+		return nil, false
+	}
+	return o.Verbosity, true
+}
+
+// HasVerbosity returns a boolean if a field has been set.
+func (o *OpenAiTextOptions) HasVerbosity() bool {
+	if o != nil && !IsNil(o.Verbosity) {
+		return true
+	}
+
+	return false
+}
+
+// SetVerbosity gets a reference to the given string and assigns it to the Verbosity field.
+func (o *OpenAiTextOptions) SetVerbosity(v string) {
+	o.Verbosity = &v
 }
 
 // GetTemperature returns the Temperature field value if set, zero value otherwise.
@@ -549,7 +582,7 @@ func (o OpenAiTextOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "seed", "max_tokens", "effort", "reasoning_effort", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "seed", "max_tokens", "effort", "reasoning_effort", "verbosity", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -571,6 +604,9 @@ func (o OpenAiTextOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ReasoningEffort) {
 		toSerialize["reasoning_effort"] = o.ReasoningEffort
+	}
+	if !IsNil(o.Verbosity) {
+		toSerialize["verbosity"] = o.Verbosity
 	}
 	if !IsNil(o.Temperature) {
 		toSerialize["temperature"] = o.Temperature
@@ -654,7 +690,7 @@ func (o *OpenAiTextOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "seed", "max_tokens", "effort", "reasoning_effort", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "seed", "max_tokens", "effort", "reasoning_effort", "verbosity", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
 			delete(extra, key)
 		}
 	}
