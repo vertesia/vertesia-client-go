@@ -420,6 +420,7 @@ model_create_table_payload.go
 model_create_tables_payload.go
 model_create_task_payload.go
 model_create_user_group_payload.go
+model_create_user_payload.go
 model_create_view_experience_request.go
 model_create_workflow_rule_payload.go
 model_dashboard.go
