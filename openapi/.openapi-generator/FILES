@@ -606,11 +606,7 @@ model_forward_email_request.go
 model_forward_email_request_attachments_inner.go
 model_forward_email_request_email.go
 model_forward_email_response.go
-model_generate_interaction_payload.go
 model_generate_test_data_payload.go
-model_generated_interaction_definition.go
-model_generated_interaction_prompt_segment.go
-model_generated_interaction_prompt_template.go
 model_generation_run_metadata.go
 model_generic_command_response.go
 model_get_file_url_payload.go
@@ -643,9 +639,6 @@ model_import_data_source.go
 model_import_job.go
 model_import_status.go
 model_import_table_data.go
-model_improve_prompt_payload.go
-model_improve_prompt_payload_config.go
-model_improve_prompt_payload_prompt_inner.go
 model_in_code_process_definition.go
 model_in_code_prompt.go
 model_in_code_type_definition.go
@@ -898,7 +891,6 @@ model_promote_dashboard_version_payload.go
 model_prompt_cache_diagnostic.go
 model_prompt_cache_mode.go
 model_prompt_cache_path.go
-model_prompt_improvement_response.go
 model_prompt_modalities.go
 model_prompt_role.go
 model_prompt_search_query.go

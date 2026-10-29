@@ -25,13 +25,15 @@ type ProjectConfiguration struct {
 	HumanContext       *string `json:"human_context,omitempty"`
 	// Legacy model defaults, replaced by inference profile assignments after migration.
 	// Deprecated
-	Defaults              *ProjectModelDefaults          `json:"defaults,omitempty"`
-	Inference             *ProjectInferenceProfiles      `json:"inference,omitempty"`
-	DefaultVisibility     *ResourceVisibility            `json:"default_visibility,omitempty"`
-	SyncContentProperties *bool                          `json:"sync_content_properties,omitempty"`
-	Embeddings            ProjectConfigurationEmbeddings `json:"embeddings"`
-	Datacenter            *string                        `json:"datacenter,omitempty"`
-	StorageBucket         *string                        `json:"storage_bucket,omitempty"`
+	Defaults              *ProjectModelDefaults     `json:"defaults,omitempty"`
+	Inference             *ProjectInferenceProfiles `json:"inference,omitempty"`
+	DefaultVisibility     *ResourceVisibility       `json:"default_visibility,omitempty"`
+	SyncContentProperties *bool                     `json:"sync_content_properties,omitempty"`
+	// Enable Shared Content for this project: sharing its documents and collections with other projects in the account, and browsing content they share. Defaults to false if not specified.
+	SharedContentEnabled *bool                          `json:"shared_content_enabled,omitempty"`
+	Embeddings           ProjectConfigurationEmbeddings `json:"embeddings"`
+	Datacenter           *string                        `json:"datacenter,omitempty"`
+	StorageBucket        *string                        `json:"storage_bucket,omitempty"`
 	// Enable real-time streaming of agent LLM responses to clients. When enabled, LLM responses are streamed chunk-by-chunk via Redis pub/sub. Defaults to true if not specified.
 	AgentStreamingEnabled *bool `json:"agent_streaming_enabled,omitempty"`
 	// Agent runtime configuration for this project.
@@ -295,6 +297,38 @@ func (o *ProjectConfiguration) HasSyncContentProperties() bool {
 // SetSyncContentProperties gets a reference to the given bool and assigns it to the SyncContentProperties field.
 func (o *ProjectConfiguration) SetSyncContentProperties(v bool) {
 	o.SyncContentProperties = &v
+}
+
+// GetSharedContentEnabled returns the SharedContentEnabled field value if set, zero value otherwise.
+func (o *ProjectConfiguration) GetSharedContentEnabled() bool {
+	if o == nil || IsNil(o.SharedContentEnabled) {
+		var ret bool
+		return ret
+	}
+	return *o.SharedContentEnabled
+}
+
+// GetSharedContentEnabledOk returns a tuple with the SharedContentEnabled field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProjectConfiguration) GetSharedContentEnabledOk() (*bool, bool) {
+	if o == nil || IsNil(o.SharedContentEnabled) {
+		return nil, false
+	}
+	return o.SharedContentEnabled, true
+}
+
+// HasSharedContentEnabled returns a boolean if a field has been set.
+func (o *ProjectConfiguration) HasSharedContentEnabled() bool {
+	if o != nil && !IsNil(o.SharedContentEnabled) {
+		return true
+	}
+
+	return false
+}
+
+// SetSharedContentEnabled gets a reference to the given bool and assigns it to the SharedContentEnabled field.
+func (o *ProjectConfiguration) SetSharedContentEnabled(v bool) {
+	o.SharedContentEnabled = &v
 }
 
 // GetEmbeddings returns the Embeddings field value
@@ -683,6 +717,9 @@ func (o ProjectConfiguration) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SyncContentProperties) {
 		toSerialize["sync_content_properties"] = o.SyncContentProperties
 	}
+	if !IsNil(o.SharedContentEnabled) {
+		toSerialize["shared_content_enabled"] = o.SharedContentEnabled
+	}
 	toSerialize["embeddings"] = o.Embeddings
 	if !IsNil(o.Datacenter) {
 		toSerialize["datacenter"] = o.Datacenter
@@ -764,6 +801,7 @@ func (o *ProjectConfiguration) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "inference")
 		delete(additionalProperties, "default_visibility")
 		delete(additionalProperties, "sync_content_properties")
+		delete(additionalProperties, "shared_content_enabled")
 		delete(additionalProperties, "embeddings")
 		delete(additionalProperties, "datacenter")
 		delete(additionalProperties, "storage_bucket")
