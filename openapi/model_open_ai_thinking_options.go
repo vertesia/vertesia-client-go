@@ -27,6 +27,7 @@ type OpenAiThinkingOptions struct {
 	Effort           *ReasoningEffort              `json:"effort,omitempty"`
 	ReasoningEffort  *ReasoningEffort              `json:"reasoning_effort,omitempty"`
 	ReasoningContext *string                       `json:"reasoning_context,omitempty"`
+	Verbosity        *string                       `json:"verbosity,omitempty"`
 	ImageDetail      *string                       `json:"image_detail,omitempty"`
 	IncludeThoughts  *bool                         `json:"include_thoughts,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
@@ -311,6 +312,38 @@ func (o *OpenAiThinkingOptions) SetReasoningContext(v string) {
 	o.ReasoningContext = &v
 }
 
+// GetVerbosity returns the Verbosity field value if set, zero value otherwise.
+func (o *OpenAiThinkingOptions) GetVerbosity() string {
+	if o == nil || IsNil(o.Verbosity) {
+		var ret string
+		return ret
+	}
+	return *o.Verbosity
+}
+
+// GetVerbosityOk returns a tuple with the Verbosity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiThinkingOptions) GetVerbosityOk() (*string, bool) {
+	if o == nil || IsNil(o.Verbosity) {
+		return nil, false
+	}
+	return o.Verbosity, true
+}
+
+// HasVerbosity returns a boolean if a field has been set.
+func (o *OpenAiThinkingOptions) HasVerbosity() bool {
+	if o != nil && !IsNil(o.Verbosity) {
+		return true
+	}
+
+	return false
+}
+
+// SetVerbosity gets a reference to the given string and assigns it to the Verbosity field.
+func (o *OpenAiThinkingOptions) SetVerbosity(v string) {
+	o.Verbosity = &v
+}
+
 // GetImageDetail returns the ImageDetail field value if set, zero value otherwise.
 func (o *OpenAiThinkingOptions) GetImageDetail() string {
 	if o == nil || IsNil(o.ImageDetail) {
@@ -473,6 +506,9 @@ func (o OpenAiThinkingOptions) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ReasoningContext) {
 		toSerialize["reasoning_context"] = o.ReasoningContext
 	}
+	if !IsNil(o.Verbosity) {
+		toSerialize["verbosity"] = o.Verbosity
+	}
 	if !IsNil(o.ImageDetail) {
 		toSerialize["image_detail"] = o.ImageDetail
 	}
@@ -487,7 +523,7 @@ func (o OpenAiThinkingOptions) ToMap() (map[string]interface{}, error) {
 	}
 
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "verbosity", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -556,7 +592,7 @@ func (o *OpenAiThinkingOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "verbosity", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
 			delete(extra, key)
 		}
 	}

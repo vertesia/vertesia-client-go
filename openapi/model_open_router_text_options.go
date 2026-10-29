@@ -24,6 +24,7 @@ type OpenRouterTextOptions struct {
 	ToolChoice       *string          `json:"tool_choice,omitempty"`
 	Effort           *ReasoningEffort `json:"effort,omitempty"`
 	ReasoningEffort  *ReasoningEffort `json:"reasoning_effort,omitempty"`
+	Verbosity        *string          `json:"verbosity,omitempty"`
 	Temperature      *float32         `json:"temperature,omitempty"`
 	TopP             *float32         `json:"top_p,omitempty"`
 	PresencePenalty  *float32         `json:"presence_penalty,omitempty"`
@@ -222,6 +223,38 @@ func (o *OpenRouterTextOptions) HasReasoningEffort() bool {
 // SetReasoningEffort gets a reference to the given ReasoningEffort and assigns it to the ReasoningEffort field.
 func (o *OpenRouterTextOptions) SetReasoningEffort(v ReasoningEffort) {
 	o.ReasoningEffort = &v
+}
+
+// GetVerbosity returns the Verbosity field value if set, zero value otherwise.
+func (o *OpenRouterTextOptions) GetVerbosity() string {
+	if o == nil || IsNil(o.Verbosity) {
+		var ret string
+		return ret
+	}
+	return *o.Verbosity
+}
+
+// GetVerbosityOk returns a tuple with the Verbosity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenRouterTextOptions) GetVerbosityOk() (*string, bool) {
+	if o == nil || IsNil(o.Verbosity) {
+		return nil, false
+	}
+	return o.Verbosity, true
+}
+
+// HasVerbosity returns a boolean if a field has been set.
+func (o *OpenRouterTextOptions) HasVerbosity() bool {
+	if o != nil && !IsNil(o.Verbosity) {
+		return true
+	}
+
+	return false
+}
+
+// SetVerbosity gets a reference to the given string and assigns it to the Verbosity field.
+func (o *OpenRouterTextOptions) SetVerbosity(v string) {
+	o.Verbosity = &v
 }
 
 // GetTemperature returns the Temperature field value if set, zero value otherwise.
@@ -812,7 +845,7 @@ func (o OpenRouterTextOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"seed", "max_tokens", "tool_choice", "effort", "reasoning_effort", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "_option_id", "provider_sort", "provider_order", "provider_only", "provider_ignore", "provider_allow_fallbacks", "provider_require_parameters", "provider_data_collection", "provider_zdr", "provider_quantizations"}) {
+		if !modelOptionsIsKnownField(key, []string{"seed", "max_tokens", "tool_choice", "effort", "reasoning_effort", "verbosity", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "_option_id", "provider_sort", "provider_order", "provider_only", "provider_ignore", "provider_allow_fallbacks", "provider_require_parameters", "provider_data_collection", "provider_zdr", "provider_quantizations"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -831,6 +864,9 @@ func (o OpenRouterTextOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ReasoningEffort) {
 		toSerialize["reasoning_effort"] = o.ReasoningEffort
+	}
+	if !IsNil(o.Verbosity) {
+		toSerialize["verbosity"] = o.Verbosity
 	}
 	if !IsNil(o.Temperature) {
 		toSerialize["temperature"] = o.Temperature
@@ -941,7 +977,7 @@ func (o *OpenRouterTextOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"seed", "max_tokens", "tool_choice", "effort", "reasoning_effort", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "_option_id", "provider_sort", "provider_order", "provider_only", "provider_ignore", "provider_allow_fallbacks", "provider_require_parameters", "provider_data_collection", "provider_zdr", "provider_quantizations"}) {
+		if modelOptionsIsKnownField(key, []string{"seed", "max_tokens", "tool_choice", "effort", "reasoning_effort", "verbosity", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "_option_id", "provider_sort", "provider_order", "provider_only", "provider_ignore", "provider_allow_fallbacks", "provider_require_parameters", "provider_data_collection", "provider_zdr", "provider_quantizations"}) {
 			delete(extra, key)
 		}
 	}
