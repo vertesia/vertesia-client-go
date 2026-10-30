@@ -36,6 +36,8 @@ type AppInstallationListEntry struct {
 	Settings         map[string]interface{}           `json:"settings,omitempty"`
 	// Admin-managed allowlist of tool names permitted for this installation. When undefined, all tools from the app are permitted. When set, only listed tool names are available for agent configuration and execution.
 	ToolAllowlist []string `json:"tool_allowlist,omitempty"`
+	// Admin-managed list of tool names from this installation that always require human approval before an agent runs them, regardless of the run's tool approval mode. When undefined, the default approval behavior applies.
+	ToolsRequiringApproval []string `json:"tools_requiring_approval,omitempty"`
 	// OAuth bindings created at install time via oauth_config provisioning. Maps collection identity (id or name) → OAuth provider ObjectId. Used by the runtime to resolve the correct OAuth provider without relying on manifest names.
 	OauthBindings []AppInstallationOAuthBinding `json:"oauth_bindings,omitempty"`
 	// OAuth bindings created at install time via oauth_providers provisioning. Maps provider key → OAuth provider ObjectId. Multiple collections sharing the same provider all resolve to the same OAuth provider.
@@ -506,6 +508,38 @@ func (o *AppInstallationListEntry) SetToolAllowlist(v []string) {
 	o.ToolAllowlist = v
 }
 
+// GetToolsRequiringApproval returns the ToolsRequiringApproval field value if set, zero value otherwise.
+func (o *AppInstallationListEntry) GetToolsRequiringApproval() []string {
+	if o == nil || IsNil(o.ToolsRequiringApproval) {
+		var ret []string
+		return ret
+	}
+	return o.ToolsRequiringApproval
+}
+
+// GetToolsRequiringApprovalOk returns a tuple with the ToolsRequiringApproval field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AppInstallationListEntry) GetToolsRequiringApprovalOk() ([]string, bool) {
+	if o == nil || IsNil(o.ToolsRequiringApproval) {
+		return nil, false
+	}
+	return o.ToolsRequiringApproval, true
+}
+
+// HasToolsRequiringApproval returns a boolean if a field has been set.
+func (o *AppInstallationListEntry) HasToolsRequiringApproval() bool {
+	if o != nil && !IsNil(o.ToolsRequiringApproval) {
+		return true
+	}
+
+	return false
+}
+
+// SetToolsRequiringApproval gets a reference to the given []string and assigns it to the ToolsRequiringApproval field.
+func (o *AppInstallationListEntry) SetToolsRequiringApproval(v []string) {
+	o.ToolsRequiringApproval = v
+}
+
 // GetOauthBindings returns the OauthBindings field value if set, zero value otherwise.
 func (o *AppInstallationListEntry) GetOauthBindings() []AppInstallationOAuthBinding {
 	if o == nil || IsNil(o.OauthBindings) {
@@ -756,6 +790,9 @@ func (o AppInstallationListEntry) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ToolAllowlist) {
 		toSerialize["tool_allowlist"] = o.ToolAllowlist
 	}
+	if !IsNil(o.ToolsRequiringApproval) {
+		toSerialize["tools_requiring_approval"] = o.ToolsRequiringApproval
+	}
 	if !IsNil(o.OauthBindings) {
 		toSerialize["oauth_bindings"] = o.OauthBindings
 	}
@@ -832,6 +869,7 @@ func (o *AppInstallationListEntry) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "oauth_client_id")
 		delete(additionalProperties, "settings")
 		delete(additionalProperties, "tool_allowlist")
+		delete(additionalProperties, "tools_requiring_approval")
 		delete(additionalProperties, "oauth_bindings")
 		delete(additionalProperties, "provider_bindings")
 		delete(additionalProperties, "access_control")

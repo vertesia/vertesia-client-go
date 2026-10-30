@@ -8266,6 +8266,162 @@ func (a *AppsAPIService) UpdateAppInstallationToolAllowlistExecute(r ApiUpdateAp
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiUpdateAppInstallationToolPermissionsRequest struct {
+	ctx                                         context.Context
+	ApiService                                  *AppsAPIService
+	installId                                   string
+	xApiVersion                                 *string
+	updateAppInstallationToolPermissionsPayload *UpdateAppInstallationToolPermissionsPayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiUpdateAppInstallationToolPermissionsRequest) XApiVersion(xApiVersion string) ApiUpdateAppInstallationToolPermissionsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiUpdateAppInstallationToolPermissionsRequest) UpdateAppInstallationToolPermissionsPayload(updateAppInstallationToolPermissionsPayload UpdateAppInstallationToolPermissionsPayload) ApiUpdateAppInstallationToolPermissionsRequest {
+	r.updateAppInstallationToolPermissionsPayload = &updateAppInstallationToolPermissionsPayload
+	return r
+}
+
+func (r ApiUpdateAppInstallationToolPermissionsRequest) Execute() (*AppInstallationWithManifest, *http.Response, error) {
+	return r.ApiService.UpdateAppInstallationToolPermissionsExecute(r)
+}
+
+/*
+UpdateAppInstallationToolPermissions Update app installation tool permissions
+
+Updates the tool allowlist and the tools that always require human approval of an app installation in one atomic write. Omitted fields are left unchanged.
+
+**Required permissions:** `project:admin`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param installId
+	@return ApiUpdateAppInstallationToolPermissionsRequest
+*/
+func (a *AppsAPIService) UpdateAppInstallationToolPermissions(ctx context.Context, installId string) ApiUpdateAppInstallationToolPermissionsRequest {
+	return ApiUpdateAppInstallationToolPermissionsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		installId:  installId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return AppInstallationWithManifest
+func (a *AppsAPIService) UpdateAppInstallationToolPermissionsExecute(r ApiUpdateAppInstallationToolPermissionsRequest) (*AppInstallationWithManifest, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPut
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *AppInstallationWithManifest
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AppsAPIService.UpdateAppInstallationToolPermissions")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/apps/installations/{installId}/tool-permissions"
+	localVarPath = strings.Replace(localVarPath, "{"+"installId"+"}", url.PathEscape(parameterValueToString(r.installId, "installId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+	if r.updateAppInstallationToolPermissionsPayload == nil {
+		return localVarReturnValue, nil, reportError("updateAppInstallationToolPermissionsPayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.updateAppInstallationToolPermissionsPayload
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiUpsertAppVersionRequest struct {
 	ctx                     context.Context
 	ApiService              *AppsAPIService
