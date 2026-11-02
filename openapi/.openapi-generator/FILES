@@ -227,6 +227,8 @@ model_audit_adoption_period.go
 model_audit_adoption_project.go
 model_audit_adoption_query.go
 model_audit_adoption_response.go
+model_audit_aggregation_batch_query.go
+model_audit_aggregation_batch_response.go
 model_audit_aggregation_detail_field.go
 model_audit_aggregation_detail_filter.go
 model_audit_aggregation_dimension.go

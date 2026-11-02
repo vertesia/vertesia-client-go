@@ -174,6 +174,158 @@ func (a *AuditTrailAPIService) AggregateAuditTrailEventsExecute(r ApiAggregateAu
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiAggregateAuditTrailEventsBatchRequest struct {
+	ctx                        context.Context
+	ApiService                 *AuditTrailAPIService
+	xApiVersion                *string
+	auditAggregationBatchQuery *AuditAggregationBatchQuery
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiAggregateAuditTrailEventsBatchRequest) XApiVersion(xApiVersion string) ApiAggregateAuditTrailEventsBatchRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiAggregateAuditTrailEventsBatchRequest) AuditAggregationBatchQuery(auditAggregationBatchQuery AuditAggregationBatchQuery) ApiAggregateAuditTrailEventsBatchRequest {
+	r.auditAggregationBatchQuery = &auditAggregationBatchQuery
+	return r
+}
+
+func (r ApiAggregateAuditTrailEventsBatchRequest) Execute() (*AuditAggregationBatchResponse, *http.Response, error) {
+	return r.ApiService.AggregateAuditTrailEventsBatchExecute(r)
+}
+
+/*
+AggregateAuditTrailEventsBatch Run several audit trail aggregations
+
+Runs up to 12 aggregations in one request. Each result equals the result of the same query sent to the single aggregation endpoint, and results come back in request order. Queries that share a scope, time range and filter are computed in one pass over the audit events. Account and project scope are enforced from the authenticated request context, per query.
+
+**Required permissions:** Any of `project:admin`, `account:admin`, `audit:read`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiAggregateAuditTrailEventsBatchRequest
+*/
+func (a *AuditTrailAPIService) AggregateAuditTrailEventsBatch(ctx context.Context) ApiAggregateAuditTrailEventsBatchRequest {
+	return ApiAggregateAuditTrailEventsBatchRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return AuditAggregationBatchResponse
+func (a *AuditTrailAPIService) AggregateAuditTrailEventsBatchExecute(r ApiAggregateAuditTrailEventsBatchRequest) (*AuditAggregationBatchResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *AuditAggregationBatchResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AuditTrailAPIService.AggregateAuditTrailEventsBatch")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/audit-trail/aggregate/batch"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+	if r.auditAggregationBatchQuery == nil {
+		return localVarReturnValue, nil, reportError("auditAggregationBatchQuery is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.auditAggregationBatchQuery
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiGetAuditAdoptionRequest struct {
 	ctx                context.Context
 	ApiService         *AuditTrailAPIService
