@@ -46,8 +46,8 @@ CancelProcessTestRun Cancel process test run
 **Required permissions:** `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
-	@param runId
+	@param processId The process definition ID, as 24 hexadecimal characters.
+	@param runId The process test run ID, as 24 hexadecimal characters.
 	@return ApiCancelProcessTestRunRequest
 */
 func (a *ProcessesAPIService) CancelProcessTestRun(ctx context.Context, processId string, runId string) ApiCancelProcessTestRunRequest {
@@ -192,7 +192,7 @@ CancelProcessTestRunById Cancel a process test run by id
 **Required permissions:** `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param runId
+	@param runId The process test run ID, as 24 hexadecimal characters.
 	@return ApiCancelProcessTestRunByIdRequest
 */
 func (a *ProcessesAPIService) CancelProcessTestRunById(ctx context.Context, runId string) ApiCancelProcessTestRunByIdRequest {
@@ -493,7 +493,7 @@ CreateProcessTestSuite Create process test suite
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
+	@param processId The process definition ID, as 24 hexadecimal characters.
 	@return ApiCreateProcessTestSuiteRequest
 */
 func (a *ProcessesAPIService) CreateProcessTestSuite(ctx context.Context, processId string) ApiCreateProcessTestSuiteRequest {
@@ -643,7 +643,7 @@ Deletes a process definition revision by id.
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
+	@param processId The process definition ID, as 24 hexadecimal characters.
 	@return ApiDeleteProcessDefinitionRequest
 */
 func (a *ProcessesAPIService) DeleteProcessDefinition(ctx context.Context, processId string) ApiDeleteProcessDefinitionRequest {
@@ -788,7 +788,7 @@ Deletes a process test run and its definition snapshot. A run that is still acti
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param runId
+	@param runId The process test run ID, as 24 hexadecimal characters.
 	@return ApiDeleteProcessTestRunRequest
 */
 func (a *ProcessesAPIService) DeleteProcessTestRun(ctx context.Context, runId string) ApiDeleteProcessTestRunRequest {
@@ -932,8 +932,8 @@ DeleteProcessTestSuite Delete process test suite
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
-	@param suiteId
+	@param processId The process definition ID, as 24 hexadecimal characters.
+	@param suiteId The process test suite ID, as 24 hexadecimal characters.
 	@return ApiDeleteProcessTestSuiteRequest
 */
 func (a *ProcessesAPIService) DeleteProcessTestSuite(ctx context.Context, processId string, suiteId string) ApiDeleteProcessTestSuiteRequest {
@@ -1080,7 +1080,7 @@ Retrieves a process definition by id.
 **Required permissions:** Any of `workflow:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
+	@param processId The process definition ID, as 24 hexadecimal characters.
 	@return ApiGetProcessDefinitionRequest
 */
 func (a *ProcessesAPIService) GetProcessDefinition(ctx context.Context, processId string) ApiGetProcessDefinitionRequest {
@@ -1224,8 +1224,8 @@ GetProcessTestRun Retrieve process test run
 **Required permissions:** Any of `workflow:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
-	@param runId
+	@param processId The process definition ID, as 24 hexadecimal characters.
+	@param runId The process test run ID, as 24 hexadecimal characters.
 	@return ApiGetProcessTestRunRequest
 */
 func (a *ProcessesAPIService) GetProcessTestRun(ctx context.Context, processId string, runId string) ApiGetProcessTestRunRequest {
@@ -1372,7 +1372,7 @@ Retrieves any process test run by its own id, whatever it was started against. R
 **Required permissions:** Any of `workflow:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param runId
+	@param runId The process test run ID, as 24 hexadecimal characters.
 	@return ApiGetProcessTestRunByIdRequest
 */
 func (a *ProcessesAPIService) GetProcessTestRunById(ctx context.Context, runId string) ApiGetProcessTestRunByIdRequest {
@@ -1517,7 +1517,7 @@ Lists all revisions for the process definition revision bucket containing the re
 **Required permissions:** Any of `workflow:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
+	@param processId The process definition ID, as 24 hexadecimal characters.
 	@return ApiListProcessDefinitionVersionsRequest
 */
 func (a *ProcessesAPIService) ListProcessDefinitionVersions(ctx context.Context, processId string) ApiListProcessDefinitionVersionsRequest {
@@ -1852,7 +1852,7 @@ ListProcessTestRuns List process test runs
 **Required permissions:** Any of `workflow:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
+	@param processId The process definition ID, as 24 hexadecimal characters.
 	@return ApiListProcessTestRunsRequest
 */
 func (a *ProcessesAPIService) ListProcessTestRuns(ctx context.Context, processId string) ApiListProcessTestRunsRequest {
@@ -2000,7 +2000,7 @@ Lists deterministic test suites attached to this process revision family.
 **Required permissions:** Any of `workflow:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
+	@param processId The process definition ID, as 24 hexadecimal characters.
 	@return ApiListProcessTestSuitesRequest
 */
 func (a *ProcessesAPIService) ListProcessTestSuites(ctx context.Context, processId string) ApiListProcessTestSuitesRequest {
@@ -2151,7 +2151,7 @@ Publishes the latest draft revision for a process definition, optionally attachi
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
+	@param processId The process definition ID, as 24 hexadecimal characters.
 	@return ApiPublishProcessDefinitionRequest
 */
 func (a *ProcessesAPIService) PublishProcessDefinition(ctx context.Context, processId string) ApiPublishProcessDefinitionRequest {
@@ -2307,7 +2307,7 @@ Creates or overwrites the latest draft revision from the requested process defin
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
+	@param processId The process definition ID, as 24 hexadecimal characters.
 	@return ApiRevertProcessDefinitionRequest
 */
 func (a *ProcessesAPIService) RevertProcessDefinition(ctx context.Context, processId string) ApiRevertProcessDefinitionRequest {
@@ -2463,7 +2463,7 @@ Starts isolated deterministic scenarios against an explicit stored process revis
 **Required permissions:** `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
+	@param processId The process definition ID, as 24 hexadecimal characters.
 	@return ApiStartProcessTestRunRequest
 */
 func (a *ProcessesAPIService) StartProcessTestRun(ctx context.Context, processId string) ApiStartProcessTestRunRequest {
@@ -2771,7 +2771,7 @@ Updates the latest draft revision in place when the current head is a draft. Upd
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
+	@param processId The process definition ID, as 24 hexadecimal characters.
 	@return ApiUpdateProcessDefinitionRequest
 */
 func (a *ProcessesAPIService) UpdateProcessDefinition(ctx context.Context, processId string) ApiUpdateProcessDefinitionRequest {
@@ -2926,8 +2926,8 @@ UpdateProcessTestSuite Update process test suite
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param processId
-	@param suiteId
+	@param processId The process definition ID, as 24 hexadecimal characters.
+	@param suiteId The process test suite ID, as 24 hexadecimal characters.
 	@return ApiUpdateProcessTestSuiteRequest
 */
 func (a *ProcessesAPIService) UpdateProcessTestSuite(ctx context.Context, processId string, suiteId string) ApiUpdateProcessTestSuiteRequest {

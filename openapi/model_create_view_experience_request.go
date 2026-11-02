@@ -27,8 +27,8 @@ type CreateViewExperienceRequest struct {
 	Navigation  []ViewNavigationItem         `json:"navigation,omitempty"`
 	Search      *ViewSearchConfiguration     `json:"search,omitempty"`
 	Results     *ViewResultsConfiguration    `json:"results,omitempty"`
-	Description string                       `json:"description"`
-	Id          string                       `json:"id"`
+	Description string                       `json:"description" validate:"regexp=\\\\S"`
+	Id          string                       `json:"id" validate:"regexp=^[a-z0-9]+(?:-[a-z0-9]+)*$"`
 	Version     *ViewExperienceSchemaVersion `json:"version,omitempty"`
 }
 

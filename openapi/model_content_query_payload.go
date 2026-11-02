@@ -17,7 +17,7 @@ import (
 // checks if the ContentQueryPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ContentQueryPayload{}
 
-// ContentQueryPayload struct for ContentQueryPayload
+// ContentQueryPayload Exactly one of `sql`, `esql` or `dsl`. An empty `sql` or `esql` counts as absent.
 type ContentQueryPayload struct {
 	Sql                  *string                 `json:"sql,omitempty"`
 	Esql                 *string                 `json:"esql,omitempty"`

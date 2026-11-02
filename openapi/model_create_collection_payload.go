@@ -18,7 +18,7 @@ import (
 // checks if the CreateCollectionPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &CreateCollectionPayload{}
 
-// CreateCollectionPayload struct for CreateCollectionPayload
+// CreateCollectionPayload `query` is a Mongo filter. Its keys are dotted field paths or `$and`, `$or` and `$nor`, and a condition is a literal or uses the comparison operators, `$in`, `$nin`, `$all`, `$exists`, `$type`, `$size`, `$regex`, `$not` and `$elemMatch`.
 type CreateCollectionPayload struct {
 	// Description of the collection and its purpose
 	Description *string `json:"description,omitempty"`

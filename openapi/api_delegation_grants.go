@@ -195,7 +195,7 @@ GetDelegationGrant Retrieve a delegation grant
 **Required permissions:** `account:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param grantId
+	@param grantId The delegation grant ID, as 24 hexadecimal characters.
 	@return ApiGetDelegationGrantRequest
 */
 func (a *DelegationGrantsAPIService) GetDelegationGrant(ctx context.Context, grantId string) ApiGetDelegationGrantRequest {
@@ -612,7 +612,7 @@ func (r ApiRevokeDelegationGrantRequest) Execute() (*DelegationGrant, *http.Resp
 RevokeDelegationGrant Revoke a standing delegation
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param grantId
+	@param grantId The delegation grant ID, as 24 hexadecimal characters.
 	@return ApiRevokeDelegationGrantRequest
 */
 func (a *DelegationGrantsAPIService) RevokeDelegationGrant(ctx context.Context, grantId string) ApiRevokeDelegationGrantRequest {

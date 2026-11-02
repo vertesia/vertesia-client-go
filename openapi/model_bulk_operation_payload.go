@@ -24,7 +24,7 @@ type BulkOperationPayload struct {
 	Name string `json:"name"`
 	// The IDs of the objects to operate on
 	Ids []string `json:"ids"`
-	// The operation parameters.
+	// The operation parameters. `create` takes the objects to create as `objects`, 1 to 10000.
 	Params               map[string]interface{} `json:"params"`
 	AdditionalProperties map[string]interface{}
 }

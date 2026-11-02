@@ -27,7 +27,7 @@ type UpdateViewExperienceRequest struct {
 	Navigation  []ViewNavigationItem        `json:"navigation,omitempty"`
 	Search      *ViewSearchConfiguration    `json:"search,omitempty"`
 	Results     *ViewResultsConfiguration   `json:"results,omitempty"`
-	Description string                      `json:"description"`
+	Description string                      `json:"description" validate:"regexp=\\\\S"`
 	Version     ViewExperienceSchemaVersion `json:"version"`
 	Revision    float32                     `json:"revision"`
 }

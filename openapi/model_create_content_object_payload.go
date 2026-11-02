@@ -17,7 +17,7 @@ import (
 // checks if the CreateContentObjectPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &CreateContentObjectPayload{}
 
-// CreateContentObjectPayload When creating from an uploaded file the content should be an URL to the uploaded file
+// CreateContentObjectPayload When creating from an uploaded file the content should be an URL to the uploaded file. `name` is required unless `content.name` or `content.source` is given; it then defaults to the content file name.
 type CreateContentObjectPayload struct {
 	Text       *string              `json:"text,omitempty"`
 	TextEtag   *string              `json:"text_etag,omitempty"`

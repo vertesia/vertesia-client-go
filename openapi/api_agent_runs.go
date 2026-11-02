@@ -55,7 +55,7 @@ Signals a process workflow to advance to an explicit target or continue from its
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiAdvanceProcessRunRequest
 */
 func (a *AgentRunsAPIService) AdvanceProcessRun(ctx context.Context, agentRunId string) ApiAdvanceProcessRunRequest {
@@ -211,7 +211,7 @@ Adds token budget to a run paused because its budget ran out; the run resumes fr
 **Required permissions:** `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiAllocateAgentRunBudgetRequest
 */
 func (a *AgentRunsAPIService) AllocateAgentRunBudget(ctx context.Context, agentRunId string) ApiAllocateAgentRunBudgetRequest {
@@ -365,7 +365,7 @@ AnswerProcessTask Answer a process task
 Validates and signals a human task answer to the backing process workflow, resuming a run paused on a `human_task` node. The caller must be the task assignee or have `task:manage`.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiAnswerProcessTaskRequest
 */
 func (a *AgentRunsAPIService) AnswerProcessTask(ctx context.Context, agentRunId string) ApiAnswerProcessTaskRequest {
@@ -674,7 +674,7 @@ Creates a signed upload URL for writing an artifact into the agent run artifact 
 **Required permissions:** `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@param path
 	@return ApiCreateAgentRunArtifactUploadUrlRequest
 */
@@ -825,7 +825,7 @@ Creates a new agent run from an existing run's interaction, input, configuration
 **Required permissions:** `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiForkAgentRunRequest
 */
 func (a *AgentRunsAPIService) ForkAgentRun(ctx context.Context, agentRunId string) ApiForkAgentRunRequest {
@@ -970,7 +970,7 @@ Retrieves a single agent run by stable agent run ID.
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiGetAgentRunRequest
 */
 func (a *AgentRunsAPIService) GetAgentRun(ctx context.Context, agentRunId string) ApiGetAgentRunRequest {
@@ -1134,7 +1134,7 @@ Returns a signed download URL as JSON when `url=1` is supplied, and otherwise st
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@param path
 	@return ApiGetAgentRunArtifactRequest
 */
@@ -1292,7 +1292,7 @@ Reads a text artifact and returns its blob generation token for conditional upda
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@param path
 	@return ApiGetAgentRunArtifactContentRequest
 */
@@ -1460,7 +1460,7 @@ Fetches detailed workflow execution state for a child workflow of an agent run.
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@param childWorkflowId
 	@return ApiGetAgentRunChildDetailsRequest
 */
@@ -1636,7 +1636,7 @@ Fetches detailed workflow execution state for an agent run, optionally including
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiGetAgentRunDetailsRequest
 */
 func (a *AgentRunsAPIService) GetAgentRunDetails(ctx context.Context, agentRunId string) ApiGetAgentRunDetailsRequest {
@@ -1790,7 +1790,7 @@ Returns the current node and the current process context snapshot for a process 
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiGetProcessRunContextRequest
 */
 func (a *AgentRunsAPIService) GetProcessRunContext(ctx context.Context, agentRunId string) ApiGetProcessRunContextRequest {
@@ -1935,7 +1935,7 @@ Returns the hydrated node history for a process run, loading full history artifa
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiGetProcessRunHistoryRequest
 */
 func (a *AgentRunsAPIService) GetProcessRunHistory(ctx context.Context, agentRunId string) ApiGetProcessRunHistoryRequest {
@@ -2086,7 +2086,7 @@ Lists user-visible artifact paths for an agent run. Internal artifact files are 
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiListAgentRunArtifactsRequest
 */
 func (a *AgentRunsAPIService) ListAgentRunArtifacts(ctx context.Context, agentRunId string) ApiListAgentRunArtifactsRequest {
@@ -2234,7 +2234,7 @@ Lists child workflows or sub-agent executions associated with an agent run.
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiListAgentRunChildrenRequest
 */
 func (a *AgentRunsAPIService) ListAgentRunChildren(ctx context.Context, agentRunId string) ApiListAgentRunChildrenRequest {
@@ -2385,7 +2385,7 @@ Returns stored compact messages for an agent run after an optional timestamp cur
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiListAgentRunUpdatesRequest
 */
 func (a *AgentRunsAPIService) ListAgentRunUpdates(ctx context.Context, agentRunId string) ApiListAgentRunUpdatesRequest {
@@ -2902,7 +2902,7 @@ Publishes a message or update into an agent run's workflow stream.
 **Required permissions:** `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiPostAgentRunUpdateRequest
 */
 func (a *AgentRunsAPIService) PostAgentRunUpdate(ctx context.Context, agentRunId string) ApiPostAgentRunUpdateRequest {
@@ -3053,7 +3053,7 @@ Runs a named query against an agent run.
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@param queryName
 	@return ApiQueryAgentRunRequest
 */
@@ -3207,7 +3207,7 @@ Records a thumbs up/down, an optional reason code and an optional comment agains
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiRecordAgentRunFeedbackRequest
 */
 func (a *AgentRunsAPIService) RecordAgentRunFeedback(ctx context.Context, agentRunId string) ApiRecordAgentRunFeedbackRequest {
@@ -3363,7 +3363,7 @@ Restarts a stopped, failed, or completed agent run by launching a new workflow t
 **Required permissions:** `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiRestartAgentRunRequest
 */
 func (a *AgentRunsAPIService) RestartAgentRun(ctx context.Context, agentRunId string) ApiRestartAgentRunRequest {
@@ -3516,7 +3516,7 @@ Signals a process workflow to retry the current node or a requested node, re-ent
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiRetryProcessNodeRequest
 */
 func (a *AgentRunsAPIService) RetryProcessNode(ctx context.Context, agentRunId string) ApiRetryProcessNodeRequest {
@@ -3984,7 +3984,7 @@ Sends a named signal to an agent run.
 **Required permissions:** `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@param signalName
 	@return ApiSignalAgentRunRequest
 */
@@ -4139,7 +4139,7 @@ Opens a Server-Sent Events stream for live and archived agent run messages.
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiStreamAgentRunRequest
 */
 func (a *AgentRunsAPIService) StreamAgentRun(ctx context.Context, agentRunId string) ApiStreamAgentRunRequest {
@@ -4272,7 +4272,7 @@ Streams Temporal history events for an agent run across continue-as-new workflow
 **Required permissions:** Any of `agent_run:read`, `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiStreamAgentRunDetailsRequest
 */
 func (a *AgentRunsAPIService) StreamAgentRunDetails(ctx context.Context, agentRunId string) ApiStreamAgentRunDetailsRequest {
@@ -4406,7 +4406,7 @@ Cancels the backing workflow, marks the agent run as cancelled, and schedules ar
 **Required permissions:** `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@return ApiTerminateAgentRunRequest
 */
 func (a *AgentRunsAPIService) TerminateAgentRun(ctx context.Context, agentRunId string) ApiTerminateAgentRunRequest {
@@ -4558,7 +4558,7 @@ Updates a text artifact only when its blob generation token still matches.
 **Required permissions:** `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param agentRunId
+	@param agentRunId The agent run ID, as 24 hexadecimal characters.
 	@param path
 	@return ApiUpdateAgentRunArtifactContentRequest
 */

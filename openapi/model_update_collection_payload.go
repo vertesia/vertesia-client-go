@@ -17,7 +17,7 @@ import (
 // checks if the UpdateCollectionPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &UpdateCollectionPayload{}
 
-// UpdateCollectionPayload Fields to change on a collection. All optional.
+// UpdateCollectionPayload Fields to change on a collection. All optional. `query` is a Mongo filter. Its keys are dotted field paths or `$and`, `$or` and `$nor`, and a condition is a literal or uses the comparison operators, `$in`, `$nin`, `$all`, `$exists`, `$type`, `$size`, `$regex`, `$not` and `$elemMatch`.
 type UpdateCollectionPayload struct {
 	// Description of the collection and its purpose
 	Description *string `json:"description,omitempty"`

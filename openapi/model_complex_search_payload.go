@@ -17,7 +17,7 @@ import (
 // checks if the ComplexSearchPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ComplexSearchPayload{}
 
-// ComplexSearchPayload struct for ComplexSearchPayload
+// ComplexSearchPayload Each facet `name` is an Elasticsearch aggregation name: non-empty, without `[`, `]` or `>`, and not `total`.
 type ComplexSearchPayload struct {
 	Facets []FacetSpec `json:"facets,omitempty"`
 	// If the facets should be limited to the current page of results. Defaults to false. When false, the facets are independent of the search results page.

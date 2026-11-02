@@ -522,7 +522,7 @@ func (r ApiListRunsRequest) Model(model []string) ApiListRunsRequest {
 	return r
 }
 
-// Environment ids to filter by.
+// Environment ids to filter by, as 24 hexadecimal characters.
 func (r ApiListRunsRequest) Environment(environment []string) ApiListRunsRequest {
 	r.environment = &environment
 	return r

@@ -19,7 +19,7 @@ var _ MappedNullable = &UpdateAppInstallationToolPermissionsPayload{}
 
 // UpdateAppInstallationToolPermissionsPayload Updates the tool allowlist and the tools requiring approval of an app installation in one atomic write.
 type UpdateAppInstallationToolPermissionsPayload struct {
-	// Tool names agents may use. Null removes the restriction; omit to leave the allowlist unchanged.
+	// Tool names agents may use, at least one. Null removes the restriction; omit to leave the allowlist unchanged.
 	ToolAllowlist []string `json:"tool_allowlist,omitempty"`
 	// Tool names that always require human approval before an agent runs them. Null clears the list; omit to leave it unchanged.
 	ToolsRequiringApproval []string `json:"tools_requiring_approval,omitempty"`

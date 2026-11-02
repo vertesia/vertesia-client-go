@@ -20,7 +20,7 @@ var _ MappedNullable = &CreateOAuthProviderPayload{}
 
 // CreateOAuthProviderPayload Payload for creating an OAuth Provider. The client_secret is accepted as plaintext on create and stored encrypted.
 type CreateOAuthProviderPayload struct {
-	Name                  string  `json:"name"`
+	Name                  string  `json:"name" validate:"regexp=^[a-z0-9][a-z0-9-]*[a-z0-9]$"`
 	DisplayName           string  `json:"display_name"`
 	GrantType             *string `json:"grant_type,omitempty"`
 	AuthorizationEndpoint *string `json:"authorization_endpoint,omitempty"`

@@ -999,7 +999,7 @@ Deletes all files under a single content object export artifact folder in the pr
 **Required permissions:** `content:superadmin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param exportId
+	@param exportId The content object export ID, as 24 hexadecimal characters.
 	@return ApiDeleteContentObjectExportRequest
 */
 func (a *ObjectsAPIService) DeleteContentObjectExport(ctx context.Context, exportId string) ApiDeleteContentObjectExportRequest {
@@ -1440,8 +1440,8 @@ Creates a signed download URL for a content object export data file or manifest 
 **Required permissions:** `content:superadmin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param exportId
-	@param role
+	@param exportId The content object export ID, as 24 hexadecimal characters.
+	@param role The export file: its data or its manifest.
 	@return ApiGetContentObjectExportDownloadUrlRequest
 */
 func (a *ObjectsAPIService) GetContentObjectExportDownloadUrl(ctx context.Context, exportId string, role string) ApiGetContentObjectExportDownloadUrlRequest {

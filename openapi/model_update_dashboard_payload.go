@@ -23,8 +23,8 @@ type UpdateDashboardPayload struct {
 	Name *string `json:"name,omitempty"`
 	// Dashboard summary
 	Summary *string `json:"summary,omitempty"`
-	// Data source used to populate Vega `data.values`.
-	DataSource *DashboardDataSource `json:"dataSource,omitempty"`
+	// SQL data source used to populate Vega `data.values`. Its query, limit and parameters are stored as the dashboard's own; a top-level `query`, `queryLimit` or `queryParameters` sent alongside takes precedence.
+	DataSource *DashboardSqlDataSource `json:"dataSource,omitempty"`
 	// SQL query that returns all data for the dashboard. Deprecated shortcut for a SQL data source.
 	Query *string `json:"query,omitempty"`
 	// Maximum rows to return from the query (default: 10000)
@@ -124,9 +124,9 @@ func (o *UpdateDashboardPayload) SetSummary(v string) {
 }
 
 // GetDataSource returns the DataSource field value if set, zero value otherwise.
-func (o *UpdateDashboardPayload) GetDataSource() DashboardDataSource {
+func (o *UpdateDashboardPayload) GetDataSource() DashboardSqlDataSource {
 	if o == nil || IsNil(o.DataSource) {
-		var ret DashboardDataSource
+		var ret DashboardSqlDataSource
 		return ret
 	}
 	return *o.DataSource
@@ -134,7 +134,7 @@ func (o *UpdateDashboardPayload) GetDataSource() DashboardDataSource {
 
 // GetDataSourceOk returns a tuple with the DataSource field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *UpdateDashboardPayload) GetDataSourceOk() (*DashboardDataSource, bool) {
+func (o *UpdateDashboardPayload) GetDataSourceOk() (*DashboardSqlDataSource, bool) {
 	if o == nil || IsNil(o.DataSource) {
 		return nil, false
 	}
@@ -150,8 +150,8 @@ func (o *UpdateDashboardPayload) HasDataSource() bool {
 	return false
 }
 
-// SetDataSource gets a reference to the given DashboardDataSource and assigns it to the DataSource field.
-func (o *UpdateDashboardPayload) SetDataSource(v DashboardDataSource) {
+// SetDataSource gets a reference to the given DashboardSqlDataSource and assigns it to the DataSource field.
+func (o *UpdateDashboardPayload) SetDataSource(v DashboardSqlDataSource) {
 	o.DataSource = &v
 }
 

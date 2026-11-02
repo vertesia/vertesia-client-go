@@ -577,7 +577,7 @@ func (r ApiListAuditTrailEventsRequest) Execute() (*AuditTrailResponse, *http.Re
 /*
 ListAuditTrailEvents List audit trail events
 
-Lists audit trail events with optional filtering by project, resource, principal, action, and time range.
+Lists audit trail events with optional filtering by project, resource, principal, action, and time range. Without `from`, the list covers the 7 days before `to` (or now); a range cannot exceed 366 days.
 
 **Required permissions:** Any of `project:admin`, `account:admin`, `audit:read`
 

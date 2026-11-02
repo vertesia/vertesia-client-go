@@ -20,10 +20,11 @@ var _ MappedNullable = &RegisterPendingAskRequest{}
 
 // RegisterPendingAskRequest struct for RegisterPendingAskRequest
 type RegisterPendingAskRequest struct {
-	RunId        string        `json:"runId"`
-	WorkflowId   string        `json:"workflowId"`
-	AgentName    string        `json:"agentName"`
-	Questions    []string      `json:"questions"`
+	RunId      string   `json:"runId"`
+	WorkflowId string   `json:"workflowId"`
+	AgentName  string   `json:"agentName"`
+	Questions  []string `json:"questions"`
+	// Hours before the question expires; more than 0. Defaults to 48.
 	TimeoutHours *float32      `json:"timeoutHours,omitempty"`
 	UserChannels []UserChannel `json:"userChannels"`
 	TaskFields   []TaskField   `json:"taskFields,omitempty"`

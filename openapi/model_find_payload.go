@@ -18,7 +18,7 @@ import (
 // checks if the FindPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &FindPayload{}
 
-// FindPayload struct for FindPayload
+// FindPayload `query` is a Mongo filter. Its keys are dotted field paths or `$and`, `$or` and `$nor`, and a condition is a literal or uses the comparison operators, `$in`, `$nin`, `$all`, `$exists`, `$type`, `$size`, `$regex`, `$not` and `$elemMatch`.
 type FindPayload struct {
 	Query                map[string]interface{} `json:"query"`
 	Offset               *float32               `json:"offset,omitempty"`

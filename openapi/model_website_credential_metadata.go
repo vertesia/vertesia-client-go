@@ -20,7 +20,7 @@ var _ MappedNullable = &WebsiteCredentialMetadata{}
 
 // WebsiteCredentialMetadata struct for WebsiteCredentialMetadata
 type WebsiteCredentialMetadata struct {
-	Name           string                         `json:"name"`
+	Name           string                         `json:"name" validate:"regexp=\\\\S"`
 	Websites       []WebsiteCredentialWebsite     `json:"websites"`
 	Username       *string                        `json:"username,omitempty"`
 	UsernameHint   *string                        `json:"username_hint,omitempty"`

@@ -48,7 +48,7 @@ Cancels a pending or in-progress durable task.
 **Required permissions:** `task:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param taskId
+	@param taskId The task ID, as 24 hexadecimal characters.
 	@return ApiCancelTaskRequest
 */
 func (a *TasksAPIService) CancelTask(ctx context.Context, taskId string) ApiCancelTaskRequest {
@@ -197,7 +197,7 @@ CompleteTask Complete a task
 Completes a durable task and, for agent ask tasks, signals the backing workflow with the submitted result. Process `human_task` nodes should be resumed through `POST /agents/{agentRunId}/answer-task` instead of this endpoint.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param taskId
+	@param taskId The task ID, as 24 hexadecimal characters.
 	@return ApiCompleteTaskRequest
 */
 func (a *TasksAPIService) CompleteTask(ctx context.Context, taskId string) ApiCompleteTaskRequest {
@@ -497,7 +497,7 @@ Deletes a durable task by id.
 **Required permissions:** `task:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param taskId
+	@param taskId The task ID, as 24 hexadecimal characters.
 	@return ApiDeleteTaskRequest
 */
 func (a *TasksAPIService) DeleteTask(ctx context.Context, taskId string) ApiDeleteTaskRequest {
@@ -640,7 +640,7 @@ GetTask Retrieve a task
 Retrieves a single durable task by id.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param taskId
+	@param taskId The task ID, as 24 hexadecimal characters.
 	@return ApiGetTaskRequest
 */
 func (a *TasksAPIService) GetTask(ctx context.Context, taskId string) ApiGetTaskRequest {
@@ -992,7 +992,7 @@ Updates a durable task, including assignment, fields, due date, and status.
 **Required permissions:** `task:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param taskId
+	@param taskId The task ID, as 24 hexadecimal characters.
 	@return ApiUpdateTaskRequest
 */
 func (a *TasksAPIService) UpdateTask(ctx context.Context, taskId string) ApiUpdateTaskRequest {

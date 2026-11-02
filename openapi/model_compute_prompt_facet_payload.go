@@ -18,7 +18,7 @@ import (
 // checks if the ComputePromptFacetPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ComputePromptFacetPayload{}
 
-// ComputePromptFacetPayload struct for ComputePromptFacetPayload
+// ComputePromptFacetPayload Each facet `name` is a Mongo field name: non-empty, without `.` or NUL, not starting with `$`, and not `total`. Each `field` is a dotted path of such names.
 type ComputePromptFacetPayload struct {
 	Facets []FacetSpec        `json:"facets"`
 	Query  *PromptSearchQuery `json:"query,omitempty"`

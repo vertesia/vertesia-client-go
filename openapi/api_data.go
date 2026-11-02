@@ -53,7 +53,7 @@ Archives multiple dashboards in one request.
 **Required permissions:** `content:delete`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
+	@param storeId The data store ID, as 24 hexadecimal characters.
 	@return ApiArchiveDashboardsBulkRequest
 */
 func (a *DataAPIService) ArchiveDashboardsBulk(ctx context.Context, storeId string) ApiArchiveDashboardsBulkRequest {
@@ -209,7 +209,7 @@ Creates a Vega-based dashboard linked to a data store.
 **Required permissions:** `content:write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
+	@param storeId The data store ID, as 24 hexadecimal characters.
 	@return ApiCreateDashboardRequest
 */
 func (a *DataAPIService) CreateDashboard(ctx context.Context, storeId string) ApiCreateDashboardRequest {
@@ -366,8 +366,8 @@ Creates a named snapshot for the current dashboard version.
 **Required permissions:** `content:write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
-	@param dashboardId
+	@param storeId The data store ID, as 24 hexadecimal characters.
+	@param dashboardId The dashboard ID, as 24 hexadecimal characters.
 	@return ApiCreateDashboardSnapshotRequest
 */
 func (a *DataAPIService) CreateDashboardSnapshot(ctx context.Context, storeId string, dashboardId string) ApiCreateDashboardSnapshotRequest {
@@ -1129,8 +1129,8 @@ Archives a dashboard.
 **Required permissions:** `content:delete`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
-	@param dashboardId
+	@param storeId The data store ID, as 24 hexadecimal characters.
+	@param dashboardId The dashboard ID, as 24 hexadecimal characters.
 	@return ApiDeleteDashboardRequest
 */
 func (a *DataAPIService) DeleteDashboard(ctx context.Context, storeId string, dashboardId string) ApiDeleteDashboardRequest {
@@ -1283,7 +1283,7 @@ Permanently deletes multiple dashboards in one request.
 **Required permissions:** `content:delete`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
+	@param storeId The data store ID, as 24 hexadecimal characters.
 	@return ApiDeleteDashboardsBulkRequest
 */
 func (a *DataAPIService) DeleteDashboardsBulk(ctx context.Context, storeId string) ApiDeleteDashboardsBulkRequest {
@@ -1734,8 +1734,8 @@ Starts rendering the saved dashboard to PNG with fresh query results, and return
 **Required permissions:** `content:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
-	@param dashboardId
+	@param storeId The data store ID, as 24 hexadecimal characters.
+	@param dashboardId The dashboard ID, as 24 hexadecimal characters.
 	@return ApiExportDashboardRequest
 */
 func (a *DataAPIService) ExportDashboard(ctx context.Context, storeId string, dashboardId string) ApiExportDashboardRequest {
@@ -1893,7 +1893,7 @@ Starts rendering the rows of a SQL query with a Vega-Lite spec as a PNG, and ret
 **Required permissions:** `content:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
+	@param storeId The data store ID, as 24 hexadecimal characters.
 	@return ApiExportDashboardPreviewRequest
 */
 func (a *DataAPIService) ExportDashboardPreview(ctx context.Context, storeId string) ApiExportDashboardPreviewRequest {
@@ -2044,8 +2044,8 @@ Retrieves a dashboard by ID.
 **Required permissions:** `content:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
-	@param dashboardId
+	@param storeId The data store ID, as 24 hexadecimal characters.
+	@param dashboardId The dashboard ID, as 24 hexadecimal characters.
 	@return ApiGetDashboardRequest
 */
 func (a *DataAPIService) GetDashboard(ctx context.Context, storeId string, dashboardId string) ApiGetDashboardRequest {
@@ -2193,7 +2193,7 @@ Returns the status of an export. A `completed` export carries a freshly signed U
 **Required permissions:** `content:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
+	@param storeId The data store ID, as 24 hexadecimal characters.
 	@param exportId
 	@return ApiGetDashboardExportRequest
 */
@@ -2343,9 +2343,9 @@ Retrieves a specific dashboard version by ID.
 **Required permissions:** `content:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
-	@param dashboardId
-	@param versionId
+	@param storeId The data store ID, as 24 hexadecimal characters.
+	@param dashboardId The dashboard ID, as 24 hexadecimal characters.
+	@param versionId The dashboard version ID, as 24 hexadecimal characters.
 	@return ApiGetDashboardVersionRequest
 */
 func (a *DataAPIService) GetDashboardVersion(ctx context.Context, storeId string, dashboardId string, versionId string) ApiGetDashboardVersionRequest {
@@ -2641,7 +2641,7 @@ Retrieves a previously created import job by ID.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param storeId
-	@param importId
+	@param importId The import job ID, as 24 hexadecimal characters.
 	@return ApiGetDataStoreImportStatusRequest
 */
 func (a *DataAPIService) GetDataStoreImportStatus(ctx context.Context, storeId string, importId string) ApiGetDataStoreImportStatusRequest {
@@ -3248,8 +3248,8 @@ Lists versions and snapshots for a dashboard.
 **Required permissions:** `content:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
-	@param dashboardId
+	@param storeId The data store ID, as 24 hexadecimal characters.
+	@param dashboardId The dashboard ID, as 24 hexadecimal characters.
 	@return ApiListDashboardVersionsRequest
 */
 func (a *DataAPIService) ListDashboardVersions(ctx context.Context, storeId string, dashboardId string) ApiListDashboardVersionsRequest {
@@ -3396,7 +3396,7 @@ Lists dashboards for a data store, optionally filtered by dashboard status.
 **Required permissions:** `content:read`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
+	@param storeId The data store ID, as 24 hexadecimal characters.
 	@return ApiListDashboardsRequest
 */
 func (a *DataAPIService) ListDashboards(ctx context.Context, storeId string) ApiListDashboardsRequest {
@@ -4299,9 +4299,9 @@ Promotes an existing dashboard version to become the current dashboard.
 **Required permissions:** `content:write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
-	@param dashboardId
-	@param versionId
+	@param storeId The data store ID, as 24 hexadecimal characters.
+	@param dashboardId The dashboard ID, as 24 hexadecimal characters.
+	@param versionId The dashboard version ID, as 24 hexadecimal characters.
 	@return ApiPromoteDashboardVersionRequest
 */
 func (a *DataAPIService) PromoteDashboardVersion(ctx context.Context, storeId string, dashboardId string, versionId string) ApiPromoteDashboardVersionRequest {
@@ -4775,7 +4775,7 @@ Executes a read-only SQL query against a specific data store version.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param storeId
-	@param versionId
+	@param versionId The data store version ID, as 24 hexadecimal characters.
 	@return ApiQueryDataStoreVersionRequest
 */
 func (a *DataAPIService) QueryDataStoreVersion(ctx context.Context, storeId string, versionId string) ApiQueryDataStoreVersionRequest {
@@ -4929,7 +4929,7 @@ Rolls a data store back to a previous version.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param storeId
-	@param versionId
+	@param versionId The data store version ID, as 24 hexadecimal characters.
 	@return ApiRollbackDataStoreVersionRequest
 */
 func (a *DataAPIService) RollbackDataStoreVersion(ctx context.Context, storeId string, versionId string) ApiRollbackDataStoreVersionRequest {
@@ -5083,8 +5083,8 @@ Enables or disables versioning for a dashboard.
 **Required permissions:** `content:write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
-	@param dashboardId
+	@param storeId The data store ID, as 24 hexadecimal characters.
+	@param dashboardId The dashboard ID, as 24 hexadecimal characters.
 	@return ApiSetDashboardVersioningRequest
 */
 func (a *DataAPIService) SetDashboardVersioning(ctx context.Context, storeId string, dashboardId string) ApiSetDashboardVersioningRequest {
@@ -5243,8 +5243,8 @@ Updates a dashboard definition, query, or metadata.
 **Required permissions:** `content:write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param storeId
-	@param dashboardId
+	@param storeId The data store ID, as 24 hexadecimal characters.
+	@param dashboardId The dashboard ID, as 24 hexadecimal characters.
 	@return ApiUpdateDashboardRequest
 */
 func (a *DataAPIService) UpdateDashboard(ctx context.Context, storeId string, dashboardId string) ApiUpdateDashboardRequest {

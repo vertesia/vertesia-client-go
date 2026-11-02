@@ -18,7 +18,7 @@ import (
 // checks if the ComputeObjectFacetPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ComputeObjectFacetPayload{}
 
-// ComputeObjectFacetPayload struct for ComputeObjectFacetPayload
+// ComputeObjectFacetPayload Each facet `name` is an Elasticsearch aggregation name: non-empty, without `[`, `]` or `>`, and not `total`.
 type ComputeObjectFacetPayload struct {
 	Facets []FacetSpec         `json:"facets"`
 	Query  *ComplexSearchQuery `json:"query,omitempty"`

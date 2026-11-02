@@ -487,7 +487,7 @@ Retrieves a process definition contributed by an installed app.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param projectId
-	@param processId
+	@param processId The app process, as `app:<app name>:<local id>`. Only the `app` prefix is checked as a format; a reference without an app name or local id is refused by the lookup, as forbidden or not found.
 	@return ApiGetProjectAppProcessRequest
 */
 func (a *ProjectsAPIService) GetProjectAppProcess(ctx context.Context, projectId string, processId string) ApiGetProjectAppProcessRequest {
@@ -634,7 +634,7 @@ Retrieves a rendering template contributed by an installed app.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param projectId
-	@param templateId
+	@param templateId The app rendering template, as `app:<app name>:<local id>`. Only the `app` prefix is checked as a format; a reference without an app name or local id is refused by the lookup, as forbidden or not found.
 	@return ApiGetProjectAppTemplateRequest
 */
 func (a *ProjectsAPIService) GetProjectAppTemplate(ctx context.Context, projectId string, templateId string) ApiGetProjectAppTemplateRequest {
@@ -781,7 +781,7 @@ Retrieves a content type contributed by an installed app.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param projectId
-	@param typeId
+	@param typeId The app content type, as `app:<app name>:<local id>`. Only the `app` prefix is checked as a format; a reference without an app name or local id is refused by the lookup, as forbidden or not found.
 	@return ApiGetProjectAppTypeRequest
 */
 func (a *ProjectsAPIService) GetProjectAppType(ctx context.Context, projectId string, typeId string) ApiGetProjectAppTypeRequest {
@@ -928,7 +928,7 @@ Retrieves a View Experience definition contributed by an installed app.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param projectId
-	@param viewId
+	@param viewId The app View, as `app:<app name>:<local id>`.
 	@return ApiGetProjectAppViewRequest
 */
 func (a *ProjectsAPIService) GetProjectAppView(ctx context.Context, projectId string, viewId string) ApiGetProjectAppViewRequest {

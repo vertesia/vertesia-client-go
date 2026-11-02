@@ -200,7 +200,7 @@ func (r ApiDeleteProjectFileRequest) Execute() (*DeleteFileResult, *http.Respons
 /*
 DeleteProjectFile Delete a file or file prefix
 
-Deletes a single file or, with `prefix=true`, all files under the provided relative project path prefix.
+Deletes a single file or, with `prefix=true`, all files under the provided relative project path prefix. The path must contain at least one `/`, so a top-level object cannot be deleted; it may be sent percent-encoded (`cache%2Fthumb.png`) or with literal slashes.
 
 **Required permissions:** Any of `content:write`, `content:delete`, `content:superadmin`
 
@@ -835,6 +835,9 @@ func (a *FilesAPIService) GetFileMetadataExecute(r ApiGetFileMetadataRequest) (*
 	localVarFormParams := url.Values{}
 	if r.file == nil {
 		return localVarReturnValue, nil, reportError("file is required and must be specified")
+	}
+	if strlen(*r.file) < 1 {
+		return localVarReturnValue, nil, reportError("file must have at least 1 elements")
 	}
 	if r.xApiVersion == nil {
 		version := a.client.cfg.DefaultHeader["x-api-version"]

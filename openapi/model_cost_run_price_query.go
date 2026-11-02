@@ -17,7 +17,7 @@ import (
 // checks if the CostRunPriceQuery type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &CostRunPriceQuery{}
 
-// CostRunPriceQuery struct for CostRunPriceQuery
+// CostRunPriceQuery Identifies the run to price by at least one of `run_id`, `agent_run_id`, `workflow_id` or `workflow_run_id`. An empty identifier counts as absent.
 type CostRunPriceQuery struct {
 	// Interaction execution run ID
 	RunId *string `json:"run_id,omitempty"`

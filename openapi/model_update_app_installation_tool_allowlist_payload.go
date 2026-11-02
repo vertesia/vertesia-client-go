@@ -20,6 +20,7 @@ var _ MappedNullable = &UpdateAppInstallationToolAllowlistPayload{}
 
 // UpdateAppInstallationToolAllowlistPayload struct for UpdateAppInstallationToolAllowlistPayload
 type UpdateAppInstallationToolAllowlistPayload struct {
+	// Tool names agents may use. An empty list is refused: send null to remove the restriction.
 	ToolAllowlist []string `json:"tool_allowlist"`
 }
 

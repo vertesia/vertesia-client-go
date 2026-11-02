@@ -392,6 +392,7 @@ model_count_result.go
 model_create_account_api_key_payload.go
 model_create_agent_run_payload.go
 model_create_api_key_payload.go
+model_create_app_repo_branch_request.go
 model_create_app_version_launch_request.go
 model_create_app_version_launch_response.go
 model_create_collection_payload.go

@@ -23,9 +23,9 @@ type UpsertAppVersionRequest struct {
 	// Existing version record to update in place, used by reproducible rebuilds.
 	RecordId   *string           `json:"record_id,omitempty"`
 	App        *string           `json:"app,omitempty"`
-	AppId      string            `json:"app_id"`
+	AppId      string            `json:"app_id" validate:"regexp=\\\\S"`
 	AppName    *string           `json:"app_name,omitempty"`
-	VersionId  string            `json:"version_id"`
+	VersionId  string            `json:"version_id" validate:"regexp=\\\\S"`
 	Kind       AppVersionKind    `json:"kind"`
 	State      *AppVersionState  `json:"state,omitempty"`
 	Target     *AppVersionTarget `json:"target,omitempty"`

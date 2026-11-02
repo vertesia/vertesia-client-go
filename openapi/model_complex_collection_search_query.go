@@ -17,7 +17,7 @@ import (
 // checks if the ComplexCollectionSearchQuery type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ComplexCollectionSearchQuery{}
 
-// ComplexCollectionSearchQuery struct for ComplexCollectionSearchQuery
+// ComplexCollectionSearchQuery `match` is a Mongo filter. Its keys are dotted field paths or `$and`, `$or` and `$nor`, and a condition is a literal or uses the comparison operators, `$in`, `$nin`, `$all`, `$exists`, `$type`, `$size`, `$regex`, `$not` and `$elemMatch`.
 type ComplexCollectionSearchQuery struct {
 	Parent               NullableString         `json:"parent,omitempty"`
 	Dynamic              *bool                  `json:"dynamic,omitempty"`

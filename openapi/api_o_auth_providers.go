@@ -45,7 +45,7 @@ AuthorizeOAuthProvider Initiate OAuth provider authorization
 Starts the OAuth 2.0 authorization flow for the current user.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The OAuth provider ID, as 24 hexadecimal characters.
 	@return ApiAuthorizeOAuthProviderRequest
 */
 func (a *OAuthProvidersAPIService) AuthorizeOAuthProvider(ctx context.Context, id string) ApiAuthorizeOAuthProviderRequest {
@@ -190,7 +190,7 @@ Tests and establishes a client credentials connection for an OAuth provider.
 **Required permissions:** `project:settings_write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The OAuth provider ID, as 24 hexadecimal characters.
 	@return ApiConnectOAuthProviderRequest
 */
 func (a *OAuthProvidersAPIService) ConnectOAuthProvider(ctx context.Context, id string) ApiConnectOAuthProviderRequest {
@@ -487,7 +487,7 @@ Deletes an OAuth provider and associated secrets and tokens.
 **Required permissions:** `project:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The OAuth provider ID, as 24 hexadecimal characters.
 	@return ApiDeleteOAuthProviderRequest
 */
 func (a *OAuthProvidersAPIService) DeleteOAuthProvider(ctx context.Context, id string) ApiDeleteOAuthProviderRequest {
@@ -630,7 +630,7 @@ DisconnectOAuthProvider Disconnect an OAuth provider
 Revokes and deletes stored tokens for an OAuth provider.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The OAuth provider ID, as 24 hexadecimal characters.
 	@return ApiDisconnectOAuthProviderRequest
 */
 func (a *OAuthProvidersAPIService) DisconnectOAuthProvider(ctx context.Context, id string) ApiDisconnectOAuthProviderRequest {
@@ -925,7 +925,7 @@ Retrieves a single OAuth provider with sensitive client secret data redacted.
 **Required permissions:** `project:settings_write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The OAuth provider ID, as 24 hexadecimal characters.
 	@return ApiGetOAuthProviderRequest
 */
 func (a *OAuthProvidersAPIService) GetOAuthProvider(ctx context.Context, id string) ApiGetOAuthProviderRequest {
@@ -1068,7 +1068,7 @@ GetOAuthProviderStatus Get OAuth provider status
 Returns authentication status for the provider in the current project or user context.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The OAuth provider ID, as 24 hexadecimal characters.
 	@return ApiGetOAuthProviderStatusRequest
 */
 func (a *OAuthProvidersAPIService) GetOAuthProviderStatus(ctx context.Context, id string) ApiGetOAuthProviderStatusRequest {
@@ -1503,7 +1503,7 @@ Updates an existing OAuth provider.
 **Required permissions:** `project:settings_write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The OAuth provider ID, as 24 hexadecimal characters.
 	@return ApiUpdateOAuthProviderRequest
 */
 func (a *OAuthProvidersAPIService) UpdateOAuthProvider(ctx context.Context, id string) ApiUpdateOAuthProviderRequest {

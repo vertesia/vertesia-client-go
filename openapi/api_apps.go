@@ -50,7 +50,7 @@ Atomically assigns or moves one stable deployment alias to this immutable app ve
 **Required permissions:** `app:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The app version ID, as 24 hexadecimal characters.
 	@param alias
 	@return ApiAssignAppVersionAliasRequest
 */
@@ -471,15 +471,21 @@ func (a *AppsAPIService) CreateAppExecute(r ApiCreateAppRequest) (*AppManifest, 
 }
 
 type ApiCreateAppRepoBranchRequest struct {
-	ctx         context.Context
-	ApiService  *AppsAPIService
-	id          string
-	xApiVersion *string
+	ctx                        context.Context
+	ApiService                 *AppsAPIService
+	id                         string
+	xApiVersion                *string
+	createAppRepoBranchRequest *CreateAppRepoBranchRequest
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiCreateAppRepoBranchRequest) XApiVersion(xApiVersion string) ApiCreateAppRepoBranchRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiCreateAppRepoBranchRequest) CreateAppRepoBranchRequest(createAppRepoBranchRequest CreateAppRepoBranchRequest) ApiCreateAppRepoBranchRequest {
+	r.createAppRepoBranchRequest = &createAppRepoBranchRequest
 	return r
 }
 
@@ -538,9 +544,12 @@ func (a *AppsAPIService) CreateAppRepoBranchExecute(r ApiCreateAppRepoBranchRequ
 	if strlen(*r.xApiVersion) < 1 {
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
+	if r.createAppRepoBranchRequest == nil {
+		return localVarReturnValue, nil, reportError("createAppRepoBranchRequest is required and must be specified")
+	}
 
 	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
+	localVarHTTPContentTypes := []string{"application/json"}
 
 	// set Content-Type header
 	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
@@ -557,6 +566,8 @@ func (a *AppsAPIService) CreateAppRepoBranchExecute(r ApiCreateAppRepoBranchRequ
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.createAppRepoBranchRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -646,7 +657,7 @@ Creates a short-lived launch selector for an immutable app version. Temporary se
 **Required permissions:** `app:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The app version ID, as 24 hexadecimal characters.
 	@return ApiCreateAppVersionLaunchRequest
 */
 func (a *AppsAPIService) CreateAppVersionLaunch(ctx context.Context, id string) ApiCreateAppVersionLaunchRequest {
@@ -941,7 +952,7 @@ Deletes an unpromoted, unaliased app version and its stored build artifacts.
 **Required permissions:** `app:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The app version ID, as 24 hexadecimal characters.
 	@return ApiDeleteAppVersionRequest
 */
 func (a *AppsAPIService) DeleteAppVersion(ctx context.Context, id string) ApiDeleteAppVersionRequest {
@@ -1085,7 +1096,7 @@ DeleteInstallationMcpApiKey Delete an installation MCP API key
 **Required permissions:** `app:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param installId
+	@param installId The app installation ID, as 24 hexadecimal characters.
 	@param collectionId
 	@return ApiDeleteInstallationMcpApiKeyRequest
 */
@@ -2160,7 +2171,7 @@ func (r ApiGetAppInstallationRequest) Execute() (*AppInstallationWithManifest, *
 GetAppInstallation Retrieve an authorized app installation by ID
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param installId
+	@param installId The app installation ID, as 24 hexadecimal characters.
 	@return ApiGetAppInstallationRequest
 */
 func (a *AppsAPIService) GetAppInstallation(ctx context.Context, installId string) ApiGetAppInstallationRequest {
@@ -3190,12 +3201,26 @@ type ApiGetAppRepoFileRequest struct {
 	ctx         context.Context
 	ApiService  *AppsAPIService
 	id          string
+	path        *string
 	xApiVersion *string
+	ref         *string
+}
+
+// Path of the file, relative to the repository root.
+func (r ApiGetAppRepoFileRequest) Path(path string) ApiGetAppRepoFileRequest {
+	r.path = &path
+	return r
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetAppRepoFileRequest) XApiVersion(xApiVersion string) ApiGetAppRepoFileRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+// Branch, tag or commit. Defaults to the default branch.
+func (r ApiGetAppRepoFileRequest) Ref(ref string) ApiGetAppRepoFileRequest {
+	r.ref = &ref
 	return r
 }
 
@@ -3244,6 +3269,9 @@ func (a *AppsAPIService) GetAppRepoFileExecute(r ApiGetAppRepoFileRequest) (*os.
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.path == nil {
+		return localVarReturnValue, nil, reportError("path is required and must be specified")
+	}
 	if r.xApiVersion == nil {
 		version := a.client.cfg.DefaultHeader["x-api-version"]
 		if version == "" {
@@ -3255,6 +3283,10 @@ func (a *AppsAPIService) GetAppRepoFileExecute(r ApiGetAppRepoFileRequest) (*os.
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	parameterAddToHeaderOrQuery(localVarQueryParams, "path", r.path, "form", "")
+	if r.ref != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "ref", r.ref, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -3481,11 +3513,25 @@ type ApiGetAppRepoTreeRequest struct {
 	ApiService  *AppsAPIService
 	id          string
 	xApiVersion *string
+	prefix      *string
+	ref         *string
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetAppRepoTreeRequest) XApiVersion(xApiVersion string) ApiGetAppRepoTreeRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+// Directory to list, relative to the repository root. Defaults to the root.
+func (r ApiGetAppRepoTreeRequest) Prefix(prefix string) ApiGetAppRepoTreeRequest {
+	r.prefix = &prefix
+	return r
+}
+
+// Branch, tag or commit. Defaults to the default branch.
+func (r ApiGetAppRepoTreeRequest) Ref(ref string) ApiGetAppRepoTreeRequest {
+	r.ref = &ref
 	return r
 }
 
@@ -3545,6 +3591,12 @@ func (a *AppsAPIService) GetAppRepoTreeExecute(r ApiGetAppRepoTreeRequest) (*App
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	if r.prefix != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "prefix", r.prefix, "form", "")
+	}
+	if r.ref != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "ref", r.ref, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -3793,7 +3845,7 @@ GetAppVersion Get an app version
 **Required permissions:** `account:member`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The app version ID, as 24 hexadecimal characters.
 	@return ApiGetAppVersionRequest
 */
 func (a *AppsAPIService) GetAppVersion(ctx context.Context, id string) ApiGetAppVersionRequest {
@@ -3937,7 +3989,7 @@ GetInstallationMcpApiKeyStatus Read an installation MCP API key status
 **Required permissions:** `app:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param installId
+	@param installId The app installation ID, as 24 hexadecimal characters.
 	@param collectionId
 	@return ApiGetInstallationMcpApiKeyStatusRequest
 */
@@ -5114,13 +5166,13 @@ func (r ApiListAppInstallationProjectsRequest) XApiVersion(xApiVersion string) A
 	return r
 }
 
-// App manifest name. One of &#x60;name&#x60; or &#x60;id&#x60; is required.
+// App manifest name. At least one of &#x60;name&#x60; or &#x60;id&#x60; is required.
 func (r ApiListAppInstallationProjectsRequest) Name(name string) ApiListAppInstallationProjectsRequest {
 	r.name = &name
 	return r
 }
 
-// App manifest id. One of &#x60;name&#x60; or &#x60;id&#x60; is required.
+// App manifest id. At least one of &#x60;name&#x60; or &#x60;id&#x60; is required; it wins over &#x60;name&#x60;.
 func (r ApiListAppInstallationProjectsRequest) Id(id string) ApiListAppInstallationProjectsRequest {
 	r.id = &id
 	return r
@@ -5423,7 +5475,7 @@ Lists tools exposed by an installed app.
 **Required permissions:** `account:member`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param installId
+	@param installId The app installation ID, as 24 hexadecimal characters.
 	@return ApiListAppInstallationToolsRequest
 */
 func (a *AppsAPIService) ListAppInstallationTools(ctx context.Context, installId string) ApiListAppInstallationToolsRequest {
@@ -5727,7 +5779,7 @@ Returns projects in the current account that the caller can access and where thi
 **Required permissions:** `app:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The app version ID, as 24 hexadecimal characters.
 	@return ApiListAppVersionLaunchTargetsRequest
 */
 func (a *AppsAPIService) ListAppVersionLaunchTargets(ctx context.Context, id string) ApiListAppVersionLaunchTargetsRequest {
@@ -6160,7 +6212,7 @@ PromoteAppVersion Promote an app version
 **Required permissions:** `app:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The app version ID, as 24 hexadecimal characters.
 	@return ApiPromoteAppVersionRequest
 */
 func (a *AppsAPIService) PromoteAppVersion(ctx context.Context, id string) ApiPromoteAppVersionRequest {
@@ -6305,7 +6357,7 @@ Rebuilds a failed or expired, unpromoted app version in place from its recorded 
 **Required permissions:** `app:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The app version ID, as 24 hexadecimal characters.
 	@return ApiRebuildAppVersionRequest
 */
 func (a *AppsAPIService) RebuildAppVersion(ctx context.Context, id string) ApiRebuildAppVersionRequest {
@@ -6451,7 +6503,7 @@ Removes the alias only if it still points to this version, so a stale client can
 **Required permissions:** `app:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param id
+	@param id The app version ID, as 24 hexadecimal characters.
 	@param alias
 	@return ApiRemoveAppVersionAliasRequest
 */
@@ -6604,7 +6656,7 @@ SetInstallationMcpApiKey Set an installation MCP API key
 **Required permissions:** `app:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param installId
+	@param installId The app installation ID, as 24 hexadecimal characters.
 	@param collectionId
 	@return ApiSetInstallationMcpApiKeyRequest
 */
@@ -7524,7 +7576,7 @@ Uninstalls an app from the current project and removes installation-scoped OAuth
 **Required permissions:** `project:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param installId
+	@param installId The app installation ID, as 24 hexadecimal characters.
 	@return ApiUninstallAppRequest
 */
 func (a *AppsAPIService) UninstallApp(ctx context.Context, installId string) ApiUninstallAppRequest {
@@ -7829,7 +7881,7 @@ UpdateAppInstallationOAuthApproval Approve or revoke OAuth permissions for an ap
 **Required permissions:** `project:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param installId
+	@param installId The app installation ID, as 24 hexadecimal characters.
 	@return ApiUpdateAppInstallationOAuthApprovalRequest
 */
 func (a *AppsAPIService) UpdateAppInstallationOAuthApproval(ctx context.Context, installId string) ApiUpdateAppInstallationOAuthApprovalRequest {
@@ -8141,7 +8193,7 @@ Updates the installation-scoped tool allowlist for an app installation.
 **Required permissions:** `project:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param installId
+	@param installId The app installation ID, as 24 hexadecimal characters.
 	@return ApiUpdateAppInstallationToolAllowlistRequest
 */
 func (a *AppsAPIService) UpdateAppInstallationToolAllowlist(ctx context.Context, installId string) ApiUpdateAppInstallationToolAllowlistRequest {
@@ -8297,7 +8349,7 @@ Updates the tool allowlist and the tools that always require human approval of a
 **Required permissions:** `project:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param installId
+	@param installId The app installation ID, as 24 hexadecimal characters.
 	@return ApiUpdateAppInstallationToolPermissionsRequest
 */
 func (a *AppsAPIService) UpdateAppInstallationToolPermissions(ctx context.Context, installId string) ApiUpdateAppInstallationToolPermissionsRequest {
