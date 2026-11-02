@@ -17,15 +17,22 @@ import (
 // checks if the ContentTypeIntakePolicyExtractionVerification type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ContentTypeIntakePolicyExtractionVerification{}
 
-// ContentTypeIntakePolicyExtractionVerification struct for ContentTypeIntakePolicyExtractionVerification
+// ContentTypeIntakePolicyExtractionVerification Reserved verification configuration. Standard Intake currently implements grounding.review instead of this pass.
 type ContentTypeIntakePolicyExtractionVerification struct {
-	Enabled     *bool    `json:"enabled,omitempty"`
-	Model       *string  `json:"model,omitempty"`
-	Environment *string  `json:"environment,omitempty"`
-	Materiality *string  `json:"materiality,omitempty"`
-	Threshold   *float32 `json:"threshold,omitempty"`
-	MaxRetries  *int32   `json:"max_retries,omitempty"`
-	OnFail      *string  `json:"on_fail,omitempty"`
+	// Reserved verification switch. Standard Intake does not currently execute this verification pass; use grounding.review for implemented grounded-extraction review.
+	Enabled *bool `json:"enabled,omitempty"`
+	// Reserved model name for the verification pass; not currently used by Standard Intake.
+	Model *string `json:"model,omitempty"`
+	// Reserved execution environment for the verification model; not currently used by Standard Intake.
+	Environment *string `json:"environment,omitempty"`
+	// Reserved guidance describing which extraction discrepancies matter; not currently used by Standard Intake.
+	Materiality *string `json:"materiality,omitempty"`
+	// Reserved verification score threshold between 0 and 1; not currently used by Standard Intake.
+	Threshold *float32 `json:"threshold,omitempty"`
+	// Reserved verification retry limit; not currently used by Standard Intake.
+	MaxRetries *int32 `json:"max_retries,omitempty"`
+	// Reserved action for failed verification: flag or block. Not currently used by Standard Intake.
+	OnFail *string `json:"on_fail,omitempty"`
 }
 
 // NewContentTypeIntakePolicyExtractionVerification instantiates a new ContentTypeIntakePolicyExtractionVerification object

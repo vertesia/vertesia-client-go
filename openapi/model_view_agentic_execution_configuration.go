@@ -19,16 +19,22 @@ var _ MappedNullable = &ViewAgenticExecutionConfiguration{}
 
 // ViewAgenticExecutionConfiguration struct for ViewAgenticExecutionConfiguration
 type ViewAgenticExecutionConfiguration struct {
+	// Optional configuration identifier. Normally omit this when overriding intake settings.
 	Id *string `json:"id,omitempty"`
 	// Select a project inference profile. Null bypasses profile defaults.
 	InferenceProfile NullableString `json:"inference_profile,omitempty"`
 	// Treat the supplied environment, model and inference_profile as the caller's settings, inherited as a fallback: the interaction's bound or attached profile, or its own model, replaces them.
-	InheritModelConfig *bool                `json:"inherit_model_config,omitempty"`
-	Environment        *string              `json:"environment,omitempty"`
-	Model              *string              `json:"model,omitempty"`
-	DoValidate         *bool                `json:"do_validate,omitempty"`
-	RunData            *RunDataStorageLevel `json:"run_data,omitempty"`
-	ConfigMode         *ConfigModes         `json:"configMode,omitempty"`
+	InheritModelConfig *bool `json:"inherit_model_config,omitempty"`
+	// Execution environment ID for the selected model. Supply with model to replace inherited profile routing.
+	Environment *string `json:"environment,omitempty"`
+	// Model name within the execution environment. Changing model or profile drops inherited model options.
+	Model *string `json:"model,omitempty"`
+	// Validate the interaction output against its result schema. Omit to inherit validation settings.
+	DoValidate *bool `json:"do_validate,omitempty"`
+	// Run-data storage level: controls which execution inputs and outputs are retained. Omit to inherit.
+	RunData *RunDataStorageLevel `json:"run_data,omitempty"`
+	// How configuration combines with the interaction configuration. Normally omit to use the default merge behavior.
+	ConfigMode *ConfigModes `json:"configMode,omitempty"`
 	// Model options as authored for this View. Open rather than the driver-discriminated `ModelOptions` union, because a View is saved before a driver is resolved.
 	ModelOptions map[string]interface{} `json:"model_options,omitempty"`
 	// Stable provider-side routing key for automatic prompt caching.

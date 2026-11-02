@@ -19,11 +19,15 @@ var _ MappedNullable = &ContentTypeIntakePolicyExtraction{}
 
 // ContentTypeIntakePolicyExtraction Controls schema-property extraction after type assignment.
 type ContentTypeIntakePolicyExtraction struct {
-	Enabled      *bool   `json:"enabled,omitempty"`
-	Source       *string `json:"source,omitempty"`
+	// Extract structured properties using the content-type schema. False skips property extraction; omission inherits.
+	Enabled *bool `json:"enabled,omitempty"`
+	// Evidence used for property extraction: text uses object text, vision uses page images, mixed uses both, and auto selects appropriate evidence for the source.
+	Source *string `json:"source,omitempty"`
+	// Additional instructions for extracting this type's properties, appended to the extraction prompt.
 	Instructions *string `json:"instructions,omitempty"`
-	Interaction  *string `json:"interaction,omitempty"`
-	// Model execution config for the standard property-extraction interaction (sys:ExtractInformation). Lets extraction run on a different model/environment than the visual page conversion. When unset, extraction uses the run's model config or the project default model. (Grounded extraction is configured separately via grounding.config.)
+	// Property-extraction interaction ID or qualified name. The built-in default is sys:ExtractInformation; media-specific analysis may override it.
+	Interaction *string `json:"interaction,omitempty"`
+	// Model execution config for the standard property-extraction interaction (sys:ExtractInformation). Lets extraction run on a different model/environment than the visual page conversion. Subscription phase settings (including legacy run-wide config) override content-type settings, which override project policy defaults; omitted fields inherit. Unspecified routing uses interaction/project model defaults. Grounded extraction uses grounding.config.
 	Config *InteractionExecutionConfiguration `json:"config,omitempty"`
 	// Which pages extraction sees: everything or the locate result.
 	Scope *IntakePageScope `json:"scope,omitempty"`

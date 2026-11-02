@@ -19,18 +19,22 @@ var _ MappedNullable = &ContentTypeIntakePolicyTextConversion{}
 
 // ContentTypeIntakePolicyTextConversion Controls source-to-text conversion before extraction and embedding.
 type ContentTypeIntakePolicyTextConversion struct {
-	Enabled      *bool                                        `json:"enabled,omitempty"`
-	Method       *string                                      `json:"method,omitempty"`
-	Custom       *ContentTypeIntakePolicyTextConversionCustom `json:"custom,omitempty"`
-	Instructions *string                                      `json:"instructions,omitempty"`
-	OutputFormat *string                                      `json:"output_format,omitempty"`
+	// Run source-to-text conversion before extraction. False skips conversion; omission inherits the next policy layer.
+	Enabled *bool `json:"enabled,omitempty"`
+	// Conversion strategy: basic uses mechanical extraction; llm uses visual conversion to Markdown; custom uses a supplied interaction. Standard Intake resolves auto to its platform semantic-conversion default.
+	Method *string                                      `json:"method,omitempty"`
+	Custom *ContentTypeIntakePolicyTextConversionCustom `json:"custom,omitempty"`
+	// Additional conversion guidance, such as which sections to retain or how to describe tables and figures.
+	Instructions *string `json:"instructions,omitempty"`
+	// Output format requested from custom conversion. Visual llm conversion always produces Markdown.
+	OutputFormat *string `json:"output_format,omitempty"`
 	// Which pages to convert: everything or the locate result. Default all.
 	Scope *IntakePageScope `json:"scope,omitempty"`
 	// Static page ranges to convert (wins over `scope` when set).
 	PageRanges [][]int32 `json:"page_ranges,omitempty"`
 	// DPI at which each page is rendered to the image the LLM converts. Default 150 — the accuracy/cost sweet spot: higher resolutions balloon input tokens (some providers tile the page) for no quality gain, below ~150 dense tables start to misread. Raise only for very fine print.
 	RenderDpi *int32 `json:"render_dpi,omitempty"`
-	// Model execution config for the page-conversion interaction (method 'llm'/'auto' -> sys:ConvertPageToMarkdown, method 'custom' -> the custom interaction). Lets the visual conversion run on a cheaper/faster model (e.g. a flash model) than extraction. When unset, conversion uses the run's model config or the project default model.
+	// Model execution config for the page-conversion interaction (method 'llm'/'auto' -> sys:ConvertPageToMarkdown, method 'custom' -> the custom interaction). Lets the visual conversion run on a cheaper/faster model than extraction. Fields inherit across policy layers: subscription phase settings (including legacy run-wide config) override content-type settings, which override project policy defaults. Unspecified routing uses interaction/project model defaults.
 	Config *InteractionExecutionConfiguration `json:"config,omitempty"`
 }
 

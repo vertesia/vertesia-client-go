@@ -20,10 +20,11 @@ var _ MappedNullable = &WorkflowEventDeliveryTarget{}
 
 // WorkflowEventDeliveryTarget struct for WorkflowEventDeliveryTarget
 type WorkflowEventDeliveryTarget struct {
-	Type                 string                 `json:"type"`
-	Endpoint             string                 `json:"endpoint"`
-	WorkflowClass        *string                `json:"workflow_class,omitempty"`
-	TaskQueue            *string                `json:"task_queue,omitempty"`
+	Type          string  `json:"type"`
+	Endpoint      string  `json:"endpoint"`
+	WorkflowClass *string `json:"workflow_class,omitempty"`
+	TaskQueue     *string `json:"task_queue,omitempty"`
+	// Workflow-specific variables. Known catalog workflows validate their own schema.
 	Vars                 map[string]interface{} `json:"vars,omitempty"`
 	InputType            *WorkflowRuleInputType `json:"input_type,omitempty"`
 	MigratedRuleName     *string                `json:"migrated_rule_name,omitempty"`
@@ -163,9 +164,9 @@ func (o *WorkflowEventDeliveryTarget) SetTaskQueue(v string) {
 	o.TaskQueue = &v
 }
 
-// GetVars returns the Vars field value if set, zero value otherwise (both if not set or set to explicit null).
+// GetVars returns the Vars field value if set, zero value otherwise.
 func (o *WorkflowEventDeliveryTarget) GetVars() map[string]interface{} {
-	if o == nil {
+	if o == nil || IsNil(o.Vars) {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -174,7 +175,6 @@ func (o *WorkflowEventDeliveryTarget) GetVars() map[string]interface{} {
 
 // GetVarsOk returns a tuple with the Vars field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *WorkflowEventDeliveryTarget) GetVarsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Vars) {
 		return map[string]interface{}{}, false
@@ -278,7 +278,7 @@ func (o WorkflowEventDeliveryTarget) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.TaskQueue) {
 		toSerialize["task_queue"] = o.TaskQueue
 	}
-	if o.Vars != nil {
+	if !IsNil(o.Vars) {
 		toSerialize["vars"] = o.Vars
 	}
 	if !IsNil(o.InputType) {

@@ -23,7 +23,7 @@ type ProjectIntakeConfiguration struct {
 	Enabled *bool `json:"enabled,omitempty"`
 	// Fast pre-conversion type identification for untyped documents. Absent means enabled with platform default thresholds.
 	Sniff *ProjectIntakeSniffConfiguration `json:"sniff,omitempty"`
-	// Project-level intake policy defaults. Same shape as the per-content-type policy; a type's `intake` block wins field-by-field over these defaults, which in turn win over the legacy flat fields below. `identification` is type-specific and ignored here.
+	// Project-level intake policy defaults. The same processing fields are used by workflow overrides and type policy. A type's `intake` block wins field-by-field over these defaults, which in turn win over the legacy flat fields below. `identification` is type-specific and ignored here.
 	DefaultPolicy *ContentTypeIntakePolicy `json:"default_policy,omitempty"`
 	// Project overrides for the platform vision detail profiles used by intake visual extraction (`low`/`standard`/`high`). Partial: omitted profiles or fields inherit the platform defaults. Types reference detail NAMES only; the profile settings live here.
 	VisionProfiles *IntakeVisionProfileSettingsMap `json:"vision_profiles,omitempty"`

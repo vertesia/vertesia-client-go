@@ -19,9 +19,12 @@ var _ MappedNullable = &ContentTypeIntakePolicyIdentification{}
 
 // ContentTypeIntakePolicyIdentification Guidance used when selecting or creating this content type.
 type ContentTypeIntakePolicyIdentification struct {
-	Guidance        *string  `json:"guidance,omitempty"`
-	DistinguishFrom *string  `json:"distinguish_from,omitempty"`
-	Examples        []string `json:"examples,omitempty"`
+	// Describe when this content type should be selected. This is type-identification metadata, not a workflow parameter.
+	Guidance *string `json:"guidance,omitempty"`
+	// Explain how to distinguish this type from similar types to improve type selection.
+	DistinguishFrom *string `json:"distinguish_from,omitempty"`
+	// Representative examples or identifying characteristics that help the type selector recognize this type.
+	Examples []string `json:"examples,omitempty"`
 }
 
 // NewContentTypeIntakePolicyIdentification instantiates a new ContentTypeIntakePolicyIdentification object

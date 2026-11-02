@@ -20,12 +20,13 @@ var _ MappedNullable = &WorkflowEventDeliveryTargetInput{}
 
 // WorkflowEventDeliveryTargetInput struct for WorkflowEventDeliveryTargetInput
 type WorkflowEventDeliveryTargetInput struct {
-	Type          string                 `json:"type"`
-	Endpoint      string                 `json:"endpoint"`
-	WorkflowClass *string                `json:"workflow_class,omitempty"`
-	TaskQueue     *string                `json:"task_queue,omitempty"`
-	Vars          map[string]interface{} `json:"vars,omitempty"`
-	InputType     *WorkflowRuleInputType `json:"input_type,omitempty"`
+	Type          string  `json:"type"`
+	Endpoint      string  `json:"endpoint"`
+	WorkflowClass *string `json:"workflow_class,omitempty"`
+	TaskQueue     *string `json:"task_queue,omitempty"`
+	// Workflow-specific variables. Known catalog workflows validate their own schema.
+	Vars      map[string]interface{} `json:"vars,omitempty"`
+	InputType *WorkflowRuleInputType `json:"input_type,omitempty"`
 	// Server-managed: ignored on write, echoed back from a read.
 	MigratedRuleName     *string `json:"migrated_rule_name,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -164,9 +165,9 @@ func (o *WorkflowEventDeliveryTargetInput) SetTaskQueue(v string) {
 	o.TaskQueue = &v
 }
 
-// GetVars returns the Vars field value if set, zero value otherwise (both if not set or set to explicit null).
+// GetVars returns the Vars field value if set, zero value otherwise.
 func (o *WorkflowEventDeliveryTargetInput) GetVars() map[string]interface{} {
-	if o == nil {
+	if o == nil || IsNil(o.Vars) {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -175,7 +176,6 @@ func (o *WorkflowEventDeliveryTargetInput) GetVars() map[string]interface{} {
 
 // GetVarsOk returns a tuple with the Vars field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *WorkflowEventDeliveryTargetInput) GetVarsOk() (map[string]interface{}, bool) {
 	if o == nil || IsNil(o.Vars) {
 		return map[string]interface{}{}, false
@@ -279,7 +279,7 @@ func (o WorkflowEventDeliveryTargetInput) ToMap() (map[string]interface{}, error
 	if !IsNil(o.TaskQueue) {
 		toSerialize["task_queue"] = o.TaskQueue
 	}
-	if o.Vars != nil {
+	if !IsNil(o.Vars) {
 		toSerialize["vars"] = o.Vars
 	}
 	if !IsNil(o.InputType) {

@@ -20,11 +20,13 @@ var _ MappedNullable = &CreateEventSubscriptionPayload{}
 
 // CreateEventSubscriptionPayload struct for CreateEventSubscriptionPayload
 type CreateEventSubscriptionPayload struct {
-	Name        string                   `json:"name"`
-	Description *string                  `json:"description,omitempty"`
-	Scope       *string                  `json:"scope,omitempty"`
-	Filter      EventSubscriptionFilter  `json:"filter"`
-	Target      EventDeliveryTargetInput `json:"target"`
+	Name string `json:"name"`
+	// Fully replace this code-defined system subscription in the current project. Only one replacement per system subscription is allowed. Disabling the replacement keeps the default suppressed; deleting it restores the default. Immutable after creation.
+	OverridesSystemSubscriptionId *string                  `json:"overrides_system_subscription_id,omitempty" validate:"regexp=\\\\S"`
+	Description                   *string                  `json:"description,omitempty"`
+	Scope                         *string                  `json:"scope,omitempty"`
+	Filter                        EventSubscriptionFilter  `json:"filter"`
+	Target                        EventDeliveryTargetInput `json:"target"`
 	// Identity the delivery runs as. Required at creation so a subscription never silently runs as the originating (possibly deleted) user. Use \"automation\" for the standard identity.
 	RunAsRole SystemRoles    `json:"run_as_role"`
 	Enabled   *bool          `json:"enabled,omitempty"`
@@ -76,6 +78,38 @@ func (o *CreateEventSubscriptionPayload) GetNameOk() (*string, bool) {
 // SetName sets field value
 func (o *CreateEventSubscriptionPayload) SetName(v string) {
 	o.Name = v
+}
+
+// GetOverridesSystemSubscriptionId returns the OverridesSystemSubscriptionId field value if set, zero value otherwise.
+func (o *CreateEventSubscriptionPayload) GetOverridesSystemSubscriptionId() string {
+	if o == nil || IsNil(o.OverridesSystemSubscriptionId) {
+		var ret string
+		return ret
+	}
+	return *o.OverridesSystemSubscriptionId
+}
+
+// GetOverridesSystemSubscriptionIdOk returns a tuple with the OverridesSystemSubscriptionId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateEventSubscriptionPayload) GetOverridesSystemSubscriptionIdOk() (*string, bool) {
+	if o == nil || IsNil(o.OverridesSystemSubscriptionId) {
+		return nil, false
+	}
+	return o.OverridesSystemSubscriptionId, true
+}
+
+// HasOverridesSystemSubscriptionId returns a boolean if a field has been set.
+func (o *CreateEventSubscriptionPayload) HasOverridesSystemSubscriptionId() bool {
+	if o != nil && !IsNil(o.OverridesSystemSubscriptionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOverridesSystemSubscriptionId gets a reference to the given string and assigns it to the OverridesSystemSubscriptionId field.
+func (o *CreateEventSubscriptionPayload) SetOverridesSystemSubscriptionId(v string) {
+	o.OverridesSystemSubscriptionId = &v
 }
 
 // GetDescription returns the Description field value if set, zero value otherwise.
@@ -289,6 +323,9 @@ func (o CreateEventSubscriptionPayload) MarshalJSON() ([]byte, error) {
 func (o CreateEventSubscriptionPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["name"] = o.Name
+	if !IsNil(o.OverridesSystemSubscriptionId) {
+		toSerialize["overrides_system_subscription_id"] = o.OverridesSystemSubscriptionId
+	}
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}

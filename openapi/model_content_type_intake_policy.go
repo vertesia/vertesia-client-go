@@ -17,9 +17,11 @@ import (
 // checks if the ContentTypeIntakePolicy type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ContentTypeIntakePolicy{}
 
-// ContentTypeIntakePolicy Per-content-type policy for the standard intake workflows.
+// ContentTypeIntakePolicy Shared intake processing policy. Workflow parameters override content-type policy, which overrides project defaults. Omitted processing fields inherit from the next layer.
 type ContentTypeIntakePolicy struct {
-	// Intake orchestration mode for this type.
+	// Media analysis defaults. Subscription settings override the content type, which overrides project defaults.
+	MediaAnalysis *IntakeMediaAnalysisOverrides `json:"media_analysis,omitempty"`
+	// Intake orchestration: programmatic runs the standard processing pipeline; agentic delegates processing to the intake agent. Omit to inherit; platform default programmatic.
 	Mode           *string                                `json:"mode,omitempty"`
 	Identification *ContentTypeIntakePolicyIdentification `json:"identification,omitempty"`
 	Locate         *ContentTypeIntakePolicyLocate         `json:"locate,omitempty"`
@@ -27,7 +29,7 @@ type ContentTypeIntakePolicy struct {
 	Extraction     *ContentTypeIntakePolicyExtraction     `json:"extraction,omitempty"`
 	// Handlebars template used to materialize extracted properties into object text.
 	RenderingTemplate *string `json:"rendering_template,omitempty"`
-	// Per-type embedding switches. Unspecified values inherit the project policy.
+	// Embedding generation switches. Omitted fields inherit type/project policy; project embedding availability remains a hard limit.
 	Embeddings *EmbeddingTypeEnabledMap `json:"embeddings,omitempty"`
 	// Whether intake should generate a table of contents for matching documents.
 	GenerateToc *bool `json:"generate_toc,omitempty"`
@@ -53,6 +55,38 @@ func NewContentTypeIntakePolicy() *ContentTypeIntakePolicy {
 func NewContentTypeIntakePolicyWithDefaults() *ContentTypeIntakePolicy {
 	this := ContentTypeIntakePolicy{}
 	return &this
+}
+
+// GetMediaAnalysis returns the MediaAnalysis field value if set, zero value otherwise.
+func (o *ContentTypeIntakePolicy) GetMediaAnalysis() IntakeMediaAnalysisOverrides {
+	if o == nil || IsNil(o.MediaAnalysis) {
+		var ret IntakeMediaAnalysisOverrides
+		return ret
+	}
+	return *o.MediaAnalysis
+}
+
+// GetMediaAnalysisOk returns a tuple with the MediaAnalysis field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentTypeIntakePolicy) GetMediaAnalysisOk() (*IntakeMediaAnalysisOverrides, bool) {
+	if o == nil || IsNil(o.MediaAnalysis) {
+		return nil, false
+	}
+	return o.MediaAnalysis, true
+}
+
+// HasMediaAnalysis returns a boolean if a field has been set.
+func (o *ContentTypeIntakePolicy) HasMediaAnalysis() bool {
+	if o != nil && !IsNil(o.MediaAnalysis) {
+		return true
+	}
+
+	return false
+}
+
+// SetMediaAnalysis gets a reference to the given IntakeMediaAnalysisOverrides and assigns it to the MediaAnalysis field.
+func (o *ContentTypeIntakePolicy) SetMediaAnalysis(v IntakeMediaAnalysisOverrides) {
+	o.MediaAnalysis = &v
 }
 
 // GetMode returns the Mode field value if set, zero value otherwise.
@@ -353,6 +387,9 @@ func (o ContentTypeIntakePolicy) MarshalJSON() ([]byte, error) {
 
 func (o ContentTypeIntakePolicy) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.MediaAnalysis) {
+		toSerialize["media_analysis"] = o.MediaAnalysis
+	}
 	if !IsNil(o.Mode) {
 		toSerialize["mode"] = o.Mode
 	}
@@ -402,6 +439,7 @@ func (o *ContentTypeIntakePolicy) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "media_analysis")
 		delete(additionalProperties, "mode")
 		delete(additionalProperties, "identification")
 		delete(additionalProperties, "locate")

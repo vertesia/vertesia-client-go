@@ -17,10 +17,12 @@ import (
 // checks if the ContentTypeIntakePolicyTextConversionCustom type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ContentTypeIntakePolicyTextConversionCustom{}
 
-// ContentTypeIntakePolicyTextConversionCustom struct for ContentTypeIntakePolicyTextConversionCustom
+// ContentTypeIntakePolicyTextConversionCustom Custom conversion target, used with method: custom. Set interaction; agent conversion is not implemented.
 type ContentTypeIntakePolicyTextConversionCustom struct {
+	// Interaction ID or qualified name to use when method is custom.
 	Interaction *string `json:"interaction,omitempty"`
-	Agent       *string `json:"agent,omitempty"`
+	// Reserved custom-agent conversion target. Standard Intake currently supports custom.interaction only.
+	Agent *string `json:"agent,omitempty"`
 }
 
 // NewContentTypeIntakePolicyTextConversionCustom instantiates a new ContentTypeIntakePolicyTextConversionCustom object

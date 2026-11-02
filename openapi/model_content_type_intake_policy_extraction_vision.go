@@ -19,7 +19,9 @@ var _ MappedNullable = &ContentTypeIntakePolicyExtractionVision{}
 
 // ContentTypeIntakePolicyExtractionVision Vision evidence budget for visual extraction. Detail names reference platform profiles; the type never defines dpi/quality/resolution.
 type ContentTypeIntakePolicyExtractionVision struct {
-	DefaultDetail  *IntakeVisionDetail  `json:"default_detail,omitempty"`
+	// Default visual evidence detail: low, standard, or high. References a platform/project rendering profile; default standard.
+	DefaultDetail *IntakeVisionDetail `json:"default_detail,omitempty"`
+	// Visual detail levels the evidence planner may choose. Omit to use the platform-supported levels.
 	AllowedDetails []IntakeVisionDetail `json:"allowed_details,omitempty"`
 	// PRIMARY budget: estimated image tokens per extraction call. Default 16000.
 	MaxImageTokens *int32 `json:"max_image_tokens,omitempty"`

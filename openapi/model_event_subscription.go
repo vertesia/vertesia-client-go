@@ -41,7 +41,7 @@ type EventSubscription struct {
 	CreatedAt                  *string                 `json:"created_at,omitempty"`
 	UpdatedAt                  *string                 `json:"updated_at,omitempty"`
 	MigratedFromWorkflowRuleId *string                 `json:"migrated_from_workflow_rule_id,omitempty"`
-	// System subscription ID replaced by this stored subscription. Set only for tenant-specific system overrides created by migrations or platform code.
+	// System subscription ID fully replaced by this stored project subscription. Disabling the replacement keeps the default suppressed; deleting it restores the default.
 	OverridesSystemSubscriptionId *string `json:"overrides_system_subscription_id,omitempty"`
 	// True when this system subscription was created from a legacy customer override.
 	CustomerOverride *bool `json:"customer_override,omitempty"`

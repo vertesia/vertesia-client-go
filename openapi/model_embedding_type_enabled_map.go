@@ -19,8 +19,11 @@ var _ MappedNullable = &EmbeddingTypeEnabledMap{}
 
 // EmbeddingTypeEnabledMap struct for EmbeddingTypeEnabledMap
 type EmbeddingTypeEnabledMap struct {
-	Text       *bool `json:"text,omitempty"`
-	Image      *bool `json:"image,omitempty"`
+	// Generate embeddings from object text. False disables this step; true still requires text embeddings to be enabled in the project.
+	Text *bool `json:"text,omitempty"`
+	// Generate image embeddings when applicable. False disables this step; true still requires image embeddings to be enabled in the project.
+	Image *bool `json:"image,omitempty"`
+	// Generate embeddings from extracted properties. False disables this step; true still requires property embeddings to be enabled in the project.
 	Properties *bool `json:"properties,omitempty"`
 }
 
