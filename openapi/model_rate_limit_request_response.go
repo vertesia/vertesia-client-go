@@ -21,6 +21,8 @@ var _ MappedNullable = &RateLimitRequestResponse{}
 // RateLimitRequestResponse struct for RateLimitRequestResponse
 type RateLimitRequestResponse struct {
 	DelayMs float32 `json:"delay_ms"`
+	// Opaque token for the slot this request holds: admitted when `delay_ms` is 0, otherwise queued until the caller asks again after the delay. Once admitted, send it back unchanged as `workflow.rate_limit_id` when executing, so completion releases exactly this slot. Absent when the request holds no slot.
+	RateLimitGrant *string `json:"rate_limit_grant,omitempty"`
 }
 
 type _RateLimitRequestResponse RateLimitRequestResponse
@@ -67,6 +69,38 @@ func (o *RateLimitRequestResponse) SetDelayMs(v float32) {
 	o.DelayMs = v
 }
 
+// GetRateLimitGrant returns the RateLimitGrant field value if set, zero value otherwise.
+func (o *RateLimitRequestResponse) GetRateLimitGrant() string {
+	if o == nil || IsNil(o.RateLimitGrant) {
+		var ret string
+		return ret
+	}
+	return *o.RateLimitGrant
+}
+
+// GetRateLimitGrantOk returns a tuple with the RateLimitGrant field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RateLimitRequestResponse) GetRateLimitGrantOk() (*string, bool) {
+	if o == nil || IsNil(o.RateLimitGrant) {
+		return nil, false
+	}
+	return o.RateLimitGrant, true
+}
+
+// HasRateLimitGrant returns a boolean if a field has been set.
+func (o *RateLimitRequestResponse) HasRateLimitGrant() bool {
+	if o != nil && !IsNil(o.RateLimitGrant) {
+		return true
+	}
+
+	return false
+}
+
+// SetRateLimitGrant gets a reference to the given string and assigns it to the RateLimitGrant field.
+func (o *RateLimitRequestResponse) SetRateLimitGrant(v string) {
+	o.RateLimitGrant = &v
+}
+
 func (o RateLimitRequestResponse) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -78,6 +112,9 @@ func (o RateLimitRequestResponse) MarshalJSON() ([]byte, error) {
 func (o RateLimitRequestResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["delay_ms"] = o.DelayMs
+	if !IsNil(o.RateLimitGrant) {
+		toSerialize["rate_limit_grant"] = o.RateLimitGrant
+	}
 	return toSerialize, nil
 }
 
