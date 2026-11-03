@@ -47,12 +47,14 @@ func (r ApiCreateWorkflowDefinitionRequest) Execute() (*DSLWorkflowDefinitionRes
 /*
 CreateWorkflowDefinition Create a workflow definition
 
-Creates a new DSL workflow definition or updates an existing one through the legacy upsert path.
+Workflow definitions are deprecated. Creates a new DSL workflow definition or updates an existing one through the legacy upsert path.
 
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiCreateWorkflowDefinitionRequest
+
+Deprecated
 */
 func (a *WorkflowDefinitionsAPIService) CreateWorkflowDefinition(ctx context.Context) ApiCreateWorkflowDefinitionRequest {
 	return ApiCreateWorkflowDefinitionRequest{
@@ -64,6 +66,8 @@ func (a *WorkflowDefinitionsAPIService) CreateWorkflowDefinition(ctx context.Con
 // Execute executes the request
 //
 //	@return DSLWorkflowDefinitionResponse
+//
+// Deprecated
 func (a *WorkflowDefinitionsAPIService) CreateWorkflowDefinitionExecute(r ApiCreateWorkflowDefinitionRequest) (*DSLWorkflowDefinitionResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
@@ -194,13 +198,15 @@ func (r ApiDeleteWorkflowDefinitionRequest) Execute() (*DeleteCountResult, *http
 /*
 DeleteWorkflowDefinition Delete a workflow definition
 
-Deletes a DSL workflow definition.
+Workflow definitions are deprecated. Deletes a DSL workflow definition.
 
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param workflowId
 	@return ApiDeleteWorkflowDefinitionRequest
+
+Deprecated
 */
 func (a *WorkflowDefinitionsAPIService) DeleteWorkflowDefinition(ctx context.Context, workflowId string) ApiDeleteWorkflowDefinitionRequest {
 	return ApiDeleteWorkflowDefinitionRequest{
@@ -213,6 +219,8 @@ func (a *WorkflowDefinitionsAPIService) DeleteWorkflowDefinition(ctx context.Con
 // Execute executes the request
 //
 //	@return DeleteCountResult
+//
+// Deprecated
 func (a *WorkflowDefinitionsAPIService) DeleteWorkflowDefinitionExecute(r ApiDeleteWorkflowDefinitionRequest) (*DeleteCountResult, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodDelete
@@ -339,13 +347,15 @@ func (r ApiGetWorkflowDefinitionRequest) Execute() (*DSLWorkflowDefinitionRespon
 /*
 GetWorkflowDefinition Retrieve a workflow definition
 
-Retrieves a DSL workflow definition by ID.
+Workflow definitions are deprecated. Retrieves a DSL workflow definition by ID.
 
 **Required permissions:** Any of `workflow:read`, `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param workflowId
 	@return ApiGetWorkflowDefinitionRequest
+
+Deprecated
 */
 func (a *WorkflowDefinitionsAPIService) GetWorkflowDefinition(ctx context.Context, workflowId string) ApiGetWorkflowDefinitionRequest {
 	return ApiGetWorkflowDefinitionRequest{
@@ -358,6 +368,8 @@ func (a *WorkflowDefinitionsAPIService) GetWorkflowDefinition(ctx context.Contex
 // Execute executes the request
 //
 //	@return DSLWorkflowDefinitionResponse
+//
+// Deprecated
 func (a *WorkflowDefinitionsAPIService) GetWorkflowDefinitionExecute(r ApiGetWorkflowDefinitionRequest) (*DSLWorkflowDefinitionResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
@@ -622,12 +634,14 @@ func (r ApiListWorkflowDefinitionsRequest) Execute() ([]WorkflowDefinitionRef, *
 /*
 ListWorkflowDefinitions List workflow definitions
 
-Lists DSL workflow definitions in the current project.
+Workflow definitions are deprecated. Lists DSL workflow definitions in the current project.
 
 **Required permissions:** Any of `workflow:read`, `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListWorkflowDefinitionsRequest
+
+Deprecated
 */
 func (a *WorkflowDefinitionsAPIService) ListWorkflowDefinitions(ctx context.Context) ApiListWorkflowDefinitionsRequest {
 	return ApiListWorkflowDefinitionsRequest{
@@ -639,6 +653,8 @@ func (a *WorkflowDefinitionsAPIService) ListWorkflowDefinitions(ctx context.Cont
 // Execute executes the request
 //
 //	@return []WorkflowDefinitionRef
+//
+// Deprecated
 func (a *WorkflowDefinitionsAPIService) ListWorkflowDefinitionsExecute(r ApiListWorkflowDefinitionsRequest) ([]WorkflowDefinitionRef, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
@@ -770,13 +786,15 @@ func (r ApiUpdateWorkflowDefinitionRequest) Execute() (*DSLWorkflowDefinitionRes
 /*
 UpdateWorkflowDefinition Update a workflow definition
 
-Updates an existing DSL workflow definition.
+Workflow definitions are deprecated. Updates an existing DSL workflow definition.
 
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param workflowId
 	@return ApiUpdateWorkflowDefinitionRequest
+
+Deprecated
 */
 func (a *WorkflowDefinitionsAPIService) UpdateWorkflowDefinition(ctx context.Context, workflowId string) ApiUpdateWorkflowDefinitionRequest {
 	return ApiUpdateWorkflowDefinitionRequest{
@@ -789,6 +807,8 @@ func (a *WorkflowDefinitionsAPIService) UpdateWorkflowDefinition(ctx context.Con
 // Execute executes the request
 //
 //	@return DSLWorkflowDefinitionResponse
+//
+// Deprecated
 func (a *WorkflowDefinitionsAPIService) UpdateWorkflowDefinitionExecute(r ApiUpdateWorkflowDefinitionRequest) (*DSLWorkflowDefinitionResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPut

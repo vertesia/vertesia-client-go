@@ -357,13 +357,15 @@ func (r ApiExecuteWorkflowRuleRequest) Execute() ([]WorkflowExecutionStartResult
 /*
 ExecuteWorkflowRule Execute a workflow rule
 
-Executes a workflow through a configured workflow rule and returns the created run.
+Workflow rules are deprecated; use event subscriptions instead. Executes a workflow through a configured workflow rule and returns the created run.
 
 **Required permissions:** `workflow:run`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param ruleId
 	@return ApiExecuteWorkflowRuleRequest
+
+Deprecated
 */
 func (a *WorkflowRunsAPIService) ExecuteWorkflowRule(ctx context.Context, ruleId string) ApiExecuteWorkflowRuleRequest {
 	return ApiExecuteWorkflowRuleRequest{
@@ -376,6 +378,8 @@ func (a *WorkflowRunsAPIService) ExecuteWorkflowRule(ctx context.Context, ruleId
 // Execute executes the request
 //
 //	@return []WorkflowExecutionStartResult
+//
+// Deprecated
 func (a *WorkflowRunsAPIService) ExecuteWorkflowRuleExecute(r ApiExecuteWorkflowRuleRequest) ([]WorkflowExecutionStartResult, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
@@ -841,13 +845,15 @@ func (r ApiListWorkflowRuleRunsRequest) Execute() (*ListWorkflowRunsResponse, *h
 /*
 ListWorkflowRuleRuns List runs for a workflow rule
 
-Lists workflow runs started from a specific workflow rule.
+Workflow rules are deprecated; use event subscriptions instead. Lists workflow runs started from a specific workflow rule.
 
 **Required permissions:** Any of `workflow:read`, `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param ruleId
 	@return ApiListWorkflowRuleRunsRequest
+
+Deprecated
 */
 func (a *WorkflowRunsAPIService) ListWorkflowRuleRuns(ctx context.Context, ruleId string) ApiListWorkflowRuleRunsRequest {
 	return ApiListWorkflowRuleRunsRequest{
@@ -860,6 +866,8 @@ func (a *WorkflowRunsAPIService) ListWorkflowRuleRuns(ctx context.Context, ruleI
 // Execute executes the request
 //
 //	@return ListWorkflowRunsResponse
+//
+// Deprecated
 func (a *WorkflowRunsAPIService) ListWorkflowRuleRunsExecute(r ApiListWorkflowRuleRunsRequest) (*ListWorkflowRunsResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet

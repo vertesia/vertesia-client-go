@@ -47,12 +47,14 @@ func (r ApiCreateWorkflowRuleRequest) Execute() (*WorkflowRule, *http.Response, 
 /*
 CreateWorkflowRule Create a workflow rule
 
-Creates a new workflow rule or updates an existing one through the legacy upsert path.
+Workflow rules are deprecated; use event subscriptions instead. Creates a new workflow rule or updates an existing one through the legacy upsert path.
 
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiCreateWorkflowRuleRequest
+
+Deprecated
 */
 func (a *WorkflowRulesAPIService) CreateWorkflowRule(ctx context.Context) ApiCreateWorkflowRuleRequest {
 	return ApiCreateWorkflowRuleRequest{
@@ -64,6 +66,8 @@ func (a *WorkflowRulesAPIService) CreateWorkflowRule(ctx context.Context) ApiCre
 // Execute executes the request
 //
 //	@return WorkflowRule
+//
+// Deprecated
 func (a *WorkflowRulesAPIService) CreateWorkflowRuleExecute(r ApiCreateWorkflowRuleRequest) (*WorkflowRule, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPost
@@ -194,13 +198,15 @@ func (r ApiDeleteWorkflowRuleRequest) Execute() (*DeleteCountResult, *http.Respo
 /*
 DeleteWorkflowRule Delete a workflow rule
 
-Deletes a workflow rule.
+Workflow rules are deprecated; use event subscriptions instead. Deletes a workflow rule.
 
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param ruleId
 	@return ApiDeleteWorkflowRuleRequest
+
+Deprecated
 */
 func (a *WorkflowRulesAPIService) DeleteWorkflowRule(ctx context.Context, ruleId string) ApiDeleteWorkflowRuleRequest {
 	return ApiDeleteWorkflowRuleRequest{
@@ -213,6 +219,8 @@ func (a *WorkflowRulesAPIService) DeleteWorkflowRule(ctx context.Context, ruleId
 // Execute executes the request
 //
 //	@return DeleteCountResult
+//
+// Deprecated
 func (a *WorkflowRulesAPIService) DeleteWorkflowRuleExecute(r ApiDeleteWorkflowRuleRequest) (*DeleteCountResult, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodDelete
@@ -339,13 +347,15 @@ func (r ApiGetWorkflowRuleRequest) Execute() (*WorkflowRule, *http.Response, err
 /*
 GetWorkflowRule Retrieve a workflow rule
 
-Retrieves a workflow rule by ID.
+Workflow rules are deprecated; use event subscriptions instead. Retrieves a workflow rule by ID.
 
 **Required permissions:** Any of `workflow:read`, `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param ruleId
 	@return ApiGetWorkflowRuleRequest
+
+Deprecated
 */
 func (a *WorkflowRulesAPIService) GetWorkflowRule(ctx context.Context, ruleId string) ApiGetWorkflowRuleRequest {
 	return ApiGetWorkflowRuleRequest{
@@ -358,6 +368,8 @@ func (a *WorkflowRulesAPIService) GetWorkflowRule(ctx context.Context, ruleId st
 // Execute executes the request
 //
 //	@return WorkflowRule
+//
+// Deprecated
 func (a *WorkflowRulesAPIService) GetWorkflowRuleExecute(r ApiGetWorkflowRuleRequest) (*WorkflowRule, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
@@ -483,12 +495,14 @@ func (r ApiListWorkflowRulesRequest) Execute() ([]WorkflowRuleItem, *http.Respon
 /*
 ListWorkflowRules List workflow rules
 
-Lists workflow rules available in the current project.
+Workflow rules are deprecated; use event subscriptions instead. Lists workflow rules available in the current project.
 
 **Required permissions:** Any of `workflow:read`, `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiListWorkflowRulesRequest
+
+Deprecated
 */
 func (a *WorkflowRulesAPIService) ListWorkflowRules(ctx context.Context) ApiListWorkflowRulesRequest {
 	return ApiListWorkflowRulesRequest{
@@ -500,6 +514,8 @@ func (a *WorkflowRulesAPIService) ListWorkflowRules(ctx context.Context) ApiList
 // Execute executes the request
 //
 //	@return []WorkflowRuleItem
+//
+// Deprecated
 func (a *WorkflowRulesAPIService) ListWorkflowRulesExecute(r ApiListWorkflowRulesRequest) ([]WorkflowRuleItem, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
@@ -631,13 +647,15 @@ func (r ApiUpdateWorkflowRuleRequest) Execute() (*WorkflowRule, *http.Response, 
 /*
 UpdateWorkflowRule Update a workflow rule
 
-Updates an existing workflow rule.
+Workflow rules are deprecated; use event subscriptions instead. Updates an existing workflow rule.
 
 **Required permissions:** `workflow:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param ruleId
 	@return ApiUpdateWorkflowRuleRequest
+
+Deprecated
 */
 func (a *WorkflowRulesAPIService) UpdateWorkflowRule(ctx context.Context, ruleId string) ApiUpdateWorkflowRuleRequest {
 	return ApiUpdateWorkflowRuleRequest{
@@ -650,6 +668,8 @@ func (a *WorkflowRulesAPIService) UpdateWorkflowRule(ctx context.Context, ruleId
 // Execute executes the request
 //
 //	@return WorkflowRule
+//
+// Deprecated
 func (a *WorkflowRulesAPIService) UpdateWorkflowRuleExecute(r ApiUpdateWorkflowRuleRequest) (*WorkflowRule, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodPut
