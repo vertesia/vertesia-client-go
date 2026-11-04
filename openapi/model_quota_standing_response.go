@@ -20,7 +20,8 @@ var _ MappedNullable = &QuotaStandingResponse{}
 
 // QuotaStandingResponse struct for QuotaStandingResponse
 type QuotaStandingResponse struct {
-	TenantId string `json:"tenant_id"`
+	WorkflowUsage *WorkflowUsageStanding `json:"workflow_usage,omitempty"`
+	TenantId      string                 `json:"tenant_id"`
 	// False when the limiter store (Redis) was unavailable, so `api`/`admission` are empty because standing could not be read — NOT because there are no limits. Limiters fail open in this case.
 	Available bool `json:"available"`
 	// Deployment base tier (env QUOTA_BASE_TIER); `default` = the static limits stand.
@@ -58,6 +59,38 @@ func NewQuotaStandingResponse(tenantId string, available bool, baseTier string, 
 func NewQuotaStandingResponseWithDefaults() *QuotaStandingResponse {
 	this := QuotaStandingResponse{}
 	return &this
+}
+
+// GetWorkflowUsage returns the WorkflowUsage field value if set, zero value otherwise.
+func (o *QuotaStandingResponse) GetWorkflowUsage() WorkflowUsageStanding {
+	if o == nil || IsNil(o.WorkflowUsage) {
+		var ret WorkflowUsageStanding
+		return ret
+	}
+	return *o.WorkflowUsage
+}
+
+// GetWorkflowUsageOk returns a tuple with the WorkflowUsage field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *QuotaStandingResponse) GetWorkflowUsageOk() (*WorkflowUsageStanding, bool) {
+	if o == nil || IsNil(o.WorkflowUsage) {
+		return nil, false
+	}
+	return o.WorkflowUsage, true
+}
+
+// HasWorkflowUsage returns a boolean if a field has been set.
+func (o *QuotaStandingResponse) HasWorkflowUsage() bool {
+	if o != nil && !IsNil(o.WorkflowUsage) {
+		return true
+	}
+
+	return false
+}
+
+// SetWorkflowUsage gets a reference to the given WorkflowUsageStanding and assigns it to the WorkflowUsage field.
+func (o *QuotaStandingResponse) SetWorkflowUsage(v WorkflowUsageStanding) {
+	o.WorkflowUsage = &v
 }
 
 // GetTenantId returns the TenantId field value
@@ -238,6 +271,9 @@ func (o QuotaStandingResponse) MarshalJSON() ([]byte, error) {
 
 func (o QuotaStandingResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.WorkflowUsage) {
+		toSerialize["workflow_usage"] = o.WorkflowUsage
+	}
 	toSerialize["tenant_id"] = o.TenantId
 	toSerialize["available"] = o.Available
 	toSerialize["base_tier"] = o.BaseTier
@@ -294,6 +330,7 @@ func (o *QuotaStandingResponse) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "workflow_usage")
 		delete(additionalProperties, "tenant_id")
 		delete(additionalProperties, "available")
 		delete(additionalProperties, "base_tier")

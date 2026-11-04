@@ -1244,6 +1244,12 @@ model_workflow_run_with_details.go
 model_workflow_search_attribute_value_inner.go
 model_workflow_task.go
 model_workflow_update_publish_response.go
+model_workflow_usage_class.go
+model_workflow_usage_class_actual_starts.go
+model_workflow_usage_class_backlog.go
+model_workflow_usage_class_occupancy.go
+model_workflow_usage_class_start_window.go
+model_workflow_usage_standing.go
 model_xai_grok_image_options.go
 response.go
 utils.go
