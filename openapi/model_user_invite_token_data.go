@@ -20,11 +20,11 @@ var _ MappedNullable = &UserInviteTokenData{}
 
 // UserInviteTokenData struct for UserInviteTokenData
 type UserInviteTokenData struct {
-	Email     string      `json:"email"`
-	Role      SystemRoles `json:"role"`
-	Account   AccountRef  `json:"account"`
-	Project   *ProjectRef `json:"project,omitempty"`
-	InvitedBy UserRef     `json:"invited_by"`
+	Email     string             `json:"email"`
+	Role      AssignableRoleName `json:"role"`
+	Account   AccountRef         `json:"account"`
+	Project   *ProjectRef        `json:"project,omitempty"`
+	InvitedBy UserRef            `json:"invited_by"`
 }
 
 type _UserInviteTokenData UserInviteTokenData
@@ -33,7 +33,7 @@ type _UserInviteTokenData UserInviteTokenData
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUserInviteTokenData(email string, role SystemRoles, account AccountRef, invitedBy UserRef) *UserInviteTokenData {
+func NewUserInviteTokenData(email string, role AssignableRoleName, account AccountRef, invitedBy UserRef) *UserInviteTokenData {
 	this := UserInviteTokenData{}
 	this.Email = email
 	this.Role = role
@@ -75,9 +75,9 @@ func (o *UserInviteTokenData) SetEmail(v string) {
 }
 
 // GetRole returns the Role field value
-func (o *UserInviteTokenData) GetRole() SystemRoles {
+func (o *UserInviteTokenData) GetRole() AssignableRoleName {
 	if o == nil {
-		var ret SystemRoles
+		var ret AssignableRoleName
 		return ret
 	}
 
@@ -86,7 +86,7 @@ func (o *UserInviteTokenData) GetRole() SystemRoles {
 
 // GetRoleOk returns a tuple with the Role field value
 // and a boolean to check if the value has been set.
-func (o *UserInviteTokenData) GetRoleOk() (*SystemRoles, bool) {
+func (o *UserInviteTokenData) GetRoleOk() (*AssignableRoleName, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -94,7 +94,7 @@ func (o *UserInviteTokenData) GetRoleOk() (*SystemRoles, bool) {
 }
 
 // SetRole sets field value
-func (o *UserInviteTokenData) SetRole(v SystemRoles) {
+func (o *UserInviteTokenData) SetRole(v AssignableRoleName) {
 	o.Role = v
 }
 

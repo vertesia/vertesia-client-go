@@ -210,6 +210,7 @@ model_app_version_urls.go
 model_app_widget_info.go
 model_ask_user_webhook_configuration.go
 model_ask_user_webhook_configuration_input.go
+model_assignable_role_name.go
 model_async_completion_mode.go
 model_async_completion_options.go
 model_async_conversation_execution_payload.go
@@ -426,6 +427,7 @@ model_create_user_group_payload.go
 model_create_user_payload.go
 model_create_view_experience_request.go
 model_create_workflow_rule_payload.go
+model_custom_role_definition.go
 model_dashboard.go
 model_dashboard_archive_result.go
 model_dashboard_bulk_archive_result.go
@@ -1095,6 +1097,7 @@ model_update_app_payload.go
 model_update_collection_payload.go
 model_update_content_object_payload.go
 model_update_content_object_type_payload.go
+model_update_custom_role_payload.go
 model_update_dashboard_payload.go
 model_update_email_route_request.go
 model_update_email_route_response.go

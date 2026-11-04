@@ -19,9 +19,9 @@ var _ MappedNullable = &UpdateApiKeyPayload{}
 
 // UpdateApiKeyPayload struct for UpdateApiKeyPayload
 type UpdateApiKeyPayload struct {
-	Name    *string      `json:"name,omitempty"`
-	Role    *SystemRoles `json:"role,omitempty"`
-	Enabled *bool        `json:"enabled,omitempty"`
+	Name    *string             `json:"name,omitempty"`
+	Role    *AssignableRoleName `json:"role,omitempty"`
+	Enabled *bool               `json:"enabled,omitempty"`
 	// Organization-wide SCIM provisioning credential. Only account administrators may create or manage these keys. May be enabled by account administrators on existing keys; disable or delete to revoke access.
 	ScimProvisioning *bool `json:"scim_provisioning,omitempty"`
 	// Custom properties for dynamic permission matching (PrincipalSet / $principal. conditions)
@@ -85,9 +85,9 @@ func (o *UpdateApiKeyPayload) SetName(v string) {
 }
 
 // GetRole returns the Role field value if set, zero value otherwise.
-func (o *UpdateApiKeyPayload) GetRole() SystemRoles {
+func (o *UpdateApiKeyPayload) GetRole() AssignableRoleName {
 	if o == nil || IsNil(o.Role) {
-		var ret SystemRoles
+		var ret AssignableRoleName
 		return ret
 	}
 	return *o.Role
@@ -95,7 +95,7 @@ func (o *UpdateApiKeyPayload) GetRole() SystemRoles {
 
 // GetRoleOk returns a tuple with the Role field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *UpdateApiKeyPayload) GetRoleOk() (*SystemRoles, bool) {
+func (o *UpdateApiKeyPayload) GetRoleOk() (*AssignableRoleName, bool) {
 	if o == nil || IsNil(o.Role) {
 		return nil, false
 	}
@@ -111,8 +111,8 @@ func (o *UpdateApiKeyPayload) HasRole() bool {
 	return false
 }
 
-// SetRole gets a reference to the given SystemRoles and assigns it to the Role field.
-func (o *UpdateApiKeyPayload) SetRole(v SystemRoles) {
+// SetRole gets a reference to the given AssignableRoleName and assigns it to the Role field.
+func (o *UpdateApiKeyPayload) SetRole(v AssignableRoleName) {
 	o.Role = &v
 }
 

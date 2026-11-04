@@ -21,10 +21,10 @@ var _ MappedNullable = &CreateApiKeyPayload{}
 
 // CreateApiKeyPayload struct for CreateApiKeyPayload
 type CreateApiKeyPayload struct {
-	Name      string       `json:"name"`
-	Role      SystemRoles  `json:"role"`
-	Type      *ApiKeyTypes `json:"type,omitempty"`
-	ExpiresAt *time.Time   `json:"expires_at,omitempty"`
+	Name      string             `json:"name"`
+	Role      AssignableRoleName `json:"role"`
+	Type      *ApiKeyTypes       `json:"type,omitempty"`
+	ExpiresAt *time.Time         `json:"expires_at,omitempty"`
 	// Organization-wide SCIM provisioning credential. Only account administrators may create or manage these keys. May be enabled by account administrators on existing keys; disable or delete to revoke access.
 	ScimProvisioning *bool `json:"scim_provisioning,omitempty"`
 	// Custom properties for dynamic permission matching (PrincipalSet / $principal. conditions)
@@ -42,7 +42,7 @@ type _CreateApiKeyPayload CreateApiKeyPayload
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateApiKeyPayload(name string, role SystemRoles) *CreateApiKeyPayload {
+func NewCreateApiKeyPayload(name string, role AssignableRoleName) *CreateApiKeyPayload {
 	this := CreateApiKeyPayload{}
 	this.Name = name
 	this.Role = role
@@ -82,9 +82,9 @@ func (o *CreateApiKeyPayload) SetName(v string) {
 }
 
 // GetRole returns the Role field value
-func (o *CreateApiKeyPayload) GetRole() SystemRoles {
+func (o *CreateApiKeyPayload) GetRole() AssignableRoleName {
 	if o == nil {
-		var ret SystemRoles
+		var ret AssignableRoleName
 		return ret
 	}
 
@@ -93,7 +93,7 @@ func (o *CreateApiKeyPayload) GetRole() SystemRoles {
 
 // GetRoleOk returns a tuple with the Role field value
 // and a boolean to check if the value has been set.
-func (o *CreateApiKeyPayload) GetRoleOk() (*SystemRoles, bool) {
+func (o *CreateApiKeyPayload) GetRoleOk() (*AssignableRoleName, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -101,7 +101,7 @@ func (o *CreateApiKeyPayload) GetRoleOk() (*SystemRoles, bool) {
 }
 
 // SetRole sets field value
-func (o *CreateApiKeyPayload) SetRole(v SystemRoles) {
+func (o *CreateApiKeyPayload) SetRole(v AssignableRoleName) {
 	o.Role = v
 }
 
