@@ -31,6 +31,8 @@ type RenderMarkdownStatusResponse struct {
 	FileUri *string `json:"file_uri,omitempty"`
 	// Error details for failed/terminated runs
 	Error *string `json:"error,omitempty"`
+	// Content left out of a completed output, such as an image that was not embedded
+	Warnings []string `json:"warnings,omitempty"`
 }
 
 type _RenderMarkdownStatusResponse RenderMarkdownStatusResponse
@@ -259,6 +261,38 @@ func (o *RenderMarkdownStatusResponse) SetError(v string) {
 	o.Error = &v
 }
 
+// GetWarnings returns the Warnings field value if set, zero value otherwise.
+func (o *RenderMarkdownStatusResponse) GetWarnings() []string {
+	if o == nil || IsNil(o.Warnings) {
+		var ret []string
+		return ret
+	}
+	return o.Warnings
+}
+
+// GetWarningsOk returns a tuple with the Warnings field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *RenderMarkdownStatusResponse) GetWarningsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Warnings) {
+		return nil, false
+	}
+	return o.Warnings, true
+}
+
+// HasWarnings returns a boolean if a field has been set.
+func (o *RenderMarkdownStatusResponse) HasWarnings() bool {
+	if o != nil && !IsNil(o.Warnings) {
+		return true
+	}
+
+	return false
+}
+
+// SetWarnings gets a reference to the given []string and assigns it to the Warnings field.
+func (o *RenderMarkdownStatusResponse) SetWarnings(v []string) {
+	o.Warnings = v
+}
+
 func (o RenderMarkdownStatusResponse) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -283,6 +317,9 @@ func (o RenderMarkdownStatusResponse) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Error) {
 		toSerialize["error"] = o.Error
+	}
+	if !IsNil(o.Warnings) {
+		toSerialize["warnings"] = o.Warnings
 	}
 	return toSerialize, nil
 }
