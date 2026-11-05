@@ -50,6 +50,8 @@ type DataStore struct {
 	LastImportAt *string `json:"last_import_at,omitempty"`
 	// Number of versions stored
 	VersionCount float32 `json:"version_count"`
+	// ID of the version this store serves. Automatic version records expire, so this version can be missing from the version list while its data stays readable. Absent on a store not written to since immutable versions were introduced.
+	CurrentVersion *string `json:"current_version,omitempty"`
 	// Complete schema definition
 	Schema DataSchema `json:"schema"`
 	// GCS bucket name
@@ -469,6 +471,38 @@ func (o *DataStore) SetVersionCount(v float32) {
 	o.VersionCount = v
 }
 
+// GetCurrentVersion returns the CurrentVersion field value if set, zero value otherwise.
+func (o *DataStore) GetCurrentVersion() string {
+	if o == nil || IsNil(o.CurrentVersion) {
+		var ret string
+		return ret
+	}
+	return *o.CurrentVersion
+}
+
+// GetCurrentVersionOk returns a tuple with the CurrentVersion field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *DataStore) GetCurrentVersionOk() (*string, bool) {
+	if o == nil || IsNil(o.CurrentVersion) {
+		return nil, false
+	}
+	return o.CurrentVersion, true
+}
+
+// HasCurrentVersion returns a boolean if a field has been set.
+func (o *DataStore) HasCurrentVersion() bool {
+	if o != nil && !IsNil(o.CurrentVersion) {
+		return true
+	}
+
+	return false
+}
+
+// SetCurrentVersion gets a reference to the given string and assigns it to the CurrentVersion field.
+func (o *DataStore) SetCurrentVersion(v string) {
+	o.CurrentVersion = &v
+}
+
 // GetSchema returns the Schema field value
 func (o *DataStore) GetSchema() DataSchema {
 	if o == nil {
@@ -570,6 +604,9 @@ func (o DataStore) ToMap() (map[string]interface{}, error) {
 		toSerialize["last_import_at"] = o.LastImportAt
 	}
 	toSerialize["version_count"] = o.VersionCount
+	if !IsNil(o.CurrentVersion) {
+		toSerialize["current_version"] = o.CurrentVersion
+	}
 	toSerialize["schema"] = o.Schema
 	toSerialize["gcs_bucket"] = o.GcsBucket
 	toSerialize["gcs_path"] = o.GcsPath
