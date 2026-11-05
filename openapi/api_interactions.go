@@ -332,11 +332,18 @@ type ApiDeleteInteractionRequest struct {
 	ApiService    *InteractionsAPIService
 	interactionId string
 	xApiVersion   *string
+	cascade       *bool
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeleteInteractionRequest) XApiVersion(xApiVersion string) ApiDeleteInteractionRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+// Set to true on a draft to also delete its published versions. A cascade never deletes a version&#39;s draft, sibling versions, or forks.
+func (r ApiDeleteInteractionRequest) Cascade(cascade bool) ApiDeleteInteractionRequest {
+	r.cascade = &cascade
 	return r
 }
 
@@ -396,6 +403,9 @@ func (a *InteractionsAPIService) DeleteInteractionExecute(r ApiDeleteInteraction
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	if r.cascade != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "cascade", r.cascade, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

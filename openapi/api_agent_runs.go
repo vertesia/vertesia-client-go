@@ -4386,11 +4386,18 @@ type ApiTerminateAgentRunRequest struct {
 	ApiService  *AgentRunsAPIService
 	agentRunId  string
 	xApiVersion *string
+	reason      *string
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiTerminateAgentRunRequest) XApiVersion(xApiVersion string) ApiTerminateAgentRunRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+// Why the run is being terminated. Takes precedence over a &#x60;reason&#x60; in the body.
+func (r ApiTerminateAgentRunRequest) Reason(reason string) ApiTerminateAgentRunRequest {
+	r.reason = &reason
 	return r
 }
 
@@ -4450,6 +4457,9 @@ func (a *AgentRunsAPIService) TerminateAgentRunExecute(r ApiTerminateAgentRunReq
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	if r.reason != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "reason", r.reason, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

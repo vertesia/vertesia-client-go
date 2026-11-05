@@ -651,11 +651,18 @@ type ApiCreateDataStoreDownloadUrlRequest struct {
 	ApiService  *DataAPIService
 	storeId     string
 	xApiVersion *string
+	versionId   *string
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiCreateDataStoreDownloadUrlRequest) XApiVersion(xApiVersion string) ApiCreateDataStoreDownloadUrlRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+// The stored version or snapshot to download. Defaults to the current database.
+func (r ApiCreateDataStoreDownloadUrlRequest) VersionId(versionId string) ApiCreateDataStoreDownloadUrlRequest {
+	r.versionId = &versionId
 	return r
 }
 
@@ -715,6 +722,9 @@ func (a *DataAPIService) CreateDataStoreDownloadUrlExecute(r ApiCreateDataStoreD
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	if r.versionId != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "version_id", r.versionId, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -2768,11 +2778,18 @@ type ApiGetDataStoreSchemaRequest struct {
 	ApiService  *DataAPIService
 	storeId     string
 	xApiVersion *string
+	format      *string
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetDataStoreSchemaRequest) XApiVersion(xApiVersion string) ApiGetDataStoreSchemaRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+// &#x60;ai&#x60; returns a condensed schema for AI context. Defaults to &#x60;full&#x60;.
+func (r ApiGetDataStoreSchemaRequest) Format(format string) ApiGetDataStoreSchemaRequest {
+	r.format = &format
 	return r
 }
 
@@ -2832,6 +2849,9 @@ func (a *DataAPIService) GetDataStoreSchemaExecute(r ApiGetDataStoreSchemaReques
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	if r.format != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "format", r.format, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -3223,16 +3243,30 @@ func (a *DataAPIService) ImportDataStoreDataExecute(r ApiImportDataStoreDataRequ
 }
 
 type ApiListDashboardVersionsRequest struct {
-	ctx         context.Context
-	ApiService  *DataAPIService
-	storeId     string
-	dashboardId string
-	xApiVersion *string
+	ctx           context.Context
+	ApiService    *DataAPIService
+	storeId       string
+	dashboardId   string
+	xApiVersion   *string
+	limit         *float32
+	snapshotsOnly *bool
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListDashboardVersionsRequest) XApiVersion(xApiVersion string) ApiListDashboardVersionsRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+// Maximum number of versions to return. Defaults to 50.
+func (r ApiListDashboardVersionsRequest) Limit(limit float32) ApiListDashboardVersionsRequest {
+	r.limit = &limit
+	return r
+}
+
+// Only list named snapshots.
+func (r ApiListDashboardVersionsRequest) SnapshotsOnly(snapshotsOnly bool) ApiListDashboardVersionsRequest {
+	r.snapshotsOnly = &snapshotsOnly
 	return r
 }
 
@@ -3295,6 +3329,12 @@ func (a *DataAPIService) ListDashboardVersionsExecute(r ApiListDashboardVersions
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "form", "")
+	}
+	if r.snapshotsOnly != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "snapshots_only", r.snapshotsOnly, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -3376,11 +3416,18 @@ type ApiListDashboardsRequest struct {
 	ApiService  *DataAPIService
 	storeId     string
 	xApiVersion *string
+	status      *string
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListDashboardsRequest) XApiVersion(xApiVersion string) ApiListDashboardsRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+// Only list dashboards with this status. Defaults to &#x60;active&#x60;.
+func (r ApiListDashboardsRequest) Status(status string) ApiListDashboardsRequest {
+	r.status = &status
 	return r
 }
 
@@ -3440,6 +3487,9 @@ func (a *DataAPIService) ListDashboardsExecute(r ApiListDashboardsRequest) ([]Da
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	if r.status != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "status", r.status, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -3521,11 +3571,18 @@ type ApiListDataStoreSchemaHistoryRequest struct {
 	ApiService  *DataAPIService
 	storeId     string
 	xApiVersion *string
+	limit       *float32
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiListDataStoreSchemaHistoryRequest) XApiVersion(xApiVersion string) ApiListDataStoreSchemaHistoryRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+// Maximum number of versions to return. Defaults to 50.
+func (r ApiListDataStoreSchemaHistoryRequest) Limit(limit float32) ApiListDataStoreSchemaHistoryRequest {
+	r.limit = &limit
 	return r
 }
 
@@ -3585,6 +3642,9 @@ func (a *DataAPIService) ListDataStoreSchemaHistoryExecute(r ApiListDataStoreSch
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

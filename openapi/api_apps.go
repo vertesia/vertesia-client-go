@@ -787,11 +787,18 @@ type ApiDeleteAppRequest struct {
 	ApiService  *AppsAPIService
 	id          string
 	xApiVersion *string
+	confirm     *bool
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiDeleteAppRequest) XApiVersion(xApiVersion string) ApiDeleteAppRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+// Set to true to delete the app. When omitted or false this is a dry run: nothing is removed, and the response describes what the cascade would remove.
+func (r ApiDeleteAppRequest) Confirm(confirm bool) ApiDeleteAppRequest {
+	r.confirm = &confirm
 	return r
 }
 
@@ -851,6 +858,9 @@ func (a *AppsAPIService) DeleteAppExecute(r ApiDeleteAppRequest) (*AppDeleteSumm
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	if r.confirm != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "confirm", r.confirm, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -3057,11 +3067,39 @@ type ApiGetAppRepoCommitsRequest struct {
 	ApiService  *AppsAPIService
 	id          string
 	xApiVersion *string
+	path        *string
+	ref         *string
+	limit       *float32
+	cursor      *string
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetAppRepoCommitsRequest) XApiVersion(xApiVersion string) ApiGetAppRepoCommitsRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+// Only list commits that changed this file, relative to the repository root.
+func (r ApiGetAppRepoCommitsRequest) Path(path string) ApiGetAppRepoCommitsRequest {
+	r.path = &path
+	return r
+}
+
+// Branch, tag or commit to start from. Defaults to the default branch.
+func (r ApiGetAppRepoCommitsRequest) Ref(ref string) ApiGetAppRepoCommitsRequest {
+	r.ref = &ref
+	return r
+}
+
+// Maximum number of commits in the page.
+func (r ApiGetAppRepoCommitsRequest) Limit(limit float32) ApiGetAppRepoCommitsRequest {
+	r.limit = &limit
+	return r
+}
+
+// The &#x60;next_cursor&#x60; of the previous page.
+func (r ApiGetAppRepoCommitsRequest) Cursor(cursor string) ApiGetAppRepoCommitsRequest {
+	r.cursor = &cursor
 	return r
 }
 
@@ -3121,6 +3159,18 @@ func (a *AppsAPIService) GetAppRepoCommitsExecute(r ApiGetAppRepoCommitsRequest)
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	if r.path != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "path", r.path, "form", "")
+	}
+	if r.ref != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "ref", r.ref, "form", "")
+	}
+	if r.limit != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "limit", r.limit, "form", "")
+	}
+	if r.cursor != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "cursor", r.cursor, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
