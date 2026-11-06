@@ -20,7 +20,8 @@ var _ MappedNullable = &ResolvePendingAskRequest{}
 
 // ResolvePendingAskRequest struct for ResolvePendingAskRequest
 type ResolvePendingAskRequest struct {
-	Response string `json:"response"`
+	Response string              `json:"response"`
+	Delivery *PendingAskDelivery `json:"delivery,omitempty"`
 }
 
 type _ResolvePendingAskRequest ResolvePendingAskRequest
@@ -67,6 +68,38 @@ func (o *ResolvePendingAskRequest) SetResponse(v string) {
 	o.Response = v
 }
 
+// GetDelivery returns the Delivery field value if set, zero value otherwise.
+func (o *ResolvePendingAskRequest) GetDelivery() PendingAskDelivery {
+	if o == nil || IsNil(o.Delivery) {
+		var ret PendingAskDelivery
+		return ret
+	}
+	return *o.Delivery
+}
+
+// GetDeliveryOk returns a tuple with the Delivery field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ResolvePendingAskRequest) GetDeliveryOk() (*PendingAskDelivery, bool) {
+	if o == nil || IsNil(o.Delivery) {
+		return nil, false
+	}
+	return o.Delivery, true
+}
+
+// HasDelivery returns a boolean if a field has been set.
+func (o *ResolvePendingAskRequest) HasDelivery() bool {
+	if o != nil && !IsNil(o.Delivery) {
+		return true
+	}
+
+	return false
+}
+
+// SetDelivery gets a reference to the given PendingAskDelivery and assigns it to the Delivery field.
+func (o *ResolvePendingAskRequest) SetDelivery(v PendingAskDelivery) {
+	o.Delivery = &v
+}
+
 func (o ResolvePendingAskRequest) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -78,6 +111,9 @@ func (o ResolvePendingAskRequest) MarshalJSON() ([]byte, error) {
 func (o ResolvePendingAskRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["response"] = o.Response
+	if !IsNil(o.Delivery) {
+		toSerialize["delivery"] = o.Delivery
+	}
 	return toSerialize, nil
 }
 

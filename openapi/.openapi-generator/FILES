@@ -803,6 +803,7 @@ model_parallel_failure_policy.go
 model_pdf_rendering_metadata.go
 model_pending_activity.go
 model_pending_ask_data.go
+model_pending_ask_delivery.go
 model_pending_ask_status.go
 model_pending_mcp_connection.go
 model_pending_tool_approval_results.go
