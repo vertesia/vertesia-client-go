@@ -43,7 +43,7 @@ func (r ApiCancelTaskRequest) Execute() (*Task, *http.Response, error) {
 /*
 CancelTask Cancel a task
 
-Cancels a pending or in-progress durable task.
+Cancels a pending or in-progress durable task. Answers 409 while a running process is waiting on the task: answer the task, advance the run, or cancel the run instead.
 
 **Required permissions:** `task:manage`
 
@@ -194,7 +194,7 @@ func (r ApiCompleteTaskRequest) Execute() (*Task, *http.Response, error) {
 /*
 CompleteTask Complete a task
 
-Completes a durable task and, for agent ask tasks, signals the backing workflow with the submitted result. Process `human_task` nodes should be resumed through `POST /agents/{agentRunId}/answer-task` instead of this endpoint.
+Completes a durable task and signals the backing agent or process workflow with the submitted result. Answers 409 when the task was already given a different answer or its run has ended.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param taskId The task ID, as 24 hexadecimal characters.
