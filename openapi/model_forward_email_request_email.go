@@ -25,6 +25,8 @@ type ForwardEmailRequestEmail struct {
 	Text      string  `json:"text"`
 	Html      *string `json:"html,omitempty"`
 	MessageId *string `json:"message_id,omitempty"`
+	// The email's In-Reply-To header. When it names an email that asked an agent prompt, the reply answers only that prompt.
+	InReplyTo *string `json:"in_reply_to,omitempty"`
 }
 
 type _ForwardEmailRequestEmail ForwardEmailRequestEmail
@@ -192,6 +194,38 @@ func (o *ForwardEmailRequestEmail) SetMessageId(v string) {
 	o.MessageId = &v
 }
 
+// GetInReplyTo returns the InReplyTo field value if set, zero value otherwise.
+func (o *ForwardEmailRequestEmail) GetInReplyTo() string {
+	if o == nil || IsNil(o.InReplyTo) {
+		var ret string
+		return ret
+	}
+	return *o.InReplyTo
+}
+
+// GetInReplyToOk returns a tuple with the InReplyTo field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ForwardEmailRequestEmail) GetInReplyToOk() (*string, bool) {
+	if o == nil || IsNil(o.InReplyTo) {
+		return nil, false
+	}
+	return o.InReplyTo, true
+}
+
+// HasInReplyTo returns a boolean if a field has been set.
+func (o *ForwardEmailRequestEmail) HasInReplyTo() bool {
+	if o != nil && !IsNil(o.InReplyTo) {
+		return true
+	}
+
+	return false
+}
+
+// SetInReplyTo gets a reference to the given string and assigns it to the InReplyTo field.
+func (o *ForwardEmailRequestEmail) SetInReplyTo(v string) {
+	o.InReplyTo = &v
+}
+
 func (o ForwardEmailRequestEmail) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -212,6 +246,9 @@ func (o ForwardEmailRequestEmail) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.MessageId) {
 		toSerialize["message_id"] = o.MessageId
+	}
+	if !IsNil(o.InReplyTo) {
+		toSerialize["in_reply_to"] = o.InReplyTo
 	}
 	return toSerialize, nil
 }

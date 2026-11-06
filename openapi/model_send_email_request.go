@@ -29,6 +29,8 @@ type SendEmailRequest struct {
 	RouteKey   *string  `json:"route_key,omitempty"`
 	InReplyTo  *string  `json:"in_reply_to,omitempty"`
 	References []string `json:"references,omitempty"`
+	// The agent prompt this email asks. A reply to the email then answers only that prompt, not a newer one.
+	RequestId *string `json:"request_id,omitempty"`
 }
 
 type _SendEmailRequest SendEmailRequest
@@ -303,6 +305,38 @@ func (o *SendEmailRequest) SetReferences(v []string) {
 	o.References = v
 }
 
+// GetRequestId returns the RequestId field value if set, zero value otherwise.
+func (o *SendEmailRequest) GetRequestId() string {
+	if o == nil || IsNil(o.RequestId) {
+		var ret string
+		return ret
+	}
+	return *o.RequestId
+}
+
+// GetRequestIdOk returns a tuple with the RequestId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SendEmailRequest) GetRequestIdOk() (*string, bool) {
+	if o == nil || IsNil(o.RequestId) {
+		return nil, false
+	}
+	return o.RequestId, true
+}
+
+// HasRequestId returns a boolean if a field has been set.
+func (o *SendEmailRequest) HasRequestId() bool {
+	if o != nil && !IsNil(o.RequestId) {
+		return true
+	}
+
+	return false
+}
+
+// SetRequestId gets a reference to the given string and assigns it to the RequestId field.
+func (o *SendEmailRequest) SetRequestId(v string) {
+	o.RequestId = &v
+}
+
 func (o SendEmailRequest) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -329,6 +363,9 @@ func (o SendEmailRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.References) {
 		toSerialize["references"] = o.References
+	}
+	if !IsNil(o.RequestId) {
+		toSerialize["request_id"] = o.RequestId
 	}
 	return toSerialize, nil
 }
