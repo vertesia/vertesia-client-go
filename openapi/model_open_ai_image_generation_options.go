@@ -31,6 +31,9 @@ type OpenAiImageGenerationOptions struct {
 	Moderation        *string                    `json:"moderation,omitempty"`
 	InputFidelity     *string                    `json:"input_fidelity,omitempty"`
 	PartialImages     *float32                   `json:"partial_images,omitempty"`
+	Complexity        *string                    `json:"complexity,omitempty"`
+	FrameCount        *int32                     `json:"frame_count,omitempty"`
+	FrameDurationMs   *int32                     `json:"frame_duration_ms,omitempty"`
 	InputImageMask    *OpenAiImageGenerationMask `json:"input_image_mask,omitempty"`
 }
 
@@ -398,6 +401,102 @@ func (o *OpenAiImageGenerationOptions) SetPartialImages(v float32) {
 	o.PartialImages = &v
 }
 
+// GetComplexity returns the Complexity field value if set, zero value otherwise.
+func (o *OpenAiImageGenerationOptions) GetComplexity() string {
+	if o == nil || IsNil(o.Complexity) {
+		var ret string
+		return ret
+	}
+	return *o.Complexity
+}
+
+// GetComplexityOk returns a tuple with the Complexity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiImageGenerationOptions) GetComplexityOk() (*string, bool) {
+	if o == nil || IsNil(o.Complexity) {
+		return nil, false
+	}
+	return o.Complexity, true
+}
+
+// HasComplexity returns a boolean if a field has been set.
+func (o *OpenAiImageGenerationOptions) HasComplexity() bool {
+	if o != nil && !IsNil(o.Complexity) {
+		return true
+	}
+
+	return false
+}
+
+// SetComplexity gets a reference to the given string and assigns it to the Complexity field.
+func (o *OpenAiImageGenerationOptions) SetComplexity(v string) {
+	o.Complexity = &v
+}
+
+// GetFrameCount returns the FrameCount field value if set, zero value otherwise.
+func (o *OpenAiImageGenerationOptions) GetFrameCount() int32 {
+	if o == nil || IsNil(o.FrameCount) {
+		var ret int32
+		return ret
+	}
+	return *o.FrameCount
+}
+
+// GetFrameCountOk returns a tuple with the FrameCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiImageGenerationOptions) GetFrameCountOk() (*int32, bool) {
+	if o == nil || IsNil(o.FrameCount) {
+		return nil, false
+	}
+	return o.FrameCount, true
+}
+
+// HasFrameCount returns a boolean if a field has been set.
+func (o *OpenAiImageGenerationOptions) HasFrameCount() bool {
+	if o != nil && !IsNil(o.FrameCount) {
+		return true
+	}
+
+	return false
+}
+
+// SetFrameCount gets a reference to the given int32 and assigns it to the FrameCount field.
+func (o *OpenAiImageGenerationOptions) SetFrameCount(v int32) {
+	o.FrameCount = &v
+}
+
+// GetFrameDurationMs returns the FrameDurationMs field value if set, zero value otherwise.
+func (o *OpenAiImageGenerationOptions) GetFrameDurationMs() int32 {
+	if o == nil || IsNil(o.FrameDurationMs) {
+		var ret int32
+		return ret
+	}
+	return *o.FrameDurationMs
+}
+
+// GetFrameDurationMsOk returns a tuple with the FrameDurationMs field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiImageGenerationOptions) GetFrameDurationMsOk() (*int32, bool) {
+	if o == nil || IsNil(o.FrameDurationMs) {
+		return nil, false
+	}
+	return o.FrameDurationMs, true
+}
+
+// HasFrameDurationMs returns a boolean if a field has been set.
+func (o *OpenAiImageGenerationOptions) HasFrameDurationMs() bool {
+	if o != nil && !IsNil(o.FrameDurationMs) {
+		return true
+	}
+
+	return false
+}
+
+// SetFrameDurationMs gets a reference to the given int32 and assigns it to the FrameDurationMs field.
+func (o *OpenAiImageGenerationOptions) SetFrameDurationMs(v int32) {
+	o.FrameDurationMs = &v
+}
+
 // GetInputImageMask returns the InputImageMask field value if set, zero value otherwise.
 func (o *OpenAiImageGenerationOptions) GetInputImageMask() OpenAiImageGenerationMask {
 	if o == nil || IsNil(o.InputImageMask) {
@@ -470,6 +569,15 @@ func (o OpenAiImageGenerationOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.PartialImages) {
 		toSerialize["partial_images"] = o.PartialImages
+	}
+	if !IsNil(o.Complexity) {
+		toSerialize["complexity"] = o.Complexity
+	}
+	if !IsNil(o.FrameCount) {
+		toSerialize["frame_count"] = o.FrameCount
+	}
+	if !IsNil(o.FrameDurationMs) {
+		toSerialize["frame_duration_ms"] = o.FrameDurationMs
 	}
 	if !IsNil(o.InputImageMask) {
 		toSerialize["input_image_mask"] = o.InputImageMask

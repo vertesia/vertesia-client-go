@@ -19,18 +19,22 @@ var _ MappedNullable = &OpenAiGptImageOptions{}
 
 // OpenAiGptImageOptions struct for OpenAiGptImageOptions
 type OpenAiGptImageOptions struct {
-	OptionId          *string  `json:"_option_id,omitempty"`
-	Size              *string  `json:"size,omitempty"`
-	Width             *float32 `json:"width,omitempty"`
-	Height            *float32 `json:"height,omitempty"`
-	ImageQuality      *string  `json:"image_quality,omitempty"`
-	Background        *string  `json:"background,omitempty"`
-	OutputFormat      *string  `json:"output_format,omitempty"`
-	N                 *float32 `json:"n,omitempty"`
-	OutputCompression *int32   `json:"output_compression,omitempty"`
-	Moderation        *string  `json:"moderation,omitempty"`
-	InputFidelity     *string  `json:"input_fidelity,omitempty"`
-	PartialImages     *float32 `json:"partial_images,omitempty"`
+	OptionId          *string                `json:"_option_id,omitempty"`
+	Size              *string                `json:"size,omitempty"`
+	Width             *float32               `json:"width,omitempty"`
+	Height            *float32               `json:"height,omitempty"`
+	ImageQuality      *string                `json:"image_quality,omitempty"`
+	Background        *string                `json:"background,omitempty"`
+	OutputFormat      *string                `json:"output_format,omitempty"`
+	N                 *float32               `json:"n,omitempty"`
+	OutputCompression *int32                 `json:"output_compression,omitempty"`
+	Moderation        *string                `json:"moderation,omitempty"`
+	InputFidelity     *string                `json:"input_fidelity,omitempty"`
+	PartialImages     *float32               `json:"partial_images,omitempty"`
+	Complexity        *string                `json:"complexity,omitempty"`
+	FrameCount        *int32                 `json:"frame_count,omitempty"`
+	FrameDurationMs   *int32                 `json:"frame_duration_ms,omitempty"`
+	Svg               *OpenAiImageSvgOptions `json:"svg,omitempty"`
 	// AdditionalProperties preserves unknown fields across read-edit-save.
 	AdditionalProperties map[string]interface{} `json:"-"`
 }
@@ -436,6 +440,134 @@ func (o *OpenAiGptImageOptions) SetPartialImages(v float32) {
 	o.PartialImages = &v
 }
 
+// GetComplexity returns the Complexity field value if set, zero value otherwise.
+func (o *OpenAiGptImageOptions) GetComplexity() string {
+	if o == nil || IsNil(o.Complexity) {
+		var ret string
+		return ret
+	}
+	return *o.Complexity
+}
+
+// GetComplexityOk returns a tuple with the Complexity field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiGptImageOptions) GetComplexityOk() (*string, bool) {
+	if o == nil || IsNil(o.Complexity) {
+		return nil, false
+	}
+	return o.Complexity, true
+}
+
+// HasComplexity returns a boolean if a field has been set.
+func (o *OpenAiGptImageOptions) HasComplexity() bool {
+	if o != nil && !IsNil(o.Complexity) {
+		return true
+	}
+
+	return false
+}
+
+// SetComplexity gets a reference to the given string and assigns it to the Complexity field.
+func (o *OpenAiGptImageOptions) SetComplexity(v string) {
+	o.Complexity = &v
+}
+
+// GetFrameCount returns the FrameCount field value if set, zero value otherwise.
+func (o *OpenAiGptImageOptions) GetFrameCount() int32 {
+	if o == nil || IsNil(o.FrameCount) {
+		var ret int32
+		return ret
+	}
+	return *o.FrameCount
+}
+
+// GetFrameCountOk returns a tuple with the FrameCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiGptImageOptions) GetFrameCountOk() (*int32, bool) {
+	if o == nil || IsNil(o.FrameCount) {
+		return nil, false
+	}
+	return o.FrameCount, true
+}
+
+// HasFrameCount returns a boolean if a field has been set.
+func (o *OpenAiGptImageOptions) HasFrameCount() bool {
+	if o != nil && !IsNil(o.FrameCount) {
+		return true
+	}
+
+	return false
+}
+
+// SetFrameCount gets a reference to the given int32 and assigns it to the FrameCount field.
+func (o *OpenAiGptImageOptions) SetFrameCount(v int32) {
+	o.FrameCount = &v
+}
+
+// GetFrameDurationMs returns the FrameDurationMs field value if set, zero value otherwise.
+func (o *OpenAiGptImageOptions) GetFrameDurationMs() int32 {
+	if o == nil || IsNil(o.FrameDurationMs) {
+		var ret int32
+		return ret
+	}
+	return *o.FrameDurationMs
+}
+
+// GetFrameDurationMsOk returns a tuple with the FrameDurationMs field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiGptImageOptions) GetFrameDurationMsOk() (*int32, bool) {
+	if o == nil || IsNil(o.FrameDurationMs) {
+		return nil, false
+	}
+	return o.FrameDurationMs, true
+}
+
+// HasFrameDurationMs returns a boolean if a field has been set.
+func (o *OpenAiGptImageOptions) HasFrameDurationMs() bool {
+	if o != nil && !IsNil(o.FrameDurationMs) {
+		return true
+	}
+
+	return false
+}
+
+// SetFrameDurationMs gets a reference to the given int32 and assigns it to the FrameDurationMs field.
+func (o *OpenAiGptImageOptions) SetFrameDurationMs(v int32) {
+	o.FrameDurationMs = &v
+}
+
+// GetSvg returns the Svg field value if set, zero value otherwise.
+func (o *OpenAiGptImageOptions) GetSvg() OpenAiImageSvgOptions {
+	if o == nil || IsNil(o.Svg) {
+		var ret OpenAiImageSvgOptions
+		return ret
+	}
+	return *o.Svg
+}
+
+// GetSvgOk returns a tuple with the Svg field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiGptImageOptions) GetSvgOk() (*OpenAiImageSvgOptions, bool) {
+	if o == nil || IsNil(o.Svg) {
+		return nil, false
+	}
+	return o.Svg, true
+}
+
+// HasSvg returns a boolean if a field has been set.
+func (o *OpenAiGptImageOptions) HasSvg() bool {
+	if o != nil && !IsNil(o.Svg) {
+		return true
+	}
+
+	return false
+}
+
+// SetSvg gets a reference to the given OpenAiImageSvgOptions and assigns it to the Svg field.
+func (o *OpenAiGptImageOptions) SetSvg(v OpenAiImageSvgOptions) {
+	o.Svg = &v
+}
+
 func (o OpenAiGptImageOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -448,7 +580,7 @@ func (o OpenAiGptImageOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "size", "width", "height", "image_quality", "background", "output_format", "n", "output_compression", "moderation", "input_fidelity", "partial_images"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "size", "width", "height", "image_quality", "background", "output_format", "n", "output_compression", "moderation", "input_fidelity", "partial_images", "complexity", "frame_count", "frame_duration_ms", "svg"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -488,6 +620,18 @@ func (o OpenAiGptImageOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.PartialImages) {
 		toSerialize["partial_images"] = o.PartialImages
+	}
+	if !IsNil(o.Complexity) {
+		toSerialize["complexity"] = o.Complexity
+	}
+	if !IsNil(o.FrameCount) {
+		toSerialize["frame_count"] = o.FrameCount
+	}
+	if !IsNil(o.FrameDurationMs) {
+		toSerialize["frame_duration_ms"] = o.FrameDurationMs
+	}
+	if !IsNil(o.Svg) {
+		toSerialize["svg"] = o.Svg
 	}
 	return toSerialize, nil
 }
@@ -544,7 +688,7 @@ func (o *OpenAiGptImageOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "size", "width", "height", "image_quality", "background", "output_format", "n", "output_compression", "moderation", "input_fidelity", "partial_images"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "size", "width", "height", "image_quality", "background", "output_format", "n", "output_compression", "moderation", "input_fidelity", "partial_images", "complexity", "frame_count", "frame_duration_ms", "svg"}) {
 			delete(extra, key)
 		}
 	}
