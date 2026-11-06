@@ -492,7 +492,7 @@ func (r ApiDeleteTaskRequest) Execute() (*DeleteCountResult, *http.Response, err
 /*
 DeleteTask Delete a task
 
-Deletes a durable task by id.
+Deletes a durable task by id. Answers 409 while the answer to an agent question is being delivered, or while a running process is waiting on it: answer the task, or cancel the run first.
 
 **Required permissions:** `task:manage`
 
