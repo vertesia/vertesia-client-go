@@ -50,6 +50,8 @@ api_workflow_runs.go
 client.go
 configuration.go
 model_abac_scope.go
+model_abort_upload_session_payload.go
+model_abort_upload_session_response.go
 model_access_control_entry.go
 model_access_control_principal_type.go
 model_access_control_resource_type.go
@@ -253,6 +255,7 @@ model_audit_usage_response.go
 model_auth_token_response.go
 model_autonomous_run_response.go
 model_aws_configuration.go
+model_azure_block_blob_upload_session.go
 model_azure_foundry_chat_options.go
 model_batch_query_payload.go
 model_batch_query_payload_queries_inner.go
@@ -304,6 +307,9 @@ model_collection_status.go
 model_column_layout.go
 model_compact_message.go
 model_complete_task_payload.go
+model_complete_upload_session_payload.go
+model_complete_upload_session_response.go
+model_completed_upload_part.go
 model_completion_result.go
 model_complex_collection_search_query.go
 model_complex_search_payload.go
@@ -423,6 +429,7 @@ model_create_snapshot_payload.go
 model_create_table_payload.go
 model_create_tables_payload.go
 model_create_task_payload.go
+model_create_upload_session_payload.go
 model_create_user_group_payload.go
 model_create_user_payload.go
 model_create_view_experience_request.go
@@ -611,6 +618,7 @@ model_forward_email_request.go
 model_forward_email_request_attachments_inner.go
 model_forward_email_request_email.go
 model_forward_email_response.go
+model_gcs_resumable_upload_session.go
 model_generate_test_data_payload.go
 model_generation_run_metadata.go
 model_generic_command_response.go
@@ -619,6 +627,7 @@ model_get_file_url_response.go
 model_get_model_prices_from_parameter.go
 model_get_model_prices_to_parameter.go
 model_get_rendition_response.go
+model_get_upload_part_urls_payload.go
 model_get_upload_url_payload.go
 model_github_configuration.go
 model_github_configuration_input.go
@@ -982,6 +991,7 @@ model_run_search_query.go
 model_run_source.go
 model_run_source_types.go
 model_run_type.go
+model_s3_multipart_upload_session.go
 model_schema_ref.go
 model_score_aggregation_types.go
 model_search_agent_runs_response.go
@@ -1126,6 +1136,9 @@ model_update_workflow_definition_payload.go
 model_update_workflow_definition_payload_with_activities.go
 model_update_workflow_definition_payload_with_steps.go
 model_update_workflow_rule_payload.go
+model_upload_part_url.go
+model_upload_part_urls_response.go
+model_upload_session.go
 model_upsert_app_version_request.go
 model_used_skill.go
 model_user.go
