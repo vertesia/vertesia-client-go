@@ -534,9 +534,16 @@ func testJPEG(t *testing.T) []byte {
 func TestGeneratedGoClientRequestShapes(t *testing.T) {
 	liveClients(t)
 
+	// Decode the payload instead of calling the constructor, whose params argument changes type
+	// between spec revisions (a free-form map, then a typed BulkOperationPayloadParams).
+	var payload BulkOperationPayload
+	if err := json.Unmarshal([]byte(`{"name":"update","ids":[],"params":{}}`), &payload); err != nil {
+		t.Fatalf("decode bulk operation payload failed: %v", err)
+	}
+
 	_, _, err := optional(func() (*BulkOperationResponse, *http.Response, error) {
 		return zenoClient.BulkOperationsAPI.RunBulkContentOperation(zenoCtx).
-			BulkOperationPayload(*NewBulkOperationPayload("update", []string{}, map[string]interface{}{})).
+			BulkOperationPayload(payload).
 			Execute()
 	}, http.StatusBadRequest, http.StatusForbidden, http.StatusNotFound, http.StatusConflict)
 	if err != nil {
