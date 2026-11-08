@@ -20,7 +20,8 @@ var _ MappedNullable = &GetFileUrlPayload{}
 
 // GetFileUrlPayload struct for GetFileUrlPayload
 type GetFileUrlPayload struct {
-	File        string  `json:"file"`
+	// The file path (relative to bucket) or full URI. It must not be blank or contain control characters.
+	File        string  `json:"file" validate:"regexp=^[\\\\u0020\\\\u00a0\\\\u1680\\\\u2000-\\\\u200a\\\\u2028\\\\u2029\\\\u202f\\\\u205f\\\\u3000\\\\ufeff]*[^\\\\u0000-\\\\u001f\\\\u007f\\\\u0020\\\\u00a0\\\\u1680\\\\u2000-\\\\u200a\\\\u2028\\\\u2029\\\\u202f\\\\u205f\\\\u3000\\\\ufeff][^\\\\u0000-\\\\u001f\\\\u007f]*$"`
 	Name        *string `json:"name,omitempty"`
 	Disposition *string `json:"disposition,omitempty"`
 }

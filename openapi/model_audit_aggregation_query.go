@@ -25,11 +25,13 @@ type AuditAggregationQuery struct {
 	// Start time; defaults to 30 days before to. The server caps the range at 366 days.
 	From *string `json:"from,omitempty"`
 	// End time; defaults to the current time.
-	To      *string                  `json:"to,omitempty"`
-	Filter  *AuditAggregationFilter  `json:"filter,omitempty"`
-	GroupBy []AuditAggregationGroup  `json:"groupBy,omitempty"`
+	To     *string                 `json:"to,omitempty"`
+	Filter *AuditAggregationFilter `json:"filter,omitempty"`
+	// At most two dimensions, each named once.
+	GroupBy []AuditAggregationGroup `json:"groupBy,omitempty"`
+	// One to twelve metrics, each with a distinct id.
 	Metrics []AuditAggregationMetric `json:"metrics"`
-	// Maximum groups returned (default 50, max 200).
+	// Maximum groups returned (default 50). A limit above 200 is capped at 200.
 	Limit *float32 `json:"limit,omitempty"`
 }
 

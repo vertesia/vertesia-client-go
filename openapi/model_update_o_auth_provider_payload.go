@@ -19,7 +19,7 @@ var _ MappedNullable = &UpdateOAuthProviderPayload{}
 
 // UpdateOAuthProviderPayload Payload for updating an OAuth Provider. All fields are optional — only provided fields are updated. To clear the client_secret, set it to an empty string.
 type UpdateOAuthProviderPayload struct {
-	Name                  *string `json:"name,omitempty"`
+	Name                  *string `json:"name,omitempty" validate:"regexp=^[a-z0-9][a-z0-9-]*[a-z0-9]$"`
 	DisplayName           *string `json:"display_name,omitempty"`
 	GrantType             *string `json:"grant_type,omitempty"`
 	AuthorizationEndpoint *string `json:"authorization_endpoint,omitempty"`

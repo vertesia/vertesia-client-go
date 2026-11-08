@@ -22,10 +22,10 @@ var _ MappedNullable = &CreateProcessDefinitionPayload{}
 type CreateProcessDefinitionPayload struct {
 	Name        string  `json:"name"`
 	Description *string `json:"description,omitempty"`
-	// Deprecated: Process definitions are created as drafts. Use the publish endpoint to create immutable published versions.
+	// Deprecated: Process definitions are created as drafts, so only `draft` is accepted. Use the publish endpoint to create immutable published versions.
 	// Deprecated
-	Status *ProcessDefinitionStatus `json:"status,omitempty"`
-	// Deprecated: Version is server-owned. Use the publish endpoint to create the next version.
+	Status *string `json:"status,omitempty"`
+	// Deprecated: Version is server-owned, so only `1` is accepted. Use the publish endpoint to create the next version.
 	// Deprecated
 	Version    *float32              `json:"version,omitempty"`
 	Tags       []string              `json:"tags,omitempty"`
@@ -111,9 +111,9 @@ func (o *CreateProcessDefinitionPayload) SetDescription(v string) {
 
 // GetStatus returns the Status field value if set, zero value otherwise.
 // Deprecated
-func (o *CreateProcessDefinitionPayload) GetStatus() ProcessDefinitionStatus {
+func (o *CreateProcessDefinitionPayload) GetStatus() string {
 	if o == nil || IsNil(o.Status) {
-		var ret ProcessDefinitionStatus
+		var ret string
 		return ret
 	}
 	return *o.Status
@@ -122,7 +122,7 @@ func (o *CreateProcessDefinitionPayload) GetStatus() ProcessDefinitionStatus {
 // GetStatusOk returns a tuple with the Status field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // Deprecated
-func (o *CreateProcessDefinitionPayload) GetStatusOk() (*ProcessDefinitionStatus, bool) {
+func (o *CreateProcessDefinitionPayload) GetStatusOk() (*string, bool) {
 	if o == nil || IsNil(o.Status) {
 		return nil, false
 	}
@@ -138,9 +138,9 @@ func (o *CreateProcessDefinitionPayload) HasStatus() bool {
 	return false
 }
 
-// SetStatus gets a reference to the given ProcessDefinitionStatus and assigns it to the Status field.
+// SetStatus gets a reference to the given string and assigns it to the Status field.
 // Deprecated
-func (o *CreateProcessDefinitionPayload) SetStatus(v ProcessDefinitionStatus) {
+func (o *CreateProcessDefinitionPayload) SetStatus(v string) {
 	o.Status = &v
 }
 

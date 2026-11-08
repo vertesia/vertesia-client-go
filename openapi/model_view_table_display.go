@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewTableDisplay{}
 
 // ViewTableDisplay struct for ViewTableDisplay
 type ViewTableDisplay struct {
-	Id       string            `json:"id"`
+	Id       string            `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	Label    string            `json:"label"`
 	Renderer *string           `json:"renderer,omitempty"`
 	PageSize *float32          `json:"page_size,omitempty"`

@@ -285,6 +285,7 @@ model_bulk_object_create_result_objects_inner.go
 model_bulk_object_delete_result.go
 model_bulk_object_update_result.go
 model_bulk_operation_payload.go
+model_bulk_operation_payload_params.go
 model_bulk_operation_response.go
 model_bulk_operation_result.go
 model_bulk_revoke_o_auth_grants_payload.go
@@ -400,6 +401,7 @@ model_cost_time_series_point.go
 model_count_result.go
 model_create_account_api_key_payload.go
 model_create_agent_run_payload.go
+model_create_agent_run_payload_all_of_content_type.go
 model_create_api_key_payload.go
 model_create_app_repo_branch_request.go
 model_create_app_version_launch_request.go
@@ -678,6 +680,7 @@ model_interaction.go
 model_interaction_configuration_record.go
 model_interaction_configuration_result.go
 model_interaction_create_payload.go
+model_interaction_create_payload_environment.go
 model_interaction_endpoint.go
 model_interaction_endpoint_query.go
 model_interaction_environment.go

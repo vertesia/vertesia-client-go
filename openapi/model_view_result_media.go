@@ -21,7 +21,7 @@ var _ MappedNullable = &ViewResultMedia{}
 // ViewResultMedia struct for ViewResultMedia
 type ViewResultMedia struct {
 	Source   string  `json:"source"`
-	Field    *string `json:"field,omitempty"`
+	Field    *string `json:"field,omitempty" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
 	Fit      *string `json:"fit,omitempty"`
 	Fallback *string `json:"fallback,omitempty"`
 }

@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewSortOption{}
 
 // ViewSortOption struct for ViewSortOption
 type ViewSortOption struct {
-	Id    string           `json:"id"`
+	Id    string           `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	Label string           `json:"label"`
 	Sort  []ViewSortClause `json:"sort"`
 }

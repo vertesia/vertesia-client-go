@@ -20,7 +20,9 @@ var _ MappedNullable = &ProcessTestTargetById{}
 
 // ProcessTestTargetById struct for ProcessTestTargetById
 type ProcessTestTargetById struct {
-	Id         string  `json:"id"`
+	// An in-code process id, `app:<app>:<process>` or `sys:<process>`. A stored process definition is tested through `POST /processes/{processId}/test-runs`.
+	Id string `json:"id" validate:"regexp=^(app|sys):"`
+	// Only for an `app:` id.
 	AppVersion *string `json:"app_version,omitempty"`
 }
 

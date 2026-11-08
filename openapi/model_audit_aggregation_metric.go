@@ -20,14 +20,14 @@ var _ MappedNullable = &AuditAggregationMetric{}
 
 // AuditAggregationMetric struct for AuditAggregationMetric
 type AuditAggregationMetric struct {
-	// Stable key used in response rows. Must contain only letters, numbers, underscores, or hyphens.
-	Id        string                    `json:"id"`
+	// Stable key used in response rows: 1 to 64 letters, numbers, underscores, or hyphens, unique within the query.
+	Id        string                    `json:"id" validate:"regexp=^[A-Za-z0-9_-]{1,64}$"`
 	Operation AuditAggregationOperation `json:"operation"`
 	// Required for count_distinct.
 	Field *AuditAggregationDistinctField `json:"field,omitempty"`
-	// Required for meter operations.
+	// Required for sum_meter and average_meter, as 1 to 128 characters.
 	MeterCategory *string `json:"meterCategory,omitempty"`
-	// Required for meter operations.
+	// Required for sum_meter and average_meter, as 1 to 128 characters.
 	MeterType *string `json:"meterType,omitempty"`
 }
 

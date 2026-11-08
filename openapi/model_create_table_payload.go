@@ -20,8 +20,8 @@ var _ MappedNullable = &CreateTablePayload{}
 
 // CreateTablePayload Payload for creating a new table.
 type CreateTablePayload struct {
-	// Table name
-	Name string `json:"name"`
+	// Table name: a SQL identifier of letters, digits and underscores, starting with a letter or underscore, at most 64 characters, and not a reserved SQL keyword.
+	Name string `json:"name" validate:"regexp=^[a-zA-Z_][a-zA-Z0-9_]*$"`
 	// Table description
 	Description *string `json:"description,omitempty"`
 	// Column definitions (at least one required)

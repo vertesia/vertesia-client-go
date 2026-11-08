@@ -31,7 +31,8 @@ type UpdateAppPayload struct {
 	Visibility  string `json:"visibility"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	Publisher   string `json:"publisher"`
+	// The publisher of the app. Must not be empty.
+	Publisher string `json:"publisher"`
 	// A svg icon for the app.
 	Icon *string `json:"icon,omitempty"`
 	// A color name to be used as the color of the app card (e.g. blue, red, green, etc.) If not specified a random color will be picked.

@@ -20,8 +20,9 @@ var _ MappedNullable = &ICreateProjectPayload{}
 
 // ICreateProjectPayload struct for ICreateProjectPayload
 type ICreateProjectPayload struct {
-	Name        string  `json:"name"`
-	Namespace   string  `json:"namespace"`
+	Name string `json:"name"`
+	// Letters, digits, `-`, `_`, `[` and `]`. Must not be the namespace of another project, which the server answers with a 409.
+	Namespace   string  `json:"namespace" validate:"regexp=^[a-zA-Z0-9_[\\\\]-]+$"`
 	Description *string `json:"description,omitempty"`
 	AutoConfig  *bool   `json:"auto_config,omitempty"`
 }

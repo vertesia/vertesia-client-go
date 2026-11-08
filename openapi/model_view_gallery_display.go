@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewGalleryDisplay{}
 
 // ViewGalleryDisplay struct for ViewGalleryDisplay
 type ViewGalleryDisplay struct {
-	Id       string            `json:"id"`
+	Id       string            `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	Label    string            `json:"label"`
 	Renderer *string           `json:"renderer,omitempty"`
 	PageSize *float32          `json:"page_size,omitempty"`

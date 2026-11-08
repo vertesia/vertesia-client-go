@@ -19,10 +19,11 @@ var _ MappedNullable = &InteractionForkPayload{}
 
 // InteractionForkPayload struct for InteractionForkPayload
 type InteractionForkPayload struct {
-	NewName       *string `json:"newName,omitempty"`
-	KeepTags      *bool   `json:"keepTags,omitempty"`
-	ForkPrompts   *bool   `json:"forkPrompts,omitempty"`
-	TargetProject *string `json:"targetProject,omitempty"`
+	NewName     *string `json:"newName,omitempty"`
+	KeepTags    *bool   `json:"keepTags,omitempty"`
+	ForkPrompts *bool   `json:"forkPrompts,omitempty"`
+	// The project to fork into, as its 24-hexadecimal-character ID. Defaults to the current one.
+	TargetProject *string `json:"targetProject,omitempty" validate:"regexp=^[0-9a-fA-F]{24}$"`
 }
 
 // NewInteractionForkPayload instantiates a new InteractionForkPayload object

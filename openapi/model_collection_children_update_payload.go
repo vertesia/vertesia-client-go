@@ -20,7 +20,8 @@ var _ MappedNullable = &CollectionChildrenUpdatePayload{}
 
 // CollectionChildrenUpdatePayload struct for CollectionChildrenUpdatePayload
 type CollectionChildrenUpdatePayload struct {
-	Action   string   `json:"action"`
+	Action string `json:"action"`
+	// IDs of the child collections to add or remove, as 24 hexadecimal characters.
 	Children []string `json:"children"`
 }
 

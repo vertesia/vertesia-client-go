@@ -17,12 +17,12 @@ import (
 // checks if the UpdateApiKeyPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &UpdateApiKeyPayload{}
 
-// UpdateApiKeyPayload struct for UpdateApiKeyPayload
+// UpdateApiKeyPayload No key of `properties`, at any depth, may contain a NUL character.
 type UpdateApiKeyPayload struct {
 	Name    *string             `json:"name,omitempty"`
 	Role    *AssignableRoleName `json:"role,omitempty"`
 	Enabled *bool               `json:"enabled,omitempty"`
-	// Organization-wide SCIM provisioning credential. Only account administrators may create or manage these keys. May be enabled by account administrators on existing keys; disable or delete to revoke access.
+	// Enables SCIM provisioning on an existing admin key. Only `true` is accepted: disable or delete the key to revoke it.
 	ScimProvisioning *bool `json:"scim_provisioning,omitempty"`
 	// Custom properties for dynamic permission matching (PrincipalSet / $principal. conditions)
 	Properties map[string]interface{} `json:"properties,omitempty"`

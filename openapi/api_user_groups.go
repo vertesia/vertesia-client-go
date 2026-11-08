@@ -49,8 +49,8 @@ Adds a user to a user group.
 **Required permissions:** Any of `account:admin`, `account:group:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param groupId
-	@param userId
+	@param groupId The user group ID, as 24 hexadecimal characters.
+	@param userId The user ID, as 24 hexadecimal characters.
 	@return ApiAddUserGroupMemberRequest
 */
 func (a *UserGroupsAPIService) AddUserGroupMember(ctx context.Context, groupId string, userId string) ApiAddUserGroupMemberRequest {
@@ -834,8 +834,8 @@ Removes a user from a user group.
 **Required permissions:** Any of `account:admin`, `account:group:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param groupId
-	@param userId
+	@param groupId The user group ID, as 24 hexadecimal characters.
+	@param userId The user ID, as 24 hexadecimal characters.
 	@return ApiRemoveUserGroupMemberRequest
 */
 func (a *UserGroupsAPIService) RemoveUserGroupMember(ctx context.Context, groupId string, userId string) ApiRemoveUserGroupMemberRequest {
@@ -1129,7 +1129,7 @@ Updates a user group by ID.
 **Required permissions:** Any of `account:admin`, `account:group:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param groupId
+	@param groupId The user group ID, as 24 hexadecimal characters.
 	@return ApiUpdateUserGroupRequest
 */
 func (a *UserGroupsAPIService) UpdateUserGroup(ctx context.Context, groupId string) ApiUpdateUserGroupRequest {

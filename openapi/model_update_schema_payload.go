@@ -18,18 +18,19 @@ import (
 // checks if the UpdateSchemaPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &UpdateSchemaPayload{}
 
-// UpdateSchemaPayload Payload for AI-driven bulk schema updates.
+// UpdateSchemaPayload struct for UpdateSchemaPayload
 type UpdateSchemaPayload struct {
+	// Relationships to set
+	Relationships []DataRelationship `json:"relationships,omitempty"`
 	// Updated schema description
 	Description *string `json:"description,omitempty"`
 	// Tables to create or update
 	Tables []CreateTablePayload `json:"tables,omitempty"`
-	// Relationships to set
-	Relationships []DataRelationship `json:"relationships,omitempty"`
-	// Tables to drop
+	// Tables to drop. A name that matches no table is ignored.
 	DropTables []string `json:"drop_tables,omitempty"`
 	// Commit message (required)
-	Message string `json:"message"`
+	Message              string `json:"message"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _UpdateSchemaPayload UpdateSchemaPayload
@@ -50,6 +51,38 @@ func NewUpdateSchemaPayload(message string) *UpdateSchemaPayload {
 func NewUpdateSchemaPayloadWithDefaults() *UpdateSchemaPayload {
 	this := UpdateSchemaPayload{}
 	return &this
+}
+
+// GetRelationships returns the Relationships field value if set, zero value otherwise.
+func (o *UpdateSchemaPayload) GetRelationships() []DataRelationship {
+	if o == nil || IsNil(o.Relationships) {
+		var ret []DataRelationship
+		return ret
+	}
+	return o.Relationships
+}
+
+// GetRelationshipsOk returns a tuple with the Relationships field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateSchemaPayload) GetRelationshipsOk() ([]DataRelationship, bool) {
+	if o == nil || IsNil(o.Relationships) {
+		return nil, false
+	}
+	return o.Relationships, true
+}
+
+// HasRelationships returns a boolean if a field has been set.
+func (o *UpdateSchemaPayload) HasRelationships() bool {
+	if o != nil && !IsNil(o.Relationships) {
+		return true
+	}
+
+	return false
+}
+
+// SetRelationships gets a reference to the given []DataRelationship and assigns it to the Relationships field.
+func (o *UpdateSchemaPayload) SetRelationships(v []DataRelationship) {
+	o.Relationships = v
 }
 
 // GetDescription returns the Description field value if set, zero value otherwise.
@@ -114,38 +147,6 @@ func (o *UpdateSchemaPayload) HasTables() bool {
 // SetTables gets a reference to the given []CreateTablePayload and assigns it to the Tables field.
 func (o *UpdateSchemaPayload) SetTables(v []CreateTablePayload) {
 	o.Tables = v
-}
-
-// GetRelationships returns the Relationships field value if set, zero value otherwise.
-func (o *UpdateSchemaPayload) GetRelationships() []DataRelationship {
-	if o == nil || IsNil(o.Relationships) {
-		var ret []DataRelationship
-		return ret
-	}
-	return o.Relationships
-}
-
-// GetRelationshipsOk returns a tuple with the Relationships field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *UpdateSchemaPayload) GetRelationshipsOk() ([]DataRelationship, bool) {
-	if o == nil || IsNil(o.Relationships) {
-		return nil, false
-	}
-	return o.Relationships, true
-}
-
-// HasRelationships returns a boolean if a field has been set.
-func (o *UpdateSchemaPayload) HasRelationships() bool {
-	if o != nil && !IsNil(o.Relationships) {
-		return true
-	}
-
-	return false
-}
-
-// SetRelationships gets a reference to the given []DataRelationship and assigns it to the Relationships field.
-func (o *UpdateSchemaPayload) SetRelationships(v []DataRelationship) {
-	o.Relationships = v
 }
 
 // GetDropTables returns the DropTables field value if set, zero value otherwise.
@@ -214,19 +215,24 @@ func (o UpdateSchemaPayload) MarshalJSON() ([]byte, error) {
 
 func (o UpdateSchemaPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Relationships) {
+		toSerialize["relationships"] = o.Relationships
+	}
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
 	if !IsNil(o.Tables) {
 		toSerialize["tables"] = o.Tables
 	}
-	if !IsNil(o.Relationships) {
-		toSerialize["relationships"] = o.Relationships
-	}
 	if !IsNil(o.DropTables) {
 		toSerialize["drop_tables"] = o.DropTables
 	}
 	toSerialize["message"] = o.Message
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -261,6 +267,17 @@ func (o *UpdateSchemaPayload) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = UpdateSchemaPayload(varUpdateSchemaPayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "relationships")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "tables")
+		delete(additionalProperties, "drop_tables")
+		delete(additionalProperties, "message")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

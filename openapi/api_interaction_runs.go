@@ -522,7 +522,7 @@ func (r ApiListRunsRequest) Model(model []string) ApiListRunsRequest {
 	return r
 }
 
-// Environment ids to filter by, as 24 hexadecimal characters.
+// Environment ids to filter by, as 24 hexadecimal characters; each value may list several, separated by commas.
 func (r ApiListRunsRequest) Environment(environment []string) ApiListRunsRequest {
 	r.environment = &environment
 	return r
@@ -540,7 +540,7 @@ func (r ApiListRunsRequest) Tag(tag []string) ApiListRunsRequest {
 	return r
 }
 
-// Parent run ids to filter by. Mutually exclusive with &#x60;is_root&#x3D;true&#x60;.
+// Parent run ids to filter by, as 24 hexadecimal characters; each value may list several, separated by commas. The legacy value &#x60;false&#x60; selects root runs. Mutually exclusive with &#x60;is_root&#x3D;true&#x60;.
 func (r ApiListRunsRequest) Parent(parent []string) ApiListRunsRequest {
 	r.parent = &parent
 	return r

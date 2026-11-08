@@ -505,7 +505,7 @@ DeleteInteractionConfiguration Remove code interaction configuration
 **Required permissions:** `project:settings_write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param interactionId
+	@param interactionId The code interaction, as `sys:<name>` or `app:<app name>:<local id>`, at most 300 characters.
 	@return ApiDeleteInteractionConfigurationRequest
 */
 func (a *InteractionsAPIService) DeleteInteractionConfiguration(ctx context.Context, interactionId string) ApiDeleteInteractionConfigurationRequest {
@@ -538,6 +538,9 @@ func (a *InteractionsAPIService) DeleteInteractionConfigurationExecute(r ApiDele
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if strlen(r.interactionId) > 300 {
+		return localVarReturnValue, nil, reportError("interactionId must have less than 300 elements")
+	}
 	if r.xApiVersion == nil {
 		version := a.client.cfg.DefaultHeader["x-api-version"]
 		if version == "" {
@@ -1909,7 +1912,7 @@ func (r ApiGetInteractionConfigurationRequest) Execute() (*InteractionConfigurat
 GetInteractionConfiguration Get saved code interaction configuration
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param interactionId
+	@param interactionId The code interaction, as `sys:<name>` or `app:<app name>:<local id>`, at most 300 characters.
 	@return ApiGetInteractionConfigurationRequest
 */
 func (a *InteractionsAPIService) GetInteractionConfiguration(ctx context.Context, interactionId string) ApiGetInteractionConfigurationRequest {
@@ -1942,6 +1945,9 @@ func (a *InteractionsAPIService) GetInteractionConfigurationExecute(r ApiGetInte
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if strlen(r.interactionId) > 300 {
+		return localVarReturnValue, nil, reportError("interactionId must have less than 300 elements")
+	}
 	if r.xApiVersion == nil {
 		version := a.client.cfg.DefaultHeader["x-api-version"]
 		if version == "" {
@@ -2802,6 +2808,7 @@ func (r ApiListInteractionTagsRequest) Name(name string) ApiListInteractionTagsR
 	return r
 }
 
+// Filter by status: draft, published, archived, code, unknown. Each value may list several, separated by commas.
 func (r ApiListInteractionTagsRequest) Status(status []string) ApiListInteractionTagsRequest {
 	r.status = &status
 	return r
@@ -2827,6 +2834,7 @@ func (r ApiListInteractionTagsRequest) Tags(tags []string) ApiListInteractionTag
 	return r
 }
 
+// Filter by version number. Must start with an integer.
 func (r ApiListInteractionTagsRequest) Version(version string) ApiListInteractionTagsRequest {
 	r.version = &version
 	return r
@@ -3375,6 +3383,7 @@ func (r ApiListInteractionsRequest) Name(name string) ApiListInteractionsRequest
 	return r
 }
 
+// Filter by status: draft, published, archived, code, unknown. Each value may list several, separated by commas.
 func (r ApiListInteractionsRequest) Status(status []string) ApiListInteractionsRequest {
 	r.status = &status
 	return r
@@ -3400,6 +3409,7 @@ func (r ApiListInteractionsRequest) Tags(tags []string) ApiListInteractionsReque
 	return r
 }
 
+// Filter by version number. Must start with an integer.
 func (r ApiListInteractionsRequest) Version(version string) ApiListInteractionsRequest {
 	r.version = &version
 	return r
@@ -4783,7 +4793,7 @@ UpdateInteractionConfiguration Create or update code interaction configuration
 **Required permissions:** `project:settings_write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param interactionId
+	@param interactionId The code interaction, as `sys:<name>` or `app:<app name>:<local id>`, at most 300 characters.
 	@return ApiUpdateInteractionConfigurationRequest
 */
 func (a *InteractionsAPIService) UpdateInteractionConfiguration(ctx context.Context, interactionId string) ApiUpdateInteractionConfigurationRequest {
@@ -4816,6 +4826,9 @@ func (a *InteractionsAPIService) UpdateInteractionConfigurationExecute(r ApiUpda
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if strlen(r.interactionId) > 300 {
+		return localVarReturnValue, nil, reportError("interactionId must have less than 300 elements")
+	}
 	if r.xApiVersion == nil {
 		version := a.client.cfg.DefaultHeader["x-api-version"]
 		if version == "" {

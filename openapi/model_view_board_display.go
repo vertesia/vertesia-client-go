@@ -20,12 +20,12 @@ var _ MappedNullable = &ViewBoardDisplay{}
 
 // ViewBoardDisplay struct for ViewBoardDisplay
 type ViewBoardDisplay struct {
-	Id       string                     `json:"id"`
+	Id       string                     `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	Label    string                     `json:"label"`
 	Renderer *string                    `json:"renderer,omitempty"`
 	PageSize *float32                   `json:"page_size,omitempty"`
 	Type     string                     `json:"type"`
-	GroupBy  string                     `json:"group_by"`
+	GroupBy  string                     `json:"group_by" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
 	Columns  []ViewBoardColumn          `json:"columns,omitempty"`
 	Card     ViewBoardCardConfiguration `json:"card"`
 }

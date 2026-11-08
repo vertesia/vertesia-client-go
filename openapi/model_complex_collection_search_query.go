@@ -19,6 +19,7 @@ var _ MappedNullable = &ComplexCollectionSearchQuery{}
 
 // ComplexCollectionSearchQuery `match` is a Mongo filter. Its keys are dotted field paths or `$and`, `$or` and `$nor`, and a condition is a literal or uses the comparison operators, `$in`, `$nin`, `$all`, `$exists`, `$type`, `$size`, `$regex`, `$not` and `$elemMatch`.
 type ComplexCollectionSearchQuery struct {
+	// Restrict the search to the children of this collection ID (24 hexadecimal characters). Empty or null searches every collection; a child search takes the parent from its path instead.
 	Parent               NullableString         `json:"parent,omitempty"`
 	Dynamic              *bool                  `json:"dynamic,omitempty"`
 	Status               *CollectionStatus      `json:"status,omitempty"`

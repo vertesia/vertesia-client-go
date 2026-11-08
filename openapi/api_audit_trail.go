@@ -698,13 +698,13 @@ func (r ApiListAuditTrailEventsRequest) ProjectId(projectId string) ApiListAudit
 	return r
 }
 
-// Start time (ISO string)
+// Start time: an ISO 8601 date or date-time, such as 2026-01-31 or 2026-01-31T12:00:00Z. Empty means no bound.
 func (r ApiListAuditTrailEventsRequest) From(from string) ApiListAuditTrailEventsRequest {
 	r.from = &from
 	return r
 }
 
-// End time (ISO string)
+// End time: an ISO 8601 date or date-time, such as 2026-01-31 or 2026-01-31T12:00:00Z. Empty means no bound.
 func (r ApiListAuditTrailEventsRequest) To(to string) ApiListAuditTrailEventsRequest {
 	r.to = &to
 	return r

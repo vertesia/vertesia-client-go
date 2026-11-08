@@ -192,7 +192,7 @@ Disables embeddings for the selected embedding type in the current project.
 **Required permissions:** `project:settings_write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param type_
+	@param type_ The embedding type: `text`, `image` or `properties`.
 	@return ApiDisableProjectEmbeddingsRequest
 */
 func (a *CommandsAPIService) DisableProjectEmbeddings(ctx context.Context, type_ string) ApiDisableProjectEmbeddingsRequest {
@@ -629,7 +629,7 @@ Validates and enables embeddings for the selected embedding type using the provi
 **Required permissions:** `project:settings_write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param type_
+	@param type_ The embedding type: `text`, `image` or `properties`.
 	@return ApiEnableProjectEmbeddingsRequest
 */
 func (a *CommandsAPIService) EnableProjectEmbeddings(ctx context.Context, type_ string) ApiEnableProjectEmbeddingsRequest {
@@ -920,7 +920,7 @@ Returns embedding configuration and indexing status for the selected embedding t
 **Required permissions:** `project:settings_write`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param type_
+	@param type_ The embedding type: `text`, `image` or `properties`.
 	@return ApiGetEmbeddingCommandStatusRequest
 */
 func (a *CommandsAPIService) GetEmbeddingCommandStatus(ctx context.Context, type_ string) ApiGetEmbeddingCommandStatusRequest {
@@ -1500,7 +1500,7 @@ Queues recalculation for missing or outdated embeddings, or all eligible objects
 **Required permissions:** `project:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param type_
+	@param type_ The embedding type: `text`, `image` or `properties`.
 	@return ApiRecalculateProjectEmbeddingsRequest
 */
 func (a *CommandsAPIService) RecalculateProjectEmbeddings(ctx context.Context, type_ string) ApiRecalculateProjectEmbeddingsRequest {

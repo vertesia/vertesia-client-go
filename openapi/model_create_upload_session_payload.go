@@ -20,8 +20,9 @@ var _ MappedNullable = &CreateUploadSessionPayload{}
 
 // CreateUploadSessionPayload Starts an upload of a file too large for a single signed PUT.
 type CreateUploadSessionPayload struct {
-	Name     string  `json:"name"`
-	Id       *string `json:"id,omitempty"`
+	Name string `json:"name"`
+	// The object name to upload to. A random name is chosen when omitted. It must not be empty, start with `/` or `\\`, or contain a `..` segment.
+	Id       *string `json:"id,omitempty" validate:"regexp=^(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*)(?:[\\\\\\/]+(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*))*[\\\\\\/]*$"`
 	MimeType *string `json:"mime_type,omitempty"`
 }
 

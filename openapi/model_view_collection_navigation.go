@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewCollectionNavigation{}
 
 // ViewCollectionNavigation struct for ViewCollectionNavigation
 type ViewCollectionNavigation struct {
-	Id                 string   `json:"id"`
+	Id                 string   `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	Label              string   `json:"label"`
 	Presentation       *string  `json:"presentation,omitempty"`
 	MultiSelect        *bool    `json:"multi_select,omitempty"`

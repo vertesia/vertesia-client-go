@@ -20,9 +20,9 @@ var _ MappedNullable = &ViewHierarchyLevel{}
 
 // ViewHierarchyLevel struct for ViewHierarchyLevel
 type ViewHierarchyLevel struct {
-	Id    string   `json:"id"`
+	Id    string   `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	Label string   `json:"label"`
-	Field string   `json:"field"`
+	Field string   `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
 	Size  *float32 `json:"size,omitempty"`
 	Sort  *string  `json:"sort,omitempty"`
 }

@@ -790,6 +790,7 @@ func (r ApiListCollectionMembersRequest) Status(status string) ApiListCollection
 	return r
 }
 
+// Only list members of this stored content type, by its ID (24 hexadecimal characters).
 func (r ApiListCollectionMembersRequest) Type_(type_ string) ApiListCollectionMembersRequest {
 	r.type_ = &type_
 	return r

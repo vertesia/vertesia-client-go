@@ -21,19 +21,19 @@ var _ MappedNullable = &InteractionCreatePayload{}
 
 // InteractionCreatePayload struct for InteractionCreatePayload
 type InteractionCreatePayload struct {
-	Status             InteractionStatus               `json:"status"`
-	TestData           map[string]interface{}          `json:"test_data,omitempty"`
-	InteractionSchema  *InteractionResultSchema        `json:"interaction_schema,omitempty"`
-	CachePolicy        *CachePolicy                    `json:"cache_policy,omitempty"`
-	Prompts            []InteractionPromptSegmentInput `json:"prompts"`
-	LastPublishedAt    *time.Time                      `json:"last_published_at,omitempty"`
-	Name               string                          `json:"name"`
-	Description        *string                         `json:"description,omitempty"`
-	AgentRunnerOptions *AgentRunnerOptions             `json:"agent_runner_options,omitempty"`
-	ResultSchema       *InteractionResultSchema        `json:"result_schema,omitempty"`
-	Environment        *InteractionEnvironment         `json:"environment,omitempty"`
-	Model              *string                         `json:"model,omitempty"`
-	ModelOptions       *ModelOptions                   `json:"model_options,omitempty"`
+	Status             InteractionStatus                    `json:"status"`
+	TestData           map[string]interface{}               `json:"test_data,omitempty"`
+	InteractionSchema  *InteractionResultSchema             `json:"interaction_schema,omitempty"`
+	CachePolicy        *CachePolicy                         `json:"cache_policy,omitempty"`
+	Prompts            []InteractionPromptSegmentInput      `json:"prompts"`
+	LastPublishedAt    *time.Time                           `json:"last_published_at,omitempty"`
+	Name               string                               `json:"name"`
+	Description        *string                              `json:"description,omitempty"`
+	AgentRunnerOptions *AgentRunnerOptions                  `json:"agent_runner_options,omitempty"`
+	ResultSchema       *InteractionResultSchema             `json:"result_schema,omitempty"`
+	Environment        *InteractionCreatePayloadEnvironment `json:"environment,omitempty"`
+	Model              *string                              `json:"model,omitempty"`
+	ModelOptions       *ModelOptions                        `json:"model_options,omitempty"`
 	// MongoDB ObjectId of the inference profile.
 	InferenceProfile  NullableString       `json:"inference_profile,omitempty"`
 	StoreMediaResults *bool                `json:"store_media_results,omitempty"`
@@ -364,9 +364,9 @@ func (o *InteractionCreatePayload) SetResultSchema(v InteractionResultSchema) {
 }
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
-func (o *InteractionCreatePayload) GetEnvironment() InteractionEnvironment {
+func (o *InteractionCreatePayload) GetEnvironment() InteractionCreatePayloadEnvironment {
 	if o == nil || IsNil(o.Environment) {
-		var ret InteractionEnvironment
+		var ret InteractionCreatePayloadEnvironment
 		return ret
 	}
 	return *o.Environment
@@ -374,7 +374,7 @@ func (o *InteractionCreatePayload) GetEnvironment() InteractionEnvironment {
 
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *InteractionCreatePayload) GetEnvironmentOk() (*InteractionEnvironment, bool) {
+func (o *InteractionCreatePayload) GetEnvironmentOk() (*InteractionCreatePayloadEnvironment, bool) {
 	if o == nil || IsNil(o.Environment) {
 		return nil, false
 	}
@@ -390,8 +390,8 @@ func (o *InteractionCreatePayload) HasEnvironment() bool {
 	return false
 }
 
-// SetEnvironment gets a reference to the given InteractionEnvironment and assigns it to the Environment field.
-func (o *InteractionCreatePayload) SetEnvironment(v InteractionEnvironment) {
+// SetEnvironment gets a reference to the given InteractionCreatePayloadEnvironment and assigns it to the Environment field.
+func (o *InteractionCreatePayload) SetEnvironment(v InteractionCreatePayloadEnvironment) {
 	o.Environment = &v
 }
 

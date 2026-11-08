@@ -19,7 +19,7 @@ import (
 // checks if the CreateApiKeyPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &CreateApiKeyPayload{}
 
-// CreateApiKeyPayload struct for CreateApiKeyPayload
+// CreateApiKeyPayload A SCIM provisioning key (`scim_provisioning: true`) takes the `admin` role. A custom `c:<name>` role must be defined in the account. No key of `properties`, at any depth, may contain a NUL character.
 type CreateApiKeyPayload struct {
 	Name      string             `json:"name"`
 	Role      AssignableRoleName `json:"role"`

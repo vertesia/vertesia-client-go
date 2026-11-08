@@ -20,10 +20,12 @@ var _ MappedNullable = &GetUploadUrlPayload{}
 
 // GetUploadUrlPayload struct for GetUploadUrlPayload
 type GetUploadUrlPayload struct {
-	Name     string   `json:"name"`
-	Id       *string  `json:"id,omitempty"`
-	MimeType *string  `json:"mime_type,omitempty"`
-	Ttl      *float32 `json:"ttl,omitempty"`
+	Name string `json:"name"`
+	// The object name to upload to. A random name is chosen when omitted. It must not be empty, start with `/` or `\\`, or contain a `..` segment.
+	Id       *string `json:"id,omitempty" validate:"regexp=^(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*)(?:[\\\\\\/]+(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*))*[\\\\\\/]*$"`
+	MimeType *string `json:"mime_type,omitempty"`
+	// Lifetime of the signed URL in seconds, at most seven days.
+	Ttl *int32 `json:"ttl,omitempty"`
 }
 
 type _GetUploadUrlPayload GetUploadUrlPayload
@@ -135,9 +137,9 @@ func (o *GetUploadUrlPayload) SetMimeType(v string) {
 }
 
 // GetTtl returns the Ttl field value if set, zero value otherwise.
-func (o *GetUploadUrlPayload) GetTtl() float32 {
+func (o *GetUploadUrlPayload) GetTtl() int32 {
 	if o == nil || IsNil(o.Ttl) {
-		var ret float32
+		var ret int32
 		return ret
 	}
 	return *o.Ttl
@@ -145,7 +147,7 @@ func (o *GetUploadUrlPayload) GetTtl() float32 {
 
 // GetTtlOk returns a tuple with the Ttl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *GetUploadUrlPayload) GetTtlOk() (*float32, bool) {
+func (o *GetUploadUrlPayload) GetTtlOk() (*int32, bool) {
 	if o == nil || IsNil(o.Ttl) {
 		return nil, false
 	}
@@ -161,8 +163,8 @@ func (o *GetUploadUrlPayload) HasTtl() bool {
 	return false
 }
 
-// SetTtl gets a reference to the given float32 and assigns it to the Ttl field.
-func (o *GetUploadUrlPayload) SetTtl(v float32) {
+// SetTtl gets a reference to the given int32 and assigns it to the Ttl field.
+func (o *GetUploadUrlPayload) SetTtl(v int32) {
 	o.Ttl = &v
 }
 

@@ -20,8 +20,8 @@ var _ MappedNullable = &UpsertAppVersionRequest{}
 
 // UpsertAppVersionRequest struct for UpsertAppVersionRequest
 type UpsertAppVersionRequest struct {
-	// Existing version record to update in place, used by reproducible rebuilds.
-	RecordId   *string           `json:"record_id,omitempty"`
+	// Existing version record to update in place, used by reproducible rebuilds, as 24 hexadecimal characters.
+	RecordId   *string           `json:"record_id,omitempty" validate:"regexp=^(?:[0-9a-fA-F]{24})?$"`
 	App        *string           `json:"app,omitempty"`
 	AppId      string            `json:"app_id" validate:"regexp=\\\\S"`
 	AppName    *string           `json:"app_name,omitempty"`

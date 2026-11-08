@@ -24,24 +24,27 @@ type RunSearchQuery struct {
 	Limit       *float32            `json:"limit,omitempty"`
 	Offset      *float32            `json:"offset,omitempty"`
 	Interaction *string             `json:"interaction,omitempty"`
-	Environment *string             `json:"environment,omitempty"`
-	Model       *string             `json:"model,omitempty"`
-	Tags        []string            `json:"tags,omitempty"`
+	// Environment id, as 24 hexadecimal characters. An empty string applies no filter.
+	Environment *string  `json:"environment,omitempty" validate:"regexp=^(?:[a-fA-F0-9]{24})?$"`
+	Model       *string  `json:"model,omitempty"`
+	Tags        []string `json:"tags,omitempty"`
 	// Tags to exclude. Runs carrying any of these tags are filtered out of the results, counts, and facet buckets. Combined with `tags` (which requires all of the listed tags) as an additional `$nin` constraint on the same field.
 	ExcludeTags      []string `json:"exclude_tags,omitempty"`
 	Query            *string  `json:"query,omitempty"`
 	DefaultQueryPath *string  `json:"default_query_path,omitempty"`
-	Parent           []string `json:"parent,omitempty"`
-	IsRoot           *bool    `json:"is_root,omitempty"`
-	Object           *string  `json:"object,omitempty"`
-	Start            *string  `json:"start,omitempty"`
-	End              *string  `json:"end,omitempty"`
-	FinishReason     *string  `json:"finish_reason,omitempty"`
-	CreatedBy        *string  `json:"created_by,omitempty"`
-	WorkflowRunIds   []string `json:"workflow_run_ids,omitempty"`
-	WorkflowIds      []string `json:"workflow_ids,omitempty"`
-	RunIds           []string `json:"run_ids,omitempty"`
-	IsAgent          *bool    `json:"is_agent,omitempty"`
+	// Parent run ids, as 24 hexadecimal characters. The legacy value `false` selects root runs, like `is_root`; it cannot be combined with a parent id.
+	Parent         []string `json:"parent,omitempty"`
+	IsRoot         *bool    `json:"is_root,omitempty"`
+	Object         *string  `json:"object,omitempty"`
+	Start          *string  `json:"start,omitempty"`
+	End            *string  `json:"end,omitempty"`
+	FinishReason   *string  `json:"finish_reason,omitempty"`
+	CreatedBy      *string  `json:"created_by,omitempty"`
+	WorkflowRunIds []string `json:"workflow_run_ids,omitempty"`
+	WorkflowIds    []string `json:"workflow_ids,omitempty"`
+	// Run ids, as 24 hexadecimal characters.
+	RunIds  []string `json:"run_ids,omitempty"`
+	IsAgent *bool    `json:"is_agent,omitempty"`
 }
 
 // NewRunSearchQuery instantiates a new RunSearchQuery object

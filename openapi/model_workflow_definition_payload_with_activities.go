@@ -27,8 +27,8 @@ type WorkflowDefinitionPayloadWithActivities struct {
 	Options     *DSLActivityOptions    `json:"options,omitempty"`
 	Result      *string                `json:"result,omitempty"`
 	DebugMode   *bool                  `json:"debug_mode,omitempty"`
-	// Legacy upsert: update this definition instead of creating a new one.
-	Id *string `json:"id,omitempty"`
+	// Legacy upsert: update this definition instead of creating a new one, as 24 hexadecimal characters.
+	Id *string `json:"id,omitempty" validate:"regexp=^[0-9a-fA-F]{24}$"`
 	// Legacy upsert: ignored, the stored value wins.
 	CreatedAt *string `json:"created_at,omitempty"`
 	// Legacy upsert: the value the definition was read with, for conflict detection.

@@ -20,7 +20,8 @@ var _ MappedNullable = &WebsiteCredentialSecretInputTotp{}
 
 // WebsiteCredentialSecretInputTotp struct for WebsiteCredentialSecretInputTotp
 type WebsiteCredentialSecretInputTotp struct {
-	Seed      string                          `json:"seed"`
+	// The base32 TOTP seed (`A`-`Z`, `2`-`7`, any case). Whitespace, `=` and `-` are ignored.
+	Seed      string                          `json:"seed" validate:"regexp=^[\\\\sA-Za-z2-7=-]*[A-Za-z2-7][\\\\sA-Za-z2-7=-]*$"`
 	Algorithm *WebsiteCredentialTotpAlgorithm `json:"algorithm,omitempty"`
 	Digits    *float32                        `json:"digits,omitempty"`
 	Period    *float32                        `json:"period,omitempty"`

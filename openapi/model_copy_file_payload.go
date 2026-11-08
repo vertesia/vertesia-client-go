@@ -20,8 +20,10 @@ var _ MappedNullable = &CopyFilePayload{}
 
 // CopyFilePayload struct for CopyFilePayload
 type CopyFilePayload struct {
-	Source string `json:"source"`
-	Dest   string `json:"dest"`
+	// The file to copy: a path relative to the bucket or a full URI. It must not be blank or contain control characters.
+	Source string `json:"source" validate:"regexp=^[\\\\u0020\\\\u00a0\\\\u1680\\\\u2000-\\\\u200a\\\\u2028\\\\u2029\\\\u202f\\\\u205f\\\\u3000\\\\ufeff]*[^\\\\u0000-\\\\u001f\\\\u007f\\\\u0020\\\\u00a0\\\\u1680\\\\u2000-\\\\u200a\\\\u2028\\\\u2029\\\\u202f\\\\u205f\\\\u3000\\\\ufeff][^\\\\u0000-\\\\u001f\\\\u007f]*$"`
+	// The object name to copy to, in the source file's bucket. It must not be empty, start with `/` or `\\`, or contain a `..` segment.
+	Dest string `json:"dest" validate:"regexp=^(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*)(?:[\\\\\\/]+(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*))*[\\\\\\/]*$"`
 }
 
 type _CopyFilePayload CopyFilePayload

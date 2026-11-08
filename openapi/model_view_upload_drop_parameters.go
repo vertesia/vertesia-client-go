@@ -21,7 +21,7 @@ var _ MappedNullable = &ViewUploadDropParameters{}
 type ViewUploadDropParameters struct {
 	TypeId       *string                `json:"type_id,omitempty"`
 	CollectionId *string                `json:"collection_id,omitempty"`
-	Location     *string                `json:"location,omitempty"`
+	Location     *string                `json:"location,omitempty" validate:"regexp=^\\/"`
 	Properties   map[string]interface{} `json:"properties,omitempty"`
 	AllowFolders *bool                  `json:"allow_folders,omitempty"`
 }

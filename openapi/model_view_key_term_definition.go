@@ -20,9 +20,9 @@ var _ MappedNullable = &ViewKeyTermDefinition{}
 
 // ViewKeyTermDefinition struct for ViewKeyTermDefinition
 type ViewKeyTermDefinition struct {
-	Id       string              `json:"id"`
+	Id       string              `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	Label    string              `json:"label"`
-	Field    *string             `json:"field,omitempty"`
+	Field    *string             `json:"field,omitempty" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
 	Type     ViewSearchFieldType `json:"type"`
 	Multiple *bool               `json:"multiple,omitempty"`
 	Operator *string             `json:"operator,omitempty"`

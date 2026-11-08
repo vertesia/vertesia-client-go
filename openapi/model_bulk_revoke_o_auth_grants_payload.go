@@ -19,9 +19,9 @@ var _ MappedNullable = &BulkRevokeOAuthGrantsPayload{}
 
 // BulkRevokeOAuthGrantsPayload struct for BulkRevokeOAuthGrantsPayload
 type BulkRevokeOAuthGrantsPayload struct {
-	AccountId      *string              `json:"account_id,omitempty"`
-	ProjectId      *string              `json:"project_id,omitempty"`
-	UserId         *string              `json:"user_id,omitempty"`
+	AccountId      *string              `json:"account_id,omitempty" validate:"regexp=^(?:[0-9a-fA-F]{24})?$"`
+	ProjectId      *string              `json:"project_id,omitempty" validate:"regexp=^(?:[0-9a-fA-F]{24})?$"`
+	UserId         *string              `json:"user_id,omitempty" validate:"regexp=^(?:[0-9a-fA-F]{24})?$"`
 	ClientId       *string              `json:"client_id,omitempty"`
 	Resource       *string              `json:"resource,omitempty"`
 	Status         *string              `json:"status,omitempty"`

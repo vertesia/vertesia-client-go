@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewRangeDefinition{}
 
 // ViewRangeDefinition struct for ViewRangeDefinition
 type ViewRangeDefinition struct {
-	Id    string   `json:"id"`
+	Id    string   `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	Label string   `json:"label"`
 	From  *float32 `json:"from,omitempty"`
 	To    *float32 `json:"to,omitempty"`

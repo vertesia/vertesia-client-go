@@ -21,12 +21,13 @@ var _ MappedNullable = &CreateTaskPayload{}
 
 // CreateTaskPayload struct for CreateTaskPayload
 type CreateTaskPayload struct {
-	Title       string      `json:"title"`
-	Description *string     `json:"description,omitempty"`
-	Assignee    *string     `json:"assignee,omitempty"`
-	Fields      []TaskField `json:"fields,omitempty"`
-	Source      TaskSource  `json:"source"`
-	DueAt       *time.Time  `json:"due_at,omitempty"`
+	Fields               []TaskField `json:"fields,omitempty"`
+	Title                string      `json:"title"`
+	Description          *string     `json:"description,omitempty"`
+	Assignee             *string     `json:"assignee,omitempty"`
+	Source               TaskSource  `json:"source"`
+	DueAt                *time.Time  `json:"due_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateTaskPayload CreateTaskPayload
@@ -48,6 +49,38 @@ func NewCreateTaskPayload(title string, source TaskSource) *CreateTaskPayload {
 func NewCreateTaskPayloadWithDefaults() *CreateTaskPayload {
 	this := CreateTaskPayload{}
 	return &this
+}
+
+// GetFields returns the Fields field value if set, zero value otherwise.
+func (o *CreateTaskPayload) GetFields() []TaskField {
+	if o == nil || IsNil(o.Fields) {
+		var ret []TaskField
+		return ret
+	}
+	return o.Fields
+}
+
+// GetFieldsOk returns a tuple with the Fields field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateTaskPayload) GetFieldsOk() ([]TaskField, bool) {
+	if o == nil || IsNil(o.Fields) {
+		return nil, false
+	}
+	return o.Fields, true
+}
+
+// HasFields returns a boolean if a field has been set.
+func (o *CreateTaskPayload) HasFields() bool {
+	if o != nil && !IsNil(o.Fields) {
+		return true
+	}
+
+	return false
+}
+
+// SetFields gets a reference to the given []TaskField and assigns it to the Fields field.
+func (o *CreateTaskPayload) SetFields(v []TaskField) {
+	o.Fields = v
 }
 
 // GetTitle returns the Title field value
@@ -138,38 +171,6 @@ func (o *CreateTaskPayload) SetAssignee(v string) {
 	o.Assignee = &v
 }
 
-// GetFields returns the Fields field value if set, zero value otherwise.
-func (o *CreateTaskPayload) GetFields() []TaskField {
-	if o == nil || IsNil(o.Fields) {
-		var ret []TaskField
-		return ret
-	}
-	return o.Fields
-}
-
-// GetFieldsOk returns a tuple with the Fields field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *CreateTaskPayload) GetFieldsOk() ([]TaskField, bool) {
-	if o == nil || IsNil(o.Fields) {
-		return nil, false
-	}
-	return o.Fields, true
-}
-
-// HasFields returns a boolean if a field has been set.
-func (o *CreateTaskPayload) HasFields() bool {
-	if o != nil && !IsNil(o.Fields) {
-		return true
-	}
-
-	return false
-}
-
-// SetFields gets a reference to the given []TaskField and assigns it to the Fields field.
-func (o *CreateTaskPayload) SetFields(v []TaskField) {
-	o.Fields = v
-}
-
 // GetSource returns the Source field value
 func (o *CreateTaskPayload) GetSource() TaskSource {
 	if o == nil {
@@ -236,6 +237,9 @@ func (o CreateTaskPayload) MarshalJSON() ([]byte, error) {
 
 func (o CreateTaskPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Fields) {
+		toSerialize["fields"] = o.Fields
+	}
 	toSerialize["title"] = o.Title
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
@@ -243,13 +247,15 @@ func (o CreateTaskPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Assignee) {
 		toSerialize["assignee"] = o.Assignee
 	}
-	if !IsNil(o.Fields) {
-		toSerialize["fields"] = o.Fields
-	}
 	toSerialize["source"] = o.Source
 	if !IsNil(o.DueAt) {
 		toSerialize["due_at"] = o.DueAt
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -285,6 +291,18 @@ func (o *CreateTaskPayload) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = CreateTaskPayload(varCreateTaskPayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "fields")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "assignee")
+		delete(additionalProperties, "source")
+		delete(additionalProperties, "due_at")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

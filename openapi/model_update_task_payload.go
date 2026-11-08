@@ -20,13 +20,16 @@ var _ MappedNullable = &UpdateTaskPayload{}
 
 // UpdateTaskPayload struct for UpdateTaskPayload
 type UpdateTaskPayload struct {
-	Title       *string            `json:"title,omitempty"`
-	Description *string            `json:"description,omitempty"`
-	Status      *DurableTaskStatus `json:"status,omitempty"`
-	Assignee    NullableString     `json:"assignee,omitempty"`
-	Fields      []TaskField        `json:"fields,omitempty"`
-	DueAt       NullableTime       `json:"due_at,omitempty"`
+	Fields               []TaskField        `json:"fields,omitempty"`
+	Title                *string            `json:"title,omitempty"`
+	Description          *string            `json:"description,omitempty"`
+	Status               *DurableTaskStatus `json:"status,omitempty"`
+	Assignee             NullableString     `json:"assignee,omitempty"`
+	DueAt                NullableTime       `json:"due_at,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
+
+type _UpdateTaskPayload UpdateTaskPayload
 
 // NewUpdateTaskPayload instantiates a new UpdateTaskPayload object
 // This constructor will assign default values to properties that have it defined,
@@ -43,6 +46,38 @@ func NewUpdateTaskPayload() *UpdateTaskPayload {
 func NewUpdateTaskPayloadWithDefaults() *UpdateTaskPayload {
 	this := UpdateTaskPayload{}
 	return &this
+}
+
+// GetFields returns the Fields field value if set, zero value otherwise.
+func (o *UpdateTaskPayload) GetFields() []TaskField {
+	if o == nil || IsNil(o.Fields) {
+		var ret []TaskField
+		return ret
+	}
+	return o.Fields
+}
+
+// GetFieldsOk returns a tuple with the Fields field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateTaskPayload) GetFieldsOk() ([]TaskField, bool) {
+	if o == nil || IsNil(o.Fields) {
+		return nil, false
+	}
+	return o.Fields, true
+}
+
+// HasFields returns a boolean if a field has been set.
+func (o *UpdateTaskPayload) HasFields() bool {
+	if o != nil && !IsNil(o.Fields) {
+		return true
+	}
+
+	return false
+}
+
+// SetFields gets a reference to the given []TaskField and assigns it to the Fields field.
+func (o *UpdateTaskPayload) SetFields(v []TaskField) {
+	o.Fields = v
 }
 
 // GetTitle returns the Title field value if set, zero value otherwise.
@@ -184,38 +219,6 @@ func (o *UpdateTaskPayload) UnsetAssignee() {
 	o.Assignee.Unset()
 }
 
-// GetFields returns the Fields field value if set, zero value otherwise.
-func (o *UpdateTaskPayload) GetFields() []TaskField {
-	if o == nil || IsNil(o.Fields) {
-		var ret []TaskField
-		return ret
-	}
-	return o.Fields
-}
-
-// GetFieldsOk returns a tuple with the Fields field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *UpdateTaskPayload) GetFieldsOk() ([]TaskField, bool) {
-	if o == nil || IsNil(o.Fields) {
-		return nil, false
-	}
-	return o.Fields, true
-}
-
-// HasFields returns a boolean if a field has been set.
-func (o *UpdateTaskPayload) HasFields() bool {
-	if o != nil && !IsNil(o.Fields) {
-		return true
-	}
-
-	return false
-}
-
-// SetFields gets a reference to the given []TaskField and assigns it to the Fields field.
-func (o *UpdateTaskPayload) SetFields(v []TaskField) {
-	o.Fields = v
-}
-
 // GetDueAt returns the DueAt field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *UpdateTaskPayload) GetDueAt() time.Time {
 	if o == nil || IsNil(o.DueAt.Get()) {
@@ -269,6 +272,9 @@ func (o UpdateTaskPayload) MarshalJSON() ([]byte, error) {
 
 func (o UpdateTaskPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Fields) {
+		toSerialize["fields"] = o.Fields
+	}
 	if !IsNil(o.Title) {
 		toSerialize["title"] = o.Title
 	}
@@ -281,13 +287,41 @@ func (o UpdateTaskPayload) ToMap() (map[string]interface{}, error) {
 	if o.Assignee.IsSet() {
 		toSerialize["assignee"] = o.Assignee.Get()
 	}
-	if !IsNil(o.Fields) {
-		toSerialize["fields"] = o.Fields
-	}
 	if o.DueAt.IsSet() {
 		toSerialize["due_at"] = o.DueAt.Get()
 	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
+}
+
+func (o *UpdateTaskPayload) UnmarshalJSON(data []byte) (err error) {
+	varUpdateTaskPayload := _UpdateTaskPayload{}
+
+	err = json.Unmarshal(data, &varUpdateTaskPayload)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateTaskPayload(varUpdateTaskPayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "fields")
+		delete(additionalProperties, "title")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "status")
+		delete(additionalProperties, "assignee")
+		delete(additionalProperties, "due_at")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableUpdateTaskPayload struct {

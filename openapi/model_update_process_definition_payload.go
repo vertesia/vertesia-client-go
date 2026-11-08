@@ -17,20 +17,14 @@ import (
 // checks if the UpdateProcessDefinitionPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &UpdateProcessDefinitionPayload{}
 
-// UpdateProcessDefinitionPayload struct for UpdateProcessDefinitionPayload
+// UpdateProcessDefinitionPayload A draft edit. `status` and `version` are server-owned: use the publish, archive and revert endpoints.
 type UpdateProcessDefinitionPayload struct {
 	// Edit revision returned by the last read. Stale revisions are rejected with HTTP 409. Omit for legacy last-write-wins behavior.
-	ExpectedEditRevision *int32  `json:"expected_edit_revision,omitempty"`
-	Name                 *string `json:"name,omitempty"`
-	Description          *string `json:"description,omitempty"`
-	// Deprecated: Status is server-owned. Use publish/archive endpoints instead of updating it directly.
-	// Deprecated
-	Status *ProcessDefinitionStatus `json:"status,omitempty"`
-	// Deprecated: Version is server-owned. Use the publish endpoint to create the next version.
-	// Deprecated
-	Version    *float32               `json:"version,omitempty"`
-	Tags       []string               `json:"tags,omitempty"`
-	Definition *ProcessDefinitionBody `json:"definition,omitempty"`
+	ExpectedEditRevision *int32                 `json:"expected_edit_revision,omitempty"`
+	Name                 *string                `json:"name,omitempty"`
+	Description          *string                `json:"description,omitempty"`
+	Tags                 []string               `json:"tags,omitempty"`
+	Definition           *ProcessDefinitionBody `json:"definition,omitempty"`
 }
 
 // NewUpdateProcessDefinitionPayload instantiates a new UpdateProcessDefinitionPayload object
@@ -146,76 +140,6 @@ func (o *UpdateProcessDefinitionPayload) SetDescription(v string) {
 	o.Description = &v
 }
 
-// GetStatus returns the Status field value if set, zero value otherwise.
-// Deprecated
-func (o *UpdateProcessDefinitionPayload) GetStatus() ProcessDefinitionStatus {
-	if o == nil || IsNil(o.Status) {
-		var ret ProcessDefinitionStatus
-		return ret
-	}
-	return *o.Status
-}
-
-// GetStatusOk returns a tuple with the Status field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// Deprecated
-func (o *UpdateProcessDefinitionPayload) GetStatusOk() (*ProcessDefinitionStatus, bool) {
-	if o == nil || IsNil(o.Status) {
-		return nil, false
-	}
-	return o.Status, true
-}
-
-// HasStatus returns a boolean if a field has been set.
-func (o *UpdateProcessDefinitionPayload) HasStatus() bool {
-	if o != nil && !IsNil(o.Status) {
-		return true
-	}
-
-	return false
-}
-
-// SetStatus gets a reference to the given ProcessDefinitionStatus and assigns it to the Status field.
-// Deprecated
-func (o *UpdateProcessDefinitionPayload) SetStatus(v ProcessDefinitionStatus) {
-	o.Status = &v
-}
-
-// GetVersion returns the Version field value if set, zero value otherwise.
-// Deprecated
-func (o *UpdateProcessDefinitionPayload) GetVersion() float32 {
-	if o == nil || IsNil(o.Version) {
-		var ret float32
-		return ret
-	}
-	return *o.Version
-}
-
-// GetVersionOk returns a tuple with the Version field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-// Deprecated
-func (o *UpdateProcessDefinitionPayload) GetVersionOk() (*float32, bool) {
-	if o == nil || IsNil(o.Version) {
-		return nil, false
-	}
-	return o.Version, true
-}
-
-// HasVersion returns a boolean if a field has been set.
-func (o *UpdateProcessDefinitionPayload) HasVersion() bool {
-	if o != nil && !IsNil(o.Version) {
-		return true
-	}
-
-	return false
-}
-
-// SetVersion gets a reference to the given float32 and assigns it to the Version field.
-// Deprecated
-func (o *UpdateProcessDefinitionPayload) SetVersion(v float32) {
-	o.Version = &v
-}
-
 // GetTags returns the Tags field value if set, zero value otherwise.
 func (o *UpdateProcessDefinitionPayload) GetTags() []string {
 	if o == nil || IsNil(o.Tags) {
@@ -298,12 +222,6 @@ func (o UpdateProcessDefinitionPayload) ToMap() (map[string]interface{}, error) 
 	}
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
-	}
-	if !IsNil(o.Status) {
-		toSerialize["status"] = o.Status
-	}
-	if !IsNil(o.Version) {
-		toSerialize["version"] = o.Version
 	}
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags

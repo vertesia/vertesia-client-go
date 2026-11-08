@@ -20,6 +20,7 @@ var _ MappedNullable = &ProjectConfigurationEmbeddingEnablePayload{}
 
 // ProjectConfigurationEmbeddingEnablePayload struct for ProjectConfigurationEmbeddingEnablePayload
 type ProjectConfigurationEmbeddingEnablePayload struct {
+	// The environment that runs the embedding model.
 	Environment string   `json:"environment"`
 	MaxTokens   *float32 `json:"max_tokens,omitempty"`
 	Model       *string  `json:"model,omitempty"`

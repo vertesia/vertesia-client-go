@@ -25,9 +25,9 @@ type ListWorkflowRunsPayload struct {
 	EventName *string `json:"event_name,omitempty"`
 	// Legacy workflow rule ID filter, when applicable.
 	RuleId *string `json:"rule_id,omitempty"`
-	// The start time for filtering workflow runs.
+	// The start time for filtering workflow runs: a date such as 2026-10-01T00:00:00.000Z. An empty or blank string sets no bound; any other value that is not a date is refused.
 	Start *string `json:"start,omitempty"`
-	// The end time for filtering workflow runs.
+	// The end time for filtering workflow runs: a date such as 2026-10-01T00:00:00.000Z. An empty or blank string sets no bound; any other value that is not a date is refused.
 	End *string `json:"end,omitempty"`
 	// The status of the workflow run.
 	Status *string `json:"status,omitempty"`

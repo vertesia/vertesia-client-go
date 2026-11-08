@@ -29,7 +29,7 @@ type UpdateUserGroupPayload struct {
 	Clearance *float32 `json:"clearance,omitempty"`
 	// Compartments — merged with user compartments using array union
 	Compartments []string `json:"compartments,omitempty"`
-	// Projects this group is allowed to be used in. When empty or absent the group is org-wide (usable in any project). When set, the group may only be used to grant permissions in the listed projects.
+	// Projects this group is allowed to be used in, as project IDs. When empty or absent the group is org-wide.
 	AllowedProjects      []string `json:"allowed_projects,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

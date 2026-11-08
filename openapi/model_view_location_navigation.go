@@ -20,15 +20,16 @@ var _ MappedNullable = &ViewLocationNavigation{}
 
 // ViewLocationNavigation struct for ViewLocationNavigation
 type ViewLocationNavigation struct {
-	Id           string   `json:"id"`
+	Id           string   `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	Label        string   `json:"label"`
 	Presentation *string  `json:"presentation,omitempty"`
 	MultiSelect  *bool    `json:"multi_select,omitempty"`
 	Order        *float32 `json:"order,omitempty"`
 	Renderer     *string  `json:"renderer,omitempty"`
 	Source       string   `json:"source"`
-	Roots        []string `json:"roots,omitempty"`
-	Depth        *float32 `json:"depth,omitempty"`
+	// Absolute location roots shown by the hierarchy.
+	Roots []string `json:"roots,omitempty"`
+	Depth *float32 `json:"depth,omitempty"`
 }
 
 type _ViewLocationNavigation ViewLocationNavigation

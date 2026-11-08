@@ -20,7 +20,7 @@ var _ MappedNullable = &RevertProcessDefinitionPayload{}
 
 // RevertProcessDefinitionPayload struct for RevertProcessDefinitionPayload
 type RevertProcessDefinitionPayload struct {
-	// Required explicit confirmation from the caller.
+	// Required explicit confirmation from the caller: only `true` is accepted.
 	Confirmed bool `json:"confirmed"`
 	// Optional note explaining why this version is being restored as the draft.
 	Comment *string `json:"comment,omitempty"`

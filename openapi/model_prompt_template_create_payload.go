@@ -21,8 +21,9 @@ var _ MappedNullable = &PromptTemplateCreatePayload{}
 
 // PromptTemplateCreatePayload struct for PromptTemplateCreatePayload
 type PromptTemplateCreatePayload struct {
-	Name            string                 `json:"name"`
-	Parent          *string                `json:"parent,omitempty"`
+	Name string `json:"name"`
+	// The ID of the prompt this one derives from, as 24 hexadecimal characters.
+	Parent          *string                `json:"parent,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
 	Description     *string                `json:"description,omitempty"`
 	TestData        map[string]interface{} `json:"test_data,omitempty"`
 	Script          *string                `json:"script,omitempty"`

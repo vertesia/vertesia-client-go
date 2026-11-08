@@ -17,7 +17,7 @@ import (
 // checks if the ExecuteViewRequest type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ExecuteViewRequest{}
 
-// ExecuteViewRequest struct for ExecuteViewRequest
+// ExecuteViewRequest The keys of `key_terms`, `navigation` and `navigation_queries` are group ids: a lowercase letter, then lowercase letters, digits, `_` or `-`. `key_terms` holds at most 50 groups and `navigation` at most 20, each of at most 100 values of at most 1,000 characters, and the two hold at most 1,000 values in total. `navigation_queries` holds at most 20 queries of at most 200 characters.
 type ExecuteViewRequest struct {
 	Query      *string             `json:"query,omitempty"`
 	KeyTerms   map[string][]string `json:"key_terms,omitempty"`

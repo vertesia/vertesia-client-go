@@ -1588,7 +1588,7 @@ GetContentObjectsExportStatus Get content object export status
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param workflowId
-	@param runId
+	@param runId The run ID of the export workflow, a UUID.
 	@return ApiGetContentObjectsExportStatusRequest
 */
 func (a *ObjectsAPIService) GetContentObjectsExportStatus(ctx context.Context, workflowId string, runId string) ApiGetContentObjectsExportStatusRequest {

@@ -20,7 +20,7 @@ var _ MappedNullable = &PublishProcessDefinitionPayload{}
 
 // PublishProcessDefinitionPayload struct for PublishProcessDefinitionPayload
 type PublishProcessDefinitionPayload struct {
-	// Required explicit confirmation from the caller.
+	// Required explicit confirmation from the caller: only `true` is accepted.
 	Confirmed bool `json:"confirmed"`
 	// Optional tags to merge into the published revision.
 	Tags []string `json:"tags,omitempty"`

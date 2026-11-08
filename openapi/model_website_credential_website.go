@@ -20,8 +20,8 @@ var _ MappedNullable = &WebsiteCredentialWebsite{}
 
 // WebsiteCredentialWebsite struct for WebsiteCredentialWebsite
 type WebsiteCredentialWebsite struct {
-	// Hostname this credential is allowed on. Subdomains match.
-	Host string `json:"host"`
+	// Hostname this credential is allowed on, or a URL to take it from. Subdomains match. A value no hostname can be read from is refused.
+	Host string `json:"host" validate:"regexp=\\\\S"`
 	// Optional login URL used by agents as a hint.
 	LoginUrl *string `json:"login_url,omitempty"`
 	// Optional narrower origin allowlist for this credential.

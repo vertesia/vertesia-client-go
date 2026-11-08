@@ -18,12 +18,13 @@ import (
 // checks if the CreateTablesPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &CreateTablesPayload{}
 
-// CreateTablesPayload Payload for creating multiple tables atomically.
+// CreateTablesPayload struct for CreateTablesPayload
 type CreateTablesPayload struct {
 	// Table definitions to create
 	Tables []CreateTablePayload `json:"tables"`
 	// Commit message
-	Message string `json:"message"`
+	Message              string `json:"message"`
+	AdditionalProperties map[string]interface{}
 }
 
 type _CreateTablesPayload CreateTablesPayload
@@ -107,6 +108,11 @@ func (o CreateTablesPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["tables"] = o.Tables
 	toSerialize["message"] = o.Message
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
 	return toSerialize, nil
 }
 
@@ -142,6 +148,14 @@ func (o *CreateTablesPayload) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	*o = CreateTablesPayload(varCreateTablesPayload)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "tables")
+		delete(additionalProperties, "message")
+		o.AdditionalProperties = additionalProperties
+	}
 
 	return err
 }

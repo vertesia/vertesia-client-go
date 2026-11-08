@@ -51,7 +51,7 @@ Applies a runtime action such as cancellation to a workflow run.
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param workflowId
 	@param runId
-	@param action
+	@param action The action to apply: `cancel` asks the run to stop, `terminate` stops it at once.
 	@return ApiApplyWorkflowRunActionRequest
 */
 func (a *WorkflowRunsAPIService) ApplyWorkflowRunAction(ctx context.Context, workflowId string, runId string, action string) ApiApplyWorkflowRunActionRequest {

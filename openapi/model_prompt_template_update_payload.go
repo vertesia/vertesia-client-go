@@ -20,14 +20,15 @@ var _ MappedNullable = &PromptTemplateUpdatePayload{}
 
 // PromptTemplateUpdatePayload struct for PromptTemplateUpdatePayload
 type PromptTemplateUpdatePayload struct {
-	Role            *PromptRole            `json:"role,omitempty"`
-	Content         *string                `json:"content,omitempty"`
-	ContentType     *TemplateType          `json:"content_type,omitempty"`
-	InputSchema     *JSONSchema            `json:"inputSchema,omitempty"`
-	Name            *string                `json:"name,omitempty"`
-	Status          *PromptStatus          `json:"status,omitempty"`
-	Version         *float32               `json:"version,omitempty"`
-	Parent          *string                `json:"parent,omitempty"`
+	Role        *PromptRole   `json:"role,omitempty"`
+	Content     *string       `json:"content,omitempty"`
+	ContentType *TemplateType `json:"content_type,omitempty"`
+	InputSchema *JSONSchema   `json:"inputSchema,omitempty"`
+	Name        *string       `json:"name,omitempty"`
+	Status      *PromptStatus `json:"status,omitempty"`
+	Version     *float32      `json:"version,omitempty"`
+	// The ID of the prompt this one derives from, as 24 hexadecimal characters.
+	Parent          *string                `json:"parent,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
 	Description     *string                `json:"description,omitempty"`
 	TestData        map[string]interface{} `json:"test_data,omitempty"`
 	Script          *string                `json:"script,omitempty"`

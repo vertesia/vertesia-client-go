@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewSortClause{}
 
 // ViewSortClause struct for ViewSortClause
 type ViewSortClause struct {
-	Field string `json:"field"`
+	Field string `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
 	Order string `json:"order"`
 }
 

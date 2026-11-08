@@ -20,12 +20,13 @@ var _ MappedNullable = &UpdateExecutionRunPayload{}
 
 // UpdateExecutionRunPayload struct for UpdateExecutionRunPayload
 type UpdateExecutionRunPayload struct {
-	Id         *string                 `json:"id,omitempty"`
-	Parent     *ExecutionRunParent     `json:"parent,omitempty"`
+	Id *string `json:"id,omitempty"`
+	// Only used by runs that were created by a virtual run to point toward the virtual run parent. The parent run ID, as 24 hexadecimal characters.
+	Parent     *string                 `json:"parent,omitempty" validate:"regexp=^[0-9a-fA-F]{24}$"`
 	Evaluation *ExecutionRunEvaluation `json:"evaluation,omitempty"`
 	Tags       []string                `json:"tags,omitempty"`
-	// Environment reference - populated with full object in API responses
-	Environment            *ExecutionEnvironmentRef           `json:"environment,omitempty"`
+	// The environment ID, as 24 hexadecimal characters.
+	Environment            *string                            `json:"environment,omitempty" validate:"regexp=^[0-9a-fA-F]{24}$"`
 	ModelId                *string                            `json:"modelId,omitempty"`
 	ResultSchema           *JSONSchema                        `json:"result_schema,omitempty"`
 	Ttl                    *float32                           `json:"ttl,omitempty"`
@@ -49,8 +50,9 @@ type UpdateExecutionRunPayload struct {
 	CreatedBy      *string     `json:"created_by,omitempty"`
 	UpdatedBy      *string     `json:"updated_by,omitempty"`
 	// The Vertesia Workflow related to this Interaction Run.  This is only set when the interaction is executed as part of a workflow.
-	Workflow             *ExecutionRunWorkflow `json:"workflow,omitempty"`
-	Interaction          *InteractionRef       `json:"interaction,omitempty"`
+	Workflow *ExecutionRunWorkflow `json:"workflow,omitempty"`
+	// The interaction ID, as 24 hexadecimal characters.
+	Interaction          *string `json:"interaction,omitempty" validate:"regexp=^[0-9a-fA-F]{24}$"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -106,9 +108,9 @@ func (o *UpdateExecutionRunPayload) SetId(v string) {
 }
 
 // GetParent returns the Parent field value if set, zero value otherwise.
-func (o *UpdateExecutionRunPayload) GetParent() ExecutionRunParent {
+func (o *UpdateExecutionRunPayload) GetParent() string {
 	if o == nil || IsNil(o.Parent) {
-		var ret ExecutionRunParent
+		var ret string
 		return ret
 	}
 	return *o.Parent
@@ -116,7 +118,7 @@ func (o *UpdateExecutionRunPayload) GetParent() ExecutionRunParent {
 
 // GetParentOk returns a tuple with the Parent field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *UpdateExecutionRunPayload) GetParentOk() (*ExecutionRunParent, bool) {
+func (o *UpdateExecutionRunPayload) GetParentOk() (*string, bool) {
 	if o == nil || IsNil(o.Parent) {
 		return nil, false
 	}
@@ -132,8 +134,8 @@ func (o *UpdateExecutionRunPayload) HasParent() bool {
 	return false
 }
 
-// SetParent gets a reference to the given ExecutionRunParent and assigns it to the Parent field.
-func (o *UpdateExecutionRunPayload) SetParent(v ExecutionRunParent) {
+// SetParent gets a reference to the given string and assigns it to the Parent field.
+func (o *UpdateExecutionRunPayload) SetParent(v string) {
 	o.Parent = &v
 }
 
@@ -202,9 +204,9 @@ func (o *UpdateExecutionRunPayload) SetTags(v []string) {
 }
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
-func (o *UpdateExecutionRunPayload) GetEnvironment() ExecutionEnvironmentRef {
+func (o *UpdateExecutionRunPayload) GetEnvironment() string {
 	if o == nil || IsNil(o.Environment) {
-		var ret ExecutionEnvironmentRef
+		var ret string
 		return ret
 	}
 	return *o.Environment
@@ -212,7 +214,7 @@ func (o *UpdateExecutionRunPayload) GetEnvironment() ExecutionEnvironmentRef {
 
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *UpdateExecutionRunPayload) GetEnvironmentOk() (*ExecutionEnvironmentRef, bool) {
+func (o *UpdateExecutionRunPayload) GetEnvironmentOk() (*string, bool) {
 	if o == nil || IsNil(o.Environment) {
 		return nil, false
 	}
@@ -228,8 +230,8 @@ func (o *UpdateExecutionRunPayload) HasEnvironment() bool {
 	return false
 }
 
-// SetEnvironment gets a reference to the given ExecutionEnvironmentRef and assigns it to the Environment field.
-func (o *UpdateExecutionRunPayload) SetEnvironment(v ExecutionEnvironmentRef) {
+// SetEnvironment gets a reference to the given string and assigns it to the Environment field.
+func (o *UpdateExecutionRunPayload) SetEnvironment(v string) {
 	o.Environment = &v
 }
 
@@ -910,9 +912,9 @@ func (o *UpdateExecutionRunPayload) SetWorkflow(v ExecutionRunWorkflow) {
 }
 
 // GetInteraction returns the Interaction field value if set, zero value otherwise.
-func (o *UpdateExecutionRunPayload) GetInteraction() InteractionRef {
+func (o *UpdateExecutionRunPayload) GetInteraction() string {
 	if o == nil || IsNil(o.Interaction) {
-		var ret InteractionRef
+		var ret string
 		return ret
 	}
 	return *o.Interaction
@@ -920,7 +922,7 @@ func (o *UpdateExecutionRunPayload) GetInteraction() InteractionRef {
 
 // GetInteractionOk returns a tuple with the Interaction field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *UpdateExecutionRunPayload) GetInteractionOk() (*InteractionRef, bool) {
+func (o *UpdateExecutionRunPayload) GetInteractionOk() (*string, bool) {
 	if o == nil || IsNil(o.Interaction) {
 		return nil, false
 	}
@@ -936,8 +938,8 @@ func (o *UpdateExecutionRunPayload) HasInteraction() bool {
 	return false
 }
 
-// SetInteraction gets a reference to the given InteractionRef and assigns it to the Interaction field.
-func (o *UpdateExecutionRunPayload) SetInteraction(v InteractionRef) {
+// SetInteraction gets a reference to the given string and assigns it to the Interaction field.
+func (o *UpdateExecutionRunPayload) SetInteraction(v string) {
 	o.Interaction = &v
 }
 

@@ -22,10 +22,9 @@ var _ MappedNullable = &BulkOperationPayload{}
 type BulkOperationPayload struct {
 	// The operation name
 	Name string `json:"name"`
-	// The IDs of the objects to operate on
-	Ids []string `json:"ids"`
-	// The operation parameters. `create` takes the objects to create as `objects`, 1 to 10000.
-	Params               map[string]interface{} `json:"params"`
+	// The IDs of the objects to operate on, each an object ID. `create` ignores them: it makes new objects.
+	Ids                  []string                   `json:"ids"`
+	Params               BulkOperationPayloadParams `json:"params"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -35,7 +34,7 @@ type _BulkOperationPayload BulkOperationPayload
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewBulkOperationPayload(name string, ids []string, params map[string]interface{}) *BulkOperationPayload {
+func NewBulkOperationPayload(name string, ids []string, params BulkOperationPayloadParams) *BulkOperationPayload {
 	this := BulkOperationPayload{}
 	this.Name = name
 	this.Ids = ids
@@ -100,9 +99,9 @@ func (o *BulkOperationPayload) SetIds(v []string) {
 }
 
 // GetParams returns the Params field value
-func (o *BulkOperationPayload) GetParams() map[string]interface{} {
+func (o *BulkOperationPayload) GetParams() BulkOperationPayloadParams {
 	if o == nil {
-		var ret map[string]interface{}
+		var ret BulkOperationPayloadParams
 		return ret
 	}
 
@@ -111,15 +110,15 @@ func (o *BulkOperationPayload) GetParams() map[string]interface{} {
 
 // GetParamsOk returns a tuple with the Params field value
 // and a boolean to check if the value has been set.
-func (o *BulkOperationPayload) GetParamsOk() (map[string]interface{}, bool) {
+func (o *BulkOperationPayload) GetParamsOk() (*BulkOperationPayloadParams, bool) {
 	if o == nil {
-		return map[string]interface{}{}, false
+		return nil, false
 	}
-	return o.Params, true
+	return &o.Params, true
 }
 
 // SetParams sets field value
-func (o *BulkOperationPayload) SetParams(v map[string]interface{}) {
+func (o *BulkOperationPayload) SetParams(v BulkOperationPayloadParams) {
 	o.Params = v
 }
 

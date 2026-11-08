@@ -20,9 +20,9 @@ var _ MappedNullable = &ViewActionConfiguration{}
 
 // ViewActionConfiguration Declarative action exposed by a View. The handler name is resolved by the embedding application; persisted configuration never contains executable code.
 type ViewActionConfiguration struct {
-	Id                string                          `json:"id"`
+	Id                string                          `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	Label             string                          `json:"label"`
-	Handler           string                          `json:"handler"`
+	Handler           string                          `json:"handler" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	Placement         *ViewActionPlacement            `json:"placement,omitempty"`
 	RequiresSelection *ViewActionSelectionRequirement `json:"requires_selection,omitempty"`
 	Destructive       *bool                           `json:"destructive,omitempty"`

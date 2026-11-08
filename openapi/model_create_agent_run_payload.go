@@ -18,8 +18,10 @@ import (
 // checks if the CreateAgentRunPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &CreateAgentRunPayload{}
 
-// CreateAgentRunPayload Payload to create and start a new agent run.
+// CreateAgentRunPayload struct for CreateAgentRunPayload
 type CreateAgentRunPayload struct {
+	// Content type linked to this run — defines the schema for `properties`
+	ContentType *ContentObjectTypeRef `json:"content_type,omitempty"`
 	// Interaction ID or code (e.g. \"sys:generic_question\").
 	Interaction string `json:"interaction"`
 	// Caller-provided conversation title.
@@ -52,8 +54,6 @@ type CreateAgentRunPayload struct {
 	CollectionId *string `json:"collection_id,omitempty"`
 	// Denylist of MCP tool-collection ids deactivated for this run. `undefined`/empty means all installed/connected MCP collections are active (back-compat, and new servers stay active by default). Listed collections are excluded even if connected.
 	DisabledMcpCollections []string `json:"disabled_mcp_collections,omitempty"`
-	// Content type linked to this run — defines the schema for `properties`
-	ContentType *ContentObjectTypeRef `json:"content_type,omitempty"`
 	// Conversation visibility
 	Visibility *ConversationVisibility `json:"visibility,omitempty"`
 	// User-defined or system tags for categorization
@@ -114,6 +114,38 @@ func NewCreateAgentRunPayload(interaction string) *CreateAgentRunPayload {
 func NewCreateAgentRunPayloadWithDefaults() *CreateAgentRunPayload {
 	this := CreateAgentRunPayload{}
 	return &this
+}
+
+// GetContentType returns the ContentType field value if set, zero value otherwise.
+func (o *CreateAgentRunPayload) GetContentType() ContentObjectTypeRef {
+	if o == nil || IsNil(o.ContentType) {
+		var ret ContentObjectTypeRef
+		return ret
+	}
+	return *o.ContentType
+}
+
+// GetContentTypeOk returns a tuple with the ContentType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAgentRunPayload) GetContentTypeOk() (*ContentObjectTypeRef, bool) {
+	if o == nil || IsNil(o.ContentType) {
+		return nil, false
+	}
+	return o.ContentType, true
+}
+
+// HasContentType returns a boolean if a field has been set.
+func (o *CreateAgentRunPayload) HasContentType() bool {
+	if o != nil && !IsNil(o.ContentType) {
+		return true
+	}
+
+	return false
+}
+
+// SetContentType gets a reference to the given ContentObjectTypeRef and assigns it to the ContentType field.
+func (o *CreateAgentRunPayload) SetContentType(v ContentObjectTypeRef) {
+	o.ContentType = &v
 }
 
 // GetInteraction returns the Interaction field value
@@ -618,38 +650,6 @@ func (o *CreateAgentRunPayload) HasDisabledMcpCollections() bool {
 // SetDisabledMcpCollections gets a reference to the given []string and assigns it to the DisabledMcpCollections field.
 func (o *CreateAgentRunPayload) SetDisabledMcpCollections(v []string) {
 	o.DisabledMcpCollections = v
-}
-
-// GetContentType returns the ContentType field value if set, zero value otherwise.
-func (o *CreateAgentRunPayload) GetContentType() ContentObjectTypeRef {
-	if o == nil || IsNil(o.ContentType) {
-		var ret ContentObjectTypeRef
-		return ret
-	}
-	return *o.ContentType
-}
-
-// GetContentTypeOk returns a tuple with the ContentType field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *CreateAgentRunPayload) GetContentTypeOk() (*ContentObjectTypeRef, bool) {
-	if o == nil || IsNil(o.ContentType) {
-		return nil, false
-	}
-	return o.ContentType, true
-}
-
-// HasContentType returns a boolean if a field has been set.
-func (o *CreateAgentRunPayload) HasContentType() bool {
-	if o != nil && !IsNil(o.ContentType) {
-		return true
-	}
-
-	return false
-}
-
-// SetContentType gets a reference to the given ContentObjectTypeRef and assigns it to the ContentType field.
-func (o *CreateAgentRunPayload) SetContentType(v ContentObjectTypeRef) {
-	o.ContentType = &v
 }
 
 // GetVisibility returns the Visibility field value if set, zero value otherwise.
@@ -1273,6 +1273,9 @@ func (o CreateAgentRunPayload) MarshalJSON() ([]byte, error) {
 
 func (o CreateAgentRunPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.ContentType) {
+		toSerialize["content_type"] = o.ContentType
+	}
 	toSerialize["interaction"] = o.Interaction
 	if !IsNil(o.Title) {
 		toSerialize["title"] = o.Title
@@ -1318,9 +1321,6 @@ func (o CreateAgentRunPayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.DisabledMcpCollections) {
 		toSerialize["disabled_mcp_collections"] = o.DisabledMcpCollections
-	}
-	if !IsNil(o.ContentType) {
-		toSerialize["content_type"] = o.ContentType
 	}
 	if !IsNil(o.Visibility) {
 		toSerialize["visibility"] = o.Visibility
@@ -1422,6 +1422,7 @@ func (o *CreateAgentRunPayload) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "content_type")
 		delete(additionalProperties, "interaction")
 		delete(additionalProperties, "title")
 		delete(additionalProperties, "topic")
@@ -1438,7 +1439,6 @@ func (o *CreateAgentRunPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "excluded_tools")
 		delete(additionalProperties, "collection_id")
 		delete(additionalProperties, "disabled_mcp_collections")
-		delete(additionalProperties, "content_type")
 		delete(additionalProperties, "visibility")
 		delete(additionalProperties, "tags")
 		delete(additionalProperties, "categories")

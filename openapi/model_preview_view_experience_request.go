@@ -18,17 +18,16 @@ import (
 // checks if the PreviewViewExperienceRequest type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &PreviewViewExperienceRequest{}
 
-// PreviewViewExperienceRequest Execute an unsaved (draft) View configuration without persisting it. Combines the inline configuration with the same execution inputs as  {@link  ExecuteViewRequest }  so authors can validate and preview results before calling create/update.
+// PreviewViewExperienceRequest Execute an unsaved (draft) View configuration without persisting it. Combines the inline configuration with the same execution inputs as  {@link  ExecuteViewRequest }  so authors can validate and preview results before calling create/update. The keys of `key_terms`, `navigation` and `navigation_queries` are group ids: a lowercase letter, then lowercase letters, digits, `_` or `-`. `key_terms` holds at most 50 groups and `navigation` at most 20, each of at most 100 values of at most 1,000 characters, and the two hold at most 1,000 values in total. `navigation_queries` holds at most 20 queries of at most 200 characters. Without `configuration.search`, `query` must be blank and every `key_terms` value empty.
 type PreviewViewExperienceRequest struct {
-	Query      *string             `json:"query,omitempty"`
-	KeyTerms   map[string][]string `json:"key_terms,omitempty"`
-	Navigation map[string][]string `json:"navigation,omitempty"`
-	// Server-side text filters for large navigation sources, keyed by navigation id.
-	NavigationQueries map[string]string `json:"navigation_queries,omitempty"`
-	Display           *string           `json:"display,omitempty"`
-	Sort              *string           `json:"sort,omitempty"`
-	Offset            *float32          `json:"offset,omitempty"`
-	Limit             *float32          `json:"limit,omitempty"`
+	Query             *string             `json:"query,omitempty"`
+	KeyTerms          map[string][]string `json:"key_terms,omitempty"`
+	Navigation        map[string][]string `json:"navigation,omitempty"`
+	NavigationQueries map[string]string   `json:"navigation_queries,omitempty"`
+	Display           *string             `json:"display,omitempty"`
+	Sort              *string             `json:"sort,omitempty"`
+	Offset            *float32            `json:"offset,omitempty"`
+	Limit             *float32            `json:"limit,omitempty"`
 	// The unsaved View configuration to validate and execute.
 	Configuration ViewExperienceConfiguration `json:"configuration"`
 }

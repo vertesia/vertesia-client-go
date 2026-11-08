@@ -3732,7 +3732,7 @@ func (r ApiSearchAgentRunsRequest) Limit(limit float32) ApiSearchAgentRunsReques
 	return r
 }
 
-// Offset for pagination
+// Offset for pagination. &#x60;offset&#x60; plus &#x60;limit&#x60; (capped at 200, 50 when omitted) must be at most 10000.
 func (r ApiSearchAgentRunsRequest) Offset(offset float32) ApiSearchAgentRunsRequest {
 	r.offset = &offset
 	return r

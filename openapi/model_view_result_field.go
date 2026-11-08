@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewResultField{}
 
 // ViewResultField struct for ViewResultField
 type ViewResultField struct {
-	Field    string                 `json:"field"`
+	Field    string                 `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
 	Label    *string                `json:"label,omitempty"`
 	Format   *ViewResultFieldFormat `json:"format,omitempty"`
 	Fallback *string                `json:"fallback,omitempty"`

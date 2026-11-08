@@ -20,14 +20,14 @@ var _ MappedNullable = &ViewTermsNavigation{}
 
 // ViewTermsNavigation struct for ViewTermsNavigation
 type ViewTermsNavigation struct {
-	Id           string   `json:"id"`
+	Id           string   `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	Label        string   `json:"label"`
 	Presentation *string  `json:"presentation,omitempty"`
 	MultiSelect  *bool    `json:"multi_select,omitempty"`
 	Order        *float32 `json:"order,omitempty"`
 	Renderer     *string  `json:"renderer,omitempty"`
 	Source       string   `json:"source"`
-	Field        string   `json:"field"`
+	Field        string   `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
 	Size         *float32 `json:"size,omitempty"`
 	Sort         *string  `json:"sort,omitempty"`
 }

@@ -1236,6 +1236,7 @@ type ApiGetFileMetadataRequest struct {
 	xApiVersion *string
 }
 
+// The file path (relative to bucket) or full URI. It must not be blank or contain control characters.
 func (r ApiGetFileMetadataRequest) File(file string) ApiGetFileMetadataRequest {
 	r.file = &file
 	return r
@@ -1291,9 +1292,6 @@ func (a *FilesAPIService) GetFileMetadataExecute(r ApiGetFileMetadataRequest) (*
 	localVarFormParams := url.Values{}
 	if r.file == nil {
 		return localVarReturnValue, nil, reportError("file is required and must be specified")
-	}
-	if strlen(*r.file) < 1 {
-		return localVarReturnValue, nil, reportError("file must have at least 1 elements")
 	}
 	if r.xApiVersion == nil {
 		version := a.client.cfg.DefaultHeader["x-api-version"]

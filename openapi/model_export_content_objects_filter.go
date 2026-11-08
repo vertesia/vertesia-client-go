@@ -17,8 +17,9 @@ import (
 // checks if the ExportContentObjectsFilter type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ExportContentObjectsFilter{}
 
-// ExportContentObjectsFilter Bounded filters supported by the bulk content object export API.
+// ExportContentObjectsFilter Bounded filters supported by the bulk content object export API. The date bounds are ISO date-times or `YYYY-MM-DD` dates.
 type ExportContentObjectsFilter struct {
+	// Content types to export: `Document` for untyped objects, a stored type ID (24 hexadecimal characters), or an in-code type ID such as `sys:Document`.
 	Types       []string `json:"types,omitempty"`
 	CreatedFrom *string  `json:"created_from,omitempty"`
 	CreatedTo   *string  `json:"created_to,omitempty"`

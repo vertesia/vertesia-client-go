@@ -18,10 +18,11 @@ import (
 // checks if the ExportPropertiesPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ExportPropertiesPayload{}
 
-// ExportPropertiesPayload struct for ExportPropertiesPayload
+// ExportPropertiesPayload Each `table_layout` column reads its `field` as a dotted path of non-empty field names, none starting with `$`, except an `objectLink` column, which exports the object title.
 type ExportPropertiesPayload struct {
-	ObjectIds   []string            `json:"objectIds"`
-	Type        string              `json:"type"`
+	ObjectIds []string `json:"objectIds"`
+	// The export format: `JSON` or `CSV`.
+	Type        string              `json:"type" validate:"regexp=^(?:JSON|CSV)$"`
 	Query       *ComplexSearchQuery `json:"query,omitempty"`
 	TableLayout []ColumnLayout      `json:"table_layout,omitempty"`
 }

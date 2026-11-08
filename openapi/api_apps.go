@@ -51,7 +51,7 @@ Atomically assigns or moves one stable deployment alias to this immutable app ve
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The app version ID, as 24 hexadecimal characters.
-	@param alias
+	@param alias The deployment alias: 1-63 lowercase letters, numbers, or inner hyphens.
 	@return ApiAssignAppVersionAliasRequest
 */
 func (a *AppsAPIService) AssignAppVersionAlias(ctx context.Context, id string, alias string) ApiAssignAppVersionAliasRequest {
@@ -2476,7 +2476,7 @@ Returns package capabilities exposed by an installed app, including UI, tools, t
 **Required permissions:** `account:member`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param installId
+	@param installId The app installation ID, as 24 hexadecimal characters.
 	@return ApiGetAppInstallationPackageRequest
 */
 func (a *AppsAPIService) GetAppInstallationPackage(ctx context.Context, installId string) ApiGetAppInstallationPackageRequest {
@@ -6554,7 +6554,7 @@ Removes the alias only if it still points to this version, so a stale client can
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id The app version ID, as 24 hexadecimal characters.
-	@param alias
+	@param alias The deployment alias: 1-63 lowercase letters, numbers, or inner hyphens.
 	@return ApiRemoveAppVersionAliasRequest
 */
 func (a *AppsAPIService) RemoveAppVersionAlias(ctx context.Context, id string, alias string) ApiRemoveAppVersionAliasRequest {
@@ -8087,7 +8087,7 @@ Updates settings for an installed app.
 **Required permissions:** `project:admin`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param appId
+	@param appId The app installation ID, as 24 hexadecimal characters.
 	@return ApiUpdateAppInstallationSettingsRequest
 */
 func (a *AppsAPIService) UpdateAppInstallationSettings(ctx context.Context, appId string) ApiUpdateAppInstallationSettingsRequest {

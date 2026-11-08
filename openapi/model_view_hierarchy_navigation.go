@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewHierarchyNavigation{}
 
 // ViewHierarchyNavigation A drill-down hierarchy assembled from independently mapped properties.  Hierarchies represent one selected path, so multi_select may only be false. Selection ids are opaque runtime values and must not be constructed by clients.
 type ViewHierarchyNavigation struct {
-	Id           string               `json:"id"`
+	Id           string               `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	Label        string               `json:"label"`
 	Presentation *string              `json:"presentation,omitempty"`
 	MultiSelect  *bool                `json:"multi_select,omitempty"`

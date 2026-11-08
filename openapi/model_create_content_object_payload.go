@@ -17,7 +17,7 @@ import (
 // checks if the CreateContentObjectPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &CreateContentObjectPayload{}
 
-// CreateContentObjectPayload When creating from an uploaded file the content should be an URL to the uploaded file. `name` is required unless `content.name` or `content.source` is given; it then defaults to the content file name.
+// CreateContentObjectPayload When creating from an uploaded file the content should be an URL to the uploaded file. `name` is required unless `content.name` or `content.source` is given; it then defaults to the content file name. `content.type`, the MIME type of the file, is required with `content.source`.
 type CreateContentObjectPayload struct {
 	Text       *string              `json:"text,omitempty"`
 	TextEtag   *string              `json:"text_etag,omitempty"`
@@ -34,12 +34,13 @@ type CreateContentObjectPayload struct {
 	SharedRoot *bool `json:"shared_root,omitempty"`
 	// Inherited properties metadata - tracks which properties were inherited from parent collections. Used to display readonly inherited properties in the UI and enable incremental sync optimization.
 	InheritedProperties []InheritedPropertyMetadata `json:"inherited_properties,omitempty"`
-	Parent              *string                     `json:"parent,omitempty"`
+	// ID of the parent object (container or folder), as 24 hexadecimal characters.
+	Parent *string `json:"parent,omitempty" validate:"regexp=^[0-9a-fA-F]{24}$"`
 	// An optional path based location for the object
 	Location *string `json:"location,omitempty"`
 	// Object status. - created: the object was created and is being processed - processing: the object is being processed - completed: the object was processed and is ready to use - failed: the object processing failed - archived: the object was archived and is no longer available
 	Status *ContentObjectStatus `json:"status,omitempty"`
-	// Content source information, typically a link to an object store
+	// Content source information. A non-empty `source` is a `gs://`, `s3://` or `az://` URI of the file (a bucket then a non-empty object path), and `type`, its MIME type, is then required.
 	Content *ContentSource `json:"content,omitempty"`
 	// External identifier for integration with other systems
 	ExternalId *string `json:"external_id,omitempty"`

@@ -20,10 +20,10 @@ var _ MappedNullable = &ViewResultsConfiguration{}
 
 // ViewResultsConfiguration struct for ViewResultsConfiguration
 type ViewResultsConfiguration struct {
-	DefaultDisplay     string                      `json:"default_display"`
+	DefaultDisplay     string                      `json:"default_display" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	AllowDisplaySwitch *bool                       `json:"allow_display_switch,omitempty"`
 	Displays           []ViewDisplayConfiguration  `json:"displays"`
-	DefaultSort        *string                     `json:"default_sort,omitempty"`
+	DefaultSort        *string                     `json:"default_sort,omitempty" validate:"regexp=^[a-z][a-z0-9_-]*$"`
 	SortOptions        []ViewSortOption            `json:"sort_options,omitempty"`
 	Selection          *ViewSelectionConfiguration `json:"selection,omitempty"`
 	Actions            *ViewActionsConfiguration   `json:"actions,omitempty"`

@@ -22,7 +22,8 @@ var _ MappedNullable = &BulkUploadUrlsPayloadFilesInner{}
 type BulkUploadUrlsPayloadFilesInner struct {
 	Name     string  `json:"name"`
 	MimeType *string `json:"mime_type,omitempty"`
-	Id       *string `json:"id,omitempty"`
+	// The object name to upload to. A random name is chosen when omitted. It must not be empty, start with `/` or `\\`, or contain a `..` segment.
+	Id *string `json:"id,omitempty" validate:"regexp=^(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*)(?:[\\\\\\/]+(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*))*[\\\\\\/]*$"`
 }
 
 type _BulkUploadUrlsPayloadFilesInner BulkUploadUrlsPayloadFilesInner

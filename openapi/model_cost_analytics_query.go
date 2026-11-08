@@ -17,7 +17,7 @@ import (
 // checks if the CostAnalyticsQuery type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &CostAnalyticsQuery{}
 
-// CostAnalyticsQuery struct for CostAnalyticsQuery
+// CostAnalyticsQuery `from` and `to` are ISO 8601 date-times or epoch milliseconds, within years 1 to 9999. The window from `from` to `to` (now when absent) may span at most 366 days.
 type CostAnalyticsQuery struct {
 	From *GetModelPricesFromParameter `json:"from,omitempty"`
 	To   *GetModelPricesToParameter   `json:"to,omitempty"`

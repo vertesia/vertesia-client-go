@@ -52,7 +52,7 @@ InspectProjectTool Inspect one project tool
 **Required permissions:** `account:member`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param toolName
+	@param toolName The tool name; it must not be blank.
 	@return ApiInspectProjectToolRequest
 */
 func (a *ToolsAPIService) InspectProjectTool(ctx context.Context, toolName string) ApiInspectProjectToolRequest {

@@ -20,7 +20,8 @@ var _ MappedNullable = &UpdateAgentArtifactContentPayload{}
 
 // UpdateAgentArtifactContentPayload Conditional text update for an agent artifact.
 type UpdateAgentArtifactContentPayload struct {
-	Content    string `json:"content"`
+	Content string `json:"content"`
+	// The blob generation the content was read at, as returned by the read.
 	Generation string `json:"generation"`
 }
 
