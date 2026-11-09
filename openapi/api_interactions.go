@@ -2339,6 +2339,1232 @@ func (a *InteractionsAPIService) ListAppInteractionsExecute(r ApiListAppInteract
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiListCatalogAppAgentsRequest struct {
+	ctx         context.Context
+	ApiService  *InteractionsAPIService
+	appName     string
+	xApiVersion *string
+	name        *string
+	tags        *[]string
+	model       *string
+	prompt      *string
+	isSubAgent  *bool
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListCatalogAppAgentsRequest) XApiVersion(xApiVersion string) ApiListCatalogAppAgentsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiListCatalogAppAgentsRequest) Name(name string) ApiListCatalogAppAgentsRequest {
+	r.name = &name
+	return r
+}
+
+func (r ApiListCatalogAppAgentsRequest) Tags(tags []string) ApiListCatalogAppAgentsRequest {
+	r.tags = &tags
+	return r
+}
+
+func (r ApiListCatalogAppAgentsRequest) Model(model string) ApiListCatalogAppAgentsRequest {
+	r.model = &model
+	return r
+}
+
+func (r ApiListCatalogAppAgentsRequest) Prompt(prompt string) ApiListCatalogAppAgentsRequest {
+	r.prompt = &prompt
+	return r
+}
+
+func (r ApiListCatalogAppAgentsRequest) IsSubAgent(isSubAgent bool) ApiListCatalogAppAgentsRequest {
+	r.isSubAgent = &isSubAgent
+	return r
+}
+
+func (r ApiListCatalogAppAgentsRequest) Execute() (*CatalogSearchResult, *http.Response, error) {
+	return r.ApiService.ListCatalogAppAgentsExecute(r)
+}
+
+/*
+ListCatalogAppAgents List app catalog agents
+
+Searches the agents provided by an app, which is asked for its interactions. Agents are the interactions configured with `agent_runner_options.is_agent`. Returns the matching agents with their tag counts and total. `model` and `prompt` only match stored agents.
+
+**Required permissions:** `interaction:read`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param appName
+	@return ApiListCatalogAppAgentsRequest
+*/
+func (a *InteractionsAPIService) ListCatalogAppAgents(ctx context.Context, appName string) ApiListCatalogAppAgentsRequest {
+	return ApiListCatalogAppAgentsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		appName:    appName,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CatalogSearchResult
+func (a *InteractionsAPIService) ListCatalogAppAgentsExecute(r ApiListCatalogAppAgentsRequest) (*CatalogSearchResult, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CatalogSearchResult
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.ListCatalogAppAgents")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/interactions/catalog/agents/apps/{appName}"
+	localVarPath = strings.Replace(localVarPath, "{"+"appName"+"}", url.PathEscape(parameterValueToString(r.appName, "appName")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	if r.name != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
+	}
+	if r.tags != nil {
+		t := *r.tags
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "tags", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "tags", t, "form", "multi")
+		}
+	}
+	if r.model != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "model", r.model, "form", "")
+	}
+	if r.prompt != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "prompt", r.prompt, "form", "")
+	}
+	if r.isSubAgent != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "is_sub_agent", r.isSubAgent, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListCatalogAppCallsRequest struct {
+	ctx         context.Context
+	ApiService  *InteractionsAPIService
+	appName     string
+	xApiVersion *string
+	name        *string
+	tags        *[]string
+	model       *string
+	prompt      *string
+	isBasic     *bool
+	isTool      *bool
+	isSkill     *bool
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListCatalogAppCallsRequest) XApiVersion(xApiVersion string) ApiListCatalogAppCallsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiListCatalogAppCallsRequest) Name(name string) ApiListCatalogAppCallsRequest {
+	r.name = &name
+	return r
+}
+
+func (r ApiListCatalogAppCallsRequest) Tags(tags []string) ApiListCatalogAppCallsRequest {
+	r.tags = &tags
+	return r
+}
+
+func (r ApiListCatalogAppCallsRequest) Model(model string) ApiListCatalogAppCallsRequest {
+	r.model = &model
+	return r
+}
+
+func (r ApiListCatalogAppCallsRequest) Prompt(prompt string) ApiListCatalogAppCallsRequest {
+	r.prompt = &prompt
+	return r
+}
+
+func (r ApiListCatalogAppCallsRequest) IsBasic(isBasic bool) ApiListCatalogAppCallsRequest {
+	r.isBasic = &isBasic
+	return r
+}
+
+func (r ApiListCatalogAppCallsRequest) IsTool(isTool bool) ApiListCatalogAppCallsRequest {
+	r.isTool = &isTool
+	return r
+}
+
+func (r ApiListCatalogAppCallsRequest) IsSkill(isSkill bool) ApiListCatalogAppCallsRequest {
+	r.isSkill = &isSkill
+	return r
+}
+
+func (r ApiListCatalogAppCallsRequest) Execute() (*CatalogSearchResult, *http.Response, error) {
+	return r.ApiService.ListCatalogAppCallsExecute(r)
+}
+
+/*
+ListCatalogAppCalls List app catalog calls
+
+Searches the calls provided by an app, which is asked for its interactions. Calls are the interactions that are not agents: basic, tool and skill calls. Returns the matching calls with their tag counts and total. `model` and `prompt` only match stored calls.
+
+**Required permissions:** `interaction:read`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param appName
+	@return ApiListCatalogAppCallsRequest
+*/
+func (a *InteractionsAPIService) ListCatalogAppCalls(ctx context.Context, appName string) ApiListCatalogAppCallsRequest {
+	return ApiListCatalogAppCallsRequest{
+		ApiService: a,
+		ctx:        ctx,
+		appName:    appName,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CatalogSearchResult
+func (a *InteractionsAPIService) ListCatalogAppCallsExecute(r ApiListCatalogAppCallsRequest) (*CatalogSearchResult, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CatalogSearchResult
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.ListCatalogAppCalls")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/interactions/catalog/calls/apps/{appName}"
+	localVarPath = strings.Replace(localVarPath, "{"+"appName"+"}", url.PathEscape(parameterValueToString(r.appName, "appName")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	if r.name != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
+	}
+	if r.tags != nil {
+		t := *r.tags
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "tags", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "tags", t, "form", "multi")
+		}
+	}
+	if r.model != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "model", r.model, "form", "")
+	}
+	if r.prompt != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "prompt", r.prompt, "form", "")
+	}
+	if r.isBasic != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "is_basic", r.isBasic, "form", "")
+	}
+	if r.isTool != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "is_tool", r.isTool, "form", "")
+	}
+	if r.isSkill != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "is_skill", r.isSkill, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListCatalogStoredAgentsRequest struct {
+	ctx         context.Context
+	ApiService  *InteractionsAPIService
+	xApiVersion *string
+	name        *string
+	tags        *[]string
+	model       *string
+	prompt      *string
+	isSubAgent  *bool
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListCatalogStoredAgentsRequest) XApiVersion(xApiVersion string) ApiListCatalogStoredAgentsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiListCatalogStoredAgentsRequest) Name(name string) ApiListCatalogStoredAgentsRequest {
+	r.name = &name
+	return r
+}
+
+func (r ApiListCatalogStoredAgentsRequest) Tags(tags []string) ApiListCatalogStoredAgentsRequest {
+	r.tags = &tags
+	return r
+}
+
+func (r ApiListCatalogStoredAgentsRequest) Model(model string) ApiListCatalogStoredAgentsRequest {
+	r.model = &model
+	return r
+}
+
+func (r ApiListCatalogStoredAgentsRequest) Prompt(prompt string) ApiListCatalogStoredAgentsRequest {
+	r.prompt = &prompt
+	return r
+}
+
+func (r ApiListCatalogStoredAgentsRequest) IsSubAgent(isSubAgent bool) ApiListCatalogStoredAgentsRequest {
+	r.isSubAgent = &isSubAgent
+	return r
+}
+
+func (r ApiListCatalogStoredAgentsRequest) Execute() (*CatalogSearchResult, *http.Response, error) {
+	return r.ApiService.ListCatalogStoredAgentsExecute(r)
+}
+
+/*
+ListCatalogStoredAgents List stored catalog agents
+
+Searches the stored agents of the project, in their draft version. Agents are the interactions configured with `agent_runner_options.is_agent`. Returns the matching agents with their tag counts and total.
+
+**Required permissions:** `interaction:read`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListCatalogStoredAgentsRequest
+*/
+func (a *InteractionsAPIService) ListCatalogStoredAgents(ctx context.Context) ApiListCatalogStoredAgentsRequest {
+	return ApiListCatalogStoredAgentsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CatalogSearchResult
+func (a *InteractionsAPIService) ListCatalogStoredAgentsExecute(r ApiListCatalogStoredAgentsRequest) (*CatalogSearchResult, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CatalogSearchResult
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.ListCatalogStoredAgents")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/interactions/catalog/agents/stored"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	if r.name != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
+	}
+	if r.tags != nil {
+		t := *r.tags
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "tags", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "tags", t, "form", "multi")
+		}
+	}
+	if r.model != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "model", r.model, "form", "")
+	}
+	if r.prompt != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "prompt", r.prompt, "form", "")
+	}
+	if r.isSubAgent != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "is_sub_agent", r.isSubAgent, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListCatalogStoredCallsRequest struct {
+	ctx         context.Context
+	ApiService  *InteractionsAPIService
+	xApiVersion *string
+	name        *string
+	tags        *[]string
+	model       *string
+	prompt      *string
+	isBasic     *bool
+	isTool      *bool
+	isSkill     *bool
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListCatalogStoredCallsRequest) XApiVersion(xApiVersion string) ApiListCatalogStoredCallsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiListCatalogStoredCallsRequest) Name(name string) ApiListCatalogStoredCallsRequest {
+	r.name = &name
+	return r
+}
+
+func (r ApiListCatalogStoredCallsRequest) Tags(tags []string) ApiListCatalogStoredCallsRequest {
+	r.tags = &tags
+	return r
+}
+
+func (r ApiListCatalogStoredCallsRequest) Model(model string) ApiListCatalogStoredCallsRequest {
+	r.model = &model
+	return r
+}
+
+func (r ApiListCatalogStoredCallsRequest) Prompt(prompt string) ApiListCatalogStoredCallsRequest {
+	r.prompt = &prompt
+	return r
+}
+
+func (r ApiListCatalogStoredCallsRequest) IsBasic(isBasic bool) ApiListCatalogStoredCallsRequest {
+	r.isBasic = &isBasic
+	return r
+}
+
+func (r ApiListCatalogStoredCallsRequest) IsTool(isTool bool) ApiListCatalogStoredCallsRequest {
+	r.isTool = &isTool
+	return r
+}
+
+func (r ApiListCatalogStoredCallsRequest) IsSkill(isSkill bool) ApiListCatalogStoredCallsRequest {
+	r.isSkill = &isSkill
+	return r
+}
+
+func (r ApiListCatalogStoredCallsRequest) Execute() (*CatalogSearchResult, *http.Response, error) {
+	return r.ApiService.ListCatalogStoredCallsExecute(r)
+}
+
+/*
+ListCatalogStoredCalls List stored catalog calls
+
+Searches the stored calls of the project, in their draft version. Calls are the interactions that are not agents: basic, tool and skill calls. Returns the matching calls with their tag counts and total.
+
+**Required permissions:** `interaction:read`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListCatalogStoredCallsRequest
+*/
+func (a *InteractionsAPIService) ListCatalogStoredCalls(ctx context.Context) ApiListCatalogStoredCallsRequest {
+	return ApiListCatalogStoredCallsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CatalogSearchResult
+func (a *InteractionsAPIService) ListCatalogStoredCallsExecute(r ApiListCatalogStoredCallsRequest) (*CatalogSearchResult, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CatalogSearchResult
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.ListCatalogStoredCalls")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/interactions/catalog/calls/stored"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	if r.name != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
+	}
+	if r.tags != nil {
+		t := *r.tags
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "tags", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "tags", t, "form", "multi")
+		}
+	}
+	if r.model != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "model", r.model, "form", "")
+	}
+	if r.prompt != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "prompt", r.prompt, "form", "")
+	}
+	if r.isBasic != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "is_basic", r.isBasic, "form", "")
+	}
+	if r.isTool != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "is_tool", r.isTool, "form", "")
+	}
+	if r.isSkill != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "is_skill", r.isSkill, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListCatalogSystemAgentsRequest struct {
+	ctx         context.Context
+	ApiService  *InteractionsAPIService
+	xApiVersion *string
+	name        *string
+	tags        *[]string
+	model       *string
+	prompt      *string
+	isSubAgent  *bool
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListCatalogSystemAgentsRequest) XApiVersion(xApiVersion string) ApiListCatalogSystemAgentsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiListCatalogSystemAgentsRequest) Name(name string) ApiListCatalogSystemAgentsRequest {
+	r.name = &name
+	return r
+}
+
+func (r ApiListCatalogSystemAgentsRequest) Tags(tags []string) ApiListCatalogSystemAgentsRequest {
+	r.tags = &tags
+	return r
+}
+
+func (r ApiListCatalogSystemAgentsRequest) Model(model string) ApiListCatalogSystemAgentsRequest {
+	r.model = &model
+	return r
+}
+
+func (r ApiListCatalogSystemAgentsRequest) Prompt(prompt string) ApiListCatalogSystemAgentsRequest {
+	r.prompt = &prompt
+	return r
+}
+
+func (r ApiListCatalogSystemAgentsRequest) IsSubAgent(isSubAgent bool) ApiListCatalogSystemAgentsRequest {
+	r.isSubAgent = &isSubAgent
+	return r
+}
+
+func (r ApiListCatalogSystemAgentsRequest) Execute() (*CatalogSearchResult, *http.Response, error) {
+	return r.ApiService.ListCatalogSystemAgentsExecute(r)
+}
+
+/*
+ListCatalogSystemAgents List system catalog agents
+
+Searches the system agents, which are defined in code by the platform. Agents are the interactions configured with `agent_runner_options.is_agent`. Returns the matching agents with their tag counts and total. `model` and `prompt` only match stored agents.
+
+**Required permissions:** `interaction:read`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListCatalogSystemAgentsRequest
+*/
+func (a *InteractionsAPIService) ListCatalogSystemAgents(ctx context.Context) ApiListCatalogSystemAgentsRequest {
+	return ApiListCatalogSystemAgentsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CatalogSearchResult
+func (a *InteractionsAPIService) ListCatalogSystemAgentsExecute(r ApiListCatalogSystemAgentsRequest) (*CatalogSearchResult, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CatalogSearchResult
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.ListCatalogSystemAgents")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/interactions/catalog/agents/system"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	if r.name != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
+	}
+	if r.tags != nil {
+		t := *r.tags
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "tags", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "tags", t, "form", "multi")
+		}
+	}
+	if r.model != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "model", r.model, "form", "")
+	}
+	if r.prompt != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "prompt", r.prompt, "form", "")
+	}
+	if r.isSubAgent != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "is_sub_agent", r.isSubAgent, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListCatalogSystemCallsRequest struct {
+	ctx         context.Context
+	ApiService  *InteractionsAPIService
+	xApiVersion *string
+	name        *string
+	tags        *[]string
+	model       *string
+	prompt      *string
+	isBasic     *bool
+	isTool      *bool
+	isSkill     *bool
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListCatalogSystemCallsRequest) XApiVersion(xApiVersion string) ApiListCatalogSystemCallsRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiListCatalogSystemCallsRequest) Name(name string) ApiListCatalogSystemCallsRequest {
+	r.name = &name
+	return r
+}
+
+func (r ApiListCatalogSystemCallsRequest) Tags(tags []string) ApiListCatalogSystemCallsRequest {
+	r.tags = &tags
+	return r
+}
+
+func (r ApiListCatalogSystemCallsRequest) Model(model string) ApiListCatalogSystemCallsRequest {
+	r.model = &model
+	return r
+}
+
+func (r ApiListCatalogSystemCallsRequest) Prompt(prompt string) ApiListCatalogSystemCallsRequest {
+	r.prompt = &prompt
+	return r
+}
+
+func (r ApiListCatalogSystemCallsRequest) IsBasic(isBasic bool) ApiListCatalogSystemCallsRequest {
+	r.isBasic = &isBasic
+	return r
+}
+
+func (r ApiListCatalogSystemCallsRequest) IsTool(isTool bool) ApiListCatalogSystemCallsRequest {
+	r.isTool = &isTool
+	return r
+}
+
+func (r ApiListCatalogSystemCallsRequest) IsSkill(isSkill bool) ApiListCatalogSystemCallsRequest {
+	r.isSkill = &isSkill
+	return r
+}
+
+func (r ApiListCatalogSystemCallsRequest) Execute() (*CatalogSearchResult, *http.Response, error) {
+	return r.ApiService.ListCatalogSystemCallsExecute(r)
+}
+
+/*
+ListCatalogSystemCalls List system catalog calls
+
+Searches the system calls, which are defined in code by the platform. Calls are the interactions that are not agents: basic, tool and skill calls. Returns the matching calls with their tag counts and total. `model` and `prompt` only match stored calls.
+
+**Required permissions:** `interaction:read`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListCatalogSystemCallsRequest
+*/
+func (a *InteractionsAPIService) ListCatalogSystemCalls(ctx context.Context) ApiListCatalogSystemCallsRequest {
+	return ApiListCatalogSystemCallsRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return CatalogSearchResult
+func (a *InteractionsAPIService) ListCatalogSystemCallsExecute(r ApiListCatalogSystemCallsRequest) (*CatalogSearchResult, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CatalogSearchResult
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "InteractionsAPIService.ListCatalogSystemCalls")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/interactions/catalog/calls/system"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	if r.name != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "name", r.name, "form", "")
+	}
+	if r.tags != nil {
+		t := *r.tags
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "tags", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "tags", t, "form", "multi")
+		}
+	}
+	if r.model != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "model", r.model, "form", "")
+	}
+	if r.prompt != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "prompt", r.prompt, "form", "")
+	}
+	if r.isBasic != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "is_basic", r.isBasic, "form", "")
+	}
+	if r.isTool != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "is_tool", r.isTool, "form", "")
+	}
+	if r.isSkill != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "is_skill", r.isSkill, "form", "")
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiListInteractionEndpointsRequest struct {
 	ctx                      context.Context
 	ApiService               *InteractionsAPIService

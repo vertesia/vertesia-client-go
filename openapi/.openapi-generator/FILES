@@ -296,6 +296,9 @@ model_cache_policy.go
 model_cancel_event_delivery_intents_payload.go
 model_cancel_event_delivery_intents_response.go
 model_catalog_interaction_ref.go
+model_catalog_search_interaction_ref.go
+model_catalog_search_result.go
+model_catalog_tag_count.go
 model_child_workflow_task.go
 model_collection.go
 model_collection_children_update_payload.go
