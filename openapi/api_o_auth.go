@@ -244,7 +244,7 @@ func (a *OAuthAPIService) LoginOAuthAuthorizationRequestExecute(r ApiLoginOAuthA
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v OAuthLoginUserNotFoundResponse
+			var v OAuthLoginNotFoundResponse
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()

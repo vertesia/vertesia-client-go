@@ -785,7 +785,9 @@ model_o_auth_grant_sort_order.go
 model_o_auth_grant_status.go
 model_o_auth_grant_type.go
 model_o_auth_login_decision_response.go
+model_o_auth_login_not_found_response.go
 model_o_auth_login_payload.go
+model_o_auth_login_request_not_found_response.go
 model_o_auth_login_user_not_found_response.go
 model_o_auth_metadata_response.go
 model_o_auth_project_binding_mode.go
