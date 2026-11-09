@@ -139,6 +139,9 @@ Unit tests run without credentials:
 go test ./...
 ```
 
+SDK sync supplies shared API response fixtures. To run the fixture-backed checks locally,
+set `VERTESIA_STUDIO_OPENAPI_FIXTURES` to the absolute path of the fixture directory.
+
 Live integration tests are opt-in. They run only when `VERTESIA_LIVE_TESTS=1`
 and `VERTESIA_API_KEY` is set to a non-placeholder `sk-` secret key. For
 Vertesia developers running the client tests locally:
