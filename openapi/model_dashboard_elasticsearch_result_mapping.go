@@ -18,21 +18,21 @@ import (
 
 // DashboardElasticsearchResultMapping - How an Elasticsearch DSL result should be converted into Vega rows.
 type DashboardElasticsearchResultMapping struct {
-	DashboardElasticsearchResultMappingOneOf  *DashboardElasticsearchResultMappingOneOf
-	DashboardElasticsearchResultMappingOneOf1 *DashboardElasticsearchResultMappingOneOf1
+	DashboardElasticsearchAggregationBucketsMapping *DashboardElasticsearchAggregationBucketsMapping
+	DashboardElasticsearchHitsMapping               *DashboardElasticsearchHitsMapping
 }
 
-// DashboardElasticsearchResultMappingOneOfAsDashboardElasticsearchResultMapping is a convenience function that returns DashboardElasticsearchResultMappingOneOf wrapped in DashboardElasticsearchResultMapping
-func DashboardElasticsearchResultMappingOneOfAsDashboardElasticsearchResultMapping(v *DashboardElasticsearchResultMappingOneOf) DashboardElasticsearchResultMapping {
+// DashboardElasticsearchAggregationBucketsMappingAsDashboardElasticsearchResultMapping is a convenience function that returns DashboardElasticsearchAggregationBucketsMapping wrapped in DashboardElasticsearchResultMapping
+func DashboardElasticsearchAggregationBucketsMappingAsDashboardElasticsearchResultMapping(v *DashboardElasticsearchAggregationBucketsMapping) DashboardElasticsearchResultMapping {
 	return DashboardElasticsearchResultMapping{
-		DashboardElasticsearchResultMappingOneOf: v,
+		DashboardElasticsearchAggregationBucketsMapping: v,
 	}
 }
 
-// DashboardElasticsearchResultMappingOneOf1AsDashboardElasticsearchResultMapping is a convenience function that returns DashboardElasticsearchResultMappingOneOf1 wrapped in DashboardElasticsearchResultMapping
-func DashboardElasticsearchResultMappingOneOf1AsDashboardElasticsearchResultMapping(v *DashboardElasticsearchResultMappingOneOf1) DashboardElasticsearchResultMapping {
+// DashboardElasticsearchHitsMappingAsDashboardElasticsearchResultMapping is a convenience function that returns DashboardElasticsearchHitsMapping wrapped in DashboardElasticsearchResultMapping
+func DashboardElasticsearchHitsMappingAsDashboardElasticsearchResultMapping(v *DashboardElasticsearchHitsMapping) DashboardElasticsearchResultMapping {
 	return DashboardElasticsearchResultMapping{
-		DashboardElasticsearchResultMappingOneOf1: v,
+		DashboardElasticsearchHitsMapping: v,
 	}
 }
 
@@ -40,44 +40,44 @@ func DashboardElasticsearchResultMappingOneOf1AsDashboardElasticsearchResultMapp
 func (dst *DashboardElasticsearchResultMapping) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
-	// try to unmarshal data into DashboardElasticsearchResultMappingOneOf
-	err = newStrictDecoder(data).Decode(&dst.DashboardElasticsearchResultMappingOneOf)
+	// try to unmarshal data into DashboardElasticsearchAggregationBucketsMapping
+	err = newStrictDecoder(data).Decode(&dst.DashboardElasticsearchAggregationBucketsMapping)
 	if err == nil {
-		jsonDashboardElasticsearchResultMappingOneOf, _ := json.Marshal(dst.DashboardElasticsearchResultMappingOneOf)
-		if string(jsonDashboardElasticsearchResultMappingOneOf) == "{}" { // empty struct
-			dst.DashboardElasticsearchResultMappingOneOf = nil
+		jsonDashboardElasticsearchAggregationBucketsMapping, _ := json.Marshal(dst.DashboardElasticsearchAggregationBucketsMapping)
+		if string(jsonDashboardElasticsearchAggregationBucketsMapping) == "{}" { // empty struct
+			dst.DashboardElasticsearchAggregationBucketsMapping = nil
 		} else {
-			if err = validator.Validate(dst.DashboardElasticsearchResultMappingOneOf); err != nil {
-				dst.DashboardElasticsearchResultMappingOneOf = nil
+			if err = validator.Validate(dst.DashboardElasticsearchAggregationBucketsMapping); err != nil {
+				dst.DashboardElasticsearchAggregationBucketsMapping = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.DashboardElasticsearchResultMappingOneOf = nil
+		dst.DashboardElasticsearchAggregationBucketsMapping = nil
 	}
 
-	// try to unmarshal data into DashboardElasticsearchResultMappingOneOf1
-	err = newStrictDecoder(data).Decode(&dst.DashboardElasticsearchResultMappingOneOf1)
+	// try to unmarshal data into DashboardElasticsearchHitsMapping
+	err = newStrictDecoder(data).Decode(&dst.DashboardElasticsearchHitsMapping)
 	if err == nil {
-		jsonDashboardElasticsearchResultMappingOneOf1, _ := json.Marshal(dst.DashboardElasticsearchResultMappingOneOf1)
-		if string(jsonDashboardElasticsearchResultMappingOneOf1) == "{}" { // empty struct
-			dst.DashboardElasticsearchResultMappingOneOf1 = nil
+		jsonDashboardElasticsearchHitsMapping, _ := json.Marshal(dst.DashboardElasticsearchHitsMapping)
+		if string(jsonDashboardElasticsearchHitsMapping) == "{}" { // empty struct
+			dst.DashboardElasticsearchHitsMapping = nil
 		} else {
-			if err = validator.Validate(dst.DashboardElasticsearchResultMappingOneOf1); err != nil {
-				dst.DashboardElasticsearchResultMappingOneOf1 = nil
+			if err = validator.Validate(dst.DashboardElasticsearchHitsMapping); err != nil {
+				dst.DashboardElasticsearchHitsMapping = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.DashboardElasticsearchResultMappingOneOf1 = nil
+		dst.DashboardElasticsearchHitsMapping = nil
 	}
 
 	if match > 1 { // more than 1 match
 		// reset to nil
-		dst.DashboardElasticsearchResultMappingOneOf = nil
-		dst.DashboardElasticsearchResultMappingOneOf1 = nil
+		dst.DashboardElasticsearchAggregationBucketsMapping = nil
+		dst.DashboardElasticsearchHitsMapping = nil
 
 		return fmt.Errorf("data matches more than one schema in oneOf(DashboardElasticsearchResultMapping)")
 	} else if match == 1 {
@@ -89,12 +89,12 @@ func (dst *DashboardElasticsearchResultMapping) UnmarshalJSON(data []byte) error
 
 // Marshal data from the first non-nil pointers in the struct to JSON
 func (src DashboardElasticsearchResultMapping) MarshalJSON() ([]byte, error) {
-	if src.DashboardElasticsearchResultMappingOneOf != nil {
-		return json.Marshal(&src.DashboardElasticsearchResultMappingOneOf)
+	if src.DashboardElasticsearchAggregationBucketsMapping != nil {
+		return json.Marshal(&src.DashboardElasticsearchAggregationBucketsMapping)
 	}
 
-	if src.DashboardElasticsearchResultMappingOneOf1 != nil {
-		return json.Marshal(&src.DashboardElasticsearchResultMappingOneOf1)
+	if src.DashboardElasticsearchHitsMapping != nil {
+		return json.Marshal(&src.DashboardElasticsearchHitsMapping)
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -105,12 +105,12 @@ func (obj *DashboardElasticsearchResultMapping) GetActualInstance() interface{} 
 	if obj == nil {
 		return nil
 	}
-	if obj.DashboardElasticsearchResultMappingOneOf != nil {
-		return obj.DashboardElasticsearchResultMappingOneOf
+	if obj.DashboardElasticsearchAggregationBucketsMapping != nil {
+		return obj.DashboardElasticsearchAggregationBucketsMapping
 	}
 
-	if obj.DashboardElasticsearchResultMappingOneOf1 != nil {
-		return obj.DashboardElasticsearchResultMappingOneOf1
+	if obj.DashboardElasticsearchHitsMapping != nil {
+		return obj.DashboardElasticsearchHitsMapping
 	}
 
 	// all schemas are nil
@@ -119,12 +119,12 @@ func (obj *DashboardElasticsearchResultMapping) GetActualInstance() interface{} 
 
 // Get the actual instance value
 func (obj DashboardElasticsearchResultMapping) GetActualInstanceValue() interface{} {
-	if obj.DashboardElasticsearchResultMappingOneOf != nil {
-		return *obj.DashboardElasticsearchResultMappingOneOf
+	if obj.DashboardElasticsearchAggregationBucketsMapping != nil {
+		return *obj.DashboardElasticsearchAggregationBucketsMapping
 	}
 
-	if obj.DashboardElasticsearchResultMappingOneOf1 != nil {
-		return *obj.DashboardElasticsearchResultMappingOneOf1
+	if obj.DashboardElasticsearchHitsMapping != nil {
+		return *obj.DashboardElasticsearchHitsMapping
 	}
 
 	// all schemas are nil

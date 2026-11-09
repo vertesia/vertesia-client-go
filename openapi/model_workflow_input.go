@@ -18,21 +18,21 @@ import (
 
 // WorkflowInput - struct for WorkflowInput
 type WorkflowInput struct {
-	WorkflowInputOneOf  *WorkflowInputOneOf
-	WorkflowInputOneOf1 *WorkflowInputOneOf1
+	WorkflowFilesInput     *WorkflowFilesInput
+	WorkflowObjectIdsInput *WorkflowObjectIdsInput
 }
 
-// WorkflowInputOneOfAsWorkflowInput is a convenience function that returns WorkflowInputOneOf wrapped in WorkflowInput
-func WorkflowInputOneOfAsWorkflowInput(v *WorkflowInputOneOf) WorkflowInput {
+// WorkflowFilesInputAsWorkflowInput is a convenience function that returns WorkflowFilesInput wrapped in WorkflowInput
+func WorkflowFilesInputAsWorkflowInput(v *WorkflowFilesInput) WorkflowInput {
 	return WorkflowInput{
-		WorkflowInputOneOf: v,
+		WorkflowFilesInput: v,
 	}
 }
 
-// WorkflowInputOneOf1AsWorkflowInput is a convenience function that returns WorkflowInputOneOf1 wrapped in WorkflowInput
-func WorkflowInputOneOf1AsWorkflowInput(v *WorkflowInputOneOf1) WorkflowInput {
+// WorkflowObjectIdsInputAsWorkflowInput is a convenience function that returns WorkflowObjectIdsInput wrapped in WorkflowInput
+func WorkflowObjectIdsInputAsWorkflowInput(v *WorkflowObjectIdsInput) WorkflowInput {
 	return WorkflowInput{
-		WorkflowInputOneOf1: v,
+		WorkflowObjectIdsInput: v,
 	}
 }
 
@@ -40,44 +40,44 @@ func WorkflowInputOneOf1AsWorkflowInput(v *WorkflowInputOneOf1) WorkflowInput {
 func (dst *WorkflowInput) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
-	// try to unmarshal data into WorkflowInputOneOf
-	err = newStrictDecoder(data).Decode(&dst.WorkflowInputOneOf)
+	// try to unmarshal data into WorkflowFilesInput
+	err = newStrictDecoder(data).Decode(&dst.WorkflowFilesInput)
 	if err == nil {
-		jsonWorkflowInputOneOf, _ := json.Marshal(dst.WorkflowInputOneOf)
-		if string(jsonWorkflowInputOneOf) == "{}" { // empty struct
-			dst.WorkflowInputOneOf = nil
+		jsonWorkflowFilesInput, _ := json.Marshal(dst.WorkflowFilesInput)
+		if string(jsonWorkflowFilesInput) == "{}" { // empty struct
+			dst.WorkflowFilesInput = nil
 		} else {
-			if err = validator.Validate(dst.WorkflowInputOneOf); err != nil {
-				dst.WorkflowInputOneOf = nil
+			if err = validator.Validate(dst.WorkflowFilesInput); err != nil {
+				dst.WorkflowFilesInput = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.WorkflowInputOneOf = nil
+		dst.WorkflowFilesInput = nil
 	}
 
-	// try to unmarshal data into WorkflowInputOneOf1
-	err = newStrictDecoder(data).Decode(&dst.WorkflowInputOneOf1)
+	// try to unmarshal data into WorkflowObjectIdsInput
+	err = newStrictDecoder(data).Decode(&dst.WorkflowObjectIdsInput)
 	if err == nil {
-		jsonWorkflowInputOneOf1, _ := json.Marshal(dst.WorkflowInputOneOf1)
-		if string(jsonWorkflowInputOneOf1) == "{}" { // empty struct
-			dst.WorkflowInputOneOf1 = nil
+		jsonWorkflowObjectIdsInput, _ := json.Marshal(dst.WorkflowObjectIdsInput)
+		if string(jsonWorkflowObjectIdsInput) == "{}" { // empty struct
+			dst.WorkflowObjectIdsInput = nil
 		} else {
-			if err = validator.Validate(dst.WorkflowInputOneOf1); err != nil {
-				dst.WorkflowInputOneOf1 = nil
+			if err = validator.Validate(dst.WorkflowObjectIdsInput); err != nil {
+				dst.WorkflowObjectIdsInput = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.WorkflowInputOneOf1 = nil
+		dst.WorkflowObjectIdsInput = nil
 	}
 
 	if match > 1 { // more than 1 match
 		// reset to nil
-		dst.WorkflowInputOneOf = nil
-		dst.WorkflowInputOneOf1 = nil
+		dst.WorkflowFilesInput = nil
+		dst.WorkflowObjectIdsInput = nil
 
 		return fmt.Errorf("data matches more than one schema in oneOf(WorkflowInput)")
 	} else if match == 1 {
@@ -89,12 +89,12 @@ func (dst *WorkflowInput) UnmarshalJSON(data []byte) error {
 
 // Marshal data from the first non-nil pointers in the struct to JSON
 func (src WorkflowInput) MarshalJSON() ([]byte, error) {
-	if src.WorkflowInputOneOf != nil {
-		return json.Marshal(&src.WorkflowInputOneOf)
+	if src.WorkflowFilesInput != nil {
+		return json.Marshal(&src.WorkflowFilesInput)
 	}
 
-	if src.WorkflowInputOneOf1 != nil {
-		return json.Marshal(&src.WorkflowInputOneOf1)
+	if src.WorkflowObjectIdsInput != nil {
+		return json.Marshal(&src.WorkflowObjectIdsInput)
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -105,12 +105,12 @@ func (obj *WorkflowInput) GetActualInstance() interface{} {
 	if obj == nil {
 		return nil
 	}
-	if obj.WorkflowInputOneOf != nil {
-		return obj.WorkflowInputOneOf
+	if obj.WorkflowFilesInput != nil {
+		return obj.WorkflowFilesInput
 	}
 
-	if obj.WorkflowInputOneOf1 != nil {
-		return obj.WorkflowInputOneOf1
+	if obj.WorkflowObjectIdsInput != nil {
+		return obj.WorkflowObjectIdsInput
 	}
 
 	// all schemas are nil
@@ -119,12 +119,12 @@ func (obj *WorkflowInput) GetActualInstance() interface{} {
 
 // Get the actual instance value
 func (obj WorkflowInput) GetActualInstanceValue() interface{} {
-	if obj.WorkflowInputOneOf != nil {
-		return *obj.WorkflowInputOneOf
+	if obj.WorkflowFilesInput != nil {
+		return *obj.WorkflowFilesInput
 	}
 
-	if obj.WorkflowInputOneOf1 != nil {
-		return *obj.WorkflowInputOneOf1
+	if obj.WorkflowObjectIdsInput != nil {
+		return *obj.WorkflowObjectIdsInput
 	}
 
 	// all schemas are nil

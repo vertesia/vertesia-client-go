@@ -18,53 +18,53 @@ import (
 
 // AlterTableOperation - struct for AlterTableOperation
 type AlterTableOperation struct {
-	AlterTableOperationOneOf  *AlterTableOperationOneOf
-	AlterTableOperationOneOf1 *AlterTableOperationOneOf1
-	AlterTableOperationOneOf2 *AlterTableOperationOneOf2
-	AlterTableOperationOneOf3 *AlterTableOperationOneOf3
-	AlterTableOperationOneOf4 *AlterTableOperationOneOf4
-	AlterTableOperationOneOf5 *AlterTableOperationOneOf5
+	AlterTableAddColumnOperation      *AlterTableAddColumnOperation
+	AlterTableAddForeignKeyOperation  *AlterTableAddForeignKeyOperation
+	AlterTableDropColumnOperation     *AlterTableDropColumnOperation
+	AlterTableDropForeignKeyOperation *AlterTableDropForeignKeyOperation
+	AlterTableModifyColumnOperation   *AlterTableModifyColumnOperation
+	AlterTableRenameColumnOperation   *AlterTableRenameColumnOperation
 }
 
-// AlterTableOperationOneOfAsAlterTableOperation is a convenience function that returns AlterTableOperationOneOf wrapped in AlterTableOperation
-func AlterTableOperationOneOfAsAlterTableOperation(v *AlterTableOperationOneOf) AlterTableOperation {
+// AlterTableAddColumnOperationAsAlterTableOperation is a convenience function that returns AlterTableAddColumnOperation wrapped in AlterTableOperation
+func AlterTableAddColumnOperationAsAlterTableOperation(v *AlterTableAddColumnOperation) AlterTableOperation {
 	return AlterTableOperation{
-		AlterTableOperationOneOf: v,
+		AlterTableAddColumnOperation: v,
 	}
 }
 
-// AlterTableOperationOneOf1AsAlterTableOperation is a convenience function that returns AlterTableOperationOneOf1 wrapped in AlterTableOperation
-func AlterTableOperationOneOf1AsAlterTableOperation(v *AlterTableOperationOneOf1) AlterTableOperation {
+// AlterTableAddForeignKeyOperationAsAlterTableOperation is a convenience function that returns AlterTableAddForeignKeyOperation wrapped in AlterTableOperation
+func AlterTableAddForeignKeyOperationAsAlterTableOperation(v *AlterTableAddForeignKeyOperation) AlterTableOperation {
 	return AlterTableOperation{
-		AlterTableOperationOneOf1: v,
+		AlterTableAddForeignKeyOperation: v,
 	}
 }
 
-// AlterTableOperationOneOf2AsAlterTableOperation is a convenience function that returns AlterTableOperationOneOf2 wrapped in AlterTableOperation
-func AlterTableOperationOneOf2AsAlterTableOperation(v *AlterTableOperationOneOf2) AlterTableOperation {
+// AlterTableDropColumnOperationAsAlterTableOperation is a convenience function that returns AlterTableDropColumnOperation wrapped in AlterTableOperation
+func AlterTableDropColumnOperationAsAlterTableOperation(v *AlterTableDropColumnOperation) AlterTableOperation {
 	return AlterTableOperation{
-		AlterTableOperationOneOf2: v,
+		AlterTableDropColumnOperation: v,
 	}
 }
 
-// AlterTableOperationOneOf3AsAlterTableOperation is a convenience function that returns AlterTableOperationOneOf3 wrapped in AlterTableOperation
-func AlterTableOperationOneOf3AsAlterTableOperation(v *AlterTableOperationOneOf3) AlterTableOperation {
+// AlterTableDropForeignKeyOperationAsAlterTableOperation is a convenience function that returns AlterTableDropForeignKeyOperation wrapped in AlterTableOperation
+func AlterTableDropForeignKeyOperationAsAlterTableOperation(v *AlterTableDropForeignKeyOperation) AlterTableOperation {
 	return AlterTableOperation{
-		AlterTableOperationOneOf3: v,
+		AlterTableDropForeignKeyOperation: v,
 	}
 }
 
-// AlterTableOperationOneOf4AsAlterTableOperation is a convenience function that returns AlterTableOperationOneOf4 wrapped in AlterTableOperation
-func AlterTableOperationOneOf4AsAlterTableOperation(v *AlterTableOperationOneOf4) AlterTableOperation {
+// AlterTableModifyColumnOperationAsAlterTableOperation is a convenience function that returns AlterTableModifyColumnOperation wrapped in AlterTableOperation
+func AlterTableModifyColumnOperationAsAlterTableOperation(v *AlterTableModifyColumnOperation) AlterTableOperation {
 	return AlterTableOperation{
-		AlterTableOperationOneOf4: v,
+		AlterTableModifyColumnOperation: v,
 	}
 }
 
-// AlterTableOperationOneOf5AsAlterTableOperation is a convenience function that returns AlterTableOperationOneOf5 wrapped in AlterTableOperation
-func AlterTableOperationOneOf5AsAlterTableOperation(v *AlterTableOperationOneOf5) AlterTableOperation {
+// AlterTableRenameColumnOperationAsAlterTableOperation is a convenience function that returns AlterTableRenameColumnOperation wrapped in AlterTableOperation
+func AlterTableRenameColumnOperationAsAlterTableOperation(v *AlterTableRenameColumnOperation) AlterTableOperation {
 	return AlterTableOperation{
-		AlterTableOperationOneOf5: v,
+		AlterTableRenameColumnOperation: v,
 	}
 }
 
@@ -72,116 +72,116 @@ func AlterTableOperationOneOf5AsAlterTableOperation(v *AlterTableOperationOneOf5
 func (dst *AlterTableOperation) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
-	// try to unmarshal data into AlterTableOperationOneOf
-	err = newStrictDecoder(data).Decode(&dst.AlterTableOperationOneOf)
+	// try to unmarshal data into AlterTableAddColumnOperation
+	err = newStrictDecoder(data).Decode(&dst.AlterTableAddColumnOperation)
 	if err == nil {
-		jsonAlterTableOperationOneOf, _ := json.Marshal(dst.AlterTableOperationOneOf)
-		if string(jsonAlterTableOperationOneOf) == "{}" { // empty struct
-			dst.AlterTableOperationOneOf = nil
+		jsonAlterTableAddColumnOperation, _ := json.Marshal(dst.AlterTableAddColumnOperation)
+		if string(jsonAlterTableAddColumnOperation) == "{}" { // empty struct
+			dst.AlterTableAddColumnOperation = nil
 		} else {
-			if err = validator.Validate(dst.AlterTableOperationOneOf); err != nil {
-				dst.AlterTableOperationOneOf = nil
+			if err = validator.Validate(dst.AlterTableAddColumnOperation); err != nil {
+				dst.AlterTableAddColumnOperation = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.AlterTableOperationOneOf = nil
+		dst.AlterTableAddColumnOperation = nil
 	}
 
-	// try to unmarshal data into AlterTableOperationOneOf1
-	err = newStrictDecoder(data).Decode(&dst.AlterTableOperationOneOf1)
+	// try to unmarshal data into AlterTableAddForeignKeyOperation
+	err = newStrictDecoder(data).Decode(&dst.AlterTableAddForeignKeyOperation)
 	if err == nil {
-		jsonAlterTableOperationOneOf1, _ := json.Marshal(dst.AlterTableOperationOneOf1)
-		if string(jsonAlterTableOperationOneOf1) == "{}" { // empty struct
-			dst.AlterTableOperationOneOf1 = nil
+		jsonAlterTableAddForeignKeyOperation, _ := json.Marshal(dst.AlterTableAddForeignKeyOperation)
+		if string(jsonAlterTableAddForeignKeyOperation) == "{}" { // empty struct
+			dst.AlterTableAddForeignKeyOperation = nil
 		} else {
-			if err = validator.Validate(dst.AlterTableOperationOneOf1); err != nil {
-				dst.AlterTableOperationOneOf1 = nil
+			if err = validator.Validate(dst.AlterTableAddForeignKeyOperation); err != nil {
+				dst.AlterTableAddForeignKeyOperation = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.AlterTableOperationOneOf1 = nil
+		dst.AlterTableAddForeignKeyOperation = nil
 	}
 
-	// try to unmarshal data into AlterTableOperationOneOf2
-	err = newStrictDecoder(data).Decode(&dst.AlterTableOperationOneOf2)
+	// try to unmarshal data into AlterTableDropColumnOperation
+	err = newStrictDecoder(data).Decode(&dst.AlterTableDropColumnOperation)
 	if err == nil {
-		jsonAlterTableOperationOneOf2, _ := json.Marshal(dst.AlterTableOperationOneOf2)
-		if string(jsonAlterTableOperationOneOf2) == "{}" { // empty struct
-			dst.AlterTableOperationOneOf2 = nil
+		jsonAlterTableDropColumnOperation, _ := json.Marshal(dst.AlterTableDropColumnOperation)
+		if string(jsonAlterTableDropColumnOperation) == "{}" { // empty struct
+			dst.AlterTableDropColumnOperation = nil
 		} else {
-			if err = validator.Validate(dst.AlterTableOperationOneOf2); err != nil {
-				dst.AlterTableOperationOneOf2 = nil
+			if err = validator.Validate(dst.AlterTableDropColumnOperation); err != nil {
+				dst.AlterTableDropColumnOperation = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.AlterTableOperationOneOf2 = nil
+		dst.AlterTableDropColumnOperation = nil
 	}
 
-	// try to unmarshal data into AlterTableOperationOneOf3
-	err = newStrictDecoder(data).Decode(&dst.AlterTableOperationOneOf3)
+	// try to unmarshal data into AlterTableDropForeignKeyOperation
+	err = newStrictDecoder(data).Decode(&dst.AlterTableDropForeignKeyOperation)
 	if err == nil {
-		jsonAlterTableOperationOneOf3, _ := json.Marshal(dst.AlterTableOperationOneOf3)
-		if string(jsonAlterTableOperationOneOf3) == "{}" { // empty struct
-			dst.AlterTableOperationOneOf3 = nil
+		jsonAlterTableDropForeignKeyOperation, _ := json.Marshal(dst.AlterTableDropForeignKeyOperation)
+		if string(jsonAlterTableDropForeignKeyOperation) == "{}" { // empty struct
+			dst.AlterTableDropForeignKeyOperation = nil
 		} else {
-			if err = validator.Validate(dst.AlterTableOperationOneOf3); err != nil {
-				dst.AlterTableOperationOneOf3 = nil
+			if err = validator.Validate(dst.AlterTableDropForeignKeyOperation); err != nil {
+				dst.AlterTableDropForeignKeyOperation = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.AlterTableOperationOneOf3 = nil
+		dst.AlterTableDropForeignKeyOperation = nil
 	}
 
-	// try to unmarshal data into AlterTableOperationOneOf4
-	err = newStrictDecoder(data).Decode(&dst.AlterTableOperationOneOf4)
+	// try to unmarshal data into AlterTableModifyColumnOperation
+	err = newStrictDecoder(data).Decode(&dst.AlterTableModifyColumnOperation)
 	if err == nil {
-		jsonAlterTableOperationOneOf4, _ := json.Marshal(dst.AlterTableOperationOneOf4)
-		if string(jsonAlterTableOperationOneOf4) == "{}" { // empty struct
-			dst.AlterTableOperationOneOf4 = nil
+		jsonAlterTableModifyColumnOperation, _ := json.Marshal(dst.AlterTableModifyColumnOperation)
+		if string(jsonAlterTableModifyColumnOperation) == "{}" { // empty struct
+			dst.AlterTableModifyColumnOperation = nil
 		} else {
-			if err = validator.Validate(dst.AlterTableOperationOneOf4); err != nil {
-				dst.AlterTableOperationOneOf4 = nil
+			if err = validator.Validate(dst.AlterTableModifyColumnOperation); err != nil {
+				dst.AlterTableModifyColumnOperation = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.AlterTableOperationOneOf4 = nil
+		dst.AlterTableModifyColumnOperation = nil
 	}
 
-	// try to unmarshal data into AlterTableOperationOneOf5
-	err = newStrictDecoder(data).Decode(&dst.AlterTableOperationOneOf5)
+	// try to unmarshal data into AlterTableRenameColumnOperation
+	err = newStrictDecoder(data).Decode(&dst.AlterTableRenameColumnOperation)
 	if err == nil {
-		jsonAlterTableOperationOneOf5, _ := json.Marshal(dst.AlterTableOperationOneOf5)
-		if string(jsonAlterTableOperationOneOf5) == "{}" { // empty struct
-			dst.AlterTableOperationOneOf5 = nil
+		jsonAlterTableRenameColumnOperation, _ := json.Marshal(dst.AlterTableRenameColumnOperation)
+		if string(jsonAlterTableRenameColumnOperation) == "{}" { // empty struct
+			dst.AlterTableRenameColumnOperation = nil
 		} else {
-			if err = validator.Validate(dst.AlterTableOperationOneOf5); err != nil {
-				dst.AlterTableOperationOneOf5 = nil
+			if err = validator.Validate(dst.AlterTableRenameColumnOperation); err != nil {
+				dst.AlterTableRenameColumnOperation = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.AlterTableOperationOneOf5 = nil
+		dst.AlterTableRenameColumnOperation = nil
 	}
 
 	if match > 1 { // more than 1 match
 		// reset to nil
-		dst.AlterTableOperationOneOf = nil
-		dst.AlterTableOperationOneOf1 = nil
-		dst.AlterTableOperationOneOf2 = nil
-		dst.AlterTableOperationOneOf3 = nil
-		dst.AlterTableOperationOneOf4 = nil
-		dst.AlterTableOperationOneOf5 = nil
+		dst.AlterTableAddColumnOperation = nil
+		dst.AlterTableAddForeignKeyOperation = nil
+		dst.AlterTableDropColumnOperation = nil
+		dst.AlterTableDropForeignKeyOperation = nil
+		dst.AlterTableModifyColumnOperation = nil
+		dst.AlterTableRenameColumnOperation = nil
 
 		return fmt.Errorf("data matches more than one schema in oneOf(AlterTableOperation)")
 	} else if match == 1 {
@@ -193,28 +193,28 @@ func (dst *AlterTableOperation) UnmarshalJSON(data []byte) error {
 
 // Marshal data from the first non-nil pointers in the struct to JSON
 func (src AlterTableOperation) MarshalJSON() ([]byte, error) {
-	if src.AlterTableOperationOneOf != nil {
-		return json.Marshal(&src.AlterTableOperationOneOf)
+	if src.AlterTableAddColumnOperation != nil {
+		return json.Marshal(&src.AlterTableAddColumnOperation)
 	}
 
-	if src.AlterTableOperationOneOf1 != nil {
-		return json.Marshal(&src.AlterTableOperationOneOf1)
+	if src.AlterTableAddForeignKeyOperation != nil {
+		return json.Marshal(&src.AlterTableAddForeignKeyOperation)
 	}
 
-	if src.AlterTableOperationOneOf2 != nil {
-		return json.Marshal(&src.AlterTableOperationOneOf2)
+	if src.AlterTableDropColumnOperation != nil {
+		return json.Marshal(&src.AlterTableDropColumnOperation)
 	}
 
-	if src.AlterTableOperationOneOf3 != nil {
-		return json.Marshal(&src.AlterTableOperationOneOf3)
+	if src.AlterTableDropForeignKeyOperation != nil {
+		return json.Marshal(&src.AlterTableDropForeignKeyOperation)
 	}
 
-	if src.AlterTableOperationOneOf4 != nil {
-		return json.Marshal(&src.AlterTableOperationOneOf4)
+	if src.AlterTableModifyColumnOperation != nil {
+		return json.Marshal(&src.AlterTableModifyColumnOperation)
 	}
 
-	if src.AlterTableOperationOneOf5 != nil {
-		return json.Marshal(&src.AlterTableOperationOneOf5)
+	if src.AlterTableRenameColumnOperation != nil {
+		return json.Marshal(&src.AlterTableRenameColumnOperation)
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -225,28 +225,28 @@ func (obj *AlterTableOperation) GetActualInstance() interface{} {
 	if obj == nil {
 		return nil
 	}
-	if obj.AlterTableOperationOneOf != nil {
-		return obj.AlterTableOperationOneOf
+	if obj.AlterTableAddColumnOperation != nil {
+		return obj.AlterTableAddColumnOperation
 	}
 
-	if obj.AlterTableOperationOneOf1 != nil {
-		return obj.AlterTableOperationOneOf1
+	if obj.AlterTableAddForeignKeyOperation != nil {
+		return obj.AlterTableAddForeignKeyOperation
 	}
 
-	if obj.AlterTableOperationOneOf2 != nil {
-		return obj.AlterTableOperationOneOf2
+	if obj.AlterTableDropColumnOperation != nil {
+		return obj.AlterTableDropColumnOperation
 	}
 
-	if obj.AlterTableOperationOneOf3 != nil {
-		return obj.AlterTableOperationOneOf3
+	if obj.AlterTableDropForeignKeyOperation != nil {
+		return obj.AlterTableDropForeignKeyOperation
 	}
 
-	if obj.AlterTableOperationOneOf4 != nil {
-		return obj.AlterTableOperationOneOf4
+	if obj.AlterTableModifyColumnOperation != nil {
+		return obj.AlterTableModifyColumnOperation
 	}
 
-	if obj.AlterTableOperationOneOf5 != nil {
-		return obj.AlterTableOperationOneOf5
+	if obj.AlterTableRenameColumnOperation != nil {
+		return obj.AlterTableRenameColumnOperation
 	}
 
 	// all schemas are nil
@@ -255,28 +255,28 @@ func (obj *AlterTableOperation) GetActualInstance() interface{} {
 
 // Get the actual instance value
 func (obj AlterTableOperation) GetActualInstanceValue() interface{} {
-	if obj.AlterTableOperationOneOf != nil {
-		return *obj.AlterTableOperationOneOf
+	if obj.AlterTableAddColumnOperation != nil {
+		return *obj.AlterTableAddColumnOperation
 	}
 
-	if obj.AlterTableOperationOneOf1 != nil {
-		return *obj.AlterTableOperationOneOf1
+	if obj.AlterTableAddForeignKeyOperation != nil {
+		return *obj.AlterTableAddForeignKeyOperation
 	}
 
-	if obj.AlterTableOperationOneOf2 != nil {
-		return *obj.AlterTableOperationOneOf2
+	if obj.AlterTableDropColumnOperation != nil {
+		return *obj.AlterTableDropColumnOperation
 	}
 
-	if obj.AlterTableOperationOneOf3 != nil {
-		return *obj.AlterTableOperationOneOf3
+	if obj.AlterTableDropForeignKeyOperation != nil {
+		return *obj.AlterTableDropForeignKeyOperation
 	}
 
-	if obj.AlterTableOperationOneOf4 != nil {
-		return *obj.AlterTableOperationOneOf4
+	if obj.AlterTableModifyColumnOperation != nil {
+		return *obj.AlterTableModifyColumnOperation
 	}
 
-	if obj.AlterTableOperationOneOf5 != nil {
-		return *obj.AlterTableOperationOneOf5
+	if obj.AlterTableRenameColumnOperation != nil {
+		return *obj.AlterTableRenameColumnOperation
 	}
 
 	// all schemas are nil

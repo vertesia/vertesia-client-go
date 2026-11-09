@@ -18,29 +18,29 @@ import (
 
 // WorkflowHistory - struct for WorkflowHistory
 type WorkflowHistory struct {
-	WorkflowHistoryOneOf  *WorkflowHistoryOneOf
-	WorkflowHistoryOneOf1 *WorkflowHistoryOneOf1
-	WorkflowHistoryOneOf2 *WorkflowHistoryOneOf2
+	WorkflowAgentHistory  *WorkflowAgentHistory
+	WorkflowEventsHistory *WorkflowEventsHistory
+	WorkflowTasksHistory  *WorkflowTasksHistory
 }
 
-// WorkflowHistoryOneOfAsWorkflowHistory is a convenience function that returns WorkflowHistoryOneOf wrapped in WorkflowHistory
-func WorkflowHistoryOneOfAsWorkflowHistory(v *WorkflowHistoryOneOf) WorkflowHistory {
+// WorkflowAgentHistoryAsWorkflowHistory is a convenience function that returns WorkflowAgentHistory wrapped in WorkflowHistory
+func WorkflowAgentHistoryAsWorkflowHistory(v *WorkflowAgentHistory) WorkflowHistory {
 	return WorkflowHistory{
-		WorkflowHistoryOneOf: v,
+		WorkflowAgentHistory: v,
 	}
 }
 
-// WorkflowHistoryOneOf1AsWorkflowHistory is a convenience function that returns WorkflowHistoryOneOf1 wrapped in WorkflowHistory
-func WorkflowHistoryOneOf1AsWorkflowHistory(v *WorkflowHistoryOneOf1) WorkflowHistory {
+// WorkflowEventsHistoryAsWorkflowHistory is a convenience function that returns WorkflowEventsHistory wrapped in WorkflowHistory
+func WorkflowEventsHistoryAsWorkflowHistory(v *WorkflowEventsHistory) WorkflowHistory {
 	return WorkflowHistory{
-		WorkflowHistoryOneOf1: v,
+		WorkflowEventsHistory: v,
 	}
 }
 
-// WorkflowHistoryOneOf2AsWorkflowHistory is a convenience function that returns WorkflowHistoryOneOf2 wrapped in WorkflowHistory
-func WorkflowHistoryOneOf2AsWorkflowHistory(v *WorkflowHistoryOneOf2) WorkflowHistory {
+// WorkflowTasksHistoryAsWorkflowHistory is a convenience function that returns WorkflowTasksHistory wrapped in WorkflowHistory
+func WorkflowTasksHistoryAsWorkflowHistory(v *WorkflowTasksHistory) WorkflowHistory {
 	return WorkflowHistory{
-		WorkflowHistoryOneOf2: v,
+		WorkflowTasksHistory: v,
 	}
 }
 
@@ -48,62 +48,62 @@ func WorkflowHistoryOneOf2AsWorkflowHistory(v *WorkflowHistoryOneOf2) WorkflowHi
 func (dst *WorkflowHistory) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
-	// try to unmarshal data into WorkflowHistoryOneOf
-	err = newStrictDecoder(data).Decode(&dst.WorkflowHistoryOneOf)
+	// try to unmarshal data into WorkflowAgentHistory
+	err = newStrictDecoder(data).Decode(&dst.WorkflowAgentHistory)
 	if err == nil {
-		jsonWorkflowHistoryOneOf, _ := json.Marshal(dst.WorkflowHistoryOneOf)
-		if string(jsonWorkflowHistoryOneOf) == "{}" { // empty struct
-			dst.WorkflowHistoryOneOf = nil
+		jsonWorkflowAgentHistory, _ := json.Marshal(dst.WorkflowAgentHistory)
+		if string(jsonWorkflowAgentHistory) == "{}" { // empty struct
+			dst.WorkflowAgentHistory = nil
 		} else {
-			if err = validator.Validate(dst.WorkflowHistoryOneOf); err != nil {
-				dst.WorkflowHistoryOneOf = nil
+			if err = validator.Validate(dst.WorkflowAgentHistory); err != nil {
+				dst.WorkflowAgentHistory = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.WorkflowHistoryOneOf = nil
+		dst.WorkflowAgentHistory = nil
 	}
 
-	// try to unmarshal data into WorkflowHistoryOneOf1
-	err = newStrictDecoder(data).Decode(&dst.WorkflowHistoryOneOf1)
+	// try to unmarshal data into WorkflowEventsHistory
+	err = newStrictDecoder(data).Decode(&dst.WorkflowEventsHistory)
 	if err == nil {
-		jsonWorkflowHistoryOneOf1, _ := json.Marshal(dst.WorkflowHistoryOneOf1)
-		if string(jsonWorkflowHistoryOneOf1) == "{}" { // empty struct
-			dst.WorkflowHistoryOneOf1 = nil
+		jsonWorkflowEventsHistory, _ := json.Marshal(dst.WorkflowEventsHistory)
+		if string(jsonWorkflowEventsHistory) == "{}" { // empty struct
+			dst.WorkflowEventsHistory = nil
 		} else {
-			if err = validator.Validate(dst.WorkflowHistoryOneOf1); err != nil {
-				dst.WorkflowHistoryOneOf1 = nil
+			if err = validator.Validate(dst.WorkflowEventsHistory); err != nil {
+				dst.WorkflowEventsHistory = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.WorkflowHistoryOneOf1 = nil
+		dst.WorkflowEventsHistory = nil
 	}
 
-	// try to unmarshal data into WorkflowHistoryOneOf2
-	err = newStrictDecoder(data).Decode(&dst.WorkflowHistoryOneOf2)
+	// try to unmarshal data into WorkflowTasksHistory
+	err = newStrictDecoder(data).Decode(&dst.WorkflowTasksHistory)
 	if err == nil {
-		jsonWorkflowHistoryOneOf2, _ := json.Marshal(dst.WorkflowHistoryOneOf2)
-		if string(jsonWorkflowHistoryOneOf2) == "{}" { // empty struct
-			dst.WorkflowHistoryOneOf2 = nil
+		jsonWorkflowTasksHistory, _ := json.Marshal(dst.WorkflowTasksHistory)
+		if string(jsonWorkflowTasksHistory) == "{}" { // empty struct
+			dst.WorkflowTasksHistory = nil
 		} else {
-			if err = validator.Validate(dst.WorkflowHistoryOneOf2); err != nil {
-				dst.WorkflowHistoryOneOf2 = nil
+			if err = validator.Validate(dst.WorkflowTasksHistory); err != nil {
+				dst.WorkflowTasksHistory = nil
 			} else {
 				match++
 			}
 		}
 	} else {
-		dst.WorkflowHistoryOneOf2 = nil
+		dst.WorkflowTasksHistory = nil
 	}
 
 	if match > 1 { // more than 1 match
 		// reset to nil
-		dst.WorkflowHistoryOneOf = nil
-		dst.WorkflowHistoryOneOf1 = nil
-		dst.WorkflowHistoryOneOf2 = nil
+		dst.WorkflowAgentHistory = nil
+		dst.WorkflowEventsHistory = nil
+		dst.WorkflowTasksHistory = nil
 
 		return fmt.Errorf("data matches more than one schema in oneOf(WorkflowHistory)")
 	} else if match == 1 {
@@ -115,16 +115,16 @@ func (dst *WorkflowHistory) UnmarshalJSON(data []byte) error {
 
 // Marshal data from the first non-nil pointers in the struct to JSON
 func (src WorkflowHistory) MarshalJSON() ([]byte, error) {
-	if src.WorkflowHistoryOneOf != nil {
-		return json.Marshal(&src.WorkflowHistoryOneOf)
+	if src.WorkflowAgentHistory != nil {
+		return json.Marshal(&src.WorkflowAgentHistory)
 	}
 
-	if src.WorkflowHistoryOneOf1 != nil {
-		return json.Marshal(&src.WorkflowHistoryOneOf1)
+	if src.WorkflowEventsHistory != nil {
+		return json.Marshal(&src.WorkflowEventsHistory)
 	}
 
-	if src.WorkflowHistoryOneOf2 != nil {
-		return json.Marshal(&src.WorkflowHistoryOneOf2)
+	if src.WorkflowTasksHistory != nil {
+		return json.Marshal(&src.WorkflowTasksHistory)
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -135,16 +135,16 @@ func (obj *WorkflowHistory) GetActualInstance() interface{} {
 	if obj == nil {
 		return nil
 	}
-	if obj.WorkflowHistoryOneOf != nil {
-		return obj.WorkflowHistoryOneOf
+	if obj.WorkflowAgentHistory != nil {
+		return obj.WorkflowAgentHistory
 	}
 
-	if obj.WorkflowHistoryOneOf1 != nil {
-		return obj.WorkflowHistoryOneOf1
+	if obj.WorkflowEventsHistory != nil {
+		return obj.WorkflowEventsHistory
 	}
 
-	if obj.WorkflowHistoryOneOf2 != nil {
-		return obj.WorkflowHistoryOneOf2
+	if obj.WorkflowTasksHistory != nil {
+		return obj.WorkflowTasksHistory
 	}
 
 	// all schemas are nil
@@ -153,16 +153,16 @@ func (obj *WorkflowHistory) GetActualInstance() interface{} {
 
 // Get the actual instance value
 func (obj WorkflowHistory) GetActualInstanceValue() interface{} {
-	if obj.WorkflowHistoryOneOf != nil {
-		return *obj.WorkflowHistoryOneOf
+	if obj.WorkflowAgentHistory != nil {
+		return *obj.WorkflowAgentHistory
 	}
 
-	if obj.WorkflowHistoryOneOf1 != nil {
-		return *obj.WorkflowHistoryOneOf1
+	if obj.WorkflowEventsHistory != nil {
+		return *obj.WorkflowEventsHistory
 	}
 
-	if obj.WorkflowHistoryOneOf2 != nil {
-		return *obj.WorkflowHistoryOneOf2
+	if obj.WorkflowTasksHistory != nil {
+		return *obj.WorkflowTasksHistory
 	}
 
 	// all schemas are nil
