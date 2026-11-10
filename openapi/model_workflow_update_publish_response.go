@@ -21,6 +21,8 @@ var _ MappedNullable = &WorkflowUpdatePublishResponse{}
 // WorkflowUpdatePublishResponse struct for WorkflowUpdatePublishResponse
 type WorkflowUpdatePublishResponse struct {
 	Success bool `json:"success"`
+	// The `timestamp` the published update carries in the run stream, in epoch milliseconds. Absent from servers that predate it.
+	Timestamp *int32 `json:"timestamp,omitempty"`
 }
 
 type _WorkflowUpdatePublishResponse WorkflowUpdatePublishResponse
@@ -67,6 +69,38 @@ func (o *WorkflowUpdatePublishResponse) SetSuccess(v bool) {
 	o.Success = v
 }
 
+// GetTimestamp returns the Timestamp field value if set, zero value otherwise.
+func (o *WorkflowUpdatePublishResponse) GetTimestamp() int32 {
+	if o == nil || IsNil(o.Timestamp) {
+		var ret int32
+		return ret
+	}
+	return *o.Timestamp
+}
+
+// GetTimestampOk returns a tuple with the Timestamp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *WorkflowUpdatePublishResponse) GetTimestampOk() (*int32, bool) {
+	if o == nil || IsNil(o.Timestamp) {
+		return nil, false
+	}
+	return o.Timestamp, true
+}
+
+// HasTimestamp returns a boolean if a field has been set.
+func (o *WorkflowUpdatePublishResponse) HasTimestamp() bool {
+	if o != nil && !IsNil(o.Timestamp) {
+		return true
+	}
+
+	return false
+}
+
+// SetTimestamp gets a reference to the given int32 and assigns it to the Timestamp field.
+func (o *WorkflowUpdatePublishResponse) SetTimestamp(v int32) {
+	o.Timestamp = &v
+}
+
 func (o WorkflowUpdatePublishResponse) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -78,6 +112,9 @@ func (o WorkflowUpdatePublishResponse) MarshalJSON() ([]byte, error) {
 func (o WorkflowUpdatePublishResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["success"] = o.Success
+	if !IsNil(o.Timestamp) {
+		toSerialize["timestamp"] = o.Timestamp
+	}
 	return toSerialize, nil
 }
 

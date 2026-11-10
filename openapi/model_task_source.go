@@ -24,6 +24,12 @@ type TaskSource struct {
 	RunId string  `json:"run_id"`
 	Node  *string `json:"node,omitempty"`
 	AskId *string `json:"ask_id,omitempty"`
+	// Stable key of the agent request this task answers (`<run_id>:<tool_use_id>`). Unique in the project: creating a task whose source repeats an existing request key returns that task instead of creating a second one.
+	RequestKey *string `json:"request_key,omitempty"`
+	// Tool-use id of the agent request (the REQUEST_INPUT message) this task answers.
+	RequestId *string `json:"request_id,omitempty"`
+	// For a tool approval task, the approval key (`tool_name:target`) the decision applies to.
+	ApprovalKey *string `json:"approval_key,omitempty"`
 }
 
 type _TaskSource TaskSource
@@ -159,6 +165,102 @@ func (o *TaskSource) SetAskId(v string) {
 	o.AskId = &v
 }
 
+// GetRequestKey returns the RequestKey field value if set, zero value otherwise.
+func (o *TaskSource) GetRequestKey() string {
+	if o == nil || IsNil(o.RequestKey) {
+		var ret string
+		return ret
+	}
+	return *o.RequestKey
+}
+
+// GetRequestKeyOk returns a tuple with the RequestKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TaskSource) GetRequestKeyOk() (*string, bool) {
+	if o == nil || IsNil(o.RequestKey) {
+		return nil, false
+	}
+	return o.RequestKey, true
+}
+
+// HasRequestKey returns a boolean if a field has been set.
+func (o *TaskSource) HasRequestKey() bool {
+	if o != nil && !IsNil(o.RequestKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetRequestKey gets a reference to the given string and assigns it to the RequestKey field.
+func (o *TaskSource) SetRequestKey(v string) {
+	o.RequestKey = &v
+}
+
+// GetRequestId returns the RequestId field value if set, zero value otherwise.
+func (o *TaskSource) GetRequestId() string {
+	if o == nil || IsNil(o.RequestId) {
+		var ret string
+		return ret
+	}
+	return *o.RequestId
+}
+
+// GetRequestIdOk returns a tuple with the RequestId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TaskSource) GetRequestIdOk() (*string, bool) {
+	if o == nil || IsNil(o.RequestId) {
+		return nil, false
+	}
+	return o.RequestId, true
+}
+
+// HasRequestId returns a boolean if a field has been set.
+func (o *TaskSource) HasRequestId() bool {
+	if o != nil && !IsNil(o.RequestId) {
+		return true
+	}
+
+	return false
+}
+
+// SetRequestId gets a reference to the given string and assigns it to the RequestId field.
+func (o *TaskSource) SetRequestId(v string) {
+	o.RequestId = &v
+}
+
+// GetApprovalKey returns the ApprovalKey field value if set, zero value otherwise.
+func (o *TaskSource) GetApprovalKey() string {
+	if o == nil || IsNil(o.ApprovalKey) {
+		var ret string
+		return ret
+	}
+	return *o.ApprovalKey
+}
+
+// GetApprovalKeyOk returns a tuple with the ApprovalKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *TaskSource) GetApprovalKeyOk() (*string, bool) {
+	if o == nil || IsNil(o.ApprovalKey) {
+		return nil, false
+	}
+	return o.ApprovalKey, true
+}
+
+// HasApprovalKey returns a boolean if a field has been set.
+func (o *TaskSource) HasApprovalKey() bool {
+	if o != nil && !IsNil(o.ApprovalKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetApprovalKey gets a reference to the given string and assigns it to the ApprovalKey field.
+func (o *TaskSource) SetApprovalKey(v string) {
+	o.ApprovalKey = &v
+}
+
 func (o TaskSource) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -176,6 +278,15 @@ func (o TaskSource) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.AskId) {
 		toSerialize["ask_id"] = o.AskId
+	}
+	if !IsNil(o.RequestKey) {
+		toSerialize["request_key"] = o.RequestKey
+	}
+	if !IsNil(o.RequestId) {
+		toSerialize["request_id"] = o.RequestId
+	}
+	if !IsNil(o.ApprovalKey) {
+		toSerialize["approval_key"] = o.ApprovalKey
 	}
 	return toSerialize, nil
 }

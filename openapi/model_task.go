@@ -21,20 +21,24 @@ var _ MappedNullable = &Task{}
 
 // Task struct for Task
 type Task struct {
-	Id                   string                 `json:"id"`
-	Account              string                 `json:"account"`
-	Project              string                 `json:"project"`
-	Title                string                 `json:"title"`
-	Description          *string                `json:"description,omitempty"`
-	Status               DurableTaskStatus      `json:"status"`
-	Assignee             *string                `json:"assignee,omitempty"`
-	Fields               []TaskField            `json:"fields"`
-	Result               map[string]interface{} `json:"result,omitempty"`
-	Source               TaskSource             `json:"source"`
-	DueAt                *time.Time             `json:"due_at,omitempty"`
-	CreatedAt            time.Time              `json:"created_at"`
-	CompletedAt          *time.Time             `json:"completed_at,omitempty"`
-	UpdatedAt            *time.Time             `json:"updated_at,omitempty"`
+	Id          string                 `json:"id"`
+	Account     string                 `json:"account"`
+	Project     string                 `json:"project"`
+	Title       string                 `json:"title"`
+	Description *string                `json:"description,omitempty"`
+	Status      DurableTaskStatus      `json:"status"`
+	Assignee    *string                `json:"assignee,omitempty"`
+	Fields      []TaskField            `json:"fields"`
+	Result      map[string]interface{} `json:"result,omitempty"`
+	Source      TaskSource             `json:"source"`
+	DueAt       *time.Time             `json:"due_at,omitempty"`
+	// Assignment revision: 1 at creation, incremented every time the assignee changes.
+	AssignmentRev *int32 `json:"assignment_rev,omitempty"`
+	// When the current assignment revision started.
+	AssignedAt           *time.Time `json:"assigned_at,omitempty"`
+	CreatedAt            time.Time  `json:"created_at"`
+	CompletedAt          *time.Time `json:"completed_at,omitempty"`
+	UpdatedAt            *time.Time `json:"updated_at,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -362,6 +366,70 @@ func (o *Task) SetDueAt(v time.Time) {
 	o.DueAt = &v
 }
 
+// GetAssignmentRev returns the AssignmentRev field value if set, zero value otherwise.
+func (o *Task) GetAssignmentRev() int32 {
+	if o == nil || IsNil(o.AssignmentRev) {
+		var ret int32
+		return ret
+	}
+	return *o.AssignmentRev
+}
+
+// GetAssignmentRevOk returns a tuple with the AssignmentRev field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Task) GetAssignmentRevOk() (*int32, bool) {
+	if o == nil || IsNil(o.AssignmentRev) {
+		return nil, false
+	}
+	return o.AssignmentRev, true
+}
+
+// HasAssignmentRev returns a boolean if a field has been set.
+func (o *Task) HasAssignmentRev() bool {
+	if o != nil && !IsNil(o.AssignmentRev) {
+		return true
+	}
+
+	return false
+}
+
+// SetAssignmentRev gets a reference to the given int32 and assigns it to the AssignmentRev field.
+func (o *Task) SetAssignmentRev(v int32) {
+	o.AssignmentRev = &v
+}
+
+// GetAssignedAt returns the AssignedAt field value if set, zero value otherwise.
+func (o *Task) GetAssignedAt() time.Time {
+	if o == nil || IsNil(o.AssignedAt) {
+		var ret time.Time
+		return ret
+	}
+	return *o.AssignedAt
+}
+
+// GetAssignedAtOk returns a tuple with the AssignedAt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Task) GetAssignedAtOk() (*time.Time, bool) {
+	if o == nil || IsNil(o.AssignedAt) {
+		return nil, false
+	}
+	return o.AssignedAt, true
+}
+
+// HasAssignedAt returns a boolean if a field has been set.
+func (o *Task) HasAssignedAt() bool {
+	if o != nil && !IsNil(o.AssignedAt) {
+		return true
+	}
+
+	return false
+}
+
+// SetAssignedAt gets a reference to the given time.Time and assigns it to the AssignedAt field.
+func (o *Task) SetAssignedAt(v time.Time) {
+	o.AssignedAt = &v
+}
+
 // GetCreatedAt returns the CreatedAt field value
 func (o *Task) GetCreatedAt() time.Time {
 	if o == nil {
@@ -479,6 +547,12 @@ func (o Task) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DueAt) {
 		toSerialize["due_at"] = o.DueAt
 	}
+	if !IsNil(o.AssignmentRev) {
+		toSerialize["assignment_rev"] = o.AssignmentRev
+	}
+	if !IsNil(o.AssignedAt) {
+		toSerialize["assigned_at"] = o.AssignedAt
+	}
 	toSerialize["created_at"] = o.CreatedAt
 	if !IsNil(o.CompletedAt) {
 		toSerialize["completed_at"] = o.CompletedAt
@@ -547,6 +621,8 @@ func (o *Task) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "result")
 		delete(additionalProperties, "source")
 		delete(additionalProperties, "due_at")
+		delete(additionalProperties, "assignment_rev")
+		delete(additionalProperties, "assigned_at")
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "completed_at")
 		delete(additionalProperties, "updated_at")

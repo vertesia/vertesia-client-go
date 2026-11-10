@@ -43,9 +43,7 @@ func (r ApiCancelTaskRequest) Execute() (*Task, *http.Response, error) {
 /*
 CancelTask Cancel a task
 
-Cancels a pending or in-progress durable task. Answers 409 while a running process is waiting on the task: answer the task, advance the run, or cancel the run instead.
-
-**Required permissions:** `task:manage`
+Cancels a pending or in-progress durable task. Answers 409 while a running process is waiting on the task: answer the task, advance the run, or cancel the run instead. Needs `task:manage`, except for a tool approval task (`source.node: tool_approval`), which a caller with `workflow:run` that may control the task's agent run can cancel: the run does so when it stops waiting on the prompt.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param taskId The task ID, as 24 hexadecimal characters.
@@ -194,7 +192,7 @@ func (r ApiCompleteTaskRequest) Execute() (*Task, *http.Response, error) {
 /*
 CompleteTask Complete a task
 
-Completes a durable task and signals the backing agent or process workflow with the submitted result. Answers 409 when the task was already given a different answer or its run has ended.
+Completes a durable task and signals the backing agent or process workflow with the submitted result. Answers 409 when the task was already given a different answer or its run has ended. A tool approval task (`source.node: tool_approval`) takes `{ decision, feedback? }` where decision is `allow_once`, `allow_for_run`, `deny` or `deny_with_feedback` (which needs feedback); completing it again with the same decision returns the task without signalling the run twice.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param taskId The task ID, as 24 hexadecimal characters.
@@ -347,7 +345,7 @@ func (r ApiCreateTaskRequest) Execute() (*Task, *http.Response, error) {
 /*
 CreateTask Create a task
 
-Creates a durable human task for a process or agent run. Callers must have `workflow:run` or `task:manage`.
+Creates a durable human task for a process or agent run. Callers must have `workflow:run` or `task:manage`. A `source.request_key` makes the call idempotent: when a task with that key already exists in the project it is returned with status 200 instead of creating another.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiCreateTaskRequest

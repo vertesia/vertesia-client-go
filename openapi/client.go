@@ -98,6 +98,8 @@ type APIClient struct {
 
 	InteractionsAPI *InteractionsAPIService
 
+	NotificationsAPI *NotificationsAPIService
+
 	OAuthAPI *OAuthAPIService
 
 	OAuthClientsAPI *OAuthClientsAPIService
@@ -187,6 +189,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.InferenceProfilesAPI = (*InferenceProfilesAPIService)(&c.common)
 	c.InteractionRunsAPI = (*InteractionRunsAPIService)(&c.common)
 	c.InteractionsAPI = (*InteractionsAPIService)(&c.common)
+	c.NotificationsAPI = (*NotificationsAPIService)(&c.common)
 	c.OAuthAPI = (*OAuthAPIService)(&c.common)
 	c.OAuthClientsAPI = (*OAuthClientsAPIService)(&c.common)
 	c.OAuthGrantsAPI = (*OAuthGrantsAPIService)(&c.common)

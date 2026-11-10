@@ -23,6 +23,7 @@ api_files.go
 api_inference_profiles.go
 api_interaction_runs.go
 api_interactions.go
+api_notifications.go
 api_o_auth.go
 api_o_auth_clients.go
 api_o_auth_grants.go
@@ -210,6 +211,7 @@ model_app_version_storage.go
 model_app_version_target.go
 model_app_version_urls.go
 model_app_widget_info.go
+model_archive_notifications_payload.go
 model_ask_user_webhook_configuration.go
 model_ask_user_webhook_configuration_input.go
 model_assignable_role_name.go
@@ -728,6 +730,7 @@ model_list_agent_runs_response.go
 model_list_content_object_exports_response.go
 model_list_event_deliveries_payload.go
 model_list_event_deliveries_response.go
+model_list_notifications_response.go
 model_list_pending_asks_response.go
 model_list_secrets_response.go
 model_list_workflow_runs_payload.go
@@ -736,6 +739,8 @@ model_llm_call_type.go
 model_load_balancing_env_config.go
 model_load_balancing_env_entry_config.go
 model_magic_pdf_configuration.go
+model_mark_all_notifications_read_payload.go
+model_mark_notifications_read_payload.go
 model_markdown_rendition_format.go
 model_mcp_api_key_config.go
 model_mcp_api_key_credential.go
@@ -768,6 +773,16 @@ model_node_definition.go
 model_node_definition_branches_inner.go
 model_node_definition_collect.go
 model_node_history_entry.go
+model_notification.go
+model_notification_category.go
+model_notification_channel_preferences.go
+model_notification_counts.go
+model_notification_kind.go
+model_notification_occurrence_ack.go
+model_notification_payload.go
+model_notification_preferences.go
+model_notification_ref.go
+model_notification_update_result.go
 model_nova_canvas_options.go
 model_o_auth_auth_status.go
 model_o_auth_authorize_response.go
