@@ -32,6 +32,7 @@ type OpenAiThinkingOptions struct {
 	IncludeThoughts  *bool                         `json:"include_thoughts,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
 	ServiceTier *string `json:"service_tier,omitempty"`
+	CacheTtl    *string `json:"cache_ttl,omitempty"`
 	// Additional provider-specific fields merged into the OpenAI-compatible request body.
 	ExtraBody            map[string]interface{} `json:"extra_body,omitempty"`
 	AdditionalProperties map[string]interface{} `json:"-"`
@@ -440,6 +441,38 @@ func (o *OpenAiThinkingOptions) SetServiceTier(v string) {
 	o.ServiceTier = &v
 }
 
+// GetCacheTtl returns the CacheTtl field value if set, zero value otherwise.
+func (o *OpenAiThinkingOptions) GetCacheTtl() string {
+	if o == nil || IsNil(o.CacheTtl) {
+		var ret string
+		return ret
+	}
+	return *o.CacheTtl
+}
+
+// GetCacheTtlOk returns a tuple with the CacheTtl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiThinkingOptions) GetCacheTtlOk() (*string, bool) {
+	if o == nil || IsNil(o.CacheTtl) {
+		return nil, false
+	}
+	return o.CacheTtl, true
+}
+
+// HasCacheTtl returns a boolean if a field has been set.
+func (o *OpenAiThinkingOptions) HasCacheTtl() bool {
+	if o != nil && !IsNil(o.CacheTtl) {
+		return true
+	}
+
+	return false
+}
+
+// SetCacheTtl gets a reference to the given string and assigns it to the CacheTtl field.
+func (o *OpenAiThinkingOptions) SetCacheTtl(v string) {
+	o.CacheTtl = &v
+}
+
 // GetExtraBody returns the ExtraBody field value if set, zero value otherwise.
 func (o *OpenAiThinkingOptions) GetExtraBody() map[string]interface{} {
 	if o == nil || IsNil(o.ExtraBody) {
@@ -518,12 +551,15 @@ func (o OpenAiThinkingOptions) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ServiceTier) {
 		toSerialize["service_tier"] = o.ServiceTier
 	}
+	if !IsNil(o.CacheTtl) {
+		toSerialize["cache_ttl"] = o.CacheTtl
+	}
 	if !IsNil(o.ExtraBody) {
 		toSerialize["extra_body"] = o.ExtraBody
 	}
 
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "verbosity", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "verbosity", "image_detail", "include_thoughts", "service_tier", "cache_ttl", "extra_body"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -592,7 +628,7 @@ func (o *OpenAiThinkingOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "verbosity", "image_detail", "include_thoughts", "service_tier", "extra_body"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "max_tokens", "tool_choice", "stop_sequence", "effort", "reasoning_effort", "reasoning_context", "verbosity", "image_detail", "include_thoughts", "service_tier", "cache_ttl", "extra_body"}) {
 			delete(extra, key)
 		}
 	}
