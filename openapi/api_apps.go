@@ -2626,7 +2626,7 @@ func (r ApiGetAppInstanceAvailabilityRequest) Execute() (*AppInstanceAvailabilit
 /*
 GetAppInstanceAvailability Check whether additional MCP app instances are enabled for this project
 
-**Required permissions:** `account:member`
+**Required permissions:** `account:member`, and `app:manage`
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiGetAppInstanceAvailabilityRequest

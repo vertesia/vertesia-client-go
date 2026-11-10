@@ -631,6 +631,8 @@ model_generation_run_metadata.go
 model_generic_command_response.go
 model_get_file_url_payload.go
 model_get_file_url_response.go
+model_get_intake_cost_summary_from_parameter.go
+model_get_intake_cost_summary_to_parameter.go
 model_get_model_prices_from_parameter.go
 model_get_model_prices_to_parameter.go
 model_get_rendition_response.go
@@ -675,9 +677,19 @@ model_inference_profile_usage.go
 model_inference_profile_usage_entry.go
 model_inherited_property_metadata.go
 model_initial_tool_call.go
+model_intake_cost_by_content_nature.go
+model_intake_cost_by_content_type.go
+model_intake_cost_by_outcome.go
+model_intake_cost_document.go
+model_intake_cost_per_page.go
+model_intake_cost_summary_response.go
+model_intake_cost_time_point.go
+model_intake_cost_totals.go
+model_intake_cost_version.go
 model_intake_media_analysis_override.go
 model_intake_media_analysis_overrides.go
 model_intake_page_scope.go
+model_intake_run_cost.go
 model_intake_vision_detail.go
 model_intake_vision_profile_settings_map.go
 model_intake_vision_profile_settings_update.go
@@ -814,6 +826,7 @@ model_o_auth_provider_exchange_payload.go
 model_o_auth_registration_source.go
 model_o_auth_response_type.go
 model_o_auth_token_endpoint_auth_method.go
+model_object_intake_cost_response.go
 model_object_search_response.go
 model_oidc_federation_connection.go
 model_oidc_federation_connection_payload.go
