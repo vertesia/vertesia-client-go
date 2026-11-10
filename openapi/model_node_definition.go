@@ -54,8 +54,14 @@ type NodeDefinition struct {
 	ExcludedTools []string `json:"excluded_tools,omitempty"`
 	// Declarative successful-tool phases and completion behavior for this agent node. The Process owns this policy; the child conversation enforces it generically.
 	AgentPolicy *ProcessAgentExecutionPolicy `json:"agent_policy,omitempty"`
-	// Model id override for this node. If unset, falls back to the process run's `config.model`, then to the project's default. Useful when a specific node needs heavier reasoning (e.g. Opus for legal flagging) while the rest of the process uses a cheaper default.
-	Model                *string                       `json:"model,omitempty"`
+	// Inference profile for this node, which supplies its environment, model and model options. Do not combine with `environment`, `model` or `model_options`. A node that selects nothing uses the process run config, then the process definition, then the interaction or agent defaults.
+	InferenceProfile *string `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	// Environment id for this node. Set it together with `model`, or alone to use the environment default model. Useful when one node needs heavier reasoning (e.g. Opus for legal flagging) while the rest of the process uses a cheaper default.
+	Environment *string `json:"environment,omitempty"`
+	// Model id for this node, in `environment`. A model without an environment is accepted only in definitions saved before environments were required; saving one is rejected.
+	Model *string `json:"model,omitempty"`
+	// Model options for this node's `environment` and `model`.
+	ModelOptions         *ModelOptions                 `json:"model_options,omitempty"`
 	Task                 *HumanTaskDefinition          `json:"task,omitempty"`
 	Foreach              *string                       `json:"foreach,omitempty"`
 	As                   *string                       `json:"as,omitempty"`
@@ -916,6 +922,70 @@ func (o *NodeDefinition) SetAgentPolicy(v ProcessAgentExecutionPolicy) {
 	o.AgentPolicy = &v
 }
 
+// GetInferenceProfile returns the InferenceProfile field value if set, zero value otherwise.
+func (o *NodeDefinition) GetInferenceProfile() string {
+	if o == nil || IsNil(o.InferenceProfile) {
+		var ret string
+		return ret
+	}
+	return *o.InferenceProfile
+}
+
+// GetInferenceProfileOk returns a tuple with the InferenceProfile field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDefinition) GetInferenceProfileOk() (*string, bool) {
+	if o == nil || IsNil(o.InferenceProfile) {
+		return nil, false
+	}
+	return o.InferenceProfile, true
+}
+
+// HasInferenceProfile returns a boolean if a field has been set.
+func (o *NodeDefinition) HasInferenceProfile() bool {
+	if o != nil && !IsNil(o.InferenceProfile) {
+		return true
+	}
+
+	return false
+}
+
+// SetInferenceProfile gets a reference to the given string and assigns it to the InferenceProfile field.
+func (o *NodeDefinition) SetInferenceProfile(v string) {
+	o.InferenceProfile = &v
+}
+
+// GetEnvironment returns the Environment field value if set, zero value otherwise.
+func (o *NodeDefinition) GetEnvironment() string {
+	if o == nil || IsNil(o.Environment) {
+		var ret string
+		return ret
+	}
+	return *o.Environment
+}
+
+// GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDefinition) GetEnvironmentOk() (*string, bool) {
+	if o == nil || IsNil(o.Environment) {
+		return nil, false
+	}
+	return o.Environment, true
+}
+
+// HasEnvironment returns a boolean if a field has been set.
+func (o *NodeDefinition) HasEnvironment() bool {
+	if o != nil && !IsNil(o.Environment) {
+		return true
+	}
+
+	return false
+}
+
+// SetEnvironment gets a reference to the given string and assigns it to the Environment field.
+func (o *NodeDefinition) SetEnvironment(v string) {
+	o.Environment = &v
+}
+
 // GetModel returns the Model field value if set, zero value otherwise.
 func (o *NodeDefinition) GetModel() string {
 	if o == nil || IsNil(o.Model) {
@@ -946,6 +1016,38 @@ func (o *NodeDefinition) HasModel() bool {
 // SetModel gets a reference to the given string and assigns it to the Model field.
 func (o *NodeDefinition) SetModel(v string) {
 	o.Model = &v
+}
+
+// GetModelOptions returns the ModelOptions field value if set, zero value otherwise.
+func (o *NodeDefinition) GetModelOptions() ModelOptions {
+	if o == nil || IsNil(o.ModelOptions) {
+		var ret ModelOptions
+		return ret
+	}
+	return *o.ModelOptions
+}
+
+// GetModelOptionsOk returns a tuple with the ModelOptions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NodeDefinition) GetModelOptionsOk() (*ModelOptions, bool) {
+	if o == nil || IsNil(o.ModelOptions) {
+		return nil, false
+	}
+	return o.ModelOptions, true
+}
+
+// HasModelOptions returns a boolean if a field has been set.
+func (o *NodeDefinition) HasModelOptions() bool {
+	if o != nil && !IsNil(o.ModelOptions) {
+		return true
+	}
+
+	return false
+}
+
+// SetModelOptions gets a reference to the given ModelOptions and assigns it to the ModelOptions field.
+func (o *NodeDefinition) SetModelOptions(v ModelOptions) {
+	o.ModelOptions = &v
 }
 
 // GetTask returns the Task field value if set, zero value otherwise.
@@ -1386,8 +1488,17 @@ func (o NodeDefinition) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.AgentPolicy) {
 		toSerialize["agent_policy"] = o.AgentPolicy
 	}
+	if !IsNil(o.InferenceProfile) {
+		toSerialize["inference_profile"] = o.InferenceProfile
+	}
+	if !IsNil(o.Environment) {
+		toSerialize["environment"] = o.Environment
+	}
 	if !IsNil(o.Model) {
 		toSerialize["model"] = o.Model
+	}
+	if !IsNil(o.ModelOptions) {
+		toSerialize["model_options"] = o.ModelOptions
 	}
 	if !IsNil(o.Task) {
 		toSerialize["task"] = o.Task
@@ -1491,7 +1602,10 @@ func (o *NodeDefinition) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "initial_skills")
 		delete(additionalProperties, "excluded_tools")
 		delete(additionalProperties, "agent_policy")
+		delete(additionalProperties, "inference_profile")
+		delete(additionalProperties, "environment")
 		delete(additionalProperties, "model")
+		delete(additionalProperties, "model_options")
 		delete(additionalProperties, "task")
 		delete(additionalProperties, "foreach")
 		delete(additionalProperties, "as")

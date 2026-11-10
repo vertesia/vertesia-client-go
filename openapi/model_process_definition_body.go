@@ -24,11 +24,18 @@ type ProcessDefinitionBody struct {
 	Process       string                         `json:"process"`
 	Description   *string                        `json:"description,omitempty"`
 	Initial       string                         `json:"initial"`
-	Model         *string                        `json:"model,omitempty"`
-	Resources     *ProcessResourcesDefinition    `json:"resources,omitempty"`
-	Context       ProcessContextDefinition       `json:"context"`
-	Nodes         map[string]NodeDefinition      `json:"nodes"`
-	Metadata      map[string]interface{}         `json:"metadata,omitempty"`
+	// Default inference profile for the LLM nodes and supervisor of this process. Do not combine with `environment`, `model` or `model_options`. A process run config selection and a node selection take precedence.
+	InferenceProfile *string `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	// Default environment id for the LLM nodes and supervisor of this process, set with `model` or alone.
+	Environment *string `json:"environment,omitempty"`
+	// Default model id, in `environment`. A model without an environment is accepted only in definitions saved before environments were required; saving one is rejected.
+	Model *string `json:"model,omitempty"`
+	// Default model options for `environment` and `model`.
+	ModelOptions *ModelOptions               `json:"model_options,omitempty"`
+	Resources    *ProcessResourcesDefinition `json:"resources,omitempty"`
+	Context      ProcessContextDefinition    `json:"context"`
+	Nodes        map[string]NodeDefinition   `json:"nodes"`
+	Metadata     map[string]interface{}      `json:"metadata,omitempty"`
 }
 
 type _ProcessDefinitionBody ProcessDefinitionBody
@@ -159,6 +166,70 @@ func (o *ProcessDefinitionBody) SetInitial(v string) {
 	o.Initial = v
 }
 
+// GetInferenceProfile returns the InferenceProfile field value if set, zero value otherwise.
+func (o *ProcessDefinitionBody) GetInferenceProfile() string {
+	if o == nil || IsNil(o.InferenceProfile) {
+		var ret string
+		return ret
+	}
+	return *o.InferenceProfile
+}
+
+// GetInferenceProfileOk returns a tuple with the InferenceProfile field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessDefinitionBody) GetInferenceProfileOk() (*string, bool) {
+	if o == nil || IsNil(o.InferenceProfile) {
+		return nil, false
+	}
+	return o.InferenceProfile, true
+}
+
+// HasInferenceProfile returns a boolean if a field has been set.
+func (o *ProcessDefinitionBody) HasInferenceProfile() bool {
+	if o != nil && !IsNil(o.InferenceProfile) {
+		return true
+	}
+
+	return false
+}
+
+// SetInferenceProfile gets a reference to the given string and assigns it to the InferenceProfile field.
+func (o *ProcessDefinitionBody) SetInferenceProfile(v string) {
+	o.InferenceProfile = &v
+}
+
+// GetEnvironment returns the Environment field value if set, zero value otherwise.
+func (o *ProcessDefinitionBody) GetEnvironment() string {
+	if o == nil || IsNil(o.Environment) {
+		var ret string
+		return ret
+	}
+	return *o.Environment
+}
+
+// GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessDefinitionBody) GetEnvironmentOk() (*string, bool) {
+	if o == nil || IsNil(o.Environment) {
+		return nil, false
+	}
+	return o.Environment, true
+}
+
+// HasEnvironment returns a boolean if a field has been set.
+func (o *ProcessDefinitionBody) HasEnvironment() bool {
+	if o != nil && !IsNil(o.Environment) {
+		return true
+	}
+
+	return false
+}
+
+// SetEnvironment gets a reference to the given string and assigns it to the Environment field.
+func (o *ProcessDefinitionBody) SetEnvironment(v string) {
+	o.Environment = &v
+}
+
 // GetModel returns the Model field value if set, zero value otherwise.
 func (o *ProcessDefinitionBody) GetModel() string {
 	if o == nil || IsNil(o.Model) {
@@ -189,6 +260,38 @@ func (o *ProcessDefinitionBody) HasModel() bool {
 // SetModel gets a reference to the given string and assigns it to the Model field.
 func (o *ProcessDefinitionBody) SetModel(v string) {
 	o.Model = &v
+}
+
+// GetModelOptions returns the ModelOptions field value if set, zero value otherwise.
+func (o *ProcessDefinitionBody) GetModelOptions() ModelOptions {
+	if o == nil || IsNil(o.ModelOptions) {
+		var ret ModelOptions
+		return ret
+	}
+	return *o.ModelOptions
+}
+
+// GetModelOptionsOk returns a tuple with the ModelOptions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProcessDefinitionBody) GetModelOptionsOk() (*ModelOptions, bool) {
+	if o == nil || IsNil(o.ModelOptions) {
+		return nil, false
+	}
+	return o.ModelOptions, true
+}
+
+// HasModelOptions returns a boolean if a field has been set.
+func (o *ProcessDefinitionBody) HasModelOptions() bool {
+	if o != nil && !IsNil(o.ModelOptions) {
+		return true
+	}
+
+	return false
+}
+
+// SetModelOptions gets a reference to the given ModelOptions and assigns it to the ModelOptions field.
+func (o *ProcessDefinitionBody) SetModelOptions(v ModelOptions) {
+	o.ModelOptions = &v
 }
 
 // GetResources returns the Resources field value if set, zero value otherwise.
@@ -319,8 +422,17 @@ func (o ProcessDefinitionBody) ToMap() (map[string]interface{}, error) {
 		toSerialize["description"] = o.Description
 	}
 	toSerialize["initial"] = o.Initial
+	if !IsNil(o.InferenceProfile) {
+		toSerialize["inference_profile"] = o.InferenceProfile
+	}
+	if !IsNil(o.Environment) {
+		toSerialize["environment"] = o.Environment
+	}
 	if !IsNil(o.Model) {
 		toSerialize["model"] = o.Model
+	}
+	if !IsNil(o.ModelOptions) {
+		toSerialize["model_options"] = o.ModelOptions
 	}
 	if !IsNil(o.Resources) {
 		toSerialize["resources"] = o.Resources

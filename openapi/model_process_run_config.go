@@ -19,12 +19,13 @@ var _ MappedNullable = &ProcessRunConfig{}
 
 // ProcessRunConfig struct for ProcessRunConfig
 type ProcessRunConfig struct {
-	// Run-level inference profile ID for process LLM nodes and the supervisor. Explicit model settings retain precedence.
+	// Run-level inference profile ID for process LLM nodes and the supervisor. Do not combine with `environment`, `model` or `model_options`. A node selection takes precedence; this run selection takes precedence over the process definition.
 	InferenceProfile NullableString `json:"inference_profile,omitempty"`
-	// Execution environment id used by Process LLM nodes and the supervisor.
+	// Run-level environment id for process LLM nodes and the supervisor, set with `model` or alone. A node selection takes precedence; this run selection takes precedence over the process definition.
 	Environment *string `json:"environment,omitempty"`
-	Model       *string `json:"model,omitempty"`
-	// Validated model options applied to Process LLM nodes and the supervisor.
+	// Run-level model id, in `environment`.
+	Model *string `json:"model,omitempty"`
+	// Run-level model options for `environment` and `model`.
 	ModelOptions *ModelOptions `json:"model_options,omitempty"`
 	// Free-form message from the user when starting a run. Passed to the orchestrator LLM in supervised mode; stored on the run regardless so programmatic runs retain the intent that triggered them.
 	UserMessage *string `json:"user_message,omitempty"`
