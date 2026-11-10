@@ -1460,7 +1460,7 @@ func (r ApiForkInteractionRequest) Execute() (*Interaction, *http.Response, erro
 /*
 ForkInteraction Fork an interaction
 
-Creates a draft copy of an interaction, optionally for another accessible project and with prompt templates forked alongside it. Without `newName`, a fork into another project keeps the source name; otherwise, or when that endpoint is taken, it gets the first of `<name> (fork)`, `<name> (fork 2)`, ... whose endpoint is free in the target project.
+Creates a draft copy of an interaction, optionally for another accessible project and with prompt templates forked alongside it. Without `newName`, a fork into another project keeps the source name; otherwise, or when that endpoint is taken, it gets the first of `<name> (fork)`, `<name> (fork 2)`, ... whose endpoint is free in the target project. A copy keeps its environment and model when the target project can use that environment. Otherwise it keeps the model in another environment of the target project that enables it, or takes the target project's default model: its agent default for an agent, then its base default. A copy into another project gets the environment, model and options of its source's inference profile, because profiles belong to their project.
 
 **Required permissions:** `interaction:write`
 
