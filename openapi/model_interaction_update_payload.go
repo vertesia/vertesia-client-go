@@ -12,7 +12,6 @@ package openapi
 
 import (
 	"encoding/json"
-	"time"
 )
 
 // checks if the InteractionUpdatePayload type satisfies the MappedNullable interface at compile time
@@ -22,15 +21,11 @@ var _ MappedNullable = &InteractionUpdatePayload{}
 type InteractionUpdatePayload struct {
 	// Edit revision returned by the last read. Stale revisions are rejected with HTTP 409. Omit for legacy last-write-wins behavior.
 	ExpectedEditRevision *int32                          `json:"expected_edit_revision,omitempty"`
-	Status               *InteractionStatus              `json:"status,omitempty"`
-	Parent               *string                         `json:"parent,omitempty"`
 	Visibility           *InteractionVisibility          `json:"visibility,omitempty"`
-	Version              *float32                        `json:"version,omitempty"`
 	TestData             map[string]interface{}          `json:"test_data,omitempty"`
 	InteractionSchema    *InteractionResultSchema        `json:"interaction_schema,omitempty"`
 	CachePolicy          *CachePolicy                    `json:"cache_policy,omitempty"`
 	Prompts              []InteractionPromptSegmentInput `json:"prompts,omitempty"`
-	LastPublishedAt      *time.Time                      `json:"last_published_at,omitempty"`
 	Name                 *string                         `json:"name,omitempty"`
 	Endpoint             *string                         `json:"endpoint,omitempty"`
 	Description          *string                         `json:"description,omitempty"`
@@ -98,70 +93,6 @@ func (o *InteractionUpdatePayload) SetExpectedEditRevision(v int32) {
 	o.ExpectedEditRevision = &v
 }
 
-// GetStatus returns the Status field value if set, zero value otherwise.
-func (o *InteractionUpdatePayload) GetStatus() InteractionStatus {
-	if o == nil || IsNil(o.Status) {
-		var ret InteractionStatus
-		return ret
-	}
-	return *o.Status
-}
-
-// GetStatusOk returns a tuple with the Status field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *InteractionUpdatePayload) GetStatusOk() (*InteractionStatus, bool) {
-	if o == nil || IsNil(o.Status) {
-		return nil, false
-	}
-	return o.Status, true
-}
-
-// HasStatus returns a boolean if a field has been set.
-func (o *InteractionUpdatePayload) HasStatus() bool {
-	if o != nil && !IsNil(o.Status) {
-		return true
-	}
-
-	return false
-}
-
-// SetStatus gets a reference to the given InteractionStatus and assigns it to the Status field.
-func (o *InteractionUpdatePayload) SetStatus(v InteractionStatus) {
-	o.Status = &v
-}
-
-// GetParent returns the Parent field value if set, zero value otherwise.
-func (o *InteractionUpdatePayload) GetParent() string {
-	if o == nil || IsNil(o.Parent) {
-		var ret string
-		return ret
-	}
-	return *o.Parent
-}
-
-// GetParentOk returns a tuple with the Parent field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *InteractionUpdatePayload) GetParentOk() (*string, bool) {
-	if o == nil || IsNil(o.Parent) {
-		return nil, false
-	}
-	return o.Parent, true
-}
-
-// HasParent returns a boolean if a field has been set.
-func (o *InteractionUpdatePayload) HasParent() bool {
-	if o != nil && !IsNil(o.Parent) {
-		return true
-	}
-
-	return false
-}
-
-// SetParent gets a reference to the given string and assigns it to the Parent field.
-func (o *InteractionUpdatePayload) SetParent(v string) {
-	o.Parent = &v
-}
-
 // GetVisibility returns the Visibility field value if set, zero value otherwise.
 func (o *InteractionUpdatePayload) GetVisibility() InteractionVisibility {
 	if o == nil || IsNil(o.Visibility) {
@@ -192,38 +123,6 @@ func (o *InteractionUpdatePayload) HasVisibility() bool {
 // SetVisibility gets a reference to the given InteractionVisibility and assigns it to the Visibility field.
 func (o *InteractionUpdatePayload) SetVisibility(v InteractionVisibility) {
 	o.Visibility = &v
-}
-
-// GetVersion returns the Version field value if set, zero value otherwise.
-func (o *InteractionUpdatePayload) GetVersion() float32 {
-	if o == nil || IsNil(o.Version) {
-		var ret float32
-		return ret
-	}
-	return *o.Version
-}
-
-// GetVersionOk returns a tuple with the Version field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *InteractionUpdatePayload) GetVersionOk() (*float32, bool) {
-	if o == nil || IsNil(o.Version) {
-		return nil, false
-	}
-	return o.Version, true
-}
-
-// HasVersion returns a boolean if a field has been set.
-func (o *InteractionUpdatePayload) HasVersion() bool {
-	if o != nil && !IsNil(o.Version) {
-		return true
-	}
-
-	return false
-}
-
-// SetVersion gets a reference to the given float32 and assigns it to the Version field.
-func (o *InteractionUpdatePayload) SetVersion(v float32) {
-	o.Version = &v
 }
 
 // GetTestData returns the TestData field value if set, zero value otherwise.
@@ -352,38 +251,6 @@ func (o *InteractionUpdatePayload) HasPrompts() bool {
 // SetPrompts gets a reference to the given []InteractionPromptSegmentInput and assigns it to the Prompts field.
 func (o *InteractionUpdatePayload) SetPrompts(v []InteractionPromptSegmentInput) {
 	o.Prompts = v
-}
-
-// GetLastPublishedAt returns the LastPublishedAt field value if set, zero value otherwise.
-func (o *InteractionUpdatePayload) GetLastPublishedAt() time.Time {
-	if o == nil || IsNil(o.LastPublishedAt) {
-		var ret time.Time
-		return ret
-	}
-	return *o.LastPublishedAt
-}
-
-// GetLastPublishedAtOk returns a tuple with the LastPublishedAt field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *InteractionUpdatePayload) GetLastPublishedAtOk() (*time.Time, bool) {
-	if o == nil || IsNil(o.LastPublishedAt) {
-		return nil, false
-	}
-	return o.LastPublishedAt, true
-}
-
-// HasLastPublishedAt returns a boolean if a field has been set.
-func (o *InteractionUpdatePayload) HasLastPublishedAt() bool {
-	if o != nil && !IsNil(o.LastPublishedAt) {
-		return true
-	}
-
-	return false
-}
-
-// SetLastPublishedAt gets a reference to the given time.Time and assigns it to the LastPublishedAt field.
-func (o *InteractionUpdatePayload) SetLastPublishedAt(v time.Time) {
-	o.LastPublishedAt = &v
 }
 
 // GetName returns the Name field value if set, zero value otherwise.
@@ -840,17 +707,8 @@ func (o InteractionUpdatePayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.ExpectedEditRevision) {
 		toSerialize["expected_edit_revision"] = o.ExpectedEditRevision
 	}
-	if !IsNil(o.Status) {
-		toSerialize["status"] = o.Status
-	}
-	if !IsNil(o.Parent) {
-		toSerialize["parent"] = o.Parent
-	}
 	if !IsNil(o.Visibility) {
 		toSerialize["visibility"] = o.Visibility
-	}
-	if !IsNil(o.Version) {
-		toSerialize["version"] = o.Version
 	}
 	if !IsNil(o.TestData) {
 		toSerialize["test_data"] = o.TestData
@@ -863,9 +721,6 @@ func (o InteractionUpdatePayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Prompts) {
 		toSerialize["prompts"] = o.Prompts
-	}
-	if !IsNil(o.LastPublishedAt) {
-		toSerialize["last_published_at"] = o.LastPublishedAt
 	}
 	if !IsNil(o.Name) {
 		toSerialize["name"] = o.Name

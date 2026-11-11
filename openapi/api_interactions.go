@@ -5860,7 +5860,7 @@ func (r ApiUpdateInteractionRequest) Execute() (*Interaction, *http.Response, er
 /*
 UpdateInteraction Update an interaction
 
-Updates mutable fields on a draft interaction, such as prompts, model configuration, tags, schemas, and agent runner options.
+Updates mutable fields on a draft interaction, such as prompts, model configuration, tags, schemas, and agent runner options. A published or archived version accepts only `description` and `tags`, and its tags cannot gain or lose `agent`, `tool` or `skill`: its behaviour is fixed once published, so publish a new version from the draft instead.
 
 **Required permissions:** `interaction:write`
 

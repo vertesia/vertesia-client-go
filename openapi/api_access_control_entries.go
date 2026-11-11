@@ -47,7 +47,7 @@ func (r ApiCreateAccessControlEntryRequest) Execute() (*AccessControlEntry, *htt
 /*
 CreateAccessControlEntry Create an access control entry
 
-Creates a new access control entry for an account, project, or application resource.
+Creates an access control entry for an account, project, or application resource. If the principal already has an entry on that resource, it is replaced, including its role and expiry. Without `expires_at` the entry does not expire, even if the one it replaces did; an empty string means the same. To change only some fields of an existing entry, use `PUT /iam/aces/{aceId}`.
 
 **Required permissions:** Any of `account:admin`, `account:membership:manage`
 
