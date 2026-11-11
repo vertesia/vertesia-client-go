@@ -663,7 +663,7 @@ func (r ApiListUserGroupsRequest) Execute() ([]UserGroup, *http.Response, error)
 /*
 ListUserGroups List user groups
 
-Lists user groups in the current account. Pass `project` to return only groups usable in that project (org-wide groups plus groups restricted to it).
+Lists user groups in the current account. Pass `project` to return only groups usable in that project (org-wide groups plus groups restricted to it). A caller whose `account:read` or `account:group:read` comes from a project role only gets the groups usable in its selected project.
 
 **Required permissions:** Any of `account:read`, `account:group:read`
 
