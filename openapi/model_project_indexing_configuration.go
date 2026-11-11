@@ -21,9 +21,9 @@ var _ MappedNullable = &ProjectIndexingConfiguration{}
 type ProjectIndexingConfiguration struct {
 	// Enable indexing for content objects in this project. When enabled, content changes trigger indexing workflows. Defaults to true - indexing is always on when ES infrastructure is available.
 	Enabled *bool `json:"enabled,omitempty"`
-	// Search tier for this project. standard uses the regional hosted Elasticsearch deployment. performance uses the regional serverless Elasticsearch project. Defaults to standard when omitted.
+	// Search tier for this project. standard uses the region's default Elasticsearch backend. performance uses the regional serverless Elasticsearch project. Defaults to standard when omitted.
 	SearchTier *ProjectSearchTier `json:"search_tier,omitempty"`
-	// Elasticsearch backend override for this project. Prefer search_tier for project configuration unless an explicit backend override is needed.
+	// Elasticsearch backend override for this project. serverless moves the project to the regional serverless Elasticsearch project; hosted is ignored and the project keeps the region's default backend. Prefer search_tier for project configuration unless an explicit backend override is needed.
 	Backend *ElasticsearchBackend `json:"backend,omitempty"`
 	// Explicit mappings for selected content-object property paths.  Keys are dot-separated paths relative to `properties`, for example `order_total` or `customer.account_number`. Unlisted fields are mapped dynamically from their JSON values. Changing this value requires a full reindex.
 	PropertyMappings map[string]ProjectSearchPropertyMapping `json:"property_mappings,omitempty"`
