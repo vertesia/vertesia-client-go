@@ -634,7 +634,7 @@ func (r ApiListApiKeysRequest) Execute() ([]ApiKey, *http.Response, error) {
 /*
 ListApiKeys List API keys
 
-Lists API keys for the current project or, for account administrators, across accessible projects in the account.
+Lists API keys for the current project or, for account administrators, across all projects in the account.
 
 **Required permissions:** `api_key:read`
 
