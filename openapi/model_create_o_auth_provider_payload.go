@@ -39,6 +39,8 @@ type CreateOAuthProviderPayload struct {
 	DefaultScopes      []string `json:"default_scopes,omitempty"`
 	UsePkce            *bool    `json:"use_pkce,omitempty"`
 	RevocationEndpoint *string  `json:"revocation_endpoint,omitempty"`
+	// Extra parameters added to the URL-encoded body of every client_credentials token request for this provider, after the standard ones (e.g. Box's box_subject_type and box_subject_id). Only used for the client_credentials grant. At most 10 entries; keys match ^[A-Za-z][A-Za-z0-9_.-]{0,63}$; values are at most 512 characters; grant_type, client_id, client_secret, scope, client_assertion and client_assertion_type are reserved. Not secret: returned as stored. On update, an empty object clears them.
+	TokenParams map[string]string `json:"token_params,omitempty"`
 }
 
 type _CreateOAuthProviderPayload CreateOAuthProviderPayload
@@ -487,6 +489,38 @@ func (o *CreateOAuthProviderPayload) SetRevocationEndpoint(v string) {
 	o.RevocationEndpoint = &v
 }
 
+// GetTokenParams returns the TokenParams field value if set, zero value otherwise.
+func (o *CreateOAuthProviderPayload) GetTokenParams() map[string]string {
+	if o == nil || IsNil(o.TokenParams) {
+		var ret map[string]string
+		return ret
+	}
+	return o.TokenParams
+}
+
+// GetTokenParamsOk returns a tuple with the TokenParams field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateOAuthProviderPayload) GetTokenParamsOk() (map[string]string, bool) {
+	if o == nil || IsNil(o.TokenParams) {
+		return map[string]string{}, false
+	}
+	return o.TokenParams, true
+}
+
+// HasTokenParams returns a boolean if a field has been set.
+func (o *CreateOAuthProviderPayload) HasTokenParams() bool {
+	if o != nil && !IsNil(o.TokenParams) {
+		return true
+	}
+
+	return false
+}
+
+// SetTokenParams gets a reference to the given map[string]string and assigns it to the TokenParams field.
+func (o *CreateOAuthProviderPayload) SetTokenParams(v map[string]string) {
+	o.TokenParams = v
+}
+
 func (o CreateOAuthProviderPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -532,6 +566,9 @@ func (o CreateOAuthProviderPayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.RevocationEndpoint) {
 		toSerialize["revocation_endpoint"] = o.RevocationEndpoint
+	}
+	if !IsNil(o.TokenParams) {
+		toSerialize["token_params"] = o.TokenParams
 	}
 	return toSerialize, nil
 }

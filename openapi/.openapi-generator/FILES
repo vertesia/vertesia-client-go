@@ -10,6 +10,7 @@ api_collections.go
 api_commands.go
 api_content_object_types.go
 api_content_query.go
+api_content_sources.go
 api_costs.go
 api_data.go
 api_default.go
@@ -275,6 +276,7 @@ model_bedrock_mistral_options.go
 model_bedrock_nova_options.go
 model_bedrock_palmyra_options.go
 model_billing_method.go
+model_box_content_source.go
 model_branch_definition.go
 model_branch_join_policy.go
 model_branch_node_branch_definition.go
@@ -371,6 +373,13 @@ model_content_query_result.go
 model_content_query_result_columns_inner.go
 model_content_query_result_hits_inner.go
 model_content_source.go
+model_content_source_report.go
+model_content_source_report_action.go
+model_content_source_report_entry.go
+model_content_source_status.go
+model_content_source_sync_counts.go
+model_content_source_sync_round.go
+model_content_source_sync_settings.go
 model_content_type_editing_policy.go
 model_content_type_extraction_grounding_policy.go
 model_content_type_extraction_grounding_review_policy.go
@@ -411,10 +420,12 @@ model_create_api_key_payload.go
 model_create_app_repo_branch_request.go
 model_create_app_version_launch_request.go
 model_create_app_version_launch_response.go
+model_create_box_content_source_payload.go
 model_create_collection_payload.go
 model_create_content_object_payload.go
 model_create_content_object_payload_tokens.go
 model_create_content_object_type_payload.go
+model_create_content_source_payload.go
 model_create_dashboard_payload.go
 model_create_dashboard_snapshot_payload.go
 model_create_data_store_payload.go
@@ -432,6 +443,7 @@ model_create_process_run_with_definition_payload.go
 model_create_process_test_suite_payload.go
 model_create_run_payload.go
 model_create_secret_request.go
+model_create_share_point_content_source_payload.go
 model_create_snapshot_payload.go
 model_create_table_payload.go
 model_create_tables_payload.go
@@ -612,6 +624,7 @@ model_export_dashboard_preview_payload.go
 model_export_properties_payload.go
 model_export_properties_response.go
 model_exported_prompt_template_ref.go
+model_external_content_source.go
 model_externalized_tool_input_ref.go
 model_extract_app_version_git_ref_type_branch_tag_commit.go
 model_facet_spec.go
@@ -1048,6 +1061,7 @@ model_set_file_metadata_payload.go
 model_set_mcp_api_key_request.go
 model_set_object_embeddings_response.go
 model_set_object_text_payload.go
+model_share_point_content_source.go
 model_signal_agent_response.go
 model_signal_event_properties.go
 model_signal_event_properties_sender.go
@@ -1092,6 +1106,7 @@ model_supported_integrations_magic_pdf.go
 model_supported_integrations_resend.go
 model_supported_integrations_serper.go
 model_supported_providers.go
+model_sync_content_source_payload.go
 model_system_defaults.go
 model_system_role_definition.go
 model_system_roles.go
@@ -1146,6 +1161,7 @@ model_update_app_payload.go
 model_update_collection_payload.go
 model_update_content_object_payload.go
 model_update_content_object_type_payload.go
+model_update_content_source_payload.go
 model_update_custom_role_payload.go
 model_update_dashboard_payload.go
 model_update_email_route_request.go
