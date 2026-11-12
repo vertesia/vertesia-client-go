@@ -72,6 +72,8 @@ type APIClient struct {
 
 	ContentQueryAPI *ContentQueryAPIService
 
+	ContentSourcesAPI *ContentSourcesAPIService
+
 	CostsAPI *CostsAPIService
 
 	DataAPI *DataAPIService
@@ -176,6 +178,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.CommandsAPI = (*CommandsAPIService)(&c.common)
 	c.ContentObjectTypesAPI = (*ContentObjectTypesAPIService)(&c.common)
 	c.ContentQueryAPI = (*ContentQueryAPIService)(&c.common)
+	c.ContentSourcesAPI = (*ContentSourcesAPIService)(&c.common)
 	c.CostsAPI = (*CostsAPIService)(&c.common)
 	c.DataAPI = (*DataAPIService)(&c.common)
 	c.DefaultAPI = (*DefaultAPIService)(&c.common)

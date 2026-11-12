@@ -40,7 +40,7 @@ type CreateContentObjectPayload struct {
 	Location *string `json:"location,omitempty"`
 	// Object status. - created: the object was created and is being processed - processing: the object is being processed - completed: the object was processed and is ready to use - failed: the object processing failed - archived: the object was archived and is no longer available
 	Status *ContentObjectStatus `json:"status,omitempty"`
-	// Content source information. A non-empty `source` is a `gs://`, `s3://` or `az://` URI of the file (a bucket then a non-empty object path), and `type`, its MIME type, is then required.
+	// Content source information. A non-empty `source` is a `gs://`, `s3://` or `az://` URI of the file (a bucket then a non-empty object path), or a `sharepoint://` or `box://` `<source_id>/<item_id>` URI of a file in a registered content source, and `type`, its MIME type, is then required.
 	Content *ContentSource `json:"content,omitempty"`
 	// External identifier for integration with other systems
 	ExternalId *string `json:"external_id,omitempty"`

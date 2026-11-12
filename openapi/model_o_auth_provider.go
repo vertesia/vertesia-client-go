@@ -42,9 +42,11 @@ type OAuthProvider struct {
 	UsePkce bool `json:"use_pkce"`
 	// Optional OAuth 2.0 revocation endpoint URL.
 	RevocationEndpoint *string `json:"revocation_endpoint,omitempty"`
-	CreatedAt          string  `json:"created_at"`
-	UpdatedAt          string  `json:"updated_at"`
-	Id                 string  `json:"id"`
+	// Extra parameters added to the URL-encoded body of every client_credentials token request for this provider, after the standard ones (e.g. Box's box_subject_type and box_subject_id). Only used for the client_credentials grant. At most 10 entries; keys match ^[A-Za-z][A-Za-z0-9_.-]{0,63}$; values are at most 512 characters; grant_type, client_id, client_secret, scope, client_assertion and client_assertion_type are reserved. Not secret: returned as stored. On update, an empty object clears them.
+	TokenParams map[string]string `json:"token_params,omitempty"`
+	CreatedAt   string            `json:"created_at"`
+	UpdatedAt   string            `json:"updated_at"`
+	Id          string            `json:"id"`
 }
 
 type _OAuthProvider OAuthProvider
@@ -386,6 +388,38 @@ func (o *OAuthProvider) SetRevocationEndpoint(v string) {
 	o.RevocationEndpoint = &v
 }
 
+// GetTokenParams returns the TokenParams field value if set, zero value otherwise.
+func (o *OAuthProvider) GetTokenParams() map[string]string {
+	if o == nil || IsNil(o.TokenParams) {
+		var ret map[string]string
+		return ret
+	}
+	return o.TokenParams
+}
+
+// GetTokenParamsOk returns a tuple with the TokenParams field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OAuthProvider) GetTokenParamsOk() (map[string]string, bool) {
+	if o == nil || IsNil(o.TokenParams) {
+		return map[string]string{}, false
+	}
+	return o.TokenParams, true
+}
+
+// HasTokenParams returns a boolean if a field has been set.
+func (o *OAuthProvider) HasTokenParams() bool {
+	if o != nil && !IsNil(o.TokenParams) {
+		return true
+	}
+
+	return false
+}
+
+// SetTokenParams gets a reference to the given map[string]string and assigns it to the TokenParams field.
+func (o *OAuthProvider) SetTokenParams(v map[string]string) {
+	o.TokenParams = v
+}
+
 // GetCreatedAt returns the CreatedAt field value
 func (o *OAuthProvider) GetCreatedAt() string {
 	if o == nil {
@@ -490,6 +524,9 @@ func (o OAuthProvider) ToMap() (map[string]interface{}, error) {
 	toSerialize["use_pkce"] = o.UsePkce
 	if !IsNil(o.RevocationEndpoint) {
 		toSerialize["revocation_endpoint"] = o.RevocationEndpoint
+	}
+	if !IsNil(o.TokenParams) {
+		toSerialize["token_params"] = o.TokenParams
 	}
 	toSerialize["created_at"] = o.CreatedAt
 	toSerialize["updated_at"] = o.UpdatedAt
