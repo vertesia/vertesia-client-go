@@ -17,7 +17,7 @@ import (
 // checks if the UpdateOAuthProviderPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &UpdateOAuthProviderPayload{}
 
-// UpdateOAuthProviderPayload Payload for updating an OAuth Provider. All fields are optional — only provided fields are updated. To clear the client_secret, set it to an empty string.
+// UpdateOAuthProviderPayload Payload for updating an OAuth Provider. All fields are optional — only provided fields are updated. To clear the client_secret, private_key or certificate, set it to an empty string.
 type UpdateOAuthProviderPayload struct {
 	Name                  *string `json:"name,omitempty" validate:"regexp=^[a-z0-9][a-z0-9-]*[a-z0-9]$"`
 	DisplayName           *string `json:"display_name,omitempty"`
@@ -26,7 +26,15 @@ type UpdateOAuthProviderPayload struct {
 	TokenEndpoint         *string `json:"token_endpoint,omitempty"`
 	ClientId              *string `json:"client_id,omitempty"`
 	// Optional client secret for confidential clients. Will be encrypted at rest and never returned in API responses.
-	ClientSecret       *string  `json:"client_secret,omitempty"`
+	ClientSecret *string `json:"client_secret,omitempty"`
+	// How Vertesia authenticates to the token endpoint (RFC 7591 names). - 'client_secret_post': the client_secret in the request body (default). - 'private_key_jwt': a JWT client assertion signed with the private key (RFC 7523). client_credentials grant only.
+	TokenEndpointAuthMethod *string `json:"token_endpoint_auth_method,omitempty"`
+	// The JWS algorithm that signs the client assertion of private_key_jwt. Defaults to RS256 for an RSA key and ES256 for a P-256 key. Microsoft Entra ID recommends PS256.
+	TokenEndpointAuthSigningAlg *string `json:"token_endpoint_auth_signing_alg,omitempty"`
+	// PEM private key (PKCS#8 or PKCS#1) that signs the client assertion of private_key_jwt: RSA of 2048 bits or more, or EC P-256. Encrypted at rest and never returned in API responses.
+	PrivateKey *string `json:"private_key,omitempty"`
+	// PEM X.509 certificate of the private key, as uploaded to the provider (for example a Microsoft Entra app registration). Its public key must match the private key.
+	Certificate        *string  `json:"certificate,omitempty"`
 	DefaultScopes      []string `json:"default_scopes,omitempty"`
 	UsePkce            *bool    `json:"use_pkce,omitempty"`
 	RevocationEndpoint *string  `json:"revocation_endpoint,omitempty"`
@@ -273,6 +281,134 @@ func (o *UpdateOAuthProviderPayload) SetClientSecret(v string) {
 	o.ClientSecret = &v
 }
 
+// GetTokenEndpointAuthMethod returns the TokenEndpointAuthMethod field value if set, zero value otherwise.
+func (o *UpdateOAuthProviderPayload) GetTokenEndpointAuthMethod() string {
+	if o == nil || IsNil(o.TokenEndpointAuthMethod) {
+		var ret string
+		return ret
+	}
+	return *o.TokenEndpointAuthMethod
+}
+
+// GetTokenEndpointAuthMethodOk returns a tuple with the TokenEndpointAuthMethod field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateOAuthProviderPayload) GetTokenEndpointAuthMethodOk() (*string, bool) {
+	if o == nil || IsNil(o.TokenEndpointAuthMethod) {
+		return nil, false
+	}
+	return o.TokenEndpointAuthMethod, true
+}
+
+// HasTokenEndpointAuthMethod returns a boolean if a field has been set.
+func (o *UpdateOAuthProviderPayload) HasTokenEndpointAuthMethod() bool {
+	if o != nil && !IsNil(o.TokenEndpointAuthMethod) {
+		return true
+	}
+
+	return false
+}
+
+// SetTokenEndpointAuthMethod gets a reference to the given string and assigns it to the TokenEndpointAuthMethod field.
+func (o *UpdateOAuthProviderPayload) SetTokenEndpointAuthMethod(v string) {
+	o.TokenEndpointAuthMethod = &v
+}
+
+// GetTokenEndpointAuthSigningAlg returns the TokenEndpointAuthSigningAlg field value if set, zero value otherwise.
+func (o *UpdateOAuthProviderPayload) GetTokenEndpointAuthSigningAlg() string {
+	if o == nil || IsNil(o.TokenEndpointAuthSigningAlg) {
+		var ret string
+		return ret
+	}
+	return *o.TokenEndpointAuthSigningAlg
+}
+
+// GetTokenEndpointAuthSigningAlgOk returns a tuple with the TokenEndpointAuthSigningAlg field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateOAuthProviderPayload) GetTokenEndpointAuthSigningAlgOk() (*string, bool) {
+	if o == nil || IsNil(o.TokenEndpointAuthSigningAlg) {
+		return nil, false
+	}
+	return o.TokenEndpointAuthSigningAlg, true
+}
+
+// HasTokenEndpointAuthSigningAlg returns a boolean if a field has been set.
+func (o *UpdateOAuthProviderPayload) HasTokenEndpointAuthSigningAlg() bool {
+	if o != nil && !IsNil(o.TokenEndpointAuthSigningAlg) {
+		return true
+	}
+
+	return false
+}
+
+// SetTokenEndpointAuthSigningAlg gets a reference to the given string and assigns it to the TokenEndpointAuthSigningAlg field.
+func (o *UpdateOAuthProviderPayload) SetTokenEndpointAuthSigningAlg(v string) {
+	o.TokenEndpointAuthSigningAlg = &v
+}
+
+// GetPrivateKey returns the PrivateKey field value if set, zero value otherwise.
+func (o *UpdateOAuthProviderPayload) GetPrivateKey() string {
+	if o == nil || IsNil(o.PrivateKey) {
+		var ret string
+		return ret
+	}
+	return *o.PrivateKey
+}
+
+// GetPrivateKeyOk returns a tuple with the PrivateKey field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateOAuthProviderPayload) GetPrivateKeyOk() (*string, bool) {
+	if o == nil || IsNil(o.PrivateKey) {
+		return nil, false
+	}
+	return o.PrivateKey, true
+}
+
+// HasPrivateKey returns a boolean if a field has been set.
+func (o *UpdateOAuthProviderPayload) HasPrivateKey() bool {
+	if o != nil && !IsNil(o.PrivateKey) {
+		return true
+	}
+
+	return false
+}
+
+// SetPrivateKey gets a reference to the given string and assigns it to the PrivateKey field.
+func (o *UpdateOAuthProviderPayload) SetPrivateKey(v string) {
+	o.PrivateKey = &v
+}
+
+// GetCertificate returns the Certificate field value if set, zero value otherwise.
+func (o *UpdateOAuthProviderPayload) GetCertificate() string {
+	if o == nil || IsNil(o.Certificate) {
+		var ret string
+		return ret
+	}
+	return *o.Certificate
+}
+
+// GetCertificateOk returns a tuple with the Certificate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateOAuthProviderPayload) GetCertificateOk() (*string, bool) {
+	if o == nil || IsNil(o.Certificate) {
+		return nil, false
+	}
+	return o.Certificate, true
+}
+
+// HasCertificate returns a boolean if a field has been set.
+func (o *UpdateOAuthProviderPayload) HasCertificate() bool {
+	if o != nil && !IsNil(o.Certificate) {
+		return true
+	}
+
+	return false
+}
+
+// SetCertificate gets a reference to the given string and assigns it to the Certificate field.
+func (o *UpdateOAuthProviderPayload) SetCertificate(v string) {
+	o.Certificate = &v
+}
+
 // GetDefaultScopes returns the DefaultScopes field value if set, zero value otherwise.
 func (o *UpdateOAuthProviderPayload) GetDefaultScopes() []string {
 	if o == nil || IsNil(o.DefaultScopes) {
@@ -399,6 +535,18 @@ func (o UpdateOAuthProviderPayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ClientSecret) {
 		toSerialize["client_secret"] = o.ClientSecret
+	}
+	if !IsNil(o.TokenEndpointAuthMethod) {
+		toSerialize["token_endpoint_auth_method"] = o.TokenEndpointAuthMethod
+	}
+	if !IsNil(o.TokenEndpointAuthSigningAlg) {
+		toSerialize["token_endpoint_auth_signing_alg"] = o.TokenEndpointAuthSigningAlg
+	}
+	if !IsNil(o.PrivateKey) {
+		toSerialize["private_key"] = o.PrivateKey
+	}
+	if !IsNil(o.Certificate) {
+		toSerialize["certificate"] = o.Certificate
 	}
 	if !IsNil(o.DefaultScopes) {
 		toSerialize["default_scopes"] = o.DefaultScopes
