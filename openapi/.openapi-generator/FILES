@@ -836,6 +836,7 @@ model_o_auth_provider_access_token_response.go
 model_o_auth_provider_auth_status.go
 model_o_auth_provider_authorize_response.go
 model_o_auth_provider_exchange_payload.go
+model_o_auth_provider_token_request.go
 model_o_auth_registration_source.go
 model_o_auth_response_type.go
 model_o_auth_token_endpoint_auth_method.go

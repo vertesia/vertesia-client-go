@@ -46,6 +46,8 @@ type OAuthProvider struct {
 	Certificate *string `json:"certificate,omitempty"`
 	// Default scopes to request during authorization.
 	DefaultScopes []string `json:"default_scopes,omitempty"`
+	// Scopes a token request may ask for instead of default_scopes (POST /oauth-providers/{id}/token with a scope), in addition to default_scopes, which are always allowed. Only used for the client_credentials grant. Set by the provider admin: a caller cannot request a scope outside this list and default_scopes. On update, an empty array clears it.
+	AllowedScopes []string `json:"allowed_scopes,omitempty"`
 	// Whether to use PKCE (Proof Key for Code Exchange) in the authorization flow. Only applies to authorization_code flow. Defaults to true.
 	UsePkce bool `json:"use_pkce"`
 	// Optional OAuth 2.0 revocation endpoint URL.
@@ -468,6 +470,38 @@ func (o *OAuthProvider) SetDefaultScopes(v []string) {
 	o.DefaultScopes = v
 }
 
+// GetAllowedScopes returns the AllowedScopes field value if set, zero value otherwise.
+func (o *OAuthProvider) GetAllowedScopes() []string {
+	if o == nil || IsNil(o.AllowedScopes) {
+		var ret []string
+		return ret
+	}
+	return o.AllowedScopes
+}
+
+// GetAllowedScopesOk returns a tuple with the AllowedScopes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OAuthProvider) GetAllowedScopesOk() ([]string, bool) {
+	if o == nil || IsNil(o.AllowedScopes) {
+		return nil, false
+	}
+	return o.AllowedScopes, true
+}
+
+// HasAllowedScopes returns a boolean if a field has been set.
+func (o *OAuthProvider) HasAllowedScopes() bool {
+	if o != nil && !IsNil(o.AllowedScopes) {
+		return true
+	}
+
+	return false
+}
+
+// SetAllowedScopes gets a reference to the given []string and assigns it to the AllowedScopes field.
+func (o *OAuthProvider) SetAllowedScopes(v []string) {
+	o.AllowedScopes = v
+}
+
 // GetUsePkce returns the UsePkce field value
 func (o *OAuthProvider) GetUsePkce() bool {
 	if o == nil {
@@ -668,6 +702,9 @@ func (o OAuthProvider) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.DefaultScopes) {
 		toSerialize["default_scopes"] = o.DefaultScopes
+	}
+	if !IsNil(o.AllowedScopes) {
+		toSerialize["allowed_scopes"] = o.AllowedScopes
 	}
 	toSerialize["use_pkce"] = o.UsePkce
 	if !IsNil(o.RevocationEndpoint) {

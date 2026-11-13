@@ -1189,15 +1189,21 @@ func (a *OAuthProvidersAPIService) GetOAuthProviderStatusExecute(r ApiGetOAuthPr
 }
 
 type ApiGetOAuthProviderTokenRequest struct {
-	ctx         context.Context
-	ApiService  *OAuthProvidersAPIService
-	id          string
-	xApiVersion *string
+	ctx                       context.Context
+	ApiService                *OAuthProvidersAPIService
+	id                        string
+	xApiVersion               *string
+	oAuthProviderTokenRequest *OAuthProviderTokenRequest
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiGetOAuthProviderTokenRequest) XApiVersion(xApiVersion string) ApiGetOAuthProviderTokenRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiGetOAuthProviderTokenRequest) OAuthProviderTokenRequest(oAuthProviderTokenRequest OAuthProviderTokenRequest) ApiGetOAuthProviderTokenRequest {
+	r.oAuthProviderTokenRequest = &oAuthProviderTokenRequest
 	return r
 }
 
@@ -1208,7 +1214,7 @@ func (r ApiGetOAuthProviderTokenRequest) Execute() (*OAuthProviderAccessTokenRes
 /*
 GetOAuthProviderToken Get an OAuth provider token
 
-Returns an access token for the configured OAuth provider.
+Returns an access token for the configured OAuth provider. A client_credentials provider can be asked for a scope other than its default_scopes, from its allowed_scopes; the token of each scope set is cached apart.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param id
@@ -1256,7 +1262,7 @@ func (a *OAuthProvidersAPIService) GetOAuthProviderTokenExecute(r ApiGetOAuthPro
 	}
 
 	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
+	localVarHTTPContentTypes := []string{"application/json"}
 
 	// set Content-Type header
 	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
@@ -1273,6 +1279,8 @@ func (a *OAuthProvidersAPIService) GetOAuthProviderTokenExecute(r ApiGetOAuthPro
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.oAuthProviderTokenRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err

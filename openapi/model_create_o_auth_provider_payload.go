@@ -35,8 +35,10 @@ type CreateOAuthProviderPayload struct {
 	// PEM private key (PKCS#8 or PKCS#1) that signs the client assertion of private_key_jwt: RSA of 2048 bits or more, or EC P-256. Encrypted at rest and never returned in API responses.
 	PrivateKey *string `json:"private_key,omitempty"`
 	// PEM X.509 certificate of the private key, as uploaded to the provider (for example a Microsoft Entra app registration). Its public key must match the private key.
-	Certificate        *string  `json:"certificate,omitempty"`
-	DefaultScopes      []string `json:"default_scopes,omitempty"`
+	Certificate   *string  `json:"certificate,omitempty"`
+	DefaultScopes []string `json:"default_scopes,omitempty"`
+	// Scopes a token request may ask for instead of default_scopes (POST /oauth-providers/{id}/token with a scope), in addition to default_scopes, which are always allowed. Only used for the client_credentials grant. Set by the provider admin: a caller cannot request a scope outside this list and default_scopes. On update, an empty array clears it.
+	AllowedScopes      []string `json:"allowed_scopes,omitempty"`
 	UsePkce            *bool    `json:"use_pkce,omitempty"`
 	RevocationEndpoint *string  `json:"revocation_endpoint,omitempty"`
 	// Extra parameters added to the URL-encoded body of every client_credentials token request for this provider, after the standard ones (e.g. Box's box_subject_type and box_subject_id). Only used for the client_credentials grant. At most 10 entries; keys match ^[A-Za-z][A-Za-z0-9_.-]{0,63}$; values are at most 512 characters; grant_type, client_id, client_secret, scope, client_assertion and client_assertion_type are reserved. Not secret: returned as stored. On update, an empty object clears them.
@@ -425,6 +427,38 @@ func (o *CreateOAuthProviderPayload) SetDefaultScopes(v []string) {
 	o.DefaultScopes = v
 }
 
+// GetAllowedScopes returns the AllowedScopes field value if set, zero value otherwise.
+func (o *CreateOAuthProviderPayload) GetAllowedScopes() []string {
+	if o == nil || IsNil(o.AllowedScopes) {
+		var ret []string
+		return ret
+	}
+	return o.AllowedScopes
+}
+
+// GetAllowedScopesOk returns a tuple with the AllowedScopes field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateOAuthProviderPayload) GetAllowedScopesOk() ([]string, bool) {
+	if o == nil || IsNil(o.AllowedScopes) {
+		return nil, false
+	}
+	return o.AllowedScopes, true
+}
+
+// HasAllowedScopes returns a boolean if a field has been set.
+func (o *CreateOAuthProviderPayload) HasAllowedScopes() bool {
+	if o != nil && !IsNil(o.AllowedScopes) {
+		return true
+	}
+
+	return false
+}
+
+// SetAllowedScopes gets a reference to the given []string and assigns it to the AllowedScopes field.
+func (o *CreateOAuthProviderPayload) SetAllowedScopes(v []string) {
+	o.AllowedScopes = v
+}
+
 // GetUsePkce returns the UsePkce field value if set, zero value otherwise.
 func (o *CreateOAuthProviderPayload) GetUsePkce() bool {
 	if o == nil || IsNil(o.UsePkce) {
@@ -560,6 +594,9 @@ func (o CreateOAuthProviderPayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.DefaultScopes) {
 		toSerialize["default_scopes"] = o.DefaultScopes
+	}
+	if !IsNil(o.AllowedScopes) {
+		toSerialize["allowed_scopes"] = o.AllowedScopes
 	}
 	if !IsNil(o.UsePkce) {
 		toSerialize["use_pkce"] = o.UsePkce
