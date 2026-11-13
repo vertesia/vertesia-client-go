@@ -28,11 +28,14 @@ type ExecutionTokenUsage struct {
 	PromptCacheWrite *float32 `json:"prompt_cache_write,omitempty"`
 	// Of `prompt_cache_write`, the tokens written with a one-hour cache lifetime, when the provider reports it. The remainder used the default (five-minute) lifetime.
 	PromptCacheWrite1h *float32 `json:"prompt_cache_write_1h,omitempty"`
-	PromptNew          *float32 `json:"prompt_new,omitempty"`
+	// Of `prompt_cache_write`, the tokens written with a 12-hour cache retention, when the provider reports it (OpenAI). The remainder used the default (30-minute) retention.
+	PromptCacheWrite12h *float32 `json:"prompt_cache_write_12h,omitempty"`
+	PromptNew           *float32 `json:"prompt_new,omitempty"`
 	// Of `result`, the tokens of generated images, when the provider reports them. Image output is priced separately from text output.
 	ResultImage *float32 `json:"result_image,omitempty"`
 	// Amount the provider reported charging for this request, in USD, when the provider returns it (e.g. OpenRouter). Absent for bring-your-own-key requests.
-	ProviderCostUsd *float32 `json:"provider_cost_usd,omitempty"`
+	ProviderCostUsd *float32   `json:"provider_cost_usd,omitempty"`
+	ToolUsage       *ToolUsage `json:"tool_usage,omitempty"`
 }
 
 // NewExecutionTokenUsage instantiates a new ExecutionTokenUsage object
@@ -244,6 +247,38 @@ func (o *ExecutionTokenUsage) SetPromptCacheWrite1h(v float32) {
 	o.PromptCacheWrite1h = &v
 }
 
+// GetPromptCacheWrite12h returns the PromptCacheWrite12h field value if set, zero value otherwise.
+func (o *ExecutionTokenUsage) GetPromptCacheWrite12h() float32 {
+	if o == nil || IsNil(o.PromptCacheWrite12h) {
+		var ret float32
+		return ret
+	}
+	return *o.PromptCacheWrite12h
+}
+
+// GetPromptCacheWrite12hOk returns a tuple with the PromptCacheWrite12h field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExecutionTokenUsage) GetPromptCacheWrite12hOk() (*float32, bool) {
+	if o == nil || IsNil(o.PromptCacheWrite12h) {
+		return nil, false
+	}
+	return o.PromptCacheWrite12h, true
+}
+
+// HasPromptCacheWrite12h returns a boolean if a field has been set.
+func (o *ExecutionTokenUsage) HasPromptCacheWrite12h() bool {
+	if o != nil && !IsNil(o.PromptCacheWrite12h) {
+		return true
+	}
+
+	return false
+}
+
+// SetPromptCacheWrite12h gets a reference to the given float32 and assigns it to the PromptCacheWrite12h field.
+func (o *ExecutionTokenUsage) SetPromptCacheWrite12h(v float32) {
+	o.PromptCacheWrite12h = &v
+}
+
 // GetPromptNew returns the PromptNew field value if set, zero value otherwise.
 func (o *ExecutionTokenUsage) GetPromptNew() float32 {
 	if o == nil || IsNil(o.PromptNew) {
@@ -340,6 +375,38 @@ func (o *ExecutionTokenUsage) SetProviderCostUsd(v float32) {
 	o.ProviderCostUsd = &v
 }
 
+// GetToolUsage returns the ToolUsage field value if set, zero value otherwise.
+func (o *ExecutionTokenUsage) GetToolUsage() ToolUsage {
+	if o == nil || IsNil(o.ToolUsage) {
+		var ret ToolUsage
+		return ret
+	}
+	return *o.ToolUsage
+}
+
+// GetToolUsageOk returns a tuple with the ToolUsage field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExecutionTokenUsage) GetToolUsageOk() (*ToolUsage, bool) {
+	if o == nil || IsNil(o.ToolUsage) {
+		return nil, false
+	}
+	return o.ToolUsage, true
+}
+
+// HasToolUsage returns a boolean if a field has been set.
+func (o *ExecutionTokenUsage) HasToolUsage() bool {
+	if o != nil && !IsNil(o.ToolUsage) {
+		return true
+	}
+
+	return false
+}
+
+// SetToolUsage gets a reference to the given ToolUsage and assigns it to the ToolUsage field.
+func (o *ExecutionTokenUsage) SetToolUsage(v ToolUsage) {
+	o.ToolUsage = &v
+}
+
 func (o ExecutionTokenUsage) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -368,6 +435,9 @@ func (o ExecutionTokenUsage) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PromptCacheWrite1h) {
 		toSerialize["prompt_cache_write_1h"] = o.PromptCacheWrite1h
 	}
+	if !IsNil(o.PromptCacheWrite12h) {
+		toSerialize["prompt_cache_write_12h"] = o.PromptCacheWrite12h
+	}
 	if !IsNil(o.PromptNew) {
 		toSerialize["prompt_new"] = o.PromptNew
 	}
@@ -376,6 +446,9 @@ func (o ExecutionTokenUsage) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ProviderCostUsd) {
 		toSerialize["provider_cost_usd"] = o.ProviderCostUsd
+	}
+	if !IsNil(o.ToolUsage) {
+		toSerialize["tool_usage"] = o.ToolUsage
 	}
 	return toSerialize, nil
 }

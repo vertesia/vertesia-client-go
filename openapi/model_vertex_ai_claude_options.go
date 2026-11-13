@@ -32,6 +32,7 @@ type VertexAIClaudeOptions struct {
 	IncludeThoughts      *bool    `json:"include_thoughts,omitempty"`
 	CacheEnabled         *bool    `json:"cache_enabled,omitempty"`
 	CacheTtl             *string  `json:"cache_ttl,omitempty"`
+	Speed                *string  `json:"speed,omitempty"`
 	NativeCompaction     *bool    `json:"native_compaction,omitempty"`
 	// AdditionalProperties preserves unknown fields across read-edit-save.
 	AdditionalProperties map[string]interface{} `json:"-"`
@@ -438,6 +439,38 @@ func (o *VertexAIClaudeOptions) SetCacheTtl(v string) {
 	o.CacheTtl = &v
 }
 
+// GetSpeed returns the Speed field value if set, zero value otherwise.
+func (o *VertexAIClaudeOptions) GetSpeed() string {
+	if o == nil || IsNil(o.Speed) {
+		var ret string
+		return ret
+	}
+	return *o.Speed
+}
+
+// GetSpeedOk returns a tuple with the Speed field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VertexAIClaudeOptions) GetSpeedOk() (*string, bool) {
+	if o == nil || IsNil(o.Speed) {
+		return nil, false
+	}
+	return o.Speed, true
+}
+
+// HasSpeed returns a boolean if a field has been set.
+func (o *VertexAIClaudeOptions) HasSpeed() bool {
+	if o != nil && !IsNil(o.Speed) {
+		return true
+	}
+
+	return false
+}
+
+// SetSpeed gets a reference to the given string and assigns it to the Speed field.
+func (o *VertexAIClaudeOptions) SetSpeed(v string) {
+	o.Speed = &v
+}
+
 // GetNativeCompaction returns the NativeCompaction field value if set, zero value otherwise.
 func (o *VertexAIClaudeOptions) GetNativeCompaction() bool {
 	if o == nil || IsNil(o.NativeCompaction) {
@@ -482,7 +515,7 @@ func (o VertexAIClaudeOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "effort", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "cache_enabled", "cache_ttl", "native_compaction"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "effort", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "cache_enabled", "cache_ttl", "speed", "native_compaction"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -522,6 +555,9 @@ func (o VertexAIClaudeOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.CacheTtl) {
 		toSerialize["cache_ttl"] = o.CacheTtl
+	}
+	if !IsNil(o.Speed) {
+		toSerialize["speed"] = o.Speed
 	}
 	if !IsNil(o.NativeCompaction) {
 		toSerialize["native_compaction"] = o.NativeCompaction
@@ -581,7 +617,7 @@ func (o *VertexAIClaudeOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "effort", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "cache_enabled", "cache_ttl", "native_compaction"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "effort", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "cache_enabled", "cache_ttl", "speed", "native_compaction"}) {
 			delete(extra, key)
 		}
 	}

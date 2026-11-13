@@ -1138,6 +1138,8 @@ model_tool_reference.go
 model_tool_result.go
 model_tool_result_meta.go
 model_tool_source.go
+model_tool_token_usage.go
+model_tool_usage.go
 model_tool_use.go
 model_tool_validation_result.go
 model_tool_validation_result_collisions_inner.go

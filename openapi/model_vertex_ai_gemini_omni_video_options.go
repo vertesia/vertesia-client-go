@@ -24,6 +24,7 @@ type VertexAIGeminiOmniVideoOptions struct {
 	AspectRatio     *string `json:"aspect_ratio,omitempty"`
 	DurationSeconds *int32  `json:"duration_seconds,omitempty"`
 	Resolution      *string `json:"resolution,omitempty"`
+	Seed            *int32  `json:"seed,omitempty"`
 	// AdditionalProperties preserves unknown fields across read-edit-save.
 	AdditionalProperties map[string]interface{} `json:"-"`
 }
@@ -205,6 +206,38 @@ func (o *VertexAIGeminiOmniVideoOptions) SetResolution(v string) {
 	o.Resolution = &v
 }
 
+// GetSeed returns the Seed field value if set, zero value otherwise.
+func (o *VertexAIGeminiOmniVideoOptions) GetSeed() int32 {
+	if o == nil || IsNil(o.Seed) {
+		var ret int32
+		return ret
+	}
+	return *o.Seed
+}
+
+// GetSeedOk returns a tuple with the Seed field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *VertexAIGeminiOmniVideoOptions) GetSeedOk() (*int32, bool) {
+	if o == nil || IsNil(o.Seed) {
+		return nil, false
+	}
+	return o.Seed, true
+}
+
+// HasSeed returns a boolean if a field has been set.
+func (o *VertexAIGeminiOmniVideoOptions) HasSeed() bool {
+	if o != nil && !IsNil(o.Seed) {
+		return true
+	}
+
+	return false
+}
+
+// SetSeed gets a reference to the given int32 and assigns it to the Seed field.
+func (o *VertexAIGeminiOmniVideoOptions) SetSeed(v int32) {
+	o.Seed = &v
+}
+
 func (o VertexAIGeminiOmniVideoOptions) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -217,7 +250,7 @@ func (o VertexAIGeminiOmniVideoOptions) ToMap() (map[string]interface{}, error) 
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "task", "aspect_ratio", "duration_seconds", "resolution"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "task", "aspect_ratio", "duration_seconds", "resolution", "seed"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -236,6 +269,9 @@ func (o VertexAIGeminiOmniVideoOptions) ToMap() (map[string]interface{}, error) 
 	}
 	if !IsNil(o.Resolution) {
 		toSerialize["resolution"] = o.Resolution
+	}
+	if !IsNil(o.Seed) {
+		toSerialize["seed"] = o.Seed
 	}
 	return toSerialize, nil
 }
@@ -292,7 +328,7 @@ func (o *VertexAIGeminiOmniVideoOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "task", "aspect_ratio", "duration_seconds", "resolution"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "task", "aspect_ratio", "duration_seconds", "resolution", "seed"}) {
 			delete(extra, key)
 		}
 	}

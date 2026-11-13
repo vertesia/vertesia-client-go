@@ -24,6 +24,7 @@ const (
 	THINKINGLEVEL_MEDIUM                     ThinkingLevel = "MEDIUM"
 	THINKINGLEVEL_LOW                        ThinkingLevel = "LOW"
 	THINKINGLEVEL_MINIMAL                    ThinkingLevel = "MINIMAL"
+	THINKINGLEVEL_XHIGH                      ThinkingLevel = "XHIGH"
 	THINKINGLEVEL_THINKING_LEVEL_UNSPECIFIED ThinkingLevel = "THINKING_LEVEL_UNSPECIFIED"
 	THINKINGLEVEL_UNKNOWN_DEFAULT_OPEN_API   ThinkingLevel = "unknown_default_open_api"
 )
@@ -34,6 +35,7 @@ var AllowedThinkingLevelEnumValues = []ThinkingLevel{
 	"MEDIUM",
 	"LOW",
 	"MINIMAL",
+	"XHIGH",
 	"THINKING_LEVEL_UNSPECIFIED",
 	"unknown_default_open_api",
 }
