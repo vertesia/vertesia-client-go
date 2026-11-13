@@ -47,12 +47,14 @@ func TestCompletionResultGenerationPatch(t *testing.T) {
 			first[model] = patched
 		}
 	}
-	tests, err := os.ReadFile("testdata/completion_result_test.go")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(filepath.Join(generated, "completion_result_test.go"), tests, 0600); err != nil {
-		t.Fatal(err)
+	for _, name := range []string{"completion_result_test.go", "forward_compat_test.go", "stripe_union_test.go"} {
+		tests, err := os.ReadFile(filepath.Join("testdata", name))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(generated, name), tests, 0600); err != nil {
+			t.Fatal(err)
+		}
 	}
 	cmd := exec.Command("go", "test", "./openapi")
 	cmd.Dir = dir

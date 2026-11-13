@@ -91,7 +91,7 @@ func TestAgentRunResponseDispatchesByRunType(t *testing.T) {
 
 	// Reuse a populated union to ensure errors also clear stale branch pointers.
 	var run AgentRunResponse
-	for _, tag := range []string{`"future_mode"`, `null`, `42`, `""`} {
+	for _, tag := range []string{`null`, `42`, `""`} {
 		if err := json.Unmarshal([]byte(strings.Replace(process, "RUN_TYPE", "supervised", 1)), &run); err != nil {
 			t.Fatal(err)
 		}
@@ -102,5 +102,10 @@ func TestAgentRunResponseDispatchesByRunType(t *testing.T) {
 		if run.GetActualInstance() != nil {
 			t.Fatal("retained a stale agent-run branch after a decoding error")
 		}
+	}
+	// A run type added by a newer server is kept as sent instead of failing the response.
+	body := strings.TrimSpace(strings.Replace(process, "RUN_TYPE", "future_mode", 1))
+	if err := json.Unmarshal([]byte(body), &run); err != nil || string(run.Raw) != body {
+		t.Fatalf("unknown run_type not kept raw: %v %#v", err, run.GetActualInstance())
 	}
 }
