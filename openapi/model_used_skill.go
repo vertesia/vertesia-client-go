@@ -30,6 +30,8 @@ type UsedSkill struct {
 	Packages []string `json:"packages,omitempty"`
 	// System-level packages to install via sudo apt-get (e.g., [\"poppler-utils\"])
 	SystemPackages []string `json:"system_packages,omitempty"`
+	// Digest of the instructions the skill returned when it was first loaded in the run, to tell skill versions apart. Absent on skills tracked before the digest existed.
+	ContentDigest *string `json:"content_digest,omitempty"`
 }
 
 type _UsedSkill UsedSkill
@@ -197,6 +199,38 @@ func (o *UsedSkill) SetSystemPackages(v []string) {
 	o.SystemPackages = v
 }
 
+// GetContentDigest returns the ContentDigest field value if set, zero value otherwise.
+func (o *UsedSkill) GetContentDigest() string {
+	if o == nil || IsNil(o.ContentDigest) {
+		var ret string
+		return ret
+	}
+	return *o.ContentDigest
+}
+
+// GetContentDigestOk returns a tuple with the ContentDigest field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UsedSkill) GetContentDigestOk() (*string, bool) {
+	if o == nil || IsNil(o.ContentDigest) {
+		return nil, false
+	}
+	return o.ContentDigest, true
+}
+
+// HasContentDigest returns a boolean if a field has been set.
+func (o *UsedSkill) HasContentDigest() bool {
+	if o != nil && !IsNil(o.ContentDigest) {
+		return true
+	}
+
+	return false
+}
+
+// SetContentDigest gets a reference to the given string and assigns it to the ContentDigest field.
+func (o *UsedSkill) SetContentDigest(v string) {
+	o.ContentDigest = &v
+}
+
 func (o UsedSkill) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -217,6 +251,9 @@ func (o UsedSkill) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.SystemPackages) {
 		toSerialize["system_packages"] = o.SystemPackages
+	}
+	if !IsNil(o.ContentDigest) {
+		toSerialize["content_digest"] = o.ContentDigest
 	}
 	return toSerialize, nil
 }

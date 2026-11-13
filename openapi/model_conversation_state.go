@@ -97,6 +97,8 @@ type ConversationState struct {
 	ActiveActivityGroupId *string `json:"active_activity_group_id,omitempty"`
 	// LLM stop reason from the latest call (e.g., \"stop\", \"length\", \"tool_use\")
 	FinishReason *string `json:"finish_reason,omitempty"`
+	// Attempt number of the activity that made the latest LLM call. Above 1, the call was retried after a failed attempt.
+	LlmAttempt *int32 `json:"llm_attempt,omitempty"`
 	// The AgentRun ID (MongoDB _id) that owns this conversation. Used for artifact storage paths: agents/{agent_run_id}/ Undefined for legacy workflows started before the AgentRun system.
 	AgentRunId *string `json:"agent_run_id,omitempty"`
 	// For workstreams: the launch ID assigned by the parent workflow. When set, artifacts are stored under agents/{agent_run_id}/workstreams/{launch_id}/ to consolidate all artifacts under the parent agent run.
@@ -1338,6 +1340,38 @@ func (o *ConversationState) SetFinishReason(v string) {
 	o.FinishReason = &v
 }
 
+// GetLlmAttempt returns the LlmAttempt field value if set, zero value otherwise.
+func (o *ConversationState) GetLlmAttempt() int32 {
+	if o == nil || IsNil(o.LlmAttempt) {
+		var ret int32
+		return ret
+	}
+	return *o.LlmAttempt
+}
+
+// GetLlmAttemptOk returns a tuple with the LlmAttempt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetLlmAttemptOk() (*int32, bool) {
+	if o == nil || IsNil(o.LlmAttempt) {
+		return nil, false
+	}
+	return o.LlmAttempt, true
+}
+
+// HasLlmAttempt returns a boolean if a field has been set.
+func (o *ConversationState) HasLlmAttempt() bool {
+	if o != nil && !IsNil(o.LlmAttempt) {
+		return true
+	}
+
+	return false
+}
+
+// SetLlmAttempt gets a reference to the given int32 and assigns it to the LlmAttempt field.
+func (o *ConversationState) SetLlmAttempt(v int32) {
+	o.LlmAttempt = &v
+}
+
 // GetAgentRunId returns the AgentRunId field value if set, zero value otherwise.
 func (o *ConversationState) GetAgentRunId() string {
 	if o == nil || IsNil(o.AgentRunId) {
@@ -1551,6 +1585,9 @@ func (o ConversationState) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.FinishReason) {
 		toSerialize["finish_reason"] = o.FinishReason
 	}
+	if !IsNil(o.LlmAttempt) {
+		toSerialize["llm_attempt"] = o.LlmAttempt
+	}
 	if !IsNil(o.AgentRunId) {
 		toSerialize["agent_run_id"] = o.AgentRunId
 	}
@@ -1646,6 +1683,7 @@ func (o *ConversationState) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "pending_mcp_connections")
 		delete(additionalProperties, "active_activity_group_id")
 		delete(additionalProperties, "finish_reason")
+		delete(additionalProperties, "llm_attempt")
 		delete(additionalProperties, "agent_run_id")
 		delete(additionalProperties, "launch_id")
 		delete(additionalProperties, "app_version")

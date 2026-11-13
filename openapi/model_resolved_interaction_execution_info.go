@@ -34,6 +34,8 @@ type ResolvedInteractionExecutionInfo struct {
 	AgentRunnerOptions *AgentRunnerOptions `json:"agent_runner_options,omitempty"`
 	// The resolved runtime configuration
 	Resolved ResolvedRuntimeConfig `json:"resolved"`
+	// Digest of the interaction's prompt segments and their template content. It changes whenever what the model is told changes, including on a draft whose version number stays the same.
+	PromptHash *string `json:"prompt_hash,omitempty"`
 }
 
 type _ResolvedInteractionExecutionInfo ResolvedInteractionExecutionInfo
@@ -237,6 +239,38 @@ func (o *ResolvedInteractionExecutionInfo) SetResolved(v ResolvedRuntimeConfig) 
 	o.Resolved = v
 }
 
+// GetPromptHash returns the PromptHash field value if set, zero value otherwise.
+func (o *ResolvedInteractionExecutionInfo) GetPromptHash() string {
+	if o == nil || IsNil(o.PromptHash) {
+		var ret string
+		return ret
+	}
+	return *o.PromptHash
+}
+
+// GetPromptHashOk returns a tuple with the PromptHash field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ResolvedInteractionExecutionInfo) GetPromptHashOk() (*string, bool) {
+	if o == nil || IsNil(o.PromptHash) {
+		return nil, false
+	}
+	return o.PromptHash, true
+}
+
+// HasPromptHash returns a boolean if a field has been set.
+func (o *ResolvedInteractionExecutionInfo) HasPromptHash() bool {
+	if o != nil && !IsNil(o.PromptHash) {
+		return true
+	}
+
+	return false
+}
+
+// SetPromptHash gets a reference to the given string and assigns it to the PromptHash field.
+func (o *ResolvedInteractionExecutionInfo) SetPromptHash(v string) {
+	o.PromptHash = &v
+}
+
 func (o ResolvedInteractionExecutionInfo) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -256,6 +290,9 @@ func (o ResolvedInteractionExecutionInfo) ToMap() (map[string]interface{}, error
 		toSerialize["agent_runner_options"] = o.AgentRunnerOptions
 	}
 	toSerialize["resolved"] = o.Resolved
+	if !IsNil(o.PromptHash) {
+		toSerialize["prompt_hash"] = o.PromptHash
+	}
 	return toSerialize, nil
 }
 

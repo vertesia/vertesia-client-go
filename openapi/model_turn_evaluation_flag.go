@@ -34,6 +34,12 @@ const (
 	TURNEVALUATIONFLAG_CIRCUIT_BREAKER            TurnEvaluationFlag = "circuit_breaker"
 	TURNEVALUATIONFLAG_NO_VISIBLE_ANSWER          TurnEvaluationFlag = "no_visible_answer"
 	TURNEVALUATIONFLAG_ANSWER_IN_TOOL_PREAMBLE    TurnEvaluationFlag = "answer_in_tool_preamble"
+	TURNEVALUATIONFLAG_RESPONSE_CUT_OFF           TurnEvaluationFlag = "response_cut_off"
+	TURNEVALUATIONFLAG_LLM_RETRIED                TurnEvaluationFlag = "llm_retried"
+	TURNEVALUATIONFLAG_UNKNOWN_TOOL               TurnEvaluationFlag = "unknown_tool"
+	TURNEVALUATIONFLAG_INVALID_TOOL_ARGUMENTS     TurnEvaluationFlag = "invalid_tool_arguments"
+	TURNEVALUATIONFLAG_CONTEXT_NEAR_FULL          TurnEvaluationFlag = "context_near_full"
+	TURNEVALUATIONFLAG_CHECKPOINT_FORCED          TurnEvaluationFlag = "checkpoint_forced"
 	TURNEVALUATIONFLAG_UNKNOWN_DEFAULT_OPEN_API   TurnEvaluationFlag = "unknown_default_open_api"
 )
 
@@ -53,6 +59,12 @@ var AllowedTurnEvaluationFlagEnumValues = []TurnEvaluationFlag{
 	"circuit_breaker",
 	"no_visible_answer",
 	"answer_in_tool_preamble",
+	"response_cut_off",
+	"llm_retried",
+	"unknown_tool",
+	"invalid_tool_arguments",
+	"context_near_full",
+	"checkpoint_forced",
 	"unknown_default_open_api",
 }
 
