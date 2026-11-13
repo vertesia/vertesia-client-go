@@ -32,6 +32,7 @@ type BedrockClaudeOptions struct {
 	Effort               *string  `json:"effort,omitempty"`
 	CacheEnabled         *bool    `json:"cache_enabled,omitempty"`
 	CacheTtl             *string  `json:"cache_ttl,omitempty"`
+	NativeCompaction     *bool    `json:"native_compaction,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
 	ServiceTier *string `json:"service_tier,omitempty"`
 	// AdditionalProperties preserves unknown fields across read-edit-save.
@@ -439,6 +440,38 @@ func (o *BedrockClaudeOptions) SetCacheTtl(v string) {
 	o.CacheTtl = &v
 }
 
+// GetNativeCompaction returns the NativeCompaction field value if set, zero value otherwise.
+func (o *BedrockClaudeOptions) GetNativeCompaction() bool {
+	if o == nil || IsNil(o.NativeCompaction) {
+		var ret bool
+		return ret
+	}
+	return *o.NativeCompaction
+}
+
+// GetNativeCompactionOk returns a tuple with the NativeCompaction field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *BedrockClaudeOptions) GetNativeCompactionOk() (*bool, bool) {
+	if o == nil || IsNil(o.NativeCompaction) {
+		return nil, false
+	}
+	return o.NativeCompaction, true
+}
+
+// HasNativeCompaction returns a boolean if a field has been set.
+func (o *BedrockClaudeOptions) HasNativeCompaction() bool {
+	if o != nil && !IsNil(o.NativeCompaction) {
+		return true
+	}
+
+	return false
+}
+
+// SetNativeCompaction gets a reference to the given bool and assigns it to the NativeCompaction field.
+func (o *BedrockClaudeOptions) SetNativeCompaction(v bool) {
+	o.NativeCompaction = &v
+}
+
 // GetServiceTier returns the ServiceTier field value if set, zero value otherwise.
 func (o *BedrockClaudeOptions) GetServiceTier() string {
 	if o == nil || IsNil(o.ServiceTier) {
@@ -483,7 +516,7 @@ func (o BedrockClaudeOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "top_k", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "effort", "cache_enabled", "cache_ttl", "service_tier"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "top_k", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "effort", "cache_enabled", "cache_ttl", "native_compaction", "service_tier"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -523,6 +556,9 @@ func (o BedrockClaudeOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.CacheTtl) {
 		toSerialize["cache_ttl"] = o.CacheTtl
+	}
+	if !IsNil(o.NativeCompaction) {
+		toSerialize["native_compaction"] = o.NativeCompaction
 	}
 	if !IsNil(o.ServiceTier) {
 		toSerialize["service_tier"] = o.ServiceTier
@@ -582,7 +618,7 @@ func (o *BedrockClaudeOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "top_k", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "effort", "cache_enabled", "cache_ttl", "service_tier"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "stop_sequence", "top_k", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "effort", "cache_enabled", "cache_ttl", "native_compaction", "service_tier"}) {
 			delete(extra, key)
 		}
 	}

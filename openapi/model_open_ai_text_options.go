@@ -35,8 +35,9 @@ type OpenAiTextOptions struct {
 	ImageDetail      *string                       `json:"image_detail,omitempty"`
 	IncludeThoughts  *bool                         `json:"include_thoughts,omitempty"`
 	// Provider-defined processing tier. Unknown non-empty values are preserved for forward compatibility.
-	ServiceTier *string `json:"service_tier,omitempty"`
-	CacheTtl    *string `json:"cache_ttl,omitempty"`
+	ServiceTier      *string `json:"service_tier,omitempty"`
+	CacheTtl         *string `json:"cache_ttl,omitempty"`
+	NativeCompaction *bool   `json:"native_compaction,omitempty"`
 	// Additional provider-specific fields merged into the OpenAI-compatible request body.
 	ExtraBody map[string]interface{} `json:"extra_body,omitempty"`
 	// AdditionalProperties preserves unknown fields across read-edit-save.
@@ -604,6 +605,38 @@ func (o *OpenAiTextOptions) SetCacheTtl(v string) {
 	o.CacheTtl = &v
 }
 
+// GetNativeCompaction returns the NativeCompaction field value if set, zero value otherwise.
+func (o *OpenAiTextOptions) GetNativeCompaction() bool {
+	if o == nil || IsNil(o.NativeCompaction) {
+		var ret bool
+		return ret
+	}
+	return *o.NativeCompaction
+}
+
+// GetNativeCompactionOk returns a tuple with the NativeCompaction field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OpenAiTextOptions) GetNativeCompactionOk() (*bool, bool) {
+	if o == nil || IsNil(o.NativeCompaction) {
+		return nil, false
+	}
+	return o.NativeCompaction, true
+}
+
+// HasNativeCompaction returns a boolean if a field has been set.
+func (o *OpenAiTextOptions) HasNativeCompaction() bool {
+	if o != nil && !IsNil(o.NativeCompaction) {
+		return true
+	}
+
+	return false
+}
+
+// SetNativeCompaction gets a reference to the given bool and assigns it to the NativeCompaction field.
+func (o *OpenAiTextOptions) SetNativeCompaction(v bool) {
+	o.NativeCompaction = &v
+}
+
 // GetExtraBody returns the ExtraBody field value if set, zero value otherwise.
 func (o *OpenAiTextOptions) GetExtraBody() map[string]interface{} {
 	if o == nil || IsNil(o.ExtraBody) {
@@ -648,7 +681,7 @@ func (o OpenAiTextOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "seed", "max_tokens", "tool_choice", "effort", "reasoning_effort", "verbosity", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "cache_ttl", "extra_body"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "seed", "max_tokens", "tool_choice", "effort", "reasoning_effort", "verbosity", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "cache_ttl", "native_compaction", "extra_body"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -703,6 +736,9 @@ func (o OpenAiTextOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.CacheTtl) {
 		toSerialize["cache_ttl"] = o.CacheTtl
+	}
+	if !IsNil(o.NativeCompaction) {
+		toSerialize["native_compaction"] = o.NativeCompaction
 	}
 	if !IsNil(o.ExtraBody) {
 		toSerialize["extra_body"] = o.ExtraBody
@@ -762,7 +798,7 @@ func (o *OpenAiTextOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "seed", "max_tokens", "tool_choice", "effort", "reasoning_effort", "verbosity", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "cache_ttl", "extra_body"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "image_generation", "seed", "max_tokens", "tool_choice", "effort", "reasoning_effort", "verbosity", "temperature", "top_p", "presence_penalty", "frequency_penalty", "stop_sequence", "image_detail", "include_thoughts", "service_tier", "cache_ttl", "native_compaction", "extra_body"}) {
 			delete(extra, key)
 		}
 	}

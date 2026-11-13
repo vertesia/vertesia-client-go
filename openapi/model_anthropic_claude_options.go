@@ -32,6 +32,7 @@ type AnthropicClaudeOptions struct {
 	IncludeThoughts      *bool    `json:"include_thoughts,omitempty"`
 	CacheEnabled         *bool    `json:"cache_enabled,omitempty"`
 	CacheTtl             *string  `json:"cache_ttl,omitempty"`
+	NativeCompaction     *bool    `json:"native_compaction,omitempty"`
 	Speed                *string  `json:"speed,omitempty"`
 	// AdditionalProperties preserves unknown fields across read-edit-save.
 	AdditionalProperties map[string]interface{} `json:"-"`
@@ -438,6 +439,38 @@ func (o *AnthropicClaudeOptions) SetCacheTtl(v string) {
 	o.CacheTtl = &v
 }
 
+// GetNativeCompaction returns the NativeCompaction field value if set, zero value otherwise.
+func (o *AnthropicClaudeOptions) GetNativeCompaction() bool {
+	if o == nil || IsNil(o.NativeCompaction) {
+		var ret bool
+		return ret
+	}
+	return *o.NativeCompaction
+}
+
+// GetNativeCompactionOk returns a tuple with the NativeCompaction field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AnthropicClaudeOptions) GetNativeCompactionOk() (*bool, bool) {
+	if o == nil || IsNil(o.NativeCompaction) {
+		return nil, false
+	}
+	return o.NativeCompaction, true
+}
+
+// HasNativeCompaction returns a boolean if a field has been set.
+func (o *AnthropicClaudeOptions) HasNativeCompaction() bool {
+	if o != nil && !IsNil(o.NativeCompaction) {
+		return true
+	}
+
+	return false
+}
+
+// SetNativeCompaction gets a reference to the given bool and assigns it to the NativeCompaction field.
+func (o *AnthropicClaudeOptions) SetNativeCompaction(v bool) {
+	o.NativeCompaction = &v
+}
+
 // GetSpeed returns the Speed field value if set, zero value otherwise.
 func (o *AnthropicClaudeOptions) GetSpeed() string {
 	if o == nil || IsNil(o.Speed) {
@@ -482,7 +515,7 @@ func (o AnthropicClaudeOptions) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	// Typed fields retain precedence, including when cleared.
 	for key, value := range o.AdditionalProperties {
-		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "effort", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "cache_enabled", "cache_ttl", "speed"}) {
+		if !modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "effort", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "cache_enabled", "cache_ttl", "native_compaction", "speed"}) {
 			toSerialize[key] = value
 		}
 	}
@@ -522,6 +555,9 @@ func (o AnthropicClaudeOptions) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.CacheTtl) {
 		toSerialize["cache_ttl"] = o.CacheTtl
+	}
+	if !IsNil(o.NativeCompaction) {
+		toSerialize["native_compaction"] = o.NativeCompaction
 	}
 	if !IsNil(o.Speed) {
 		toSerialize["speed"] = o.Speed
@@ -581,7 +617,7 @@ func (o *AnthropicClaudeOptions) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	for key := range extra {
-		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "effort", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "cache_enabled", "cache_ttl", "speed"}) {
+		if modelOptionsIsKnownField(key, []string{"_option_id", "max_tokens", "temperature", "top_p", "top_k", "stop_sequence", "effort", "thinking_mode", "thinking_budget_tokens", "include_thoughts", "cache_enabled", "cache_ttl", "native_compaction", "speed"}) {
 			delete(extra, key)
 		}
 	}
