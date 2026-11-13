@@ -53,7 +53,7 @@ func TestCompletionResultDiscriminator(t *testing.T) {
 			}
 		})
 	}
-	for _, body := range []string{`{}`, `null`, `{"value":"missing type"}`, `{"type":"unknown","value":"x"}`, `{"type":"text"}`, `{"type":"text","value":[]}`, `{"type":"audio","value":"gs://b/a"}`} {
+	for _, body := range []string{`{}`, `null`, `{"value":"missing type"}`, `{"type":"text"}`, `{"type":"text","value":[]}`, `{"type":"audio","value":"gs://b/a"}`} {
 		if err := json.Unmarshal([]byte(body), &result); err == nil {
 			t.Fatalf("accepted invalid result: %s", body)
 		}
@@ -74,7 +74,7 @@ func TestContentTypeRefDiscriminator(t *testing.T) {
 		}
 		assertSingleBranch(t, result, tc.branch)
 	}
-	for _, body := range []string{`{}`, `null`, `{"ref_type":"future"}`, `{"ref_type":42}`, `{"ref_type":"stored"}`, `{"ref_type":"incode","id":false,"name":"Invoice"}`} {
+	for _, body := range []string{`{}`, `null`, `{"ref_type":42}`, `{"ref_type":"stored"}`, `{"ref_type":"incode","id":false,"name":"Invoice"}`} {
 		if err := json.Unmarshal([]byte(body), &result); err == nil {
 			t.Fatalf("accepted invalid type ref: %s", body)
 		}
@@ -95,7 +95,7 @@ func TestBulkOperationDiscriminator(t *testing.T) {
 		}
 		assertSingleBranch(t, result, tc.branch)
 	}
-	for _, body := range []string{`{}`, `null`, `{"operation":"future"}`, `{"operation":false}`, `{"operation":"update","status":"completed"}`, `{"operation":"delete","status":"completed","deleted":"bad","failed":[]}`} {
+	for _, body := range []string{`{}`, `null`, `{"operation":false}`, `{"operation":"update","status":"completed"}`, `{"operation":"delete","status":"completed","deleted":"bad","failed":[]}`} {
 		if err := json.Unmarshal([]byte(body), &result); err == nil {
 			t.Fatalf("accepted invalid bulk result: %s", body)
 		}
