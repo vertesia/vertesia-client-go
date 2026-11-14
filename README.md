@@ -247,7 +247,10 @@ change, and a released client keeps decoding its responses:
   `GetActualInstance()` returns it, and `MarshalJSON` writes it back unchanged. A union with a
   published discriminator dispatches on it: a known value decodes into its typed branch and still
   fails if that branch is invalid, an unknown value goes to `Raw`, and a missing value is an error.
-  Other unions keep the generated decoder and use `Raw` only when it cannot pick one branch.
+  A union without a discriminator whose branches each declare a distinct literal for one property
+  (`McpConnectionParameter`'s `type`) dispatches on it the same way when the property is present.
+  Other unions keep the generated decoder and use `Raw` only when it cannot pick one branch. A
+  dispatched branch is validated as the generated decoder validated it.
 
 `scripts/patch-unions` applies the union rule after generation; the tests in `testdata/` run
 against a freshly patched copy of the generated package.

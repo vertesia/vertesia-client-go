@@ -208,3 +208,48 @@ func TestForwardCompatModelOptionsKeepEveryReceivedOption(t *testing.T) {
 		}
 	}
 }
+
+func TestForwardCompatLiteralTagSelectsTheBranch(t *testing.T) {
+	// McpPublicParameter ignores unknown properties, so the generated decoder took it for any object.
+	body := `{"type":"oauth","title":"token","authorization_url":"https://example.com"}`
+	var parameter McpConnectionParameter
+	if err := json.Unmarshal([]byte(body), &parameter); err != nil {
+		t.Fatal(err)
+	}
+	if string(parameter.Raw) != body || parameter.McpPublicParameter != nil {
+		t.Fatalf("parameter = %#v", parameter)
+	}
+	if encoded, err := json.Marshal(parameter); err != nil || string(encoded) != body {
+		t.Fatalf("re-encoded %s, %v", encoded, err)
+	}
+
+	if err := json.Unmarshal([]byte(`{"type":"secret","title":"key"}`), &parameter); err != nil {
+		t.Fatal(err)
+	}
+	if parameter.McpSecretParameter == nil {
+		t.Fatalf("secret decoded as %#v", parameter)
+	}
+	for _, public := range []string{`{"type":"string","title":"name"}`, `{"title":"name"}`} {
+		if err := json.Unmarshal([]byte(public), &parameter); err != nil {
+			t.Fatal(err)
+		}
+		if parameter.McpPublicParameter == nil {
+			t.Fatalf("%s decoded as %#v", public, parameter)
+		}
+	}
+}
+
+func TestForwardCompatDispatchedBranchIsValidated(t *testing.T) {
+	list := `{"type":"list","id":"ID","label":"Items","title":{"field":"name"}}`
+	var display ViewDisplayConfiguration
+	if err := json.Unmarshal([]byte(strings.Replace(list, `"ID"`, `"items"`, 1)), &display); err != nil {
+		t.Fatal(err)
+	}
+	if display.ViewListDisplay == nil {
+		t.Fatalf("decoded as %T", display.GetActualInstance())
+	}
+	// The id pattern is ^[a-z][a-z0-9_-]*$.
+	if err := json.Unmarshal([]byte(strings.Replace(list, `"ID"`, `"INVALID ID"`, 1)), &display); err == nil {
+		t.Fatal("an invalid list display was accepted")
+	}
+}

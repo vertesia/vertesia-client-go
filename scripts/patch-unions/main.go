@@ -9,8 +9,13 @@
 //     into its typed branch (and fails if the branch is invalid), an unknown value goes to Raw, and
 //     a missing value is an error. The generated decoder tries every branch and fails when several
 //     match, which happens whenever branches share their required fields;
+//   - a union without a discriminator whose branches each declare a distinct literal for the same
+//     property (McpConnectionParameter's type) dispatches on that property when it is present, so
+//     that a permissive branch does not swallow another branch or an unknown variant;
 //   - any other union keeps its generated decoder, but when that decoder cannot pick a branch the
 //     payload goes to Raw instead of failing.
+//
+// A dispatched branch is validated as the generated decoder validated it.
 //
 // The patch locates declarations with go/ast, replaces only their source spans, and is idempotent.
 package main
@@ -36,11 +41,13 @@ const (
 	unionMarker = "Marshal data from the first non-nil pointers in the struct to JSON"
 	// The generated decoder of a non-discriminated union, kept under this name behind the wrapper.
 	variantDecoder = "unmarshalVariantJSON"
+	validatorPath  = "gopkg.in/validator.v2"
 )
 
 type schema struct {
 	Ref        string            `json:"$ref"`
 	OneOf      []schema          `json:"oneOf"`
+	AnyOf      []schema          `json:"anyOf"`
 	Required   []string          `json:"required"`
 	Const      json.RawMessage   `json:"const"`
 	Enum       []json.RawMessage `json:"enum"`
@@ -213,6 +220,58 @@ func dispatch(schemas map[string]schema, union string, fields map[string]string)
 	return property, branches, nil
 }
 
+// literalTag returns the property for which every branch of an undiscriminated union declares a
+// distinct string literal, with the branches, or "" when there is none.
+func literalTag(schemas map[string]schema, union string, fields map[string]string) (string, []branch) {
+	members := schemas[union].OneOf
+	if len(members) == 0 {
+		members = schemas[union].AnyOf
+	}
+	if len(members) < 2 || len(members) != len(fields) {
+		return "", nil
+	}
+	var properties []string
+	for property := range schemas[strings.TrimPrefix(members[0].Ref, "#/components/schemas/")].Properties {
+		properties = append(properties, property)
+	}
+	sort.Strings(properties)
+	for _, property := range properties {
+		var branches []branch
+		seen := map[string]bool{}
+		for _, ref := range members {
+			name := strings.TrimPrefix(ref.Ref, "#/components/schemas/")
+			member := schemas[name]
+			if _, declared := member.Properties[property]; !declared || fields[name] == "" {
+				break
+			}
+			id, err := discriminatorValue(schemas, member, property)
+			if err != nil || seen[id] {
+				break
+			}
+			seen[id] = true
+			branches = append(branches, branch{id, name, fields[name]})
+		}
+		if len(branches) == len(members) {
+			return property, branches
+		}
+	}
+	return "", nil
+}
+
+// tagSwitch decodes data into the branch its tag names, validated as the generated decoder
+// validates it, or keeps an unknown tag in Raw.
+func tagSwitch(tag string, branches []branch) string {
+	var body strings.Builder
+	fmt.Fprintf(&body, "switch %s {\n", tag)
+	for _, b := range branches {
+		fmt.Fprintf(&body, "case %q:\nvar value %s\nif err := json.Unmarshal(data, &value); err != nil {\nreturn err\n}\n", b.id, b.typ)
+		body.WriteString("if err := validator.Validate(&value); err != nil {\nreturn err\n}\n")
+		fmt.Fprintf(&body, "dst.%s = &value\nreturn nil\n", b.field)
+	}
+	fmt.Fprintf(&body, "default:\n%s}\n", keepRaw("dst"))
+	return body.String()
+}
+
 func keepRaw(variable string) string {
 	return "// A variant added after this client was generated: keep it as the server sent it.\n" +
 		variable + ".Raw = append(json.RawMessage(nil), data...)\nreturn nil\n"
@@ -242,11 +301,8 @@ func patchUnion(s *source, schemas map[string]schema, name string, st *ast.Struc
 		fmt.Fprintf(&body, "var tag struct { Discriminator *string `json:%q` }\n", property)
 		body.WriteString("if err := json.Unmarshal(data, &tag); err != nil { return err }\n")
 		fmt.Fprintf(&body, "if tag.Discriminator == nil || *tag.Discriminator == \"\" { return fmt.Errorf(%q) }\n", "missing "+name+" "+property)
-		body.WriteString("switch *tag.Discriminator {\n")
-		for _, b := range branches {
-			fmt.Fprintf(&body, "case %q: var value %s; if err := json.Unmarshal(data, &value); err != nil { return err }; dst.%s = &value; return nil\n", b.id, b.typ, b.field)
-		}
-		fmt.Fprintf(&body, "default:\n%s}\n}", keepRaw("dst"))
+		body.WriteString(tagSwitch("*tag.Discriminator", branches))
+		body.WriteString("}")
 		s.replace(decode, body.String())
 	} else if !mentionsRaw(s, decode) && s.method(name, variantDecoder) == nil {
 		// Keep the generated decoder for known variants, under another name.
@@ -255,11 +311,18 @@ func patchUnion(s *source, schemas map[string]schema, name string, st *ast.Struc
 		if decode.Doc != nil {
 			at = decode.Doc.Pos()
 		}
+		dispatchTag := ""
+		if property, branches := literalTag(schemas, name, fields); property != "" {
+			// The generated decoder takes the first branch that decodes, and a branch that ignores
+			// unknown properties decodes any object. When present, the literal names the branch.
+			dispatchTag = fmt.Sprintf("var tag struct {\nValue *string `json:%q`\n}\n", property) +
+				"if json.Unmarshal(data, &tag) == nil && tag.Value != nil {\n" + tagSwitch("*tag.Value", branches) + "}\n"
+		}
 		s.insert(at, fmt.Sprintf(`// UnmarshalJSON decodes a known variant, or keeps the payload in Raw when the generated
 // decoder cannot pick a single known variant.
 func (dst *%s) UnmarshalJSON(data []byte) error {
 *dst = %s{}
-err := dst.%s(data)
+%serr := dst.%s(data)
 if err == nil {
 return nil
 }
@@ -271,7 +334,7 @@ return err
 
 // %s is the generated decoder of the known variants.
 //
-`, name, name, variantDecoder, name, keepRaw("dst"), variantDecoder))
+`, name, name, dispatchTag, variantDecoder, name, keepRaw("dst"), variantDecoder))
 	}
 	for _, method := range []struct{ name, result string }{
 		{"MarshalJSON", "[]byte(%s.Raw), nil"},
@@ -292,8 +355,9 @@ return err
 	return nil
 }
 
-// removeUnusedImport drops an import whose package the patched source no longer references.
-func removeUnusedImport(output []byte, path, name string) ([]byte, error) {
+// ensureImport adds an import for a package the patched source references, and drops it when the
+// source no longer does.
+func ensureImport(output []byte, path, name string) ([]byte, error) {
 	fset := token.NewFileSet()
 	tree, err := parser.ParseFile(fset, "", output, parser.ParseComments)
 	if err != nil {
@@ -308,16 +372,20 @@ func removeUnusedImport(output []byte, path, name string) ([]byte, error) {
 		}
 		return !used
 	})
-	if used {
-		return output, nil
-	}
 	for _, imp := range tree.Imports {
 		if value, _ := strconv.Unquote(imp.Path.Value); value == path {
+			if used {
+				return output, nil
+			}
 			start, end := fset.Position(imp.Pos()).Offset, fset.Position(imp.End()).Offset
 			return append(output[:start:start], output[end:]...), nil
 		}
 	}
-	return output, nil
+	if !used {
+		return output, nil
+	}
+	at := fset.Position(tree.Name.End()).Offset
+	return append(output[:at:at], append([]byte("\n\nimport "+strconv.Quote(path)), output[at:]...)...), nil
 }
 
 func patchFile(path string, schemas map[string]schema, declared, patched map[string]bool) error {
@@ -358,8 +426,8 @@ func patchFile(path string, schemas map[string]schema, declared, patched map[str
 	for _, e := range s.edits {
 		output = append(output[:e.start:e.start], append([]byte(e.text), output[e.end:]...)...)
 	}
-	// Dispatch replaces the only validator calls of a discriminated union.
-	if output, err = removeUnusedImport(output, "gopkg.in/validator.v2", "validator"); err != nil {
+	// Dispatch validates with the generated decoder's validator, which a file may not import yet.
+	if output, err = ensureImport(output, validatorPath, "validator"); err != nil {
 		return fmt.Errorf("%s: %w", path, err)
 	}
 	if output, err = format.Source(output); err != nil {
