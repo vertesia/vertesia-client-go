@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"strings"
 	"testing"
+
+	"gopkg.in/validator.v2"
 )
 
 // A released client must keep decoding responses from a newer server. These cases are what a
@@ -251,5 +253,30 @@ func TestForwardCompatDispatchedBranchIsValidated(t *testing.T) {
 	// The id pattern is ^[a-z][a-z0-9_-]*$.
 	if err := json.Unmarshal([]byte(strings.Replace(list, `"ID"`, `"INVALID ID"`, 1)), &display); err == nil {
 		t.Fatal("an invalid list display was accepted")
+	}
+	// The title field pattern is ^[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)*$, which the generated tag escaped twice.
+	dotted := strings.Replace(strings.Replace(list, `"ID"`, `"items"`, 1), `"name"`, `"document.title"`, 1)
+	if err := json.Unmarshal([]byte(dotted), &display); err != nil {
+		t.Fatalf("a dotted field was rejected: %v", err)
+	}
+}
+
+func TestForwardCompatValidateTagsMatchTheSpecPatterns(t *testing.T) {
+	cases := []struct {
+		name         string
+		valid, wrong interface{}
+	}{
+		// ^[A-Za-z0-9_-]{1,64}$: validator.v2 split the tag at the comma and failed every value.
+		{"comma", AuditAggregationMetric{Id: "count"}, AuditAggregationMetric{Id: "bad id"}},
+		// A \u escape, which Go's regexp does not accept, and a doubled backslash.
+		{"unicode", CopyFilePayload{Source: "a/b.txt", Dest: "c/d.txt"}, CopyFilePayload{Source: "a/b.txt", Dest: "../d.txt"}},
+	}
+	for _, c := range cases {
+		if err := validator.Validate(c.valid); err != nil {
+			t.Errorf("%s: valid value rejected: %v", c.name, err)
+		}
+		if err := validator.Validate(c.wrong); err == nil {
+			t.Errorf("%s: invalid value accepted", c.name)
+		}
 	}
 }

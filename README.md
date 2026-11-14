@@ -255,6 +255,13 @@ change, and a released client keeps decoding its responses:
 `scripts/patch-unions` applies the union rule after generation; the tests in `testdata/` run
 against a freshly patched copy of the generated package.
 
+The `validate:"regexp=..."` tags are checked by `gopkg.in/validator.v2`, which reads the pattern as
+written. OpenAPI Generator doubles each backslash of the spec pattern and keeps the commas validator.v2
+splits its parameters on, so the generated tags rejected valid values such as the dotted view field
+`document.title`, and every value of a field whose pattern has a `{m,n}` quantifier.
+`scripts/patch-validate-regexp` writes the spec pattern back into each tag, with `\uXXXX` as
+`\x{XXXX}` and commas escaped, and fails if a pattern does not compile.
+
 ## OIDC federation for provisioned users
 
 Use a separate client for each user/project/resource/scope combination. The user must already be

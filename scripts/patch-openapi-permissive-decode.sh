@@ -22,6 +22,10 @@ find "$openapi_dir" -name 'model_*.go' -print0 | xargs -0 perl -pi -e '
   s{^(\t\w+\s+)(?!\*?string\s)(\S+\s+`[^`]*?)\s+validate:"regexp=(?:[^"\\]|\\.)*"}{$1$2};
 '
 
+# openapi-generator doubles the backslashes of every pattern and leaves the commas that validator.v2
+# splits its parameters on, so most regexp tags reject valid values. Restore the spec patterns.
+go run "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/patch-validate-regexp/main.go" -dir "$openapi_dir"
+
 # enumUnknownDefaultCase replaces a value added by a newer server with the unknown_default_open_api
 # placeholder, so a read-modify-write sends the placeholder back. The enum types are strings: keep
 # the value as received. IsValid() still reports it as unknown to this client version.
