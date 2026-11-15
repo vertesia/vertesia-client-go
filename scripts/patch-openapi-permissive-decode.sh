@@ -73,3 +73,9 @@ find "$openapi_dir" -name 'api_*.go' -print0 | xargs -0 perl -0pi -e '
 # (every AgentRunResponse matched both its supervised and programmatic branches).
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 go run "$script_dir/patch-unions/main.go" -dir "$openapi_dir" -spec "$script_dir/../spec/vertesia-openapi.json"
+
+# openapi-generator guards a required nullable list, map or free-form property with a nil check in
+# ToMap, so a nil value drops a property the server requires and null cannot be sent (clearing an
+# installation's tool allowlist, a tool use without input). Write required properties always; nil
+# encodes as null. Optional properties keep their guard.
+go run "$script_dir/patch-required-nullable-write/main.go" -dir "$openapi_dir"
