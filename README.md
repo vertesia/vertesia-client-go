@@ -254,9 +254,11 @@ change, and a released client keeps decoding its responses:
   accepts today, and a newer server can widen them, so the generated models carry no
   `validate:"regexp=..."` tags: a list of completion results decodes even when one of them holds a
   value this client's copy of the pattern rejects. Types and required properties are still
-  checked, and a required property that is not nullable cannot be `null`: `"mime_type": null`
-  fails instead of decoding as `""`. The client does not check requests against the patterns
-  either; the server validates what it receives and answers 400 with the reason.
+  checked. A required property cannot be `null` when the spec does not allow it and its Go type
+  would decode `null` as another value: `"mime_type": null` fails instead of decoding as `""`.
+  Properties the spec lets be `null`, such as a tool call's `tool_input`, and lists, maps and
+  pointers, which keep `null` as `nil`, accept it. The client does not check requests against the
+  patterns either; the server validates what it receives and answers 400 with the reason.
 
 `scripts/patch-unions` applies the union rule after generation, and
 `scripts/patch-openapi-permissive-decode.sh` drops the regexp tags and runs

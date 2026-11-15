@@ -24,8 +24,10 @@ find "$openapi_dir" -name 'model_*.go' -print0 | xargs -0 perl -pi -e '
 
 # The generated decoders check that each required property is present, but a null passed that check
 # and decoded as the zero value: "mime_type": null became "". The regexp tags happened to reject some
-# of those values. Reject null for each required property whose type cannot hold it.
-go run "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/patch-required-null/main.go" -dir "$openapi_dir"
+# of those values. Reject null for each required property that the spec does not let be null and
+# whose Go type cannot hold it.
+go run "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/patch-required-null/main.go" -dir "$openapi_dir" \
+  -spec "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../spec/vertesia-openapi.json"
 
 # enumUnknownDefaultCase replaces a value added by a newer server with the unknown_default_open_api
 # placeholder, so a read-modify-write sends the placeholder back. The enum types are strings: keep

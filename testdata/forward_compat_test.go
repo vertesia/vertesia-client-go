@@ -283,8 +283,8 @@ func TestForwardCompatPatternsAreLeftToTheServer(t *testing.T) {
 	}
 }
 
-// Types are still checked, and a required property that is not nullable cannot be null: it would
-// decode as its zero value and be written back as "".
+// Types are still checked, and a required string, number or struct that the spec does not let be
+// null cannot be null: it would decode as its zero value and be written back as "".
 func TestForwardCompatRequiredPropertiesAreNotNull(t *testing.T) {
 	for _, body := range []string{
 		`{"type":"audio","value":"gs://bucket/a.wav","mime_type":null}`,
@@ -316,6 +316,31 @@ func TestForwardCompatRequiredPropertiesAreNotNull(t *testing.T) {
 		t.Fatal(err)
 	}
 	assertSameJSON(t, enabled, status)
+}
+
+// The spec decides which required properties can be null, whatever their Go type: a tool call
+// without input, and the payload that removes an installation's tool allowlist.
+func TestForwardCompatNullableRequiredPropertiesAcceptNull(t *testing.T) {
+	var calls []ToolUse
+	body := `[{"id":"1","tool_name":"search","tool_input":{"q":"a"}},{"id":"2","tool_name":"now","tool_input":null}]`
+	if err := json.Unmarshal([]byte(body), &calls); err != nil {
+		t.Fatal(err)
+	}
+	if len(calls) != 2 || calls[0].ToolInput["q"] != "a" || calls[1].ToolName != "now" || calls[1].ToolInput != nil {
+		t.Fatalf("decoded %#v", calls)
+	}
+
+	var payload UpdateAppInstallationToolAllowlistPayload
+	if err := json.Unmarshal([]byte(`{"tool_allowlist":null}`), &payload); err != nil {
+		t.Fatal(err)
+	}
+	if payload.ToolAllowlist != nil {
+		t.Fatalf("decoded %#v", payload)
+	}
+	// The property is still required.
+	if err := json.Unmarshal([]byte(`{}`), &payload); err == nil {
+		t.Fatal("accepted a payload without tool_allowlist")
+	}
 }
 
 func assertSameJSON(t *testing.T, want string, value interface{}) {
