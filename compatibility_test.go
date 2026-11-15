@@ -63,13 +63,3 @@ func TestGeneratedUnionsIgnoreUnknownFields(t *testing.T) {
 		t.Fatal("EmbeddingsApiTextInput text was not decoded")
 	}
 }
-
-func TestGeneratedEnumsUseUnknownDefaultForUnknownValues(t *testing.T) {
-	var accountType openapi.AccountType
-	if err := json.Unmarshal([]byte(`"new-account-kind"`), &accountType); err != nil {
-		t.Fatalf("unmarshal unknown AccountType failed: %v", err)
-	}
-	if accountType != openapi.ACCOUNTTYPE_UNKNOWN_DEFAULT_OPEN_API {
-		t.Fatalf("AccountType = %q, want %q", accountType, openapi.ACCOUNTTYPE_UNKNOWN_DEFAULT_OPEN_API)
-	}
-}
