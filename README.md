@@ -254,11 +254,13 @@ change, and a released client keeps decoding its responses:
   accepts today, and a newer server can widen them, so the generated models carry no
   `validate:"regexp=..."` tags: a list of completion results decodes even when one of them holds a
   value this client's copy of the pattern rejects. Types and required properties are still
-  checked. The client does not check requests against the patterns either; the server validates
-  what it receives and answers 400 with the reason.
+  checked, and a required property that is not nullable cannot be `null`: `"mime_type": null`
+  fails instead of decoding as `""`. The client does not check requests against the patterns
+  either; the server validates what it receives and answers 400 with the reason.
 
 `scripts/patch-unions` applies the union rule after generation, and
-`scripts/patch-openapi-permissive-decode.sh` drops the regexp tags; the tests in `testdata/` run
+`scripts/patch-openapi-permissive-decode.sh` drops the regexp tags and runs
+`scripts/patch-required-null`; the tests in `testdata/` run
 against a freshly patched copy of the generated package.
 
 ## OIDC federation for provisioned users

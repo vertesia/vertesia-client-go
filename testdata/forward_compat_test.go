@@ -283,6 +283,41 @@ func TestForwardCompatPatternsAreLeftToTheServer(t *testing.T) {
 	}
 }
 
+// Types are still checked, and a required property that is not nullable cannot be null: it would
+// decode as its zero value and be written back as "".
+func TestForwardCompatRequiredPropertiesAreNotNull(t *testing.T) {
+	for _, body := range []string{
+		`{"type":"audio","value":"gs://bucket/a.wav","mime_type":null}`,
+		`{"type":"audio","value":null,"mime_type":"audio/wav"}`,
+		`[{"type":"text","value":"hello"},{"type":"audio","value":"gs://bucket/a.wav","mime_type":null}]`,
+		`{"status":"enabled","billing_method":null,"portal_url":null}`,
+		`{"type":"audio","value":"gs://bucket/a.wav","mime_type":7}`,
+	} {
+		var err error
+		switch {
+		case strings.HasPrefix(body, "["):
+			var results []CompletionResult
+			err = json.Unmarshal([]byte(body), &results)
+		case strings.Contains(body, "billing_method"):
+			var status StripeBillingStatusResponse
+			err = json.Unmarshal([]byte(body), &status)
+		default:
+			var result CompletionResult
+			err = json.Unmarshal([]byte(body), &result)
+		}
+		if err == nil {
+			t.Errorf("accepted %s", body)
+		}
+	}
+	// A required property that is nullable can still be null.
+	enabled := `{"status":"enabled","billing_method":"stripe","portal_url":null}`
+	var status StripeBillingStatusResponse
+	if err := json.Unmarshal([]byte(enabled), &status); err != nil {
+		t.Fatal(err)
+	}
+	assertSameJSON(t, enabled, status)
+}
+
 func assertSameJSON(t *testing.T, want string, value interface{}) {
 	t.Helper()
 	encoded, err := json.Marshal(value)
