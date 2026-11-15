@@ -13,18 +13,14 @@ find "$openapi_dir" -name 'model_*.go' -print0 | xargs -0 perl -0pi -e '
   s/decoder := json\.NewDecoder\(bytes\.NewReader\(data\)\)\n\tdecoder\.DisallowUnknownFields\(\)\n\terr = decoder\.Decode\(&([A-Za-z0-9_]+)\)/err = json.Unmarshal(data, &$1)/g;
 '
 
-# gopkg.in/validator.v2 only applies regexp rules to string and *string fields; on any other
-# kind (NullableString, NullableTime, time.Time) it returns ErrUnsupported even when the field
-# is absent. oneOf decoders run validator.Validate on each candidate, so one such tag anywhere in
-# a branch makes that branch unmatchable (every AgentRunResponse failed on config.inference_profile).
-# The server already enforces these patterns, so drop the tags the validator cannot evaluate.
+# The validate:"regexp=..." tags copy the spec's patterns, which describe what the server accepts
+# today; a newer server can widen them. Union decoders run validator.Validate on the branch they
+# decode, which recurses into nested structs and lists, so one value outside a stale pattern failed
+# the whole response, such as a list of completion results holding an audio result with an https
+# value. Drop the tags: the server validates what it receives, and Go never validated requests.
 find "$openapi_dir" -name 'model_*.go' -print0 | xargs -0 perl -pi -e '
-  s{^(\t\w+\s+)(?!\*?string\s)(\S+\s+`[^`]*?)\s+validate:"regexp=(?:[^"\\]|\\.)*"}{$1$2};
+  s{\s+validate:"regexp=(?:[^"\\]|\\.)*"}{}g;
 '
-
-# openapi-generator doubles the backslashes of every pattern and leaves the commas that validator.v2
-# splits its parameters on, so most regexp tags reject valid values. Restore the spec patterns.
-go run "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/patch-validate-regexp/main.go" -dir "$openapi_dir"
 
 # enumUnknownDefaultCase replaces a value added by a newer server with the unknown_default_open_api
 # placeholder, so a read-modify-write sends the placeholder back. The enum types are strings: keep
