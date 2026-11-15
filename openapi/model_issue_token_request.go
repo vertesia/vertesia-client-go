@@ -24,6 +24,9 @@ type IssueTokenRequest struct {
 	ProjectTokenRequest        *ProjectTokenRequest
 	ServiceAccountTokenRequest *ServiceAccountTokenRequest
 	UserTokenRequest           *UserTokenRequest
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // AgentTokenRequestAsIssueTokenRequest is a convenience function that returns AgentTokenRequest wrapped in IssueTokenRequest
@@ -70,124 +73,81 @@ func UserTokenRequestAsIssueTokenRequest(v *UserTokenRequest) IssueTokenRequest 
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *IssueTokenRequest) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into AgentTokenRequest
-	err = newStrictDecoder(data).Decode(&dst.AgentTokenRequest)
-	if err == nil {
-		jsonAgentTokenRequest, _ := json.Marshal(dst.AgentTokenRequest)
-		if string(jsonAgentTokenRequest) == "{}" { // empty struct
-			dst.AgentTokenRequest = nil
-		} else {
-			if err = validator.Validate(dst.AgentTokenRequest); err != nil {
-				dst.AgentTokenRequest = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.AgentTokenRequest = nil
+	*dst = IssueTokenRequest{}
+	var tag struct {
+		Discriminator *string `json:"type"`
 	}
-
-	// try to unmarshal data into ApiKeyTokenRequest
-	err = newStrictDecoder(data).Decode(&dst.ApiKeyTokenRequest)
-	if err == nil {
-		jsonApiKeyTokenRequest, _ := json.Marshal(dst.ApiKeyTokenRequest)
-		if string(jsonApiKeyTokenRequest) == "{}" { // empty struct
-			dst.ApiKeyTokenRequest = nil
-		} else {
-			if err = validator.Validate(dst.ApiKeyTokenRequest); err != nil {
-				dst.ApiKeyTokenRequest = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ApiKeyTokenRequest = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into EnvironmentTokenRequest
-	err = newStrictDecoder(data).Decode(&dst.EnvironmentTokenRequest)
-	if err == nil {
-		jsonEnvironmentTokenRequest, _ := json.Marshal(dst.EnvironmentTokenRequest)
-		if string(jsonEnvironmentTokenRequest) == "{}" { // empty struct
-			dst.EnvironmentTokenRequest = nil
-		} else {
-			if err = validator.Validate(dst.EnvironmentTokenRequest); err != nil {
-				dst.EnvironmentTokenRequest = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.EnvironmentTokenRequest = nil
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing IssueTokenRequest type")
 	}
-
-	// try to unmarshal data into ProjectTokenRequest
-	err = newStrictDecoder(data).Decode(&dst.ProjectTokenRequest)
-	if err == nil {
-		jsonProjectTokenRequest, _ := json.Marshal(dst.ProjectTokenRequest)
-		if string(jsonProjectTokenRequest) == "{}" { // empty struct
-			dst.ProjectTokenRequest = nil
-		} else {
-			if err = validator.Validate(dst.ProjectTokenRequest); err != nil {
-				dst.ProjectTokenRequest = nil
-			} else {
-				match++
-			}
+	switch *tag.Discriminator {
+	case "apikey":
+		var value ApiKeyTokenRequest
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.ProjectTokenRequest = nil
-	}
-
-	// try to unmarshal data into ServiceAccountTokenRequest
-	err = newStrictDecoder(data).Decode(&dst.ServiceAccountTokenRequest)
-	if err == nil {
-		jsonServiceAccountTokenRequest, _ := json.Marshal(dst.ServiceAccountTokenRequest)
-		if string(jsonServiceAccountTokenRequest) == "{}" { // empty struct
-			dst.ServiceAccountTokenRequest = nil
-		} else {
-			if err = validator.Validate(dst.ServiceAccountTokenRequest); err != nil {
-				dst.ServiceAccountTokenRequest = nil
-			} else {
-				match++
-			}
+		if err := validator.Validate(&value); err != nil {
+			return err
 		}
-	} else {
-		dst.ServiceAccountTokenRequest = nil
-	}
-
-	// try to unmarshal data into UserTokenRequest
-	err = newStrictDecoder(data).Decode(&dst.UserTokenRequest)
-	if err == nil {
-		jsonUserTokenRequest, _ := json.Marshal(dst.UserTokenRequest)
-		if string(jsonUserTokenRequest) == "{}" { // empty struct
-			dst.UserTokenRequest = nil
-		} else {
-			if err = validator.Validate(dst.UserTokenRequest); err != nil {
-				dst.UserTokenRequest = nil
-			} else {
-				match++
-			}
+		dst.ApiKeyTokenRequest = &value
+		return nil
+	case "user":
+		var value UserTokenRequest
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.UserTokenRequest = nil
-	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.AgentTokenRequest = nil
-		dst.ApiKeyTokenRequest = nil
-		dst.EnvironmentTokenRequest = nil
-		dst.ProjectTokenRequest = nil
-		dst.ServiceAccountTokenRequest = nil
-		dst.UserTokenRequest = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(IssueTokenRequest)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(IssueTokenRequest)")
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.UserTokenRequest = &value
+		return nil
+	case "project":
+		var value ProjectTokenRequest
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ProjectTokenRequest = &value
+		return nil
+	case "environment":
+		var value EnvironmentTokenRequest
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.EnvironmentTokenRequest = &value
+		return nil
+	case "agent":
+		var value AgentTokenRequest
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.AgentTokenRequest = &value
+		return nil
+	case "service_account":
+		var value ServiceAccountTokenRequest
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ServiceAccountTokenRequest = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -215,6 +175,10 @@ func (src IssueTokenRequest) MarshalJSON() ([]byte, error) {
 
 	if src.UserTokenRequest != nil {
 		return json.Marshal(&src.UserTokenRequest)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -250,6 +214,10 @@ func (obj *IssueTokenRequest) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -280,6 +248,10 @@ func (obj IssueTokenRequest) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

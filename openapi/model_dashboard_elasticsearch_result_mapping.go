@@ -20,6 +20,9 @@ import (
 type DashboardElasticsearchResultMapping struct {
 	DashboardElasticsearchAggregationBucketsMapping *DashboardElasticsearchAggregationBucketsMapping
 	DashboardElasticsearchHitsMapping               *DashboardElasticsearchHitsMapping
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // DashboardElasticsearchAggregationBucketsMappingAsDashboardElasticsearchResultMapping is a convenience function that returns DashboardElasticsearchAggregationBucketsMapping wrapped in DashboardElasticsearchResultMapping
@@ -38,52 +41,41 @@ func DashboardElasticsearchHitsMappingAsDashboardElasticsearchResultMapping(v *D
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *DashboardElasticsearchResultMapping) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into DashboardElasticsearchAggregationBucketsMapping
-	err = newStrictDecoder(data).Decode(&dst.DashboardElasticsearchAggregationBucketsMapping)
-	if err == nil {
-		jsonDashboardElasticsearchAggregationBucketsMapping, _ := json.Marshal(dst.DashboardElasticsearchAggregationBucketsMapping)
-		if string(jsonDashboardElasticsearchAggregationBucketsMapping) == "{}" { // empty struct
-			dst.DashboardElasticsearchAggregationBucketsMapping = nil
-		} else {
-			if err = validator.Validate(dst.DashboardElasticsearchAggregationBucketsMapping); err != nil {
-				dst.DashboardElasticsearchAggregationBucketsMapping = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.DashboardElasticsearchAggregationBucketsMapping = nil
+	*dst = DashboardElasticsearchResultMapping{}
+	var tag struct {
+		Discriminator *string `json:"type"`
 	}
-
-	// try to unmarshal data into DashboardElasticsearchHitsMapping
-	err = newStrictDecoder(data).Decode(&dst.DashboardElasticsearchHitsMapping)
-	if err == nil {
-		jsonDashboardElasticsearchHitsMapping, _ := json.Marshal(dst.DashboardElasticsearchHitsMapping)
-		if string(jsonDashboardElasticsearchHitsMapping) == "{}" { // empty struct
-			dst.DashboardElasticsearchHitsMapping = nil
-		} else {
-			if err = validator.Validate(dst.DashboardElasticsearchHitsMapping); err != nil {
-				dst.DashboardElasticsearchHitsMapping = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.DashboardElasticsearchHitsMapping = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.DashboardElasticsearchAggregationBucketsMapping = nil
-		dst.DashboardElasticsearchHitsMapping = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(DashboardElasticsearchResultMapping)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(DashboardElasticsearchResultMapping)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing DashboardElasticsearchResultMapping type")
+	}
+	switch *tag.Discriminator {
+	case "hits":
+		var value DashboardElasticsearchHitsMapping
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.DashboardElasticsearchHitsMapping = &value
+		return nil
+	case "aggregation_buckets":
+		var value DashboardElasticsearchAggregationBucketsMapping
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.DashboardElasticsearchAggregationBucketsMapping = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src DashboardElasticsearchResultMapping) MarshalJSON() ([]byte, error) {
 
 	if src.DashboardElasticsearchHitsMapping != nil {
 		return json.Marshal(&src.DashboardElasticsearchHitsMapping)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *DashboardElasticsearchResultMapping) GetActualInstance() interface{} 
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj DashboardElasticsearchResultMapping) GetActualInstanceValue() interfac
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

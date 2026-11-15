@@ -56,7 +56,7 @@ func (v *ProcessToolCompatibilityReason) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PROCESSTOOLCOMPATIBILITYREASON_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

@@ -46,7 +46,7 @@ func (v *WebhookSigningMode) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = WEBHOOKSIGNINGMODE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

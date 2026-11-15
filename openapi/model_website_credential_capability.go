@@ -48,7 +48,7 @@ func (v *WebsiteCredentialCapability) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = WEBSITECREDENTIALCAPABILITY_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

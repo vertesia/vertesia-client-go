@@ -22,7 +22,7 @@ var _ MappedNullable = &GetUploadUrlPayload{}
 type GetUploadUrlPayload struct {
 	Name string `json:"name"`
 	// The object name to upload to. A random name is chosen when omitted. It must not be empty, start with `/` or `\\`, or contain a `..` segment.
-	Id       *string `json:"id,omitempty" validate:"regexp=^(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*)(?:[\\\\\\/]+(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*))*[\\\\\\/]*$"`
+	Id       *string `json:"id,omitempty" validate:"regexp=^(?:\\.\\.[^\\/]+|\\.(?:[^\\/.][^\\/]*)?|[^\\/.][^\\/]*)(?:[\\/]+(?:\\.\\.[^\\/]+|\\.(?:[^\\/.][^\\/]*)?|[^\\/.][^\\/]*))*[\\/]*$"`
 	MimeType *string `json:"mime_type,omitempty"`
 	// Lifetime of the signed URL in seconds, at most seven days.
 	Ttl *int32 `json:"ttl,omitempty"`
@@ -261,3 +261,5 @@ func (v *NullableGetUploadUrlPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

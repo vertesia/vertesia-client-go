@@ -50,7 +50,7 @@ func (v *DurableTaskStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = DURABLETASKSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

@@ -23,7 +23,7 @@ type InferenceProfileSnapshot struct {
 	// MongoDB ObjectId of the inference profile.
 	Id *string `json:"id,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
 	// Editable display name, independent of the stable profile ID.
-	Name     string           `json:"name" validate:"regexp=\\\\S"`
+	Name     string           `json:"name" validate:"regexp=\\S"`
 	Revision string           `json:"revision"`
 	Source   string           `json:"source"`
 	Profile  InferenceProfile `json:"profile"`
@@ -273,3 +273,5 @@ func (v *NullableInferenceProfileSnapshot) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

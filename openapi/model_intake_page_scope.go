@@ -46,7 +46,7 @@ func (v *IntakePageScope) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = INTAKEPAGESCOPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

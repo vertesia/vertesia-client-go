@@ -44,7 +44,7 @@ func (v *SupportedIntegrationsSerper) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = SUPPORTEDINTEGRATIONSSERPER_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

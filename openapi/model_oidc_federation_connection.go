@@ -24,7 +24,7 @@ type OidcFederationConnection struct {
 	Issuer  string  `json:"issuer"`
 	JwksUri *string `json:"jwks_uri,omitempty"`
 	// Exact top-level verified token claim matched to SCIM externalId within the owning provisioning account.
-	ExternalIdClaim   string   `json:"external_id_claim" validate:"regexp=\\\\S"`
+	ExternalIdClaim   string   `json:"external_id_claim" validate:"regexp=\\S"`
 	AllowedAudiences  []string `json:"allowed_audiences"`
 	AllowedAlgorithms []string `json:"allowed_algorithms"`
 	SubjectTokenType  string   `json:"subject_token_type"`
@@ -645,3 +645,5 @@ func (v *NullableOidcFederationConnection) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

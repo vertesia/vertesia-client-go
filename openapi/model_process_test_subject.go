@@ -21,6 +21,9 @@ type ProcessTestSubject struct {
 	ProcessTestInlineSubject   *ProcessTestInlineSubject
 	ProcessTestResolvedSubject *ProcessTestResolvedSubject
 	ProcessTestStoredSubject   *ProcessTestStoredSubject
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // ProcessTestInlineSubjectAsProcessTestSubject is a convenience function that returns ProcessTestInlineSubject wrapped in ProcessTestSubject
@@ -46,70 +49,51 @@ func ProcessTestStoredSubjectAsProcessTestSubject(v *ProcessTestStoredSubject) P
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *ProcessTestSubject) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into ProcessTestInlineSubject
-	err = newStrictDecoder(data).Decode(&dst.ProcessTestInlineSubject)
-	if err == nil {
-		jsonProcessTestInlineSubject, _ := json.Marshal(dst.ProcessTestInlineSubject)
-		if string(jsonProcessTestInlineSubject) == "{}" { // empty struct
-			dst.ProcessTestInlineSubject = nil
-		} else {
-			if err = validator.Validate(dst.ProcessTestInlineSubject); err != nil {
-				dst.ProcessTestInlineSubject = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ProcessTestInlineSubject = nil
+	*dst = ProcessTestSubject{}
+	var tag struct {
+		Discriminator *string `json:"kind"`
 	}
-
-	// try to unmarshal data into ProcessTestResolvedSubject
-	err = newStrictDecoder(data).Decode(&dst.ProcessTestResolvedSubject)
-	if err == nil {
-		jsonProcessTestResolvedSubject, _ := json.Marshal(dst.ProcessTestResolvedSubject)
-		if string(jsonProcessTestResolvedSubject) == "{}" { // empty struct
-			dst.ProcessTestResolvedSubject = nil
-		} else {
-			if err = validator.Validate(dst.ProcessTestResolvedSubject); err != nil {
-				dst.ProcessTestResolvedSubject = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ProcessTestResolvedSubject = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into ProcessTestStoredSubject
-	err = newStrictDecoder(data).Decode(&dst.ProcessTestStoredSubject)
-	if err == nil {
-		jsonProcessTestStoredSubject, _ := json.Marshal(dst.ProcessTestStoredSubject)
-		if string(jsonProcessTestStoredSubject) == "{}" { // empty struct
-			dst.ProcessTestStoredSubject = nil
-		} else {
-			if err = validator.Validate(dst.ProcessTestStoredSubject); err != nil {
-				dst.ProcessTestStoredSubject = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ProcessTestStoredSubject = nil
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing ProcessTestSubject kind")
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.ProcessTestInlineSubject = nil
-		dst.ProcessTestResolvedSubject = nil
-		dst.ProcessTestStoredSubject = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(ProcessTestSubject)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(ProcessTestSubject)")
+	switch *tag.Discriminator {
+	case "stored":
+		var value ProcessTestStoredSubject
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ProcessTestStoredSubject = &value
+		return nil
+	case "resolved":
+		var value ProcessTestResolvedSubject
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ProcessTestResolvedSubject = &value
+		return nil
+	case "inline":
+		var value ProcessTestInlineSubject
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ProcessTestInlineSubject = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -125,6 +109,10 @@ func (src ProcessTestSubject) MarshalJSON() ([]byte, error) {
 
 	if src.ProcessTestStoredSubject != nil {
 		return json.Marshal(&src.ProcessTestStoredSubject)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -148,6 +136,10 @@ func (obj *ProcessTestSubject) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -166,6 +158,10 @@ func (obj ProcessTestSubject) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

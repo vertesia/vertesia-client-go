@@ -21,7 +21,7 @@ var _ MappedNullable = &GetFileUrlPayload{}
 // GetFileUrlPayload struct for GetFileUrlPayload
 type GetFileUrlPayload struct {
 	// The file path (relative to bucket) or full URI. It must not be blank or contain control characters.
-	File        string  `json:"file" validate:"regexp=^[\\\\u0020\\\\u00a0\\\\u1680\\\\u2000-\\\\u200a\\\\u2028\\\\u2029\\\\u202f\\\\u205f\\\\u3000\\\\ufeff]*[^\\\\u0000-\\\\u001f\\\\u007f\\\\u0020\\\\u00a0\\\\u1680\\\\u2000-\\\\u200a\\\\u2028\\\\u2029\\\\u202f\\\\u205f\\\\u3000\\\\ufeff][^\\\\u0000-\\\\u001f\\\\u007f]*$"`
+	File        string  `json:"file" validate:"regexp=^[\\x{0020}\\x{00a0}\\x{1680}\\x{2000}-\\x{200a}\\x{2028}\\x{2029}\\x{202f}\\x{205f}\\x{3000}\\x{feff}]*[^\\x{0000}-\\x{001f}\\x{007f}\\x{0020}\\x{00a0}\\x{1680}\\x{2000}-\\x{200a}\\x{2028}\\x{2029}\\x{202f}\\x{205f}\\x{3000}\\x{feff}][^\\x{0000}-\\x{001f}\\x{007f}]*$"`
 	Name        *string `json:"name,omitempty"`
 	Disposition *string `json:"disposition,omitempty"`
 }
@@ -224,3 +224,5 @@ func (v *NullableGetFileUrlPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

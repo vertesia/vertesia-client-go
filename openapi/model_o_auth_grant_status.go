@@ -48,7 +48,7 @@ func (v *OAuthGrantStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = OAUTHGRANTSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

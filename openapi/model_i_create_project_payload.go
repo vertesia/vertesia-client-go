@@ -22,7 +22,7 @@ var _ MappedNullable = &ICreateProjectPayload{}
 type ICreateProjectPayload struct {
 	Name string `json:"name"`
 	// Letters, digits, `-`, `_`, `[` and `]`. Must not be the namespace of another project, which the server answers with a 409.
-	Namespace   string  `json:"namespace" validate:"regexp=^[a-zA-Z0-9_[\\\\]-]+$"`
+	Namespace   string  `json:"namespace" validate:"regexp=^[a-zA-Z0-9_[\\]-]+$"`
 	Description *string `json:"description,omitempty"`
 	AutoConfig  *bool   `json:"auto_config,omitempty"`
 }
@@ -252,3 +252,5 @@ func (v *NullableICreateProjectPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

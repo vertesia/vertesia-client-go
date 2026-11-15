@@ -52,7 +52,7 @@ func (v *AppBuildProgressStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = APPBUILDPROGRESSSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

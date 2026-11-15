@@ -50,7 +50,7 @@ func (v *EvaluationSeverity) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = EVALUATIONSEVERITY_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

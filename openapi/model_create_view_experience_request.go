@@ -27,7 +27,7 @@ type CreateViewExperienceRequest struct {
 	Navigation  []ViewNavigationItem         `json:"navigation,omitempty"`
 	Search      *ViewSearchConfiguration     `json:"search,omitempty"`
 	Results     *ViewResultsConfiguration    `json:"results,omitempty"`
-	Description string                       `json:"description" validate:"regexp=\\\\S"`
+	Description string                       `json:"description" validate:"regexp=\\S"`
 	Id          string                       `json:"id" validate:"regexp=^[a-z0-9]+(?:-[a-z0-9]+)*$"`
 	Version     *ViewExperienceSchemaVersion `json:"version,omitempty"`
 }
@@ -459,3 +459,5 @@ func (v *NullableCreateViewExperienceRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

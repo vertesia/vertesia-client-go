@@ -52,7 +52,7 @@ func (v *InteractionStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = INTERACTIONSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

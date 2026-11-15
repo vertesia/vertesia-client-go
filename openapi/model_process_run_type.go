@@ -46,7 +46,7 @@ func (v *ProcessRunType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PROCESSRUNTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

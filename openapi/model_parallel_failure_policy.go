@@ -46,7 +46,7 @@ func (v *ParallelFailurePolicy) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PARALLELFAILUREPOLICY_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

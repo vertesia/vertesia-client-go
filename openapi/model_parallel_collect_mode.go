@@ -44,7 +44,7 @@ func (v *ParallelCollectMode) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PARALLELCOLLECTMODE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

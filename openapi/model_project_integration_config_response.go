@@ -27,6 +27,9 @@ type ProjectIntegrationConfigResponse struct {
 	MagicPdfConfiguration       *MagicPdfConfiguration
 	ResendConfiguration         *ResendConfiguration
 	SerperConfiguration         *SerperConfiguration
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // AskUserWebhookConfigurationAsProjectIntegrationConfigResponse is a convenience function that returns AskUserWebhookConfiguration wrapped in ProjectIntegrationConfigResponse
@@ -94,178 +97,111 @@ func SerperConfigurationAsProjectIntegrationConfigResponse(v *SerperConfiguratio
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *ProjectIntegrationConfigResponse) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into AskUserWebhookConfiguration
-	err = newStrictDecoder(data).Decode(&dst.AskUserWebhookConfiguration)
-	if err == nil {
-		jsonAskUserWebhookConfiguration, _ := json.Marshal(dst.AskUserWebhookConfiguration)
-		if string(jsonAskUserWebhookConfiguration) == "{}" { // empty struct
-			dst.AskUserWebhookConfiguration = nil
-		} else {
-			if err = validator.Validate(dst.AskUserWebhookConfiguration); err != nil {
-				dst.AskUserWebhookConfiguration = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.AskUserWebhookConfiguration = nil
+	*dst = ProjectIntegrationConfigResponse{}
+	var tag struct {
+		Discriminator *string `json:"integration"`
 	}
-
-	// try to unmarshal data into AwsConfiguration
-	err = newStrictDecoder(data).Decode(&dst.AwsConfiguration)
-	if err == nil {
-		jsonAwsConfiguration, _ := json.Marshal(dst.AwsConfiguration)
-		if string(jsonAwsConfiguration) == "{}" { // empty struct
-			dst.AwsConfiguration = nil
-		} else {
-			if err = validator.Validate(dst.AwsConfiguration); err != nil {
-				dst.AwsConfiguration = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.AwsConfiguration = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into ExaConfiguration
-	err = newStrictDecoder(data).Decode(&dst.ExaConfiguration)
-	if err == nil {
-		jsonExaConfiguration, _ := json.Marshal(dst.ExaConfiguration)
-		if string(jsonExaConfiguration) == "{}" { // empty struct
-			dst.ExaConfiguration = nil
-		} else {
-			if err = validator.Validate(dst.ExaConfiguration); err != nil {
-				dst.ExaConfiguration = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ExaConfiguration = nil
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing ProjectIntegrationConfigResponse integration")
 	}
-
-	// try to unmarshal data into GithubConfiguration
-	err = newStrictDecoder(data).Decode(&dst.GithubConfiguration)
-	if err == nil {
-		jsonGithubConfiguration, _ := json.Marshal(dst.GithubConfiguration)
-		if string(jsonGithubConfiguration) == "{}" { // empty struct
-			dst.GithubConfiguration = nil
-		} else {
-			if err = validator.Validate(dst.GithubConfiguration); err != nil {
-				dst.GithubConfiguration = nil
-			} else {
-				match++
-			}
+	switch *tag.Discriminator {
+	case "gladia":
+		var value GladiaConfiguration
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.GithubConfiguration = nil
-	}
-
-	// try to unmarshal data into GladiaConfiguration
-	err = newStrictDecoder(data).Decode(&dst.GladiaConfiguration)
-	if err == nil {
-		jsonGladiaConfiguration, _ := json.Marshal(dst.GladiaConfiguration)
-		if string(jsonGladiaConfiguration) == "{}" { // empty struct
-			dst.GladiaConfiguration = nil
-		} else {
-			if err = validator.Validate(dst.GladiaConfiguration); err != nil {
-				dst.GladiaConfiguration = nil
-			} else {
-				match++
-			}
+		if err := validator.Validate(&value); err != nil {
+			return err
 		}
-	} else {
-		dst.GladiaConfiguration = nil
-	}
-
-	// try to unmarshal data into LinkupConfiguration
-	err = newStrictDecoder(data).Decode(&dst.LinkupConfiguration)
-	if err == nil {
-		jsonLinkupConfiguration, _ := json.Marshal(dst.LinkupConfiguration)
-		if string(jsonLinkupConfiguration) == "{}" { // empty struct
-			dst.LinkupConfiguration = nil
-		} else {
-			if err = validator.Validate(dst.LinkupConfiguration); err != nil {
-				dst.LinkupConfiguration = nil
-			} else {
-				match++
-			}
+		dst.GladiaConfiguration = &value
+		return nil
+	case "github":
+		var value GithubConfiguration
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.LinkupConfiguration = nil
-	}
-
-	// try to unmarshal data into MagicPdfConfiguration
-	err = newStrictDecoder(data).Decode(&dst.MagicPdfConfiguration)
-	if err == nil {
-		jsonMagicPdfConfiguration, _ := json.Marshal(dst.MagicPdfConfiguration)
-		if string(jsonMagicPdfConfiguration) == "{}" { // empty struct
-			dst.MagicPdfConfiguration = nil
-		} else {
-			if err = validator.Validate(dst.MagicPdfConfiguration); err != nil {
-				dst.MagicPdfConfiguration = nil
-			} else {
-				match++
-			}
+		if err := validator.Validate(&value); err != nil {
+			return err
 		}
-	} else {
-		dst.MagicPdfConfiguration = nil
-	}
-
-	// try to unmarshal data into ResendConfiguration
-	err = newStrictDecoder(data).Decode(&dst.ResendConfiguration)
-	if err == nil {
-		jsonResendConfiguration, _ := json.Marshal(dst.ResendConfiguration)
-		if string(jsonResendConfiguration) == "{}" { // empty struct
-			dst.ResendConfiguration = nil
-		} else {
-			if err = validator.Validate(dst.ResendConfiguration); err != nil {
-				dst.ResendConfiguration = nil
-			} else {
-				match++
-			}
+		dst.GithubConfiguration = &value
+		return nil
+	case "aws":
+		var value AwsConfiguration
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.ResendConfiguration = nil
-	}
-
-	// try to unmarshal data into SerperConfiguration
-	err = newStrictDecoder(data).Decode(&dst.SerperConfiguration)
-	if err == nil {
-		jsonSerperConfiguration, _ := json.Marshal(dst.SerperConfiguration)
-		if string(jsonSerperConfiguration) == "{}" { // empty struct
-			dst.SerperConfiguration = nil
-		} else {
-			if err = validator.Validate(dst.SerperConfiguration); err != nil {
-				dst.SerperConfiguration = nil
-			} else {
-				match++
-			}
+		if err := validator.Validate(&value); err != nil {
+			return err
 		}
-	} else {
-		dst.SerperConfiguration = nil
-	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.AskUserWebhookConfiguration = nil
-		dst.AwsConfiguration = nil
-		dst.ExaConfiguration = nil
-		dst.GithubConfiguration = nil
-		dst.GladiaConfiguration = nil
-		dst.LinkupConfiguration = nil
-		dst.MagicPdfConfiguration = nil
-		dst.ResendConfiguration = nil
-		dst.SerperConfiguration = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(ProjectIntegrationConfigResponse)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(ProjectIntegrationConfigResponse)")
+		dst.AwsConfiguration = &value
+		return nil
+	case "magic_pdf":
+		var value MagicPdfConfiguration
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.MagicPdfConfiguration = &value
+		return nil
+	case "serper":
+		var value SerperConfiguration
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.SerperConfiguration = &value
+		return nil
+	case "exa":
+		var value ExaConfiguration
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ExaConfiguration = &value
+		return nil
+	case "linkup":
+		var value LinkupConfiguration
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.LinkupConfiguration = &value
+		return nil
+	case "resend":
+		var value ResendConfiguration
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ResendConfiguration = &value
+		return nil
+	case "ask_user_webhook":
+		var value AskUserWebhookConfiguration
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.AskUserWebhookConfiguration = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -305,6 +241,10 @@ func (src ProjectIntegrationConfigResponse) MarshalJSON() ([]byte, error) {
 
 	if src.SerperConfiguration != nil {
 		return json.Marshal(&src.SerperConfiguration)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -352,6 +292,10 @@ func (obj *ProjectIntegrationConfigResponse) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -394,6 +338,10 @@ func (obj ProjectIntegrationConfigResponse) GetActualInstanceValue() interface{}
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

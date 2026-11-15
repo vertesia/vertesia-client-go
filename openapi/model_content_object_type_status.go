@@ -46,7 +46,7 @@ func (v *ContentObjectTypeStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = CONTENTOBJECTTYPESTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

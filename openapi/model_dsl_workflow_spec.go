@@ -20,6 +20,9 @@ import (
 type DSLWorkflowSpec struct {
 	DSLWorkflowSpecWithActivities *DSLWorkflowSpecWithActivities
 	DSLWorkflowSpecWithSteps      *DSLWorkflowSpecWithSteps
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // DSLWorkflowSpecWithActivitiesAsDSLWorkflowSpec is a convenience function that returns DSLWorkflowSpecWithActivities wrapped in DSLWorkflowSpec
@@ -38,52 +41,41 @@ func DSLWorkflowSpecWithStepsAsDSLWorkflowSpec(v *DSLWorkflowSpecWithSteps) DSLW
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *DSLWorkflowSpec) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into DSLWorkflowSpecWithActivities
-	err = newStrictDecoder(data).Decode(&dst.DSLWorkflowSpecWithActivities)
-	if err == nil {
-		jsonDSLWorkflowSpecWithActivities, _ := json.Marshal(dst.DSLWorkflowSpecWithActivities)
-		if string(jsonDSLWorkflowSpecWithActivities) == "{}" { // empty struct
-			dst.DSLWorkflowSpecWithActivities = nil
-		} else {
-			if err = validator.Validate(dst.DSLWorkflowSpecWithActivities); err != nil {
-				dst.DSLWorkflowSpecWithActivities = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.DSLWorkflowSpecWithActivities = nil
+	*dst = DSLWorkflowSpec{}
+	var tag struct {
+		Discriminator *string `json:"spec_format"`
 	}
-
-	// try to unmarshal data into DSLWorkflowSpecWithSteps
-	err = newStrictDecoder(data).Decode(&dst.DSLWorkflowSpecWithSteps)
-	if err == nil {
-		jsonDSLWorkflowSpecWithSteps, _ := json.Marshal(dst.DSLWorkflowSpecWithSteps)
-		if string(jsonDSLWorkflowSpecWithSteps) == "{}" { // empty struct
-			dst.DSLWorkflowSpecWithSteps = nil
-		} else {
-			if err = validator.Validate(dst.DSLWorkflowSpecWithSteps); err != nil {
-				dst.DSLWorkflowSpecWithSteps = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.DSLWorkflowSpecWithSteps = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.DSLWorkflowSpecWithActivities = nil
-		dst.DSLWorkflowSpecWithSteps = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(DSLWorkflowSpec)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(DSLWorkflowSpec)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing DSLWorkflowSpec spec_format")
+	}
+	switch *tag.Discriminator {
+	case "steps":
+		var value DSLWorkflowSpecWithSteps
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.DSLWorkflowSpecWithSteps = &value
+		return nil
+	case "activities":
+		var value DSLWorkflowSpecWithActivities
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.DSLWorkflowSpecWithActivities = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src DSLWorkflowSpec) MarshalJSON() ([]byte, error) {
 
 	if src.DSLWorkflowSpecWithSteps != nil {
 		return json.Marshal(&src.DSLWorkflowSpecWithSteps)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *DSLWorkflowSpec) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj DSLWorkflowSpec) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

@@ -48,7 +48,7 @@ func (v *RunDataStorageLevel) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = RUNDATASTORAGELEVEL_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

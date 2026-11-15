@@ -48,7 +48,7 @@ func (v *ExtractAppVersionGitRefTypeBranchTagCommit) UnmarshalJSON(src []byte) e
 		}
 	}
 
-	*v = EXTRACTAPPVERSIONGITREFTYPEBRANCHTAGCOMMIT_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

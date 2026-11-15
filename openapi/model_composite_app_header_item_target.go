@@ -46,7 +46,7 @@ func (v *CompositeAppHeaderItemTarget) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = COMPOSITEAPPHEADERITEMTARGET_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

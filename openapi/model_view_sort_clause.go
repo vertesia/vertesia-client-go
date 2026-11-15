@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewSortClause{}
 
 // ViewSortClause struct for ViewSortClause
 type ViewSortClause struct {
-	Field string `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
+	Field string `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\.[A-Za-z0-9_]+)*$"`
 	Order string `json:"order"`
 }
 
@@ -179,3 +179,5 @@ func (v *NullableViewSortClause) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

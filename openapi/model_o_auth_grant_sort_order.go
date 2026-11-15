@@ -46,7 +46,7 @@ func (v *OAuthGrantSortOrder) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = OAUTHGRANTSORTORDER_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

@@ -80,7 +80,7 @@ func (v *KnownAuditAction) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = KNOWNAUDITACTION_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

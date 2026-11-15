@@ -46,7 +46,7 @@ func (v *CollectionStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = COLLECTIONSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

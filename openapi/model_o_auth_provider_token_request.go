@@ -20,7 +20,7 @@ var _ MappedNullable = &OAuthProviderTokenRequest{}
 // OAuthProviderTokenRequest Optional body of the provider token request.
 type OAuthProviderTokenRequest struct {
 	// Space-separated scopes to request instead of default_scopes (RFC 6749 §3.3), for example a second resource of the same client. Each scope must be in the provider's default_scopes or allowed_scopes, otherwise the request fails with 400. client_credentials providers only. Omit it for the default scopes.
-	Scope *string `json:"scope,omitempty" validate:"regexp=\\\\S"`
+	Scope *string `json:"scope,omitempty" validate:"regexp=\\S"`
 }
 
 // NewOAuthProviderTokenRequest instantiates a new OAuthProviderTokenRequest object
@@ -123,3 +123,5 @@ func (v *NullableOAuthProviderTokenRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

@@ -21,7 +21,7 @@ var _ MappedNullable = &WebsiteCredentialSecretInputTotp{}
 // WebsiteCredentialSecretInputTotp struct for WebsiteCredentialSecretInputTotp
 type WebsiteCredentialSecretInputTotp struct {
 	// The base32 TOTP seed (`A`-`Z`, `2`-`7`, any case). Whitespace, `=` and `-` are ignored.
-	Seed      string                          `json:"seed" validate:"regexp=^[\\\\sA-Za-z2-7=-]*[A-Za-z2-7][\\\\sA-Za-z2-7=-]*$"`
+	Seed      string                          `json:"seed" validate:"regexp=^[\\sA-Za-z2-7=-]*[A-Za-z2-7][\\sA-Za-z2-7=-]*$"`
 	Algorithm *WebsiteCredentialTotpAlgorithm `json:"algorithm,omitempty"`
 	Digits    *float32                        `json:"digits,omitempty"`
 	Period    *float32                        `json:"period,omitempty"`
@@ -332,3 +332,5 @@ func (v *NullableWebsiteCredentialSecretInputTotp) UnmarshalJSON(src []byte) err
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

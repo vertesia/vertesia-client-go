@@ -28,7 +28,7 @@ type StartAppScaffoldRequest struct {
 	// App permissions declared in generated source. Defaults to sign-in only.
 	OauthScopes []string `json:"oauth_scopes,omitempty"`
 	// Optional Vertesia SDK version or package track for this scaffold. Overrides the deployment default.
-	AppgenPackageSpec *string `json:"appgen_package_spec,omitempty" validate:"regexp=^(?:latest|dev|dev-[0-9]+\\\\.[0-9]+|snapshot-[0-9a-f]{7}|[0-9]+\\\\.[0-9]+\\\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\\\+[0-9A-Za-z.-]+)?)$"`
+	AppgenPackageSpec *string `json:"appgen_package_spec,omitempty" validate:"regexp=^(?:latest|dev|dev-[0-9]+\\.[0-9]+|snapshot-[0-9a-f]{7}|[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?)$"`
 	// Start an initial app version build after the source has been pushed. Defaults to true.
 	CreateVersion *bool `json:"create_version,omitempty"`
 	// Explicit source setup behavior for external repositories. Omit to retain the legacy automatic behavior.
@@ -519,3 +519,5 @@ func (v *NullableStartAppScaffoldRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

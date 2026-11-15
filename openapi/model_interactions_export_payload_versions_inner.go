@@ -19,10 +19,32 @@ import (
 type InteractionsExportPayloadVersionsInner struct {
 	Float32 *float32
 	String  *string
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
-// Unmarshal JSON data into any of the pointers in the struct
+// UnmarshalJSON decodes a known variant, or keeps the payload in Raw when the generated
+// decoder cannot pick a single known variant.
 func (dst *InteractionsExportPayloadVersionsInner) UnmarshalJSON(data []byte) error {
+	*dst = InteractionsExportPayloadVersionsInner{}
+	err := dst.unmarshalVariantJSON(data)
+	if err == nil {
+		return nil
+	}
+	*dst = InteractionsExportPayloadVersionsInner{}
+	if string(data) == "null" || !json.Valid(data) {
+		return err
+	}
+	// A variant added after this client was generated: keep it as the server sent it.
+	dst.Raw = append(json.RawMessage(nil), data...)
+	return nil
+}
+
+// unmarshalVariantJSON is the generated decoder of the known variants.
+//
+// Unmarshal JSON data into any of the pointers in the struct
+func (dst *InteractionsExportPayloadVersionsInner) unmarshalVariantJSON(data []byte) error {
 	var err error
 	// try to unmarshal JSON data into Float32
 	err = json.Unmarshal(data, &dst.Float32)
@@ -61,6 +83,10 @@ func (src InteractionsExportPayloadVersionsInner) MarshalJSON() ([]byte, error) 
 
 	if src.String != nil {
 		return json.Marshal(&src.String)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in anyOf schemas

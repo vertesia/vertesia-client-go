@@ -27,7 +27,7 @@ type UpdateViewExperienceRequest struct {
 	Navigation  []ViewNavigationItem        `json:"navigation,omitempty"`
 	Search      *ViewSearchConfiguration    `json:"search,omitempty"`
 	Results     *ViewResultsConfiguration   `json:"results,omitempty"`
-	Description string                      `json:"description" validate:"regexp=\\\\S"`
+	Description string                      `json:"description" validate:"regexp=\\S"`
 	Version     ViewExperienceSchemaVersion `json:"version"`
 	Revision    float32                     `json:"revision"`
 }
@@ -451,3 +451,5 @@ func (v *NullableUpdateViewExperienceRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

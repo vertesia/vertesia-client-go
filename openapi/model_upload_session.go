@@ -21,6 +21,9 @@ type UploadSession struct {
 	AzureBlockBlobUploadSession *AzureBlockBlobUploadSession
 	GcsResumableUploadSession   *GcsResumableUploadSession
 	S3MultipartUploadSession    *S3MultipartUploadSession
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // AzureBlockBlobUploadSessionAsUploadSession is a convenience function that returns AzureBlockBlobUploadSession wrapped in UploadSession
@@ -46,70 +49,51 @@ func S3MultipartUploadSessionAsUploadSession(v *S3MultipartUploadSession) Upload
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *UploadSession) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into AzureBlockBlobUploadSession
-	err = newStrictDecoder(data).Decode(&dst.AzureBlockBlobUploadSession)
-	if err == nil {
-		jsonAzureBlockBlobUploadSession, _ := json.Marshal(dst.AzureBlockBlobUploadSession)
-		if string(jsonAzureBlockBlobUploadSession) == "{}" { // empty struct
-			dst.AzureBlockBlobUploadSession = nil
-		} else {
-			if err = validator.Validate(dst.AzureBlockBlobUploadSession); err != nil {
-				dst.AzureBlockBlobUploadSession = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.AzureBlockBlobUploadSession = nil
+	*dst = UploadSession{}
+	var tag struct {
+		Discriminator *string `json:"protocol"`
 	}
-
-	// try to unmarshal data into GcsResumableUploadSession
-	err = newStrictDecoder(data).Decode(&dst.GcsResumableUploadSession)
-	if err == nil {
-		jsonGcsResumableUploadSession, _ := json.Marshal(dst.GcsResumableUploadSession)
-		if string(jsonGcsResumableUploadSession) == "{}" { // empty struct
-			dst.GcsResumableUploadSession = nil
-		} else {
-			if err = validator.Validate(dst.GcsResumableUploadSession); err != nil {
-				dst.GcsResumableUploadSession = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.GcsResumableUploadSession = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into S3MultipartUploadSession
-	err = newStrictDecoder(data).Decode(&dst.S3MultipartUploadSession)
-	if err == nil {
-		jsonS3MultipartUploadSession, _ := json.Marshal(dst.S3MultipartUploadSession)
-		if string(jsonS3MultipartUploadSession) == "{}" { // empty struct
-			dst.S3MultipartUploadSession = nil
-		} else {
-			if err = validator.Validate(dst.S3MultipartUploadSession); err != nil {
-				dst.S3MultipartUploadSession = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.S3MultipartUploadSession = nil
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing UploadSession protocol")
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.AzureBlockBlobUploadSession = nil
-		dst.GcsResumableUploadSession = nil
-		dst.S3MultipartUploadSession = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(UploadSession)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(UploadSession)")
+	switch *tag.Discriminator {
+	case "gcs_resumable":
+		var value GcsResumableUploadSession
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.GcsResumableUploadSession = &value
+		return nil
+	case "azure_block_blob":
+		var value AzureBlockBlobUploadSession
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.AzureBlockBlobUploadSession = &value
+		return nil
+	case "s3_multipart":
+		var value S3MultipartUploadSession
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.S3MultipartUploadSession = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -125,6 +109,10 @@ func (src UploadSession) MarshalJSON() ([]byte, error) {
 
 	if src.S3MultipartUploadSession != nil {
 		return json.Marshal(&src.S3MultipartUploadSession)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -148,6 +136,10 @@ func (obj *UploadSession) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -166,6 +158,10 @@ func (obj UploadSession) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

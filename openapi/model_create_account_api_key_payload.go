@@ -21,7 +21,7 @@ var _ MappedNullable = &CreateAccountApiKeyPayload{}
 
 // CreateAccountApiKeyPayload struct for CreateAccountApiKeyPayload
 type CreateAccountApiKeyPayload struct {
-	Name      string     `json:"name" validate:"regexp=\\\\S"`
+	Name      string     `json:"name" validate:"regexp=\\S"`
 	ExpiresAt *time.Time `json:"expires_at,omitempty"`
 }
 
@@ -188,3 +188,5 @@ func (v *NullableCreateAccountApiKeyPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

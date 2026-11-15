@@ -20,6 +20,9 @@ import (
 type CreateContentSourcePayload struct {
 	CreateBoxContentSourcePayload        *CreateBoxContentSourcePayload
 	CreateSharePointContentSourcePayload *CreateSharePointContentSourcePayload
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // CreateBoxContentSourcePayloadAsCreateContentSourcePayload is a convenience function that returns CreateBoxContentSourcePayload wrapped in CreateContentSourcePayload
@@ -38,52 +41,41 @@ func CreateSharePointContentSourcePayloadAsCreateContentSourcePayload(v *CreateS
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *CreateContentSourcePayload) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into CreateBoxContentSourcePayload
-	err = newStrictDecoder(data).Decode(&dst.CreateBoxContentSourcePayload)
-	if err == nil {
-		jsonCreateBoxContentSourcePayload, _ := json.Marshal(dst.CreateBoxContentSourcePayload)
-		if string(jsonCreateBoxContentSourcePayload) == "{}" { // empty struct
-			dst.CreateBoxContentSourcePayload = nil
-		} else {
-			if err = validator.Validate(dst.CreateBoxContentSourcePayload); err != nil {
-				dst.CreateBoxContentSourcePayload = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.CreateBoxContentSourcePayload = nil
+	*dst = CreateContentSourcePayload{}
+	var tag struct {
+		Discriminator *string `json:"type"`
 	}
-
-	// try to unmarshal data into CreateSharePointContentSourcePayload
-	err = newStrictDecoder(data).Decode(&dst.CreateSharePointContentSourcePayload)
-	if err == nil {
-		jsonCreateSharePointContentSourcePayload, _ := json.Marshal(dst.CreateSharePointContentSourcePayload)
-		if string(jsonCreateSharePointContentSourcePayload) == "{}" { // empty struct
-			dst.CreateSharePointContentSourcePayload = nil
-		} else {
-			if err = validator.Validate(dst.CreateSharePointContentSourcePayload); err != nil {
-				dst.CreateSharePointContentSourcePayload = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.CreateSharePointContentSourcePayload = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.CreateBoxContentSourcePayload = nil
-		dst.CreateSharePointContentSourcePayload = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(CreateContentSourcePayload)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(CreateContentSourcePayload)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing CreateContentSourcePayload type")
+	}
+	switch *tag.Discriminator {
+	case "sharepoint":
+		var value CreateSharePointContentSourcePayload
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.CreateSharePointContentSourcePayload = &value
+		return nil
+	case "box":
+		var value CreateBoxContentSourcePayload
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.CreateBoxContentSourcePayload = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src CreateContentSourcePayload) MarshalJSON() ([]byte, error) {
 
 	if src.CreateSharePointContentSourcePayload != nil {
 		return json.Marshal(&src.CreateSharePointContentSourcePayload)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *CreateContentSourcePayload) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj CreateContentSourcePayload) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

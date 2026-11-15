@@ -48,7 +48,7 @@ func (v *PromptStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PROMPTSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

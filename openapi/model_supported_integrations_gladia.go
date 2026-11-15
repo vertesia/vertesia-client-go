@@ -44,7 +44,7 @@ func (v *SupportedIntegrationsGladia) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = SUPPORTEDINTEGRATIONSGLADIA_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

@@ -52,7 +52,7 @@ func (v *ContentSourceReportAction) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = CONTENTSOURCEREPORTACTION_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

@@ -48,7 +48,7 @@ func (v *ProcessScriptLanguage) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PROCESSSCRIPTLANGUAGE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

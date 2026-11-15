@@ -46,7 +46,7 @@ func (v *Modalities) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = MODALITIES_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

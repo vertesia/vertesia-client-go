@@ -20,6 +20,9 @@ import (
 type WorkflowInput struct {
 	WorkflowFilesInput     *WorkflowFilesInput
 	WorkflowObjectIdsInput *WorkflowObjectIdsInput
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // WorkflowFilesInputAsWorkflowInput is a convenience function that returns WorkflowFilesInput wrapped in WorkflowInput
@@ -38,52 +41,41 @@ func WorkflowObjectIdsInputAsWorkflowInput(v *WorkflowObjectIdsInput) WorkflowIn
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *WorkflowInput) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into WorkflowFilesInput
-	err = newStrictDecoder(data).Decode(&dst.WorkflowFilesInput)
-	if err == nil {
-		jsonWorkflowFilesInput, _ := json.Marshal(dst.WorkflowFilesInput)
-		if string(jsonWorkflowFilesInput) == "{}" { // empty struct
-			dst.WorkflowFilesInput = nil
-		} else {
-			if err = validator.Validate(dst.WorkflowFilesInput); err != nil {
-				dst.WorkflowFilesInput = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.WorkflowFilesInput = nil
+	*dst = WorkflowInput{}
+	var tag struct {
+		Discriminator *string `json:"inputType"`
 	}
-
-	// try to unmarshal data into WorkflowObjectIdsInput
-	err = newStrictDecoder(data).Decode(&dst.WorkflowObjectIdsInput)
-	if err == nil {
-		jsonWorkflowObjectIdsInput, _ := json.Marshal(dst.WorkflowObjectIdsInput)
-		if string(jsonWorkflowObjectIdsInput) == "{}" { // empty struct
-			dst.WorkflowObjectIdsInput = nil
-		} else {
-			if err = validator.Validate(dst.WorkflowObjectIdsInput); err != nil {
-				dst.WorkflowObjectIdsInput = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.WorkflowObjectIdsInput = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.WorkflowFilesInput = nil
-		dst.WorkflowObjectIdsInput = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(WorkflowInput)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(WorkflowInput)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing WorkflowInput inputType")
+	}
+	switch *tag.Discriminator {
+	case "objectIds":
+		var value WorkflowObjectIdsInput
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.WorkflowObjectIdsInput = &value
+		return nil
+	case "files":
+		var value WorkflowFilesInput
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.WorkflowFilesInput = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src WorkflowInput) MarshalJSON() ([]byte, error) {
 
 	if src.WorkflowObjectIdsInput != nil {
 		return json.Marshal(&src.WorkflowObjectIdsInput)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *WorkflowInput) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj WorkflowInput) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

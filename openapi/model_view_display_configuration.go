@@ -23,6 +23,9 @@ type ViewDisplayConfiguration struct {
 	ViewGalleryDisplay *ViewGalleryDisplay
 	ViewListDisplay    *ViewListDisplay
 	ViewTableDisplay   *ViewTableDisplay
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // ViewBoardDisplayAsViewDisplayConfiguration is a convenience function that returns ViewBoardDisplay wrapped in ViewDisplayConfiguration
@@ -62,106 +65,71 @@ func ViewTableDisplayAsViewDisplayConfiguration(v *ViewTableDisplay) ViewDisplay
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *ViewDisplayConfiguration) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into ViewBoardDisplay
-	err = newStrictDecoder(data).Decode(&dst.ViewBoardDisplay)
-	if err == nil {
-		jsonViewBoardDisplay, _ := json.Marshal(dst.ViewBoardDisplay)
-		if string(jsonViewBoardDisplay) == "{}" { // empty struct
-			dst.ViewBoardDisplay = nil
-		} else {
-			if err = validator.Validate(dst.ViewBoardDisplay); err != nil {
-				dst.ViewBoardDisplay = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ViewBoardDisplay = nil
+	*dst = ViewDisplayConfiguration{}
+	var tag struct {
+		Discriminator *string `json:"type"`
 	}
-
-	// try to unmarshal data into ViewCardsDisplay
-	err = newStrictDecoder(data).Decode(&dst.ViewCardsDisplay)
-	if err == nil {
-		jsonViewCardsDisplay, _ := json.Marshal(dst.ViewCardsDisplay)
-		if string(jsonViewCardsDisplay) == "{}" { // empty struct
-			dst.ViewCardsDisplay = nil
-		} else {
-			if err = validator.Validate(dst.ViewCardsDisplay); err != nil {
-				dst.ViewCardsDisplay = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ViewCardsDisplay = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into ViewGalleryDisplay
-	err = newStrictDecoder(data).Decode(&dst.ViewGalleryDisplay)
-	if err == nil {
-		jsonViewGalleryDisplay, _ := json.Marshal(dst.ViewGalleryDisplay)
-		if string(jsonViewGalleryDisplay) == "{}" { // empty struct
-			dst.ViewGalleryDisplay = nil
-		} else {
-			if err = validator.Validate(dst.ViewGalleryDisplay); err != nil {
-				dst.ViewGalleryDisplay = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ViewGalleryDisplay = nil
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing ViewDisplayConfiguration type")
 	}
-
-	// try to unmarshal data into ViewListDisplay
-	err = newStrictDecoder(data).Decode(&dst.ViewListDisplay)
-	if err == nil {
-		jsonViewListDisplay, _ := json.Marshal(dst.ViewListDisplay)
-		if string(jsonViewListDisplay) == "{}" { // empty struct
-			dst.ViewListDisplay = nil
-		} else {
-			if err = validator.Validate(dst.ViewListDisplay); err != nil {
-				dst.ViewListDisplay = nil
-			} else {
-				match++
-			}
+	switch *tag.Discriminator {
+	case "list":
+		var value ViewListDisplay
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.ViewListDisplay = nil
-	}
-
-	// try to unmarshal data into ViewTableDisplay
-	err = newStrictDecoder(data).Decode(&dst.ViewTableDisplay)
-	if err == nil {
-		jsonViewTableDisplay, _ := json.Marshal(dst.ViewTableDisplay)
-		if string(jsonViewTableDisplay) == "{}" { // empty struct
-			dst.ViewTableDisplay = nil
-		} else {
-			if err = validator.Validate(dst.ViewTableDisplay); err != nil {
-				dst.ViewTableDisplay = nil
-			} else {
-				match++
-			}
+		if err := validator.Validate(&value); err != nil {
+			return err
 		}
-	} else {
-		dst.ViewTableDisplay = nil
-	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.ViewBoardDisplay = nil
-		dst.ViewCardsDisplay = nil
-		dst.ViewGalleryDisplay = nil
-		dst.ViewListDisplay = nil
-		dst.ViewTableDisplay = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(ViewDisplayConfiguration)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(ViewDisplayConfiguration)")
+		dst.ViewListDisplay = &value
+		return nil
+	case "table":
+		var value ViewTableDisplay
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ViewTableDisplay = &value
+		return nil
+	case "cards":
+		var value ViewCardsDisplay
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ViewCardsDisplay = &value
+		return nil
+	case "gallery":
+		var value ViewGalleryDisplay
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ViewGalleryDisplay = &value
+		return nil
+	case "board":
+		var value ViewBoardDisplay
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ViewBoardDisplay = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -185,6 +153,10 @@ func (src ViewDisplayConfiguration) MarshalJSON() ([]byte, error) {
 
 	if src.ViewTableDisplay != nil {
 		return json.Marshal(&src.ViewTableDisplay)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -216,6 +188,10 @@ func (obj *ViewDisplayConfiguration) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -242,6 +218,10 @@ func (obj ViewDisplayConfiguration) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

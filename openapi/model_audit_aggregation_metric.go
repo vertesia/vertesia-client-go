@@ -21,7 +21,7 @@ var _ MappedNullable = &AuditAggregationMetric{}
 // AuditAggregationMetric struct for AuditAggregationMetric
 type AuditAggregationMetric struct {
 	// Stable key used in response rows: 1 to 64 letters, numbers, underscores, or hyphens, unique within the query.
-	Id        string                    `json:"id" validate:"regexp=^[A-Za-z0-9_-]{1,64}$"`
+	Id        string                    `json:"id" validate:"regexp=^[A-Za-z0-9_-]{1\\,64}$"`
 	Operation AuditAggregationOperation `json:"operation"`
 	// Required for count_distinct.
 	Field *AuditAggregationDistinctField `json:"field,omitempty"`
@@ -291,3 +291,5 @@ func (v *NullableAuditAggregationMetric) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

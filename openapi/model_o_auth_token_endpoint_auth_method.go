@@ -50,7 +50,7 @@ func (v *OAuthTokenEndpointAuthMethod) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = OAUTHTOKENENDPOINTAUTHMETHOD_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

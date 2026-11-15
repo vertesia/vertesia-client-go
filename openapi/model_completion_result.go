@@ -13,6 +13,7 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
+	"gopkg.in/validator.v2"
 )
 
 // CompletionResult - struct for CompletionResult
@@ -23,6 +24,9 @@ type CompletionResult struct {
 	TextResult     *TextResult
 	ThoughtsResult *ThoughtsResult
 	VideoResult    *VideoResult
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // AudioResultAsCompletionResult is a convenience function that returns AudioResult wrapped in CompletionResult
@@ -71,15 +75,21 @@ func VideoResultAsCompletionResult(v *VideoResult) CompletionResult {
 func (dst *CompletionResult) UnmarshalJSON(data []byte) error {
 	*dst = CompletionResult{}
 	var tag struct {
-		Discriminator string `json:"type"`
+		Discriminator *string `json:"type"`
 	}
 	if err := json.Unmarshal(data, &tag); err != nil {
 		return err
 	}
-	switch tag.Discriminator {
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing CompletionResult type")
+	}
+	switch *tag.Discriminator {
 	case "text":
 		var value TextResult
 		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
 			return err
 		}
 		dst.TextResult = &value
@@ -89,11 +99,17 @@ func (dst *CompletionResult) UnmarshalJSON(data []byte) error {
 		if err := json.Unmarshal(data, &value); err != nil {
 			return err
 		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
 		dst.ThoughtsResult = &value
 		return nil
 	case "json":
 		var value JsonResult
 		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
 			return err
 		}
 		dst.JsonResult = &value
@@ -103,11 +119,17 @@ func (dst *CompletionResult) UnmarshalJSON(data []byte) error {
 		if err := json.Unmarshal(data, &value); err != nil {
 			return err
 		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
 		dst.ImageResult = &value
 		return nil
 	case "video":
 		var value VideoResult
 		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
 			return err
 		}
 		dst.VideoResult = &value
@@ -117,10 +139,15 @@ func (dst *CompletionResult) UnmarshalJSON(data []byte) error {
 		if err := json.Unmarshal(data, &value); err != nil {
 			return err
 		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
 		dst.AudioResult = &value
 		return nil
 	default:
-		return fmt.Errorf("unknown CompletionResult type %q", tag.Discriminator)
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -148,6 +175,10 @@ func (src CompletionResult) MarshalJSON() ([]byte, error) {
 
 	if src.VideoResult != nil {
 		return json.Marshal(&src.VideoResult)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -183,6 +214,10 @@ func (obj *CompletionResult) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -213,6 +248,10 @@ func (obj CompletionResult) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

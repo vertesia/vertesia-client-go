@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewTableColumn{}
 
 // ViewTableColumn struct for ViewTableColumn
 type ViewTableColumn struct {
-	Field      string                 `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
+	Field      string                 `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\.[A-Za-z0-9_]+)*$"`
 	Label      *string                `json:"label,omitempty"`
 	Format     *ViewResultFieldFormat `json:"format,omitempty"`
 	Fallback   *string                `json:"fallback,omitempty"`
@@ -367,3 +367,5 @@ func (v *NullableViewTableColumn) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

@@ -44,7 +44,7 @@ func (v *SupportedIntegrationsAskUserWebhook) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = SUPPORTEDINTEGRATIONSASKUSERWEBHOOK_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

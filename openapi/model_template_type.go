@@ -48,7 +48,7 @@ func (v *TemplateType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = TEMPLATETYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

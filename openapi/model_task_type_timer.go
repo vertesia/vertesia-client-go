@@ -44,7 +44,7 @@ func (v *TaskTypeTIMER) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = TASKTYPETIMER_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

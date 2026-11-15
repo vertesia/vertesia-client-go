@@ -50,7 +50,7 @@ func (v *AuditAggregationResolution) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = AUDITAGGREGATIONRESOLUTION_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

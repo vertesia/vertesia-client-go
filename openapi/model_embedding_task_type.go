@@ -46,7 +46,7 @@ func (v *EmbeddingTaskType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = EMBEDDINGTASKTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

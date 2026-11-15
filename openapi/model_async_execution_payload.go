@@ -20,6 +20,9 @@ import (
 type AsyncExecutionPayload struct {
 	AsyncConversationExecutionPayload *AsyncConversationExecutionPayload
 	AsyncInteractionExecutionPayload  *AsyncInteractionExecutionPayload
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // AsyncConversationExecutionPayloadAsAsyncExecutionPayload is a convenience function that returns AsyncConversationExecutionPayload wrapped in AsyncExecutionPayload
@@ -38,52 +41,41 @@ func AsyncInteractionExecutionPayloadAsAsyncExecutionPayload(v *AsyncInteraction
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *AsyncExecutionPayload) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into AsyncConversationExecutionPayload
-	err = newStrictDecoder(data).Decode(&dst.AsyncConversationExecutionPayload)
-	if err == nil {
-		jsonAsyncConversationExecutionPayload, _ := json.Marshal(dst.AsyncConversationExecutionPayload)
-		if string(jsonAsyncConversationExecutionPayload) == "{}" { // empty struct
-			dst.AsyncConversationExecutionPayload = nil
-		} else {
-			if err = validator.Validate(dst.AsyncConversationExecutionPayload); err != nil {
-				dst.AsyncConversationExecutionPayload = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.AsyncConversationExecutionPayload = nil
+	*dst = AsyncExecutionPayload{}
+	var tag struct {
+		Discriminator *string `json:"type"`
 	}
-
-	// try to unmarshal data into AsyncInteractionExecutionPayload
-	err = newStrictDecoder(data).Decode(&dst.AsyncInteractionExecutionPayload)
-	if err == nil {
-		jsonAsyncInteractionExecutionPayload, _ := json.Marshal(dst.AsyncInteractionExecutionPayload)
-		if string(jsonAsyncInteractionExecutionPayload) == "{}" { // empty struct
-			dst.AsyncInteractionExecutionPayload = nil
-		} else {
-			if err = validator.Validate(dst.AsyncInteractionExecutionPayload); err != nil {
-				dst.AsyncInteractionExecutionPayload = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.AsyncInteractionExecutionPayload = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.AsyncConversationExecutionPayload = nil
-		dst.AsyncInteractionExecutionPayload = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(AsyncExecutionPayload)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(AsyncExecutionPayload)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing AsyncExecutionPayload type")
+	}
+	switch *tag.Discriminator {
+	case "conversation":
+		var value AsyncConversationExecutionPayload
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.AsyncConversationExecutionPayload = &value
+		return nil
+	case "interaction":
+		var value AsyncInteractionExecutionPayload
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.AsyncInteractionExecutionPayload = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src AsyncExecutionPayload) MarshalJSON() ([]byte, error) {
 
 	if src.AsyncInteractionExecutionPayload != nil {
 		return json.Marshal(&src.AsyncInteractionExecutionPayload)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *AsyncExecutionPayload) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj AsyncExecutionPayload) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

@@ -46,7 +46,7 @@ func (v *AppAvailableIn) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = APPAVAILABLEIN_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

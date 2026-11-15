@@ -140,7 +140,7 @@ func (v *Permission) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PERMISSION_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

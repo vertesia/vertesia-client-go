@@ -44,7 +44,7 @@ func (v *SupportedIntegrationsGithub) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = SUPPORTEDINTEGRATIONSGITHUB_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

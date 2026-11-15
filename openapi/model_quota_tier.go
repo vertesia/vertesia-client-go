@@ -46,7 +46,7 @@ func (v *QuotaTier) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = QUOTATIER_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

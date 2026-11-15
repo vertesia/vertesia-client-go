@@ -46,7 +46,7 @@ func (v *SemanticConditionOnError) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = SEMANTICCONDITIONONERROR_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

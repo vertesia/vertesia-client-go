@@ -48,7 +48,7 @@ func (v *DataRelationshipType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = DATARELATIONSHIPTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

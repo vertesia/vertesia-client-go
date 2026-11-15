@@ -46,7 +46,7 @@ func (v *DocumentProcessingPhase) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = DOCUMENTPROCESSINGPHASE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

@@ -54,7 +54,7 @@ func (v *ViewQueryPlanningFailureCode) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = VIEWQUERYPLANNINGFAILURECODE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

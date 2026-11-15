@@ -66,7 +66,7 @@ func (v *ParallelCollectField) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PARALLELCOLLECTFIELD_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

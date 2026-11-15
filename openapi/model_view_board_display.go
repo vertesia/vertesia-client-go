@@ -25,7 +25,7 @@ type ViewBoardDisplay struct {
 	Renderer *string                    `json:"renderer,omitempty"`
 	PageSize *float32                   `json:"page_size,omitempty"`
 	Type     string                     `json:"type"`
-	GroupBy  string                     `json:"group_by" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
+	GroupBy  string                     `json:"group_by" validate:"regexp=^[A-Za-z0-9_]+(?:\\.[A-Za-z0-9_]+)*$"`
 	Columns  []ViewBoardColumn          `json:"columns,omitempty"`
 	Card     ViewBoardCardConfiguration `json:"card"`
 }
@@ -371,3 +371,5 @@ func (v *NullableViewBoardDisplay) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

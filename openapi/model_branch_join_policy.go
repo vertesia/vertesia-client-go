@@ -44,7 +44,7 @@ func (v *BranchJoinPolicy) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = BRANCHJOINPOLICY_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

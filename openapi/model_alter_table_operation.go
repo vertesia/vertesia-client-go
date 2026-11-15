@@ -24,6 +24,9 @@ type AlterTableOperation struct {
 	AlterTableDropForeignKeyOperation *AlterTableDropForeignKeyOperation
 	AlterTableModifyColumnOperation   *AlterTableModifyColumnOperation
 	AlterTableRenameColumnOperation   *AlterTableRenameColumnOperation
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // AlterTableAddColumnOperationAsAlterTableOperation is a convenience function that returns AlterTableAddColumnOperation wrapped in AlterTableOperation
@@ -70,124 +73,81 @@ func AlterTableRenameColumnOperationAsAlterTableOperation(v *AlterTableRenameCol
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *AlterTableOperation) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into AlterTableAddColumnOperation
-	err = newStrictDecoder(data).Decode(&dst.AlterTableAddColumnOperation)
-	if err == nil {
-		jsonAlterTableAddColumnOperation, _ := json.Marshal(dst.AlterTableAddColumnOperation)
-		if string(jsonAlterTableAddColumnOperation) == "{}" { // empty struct
-			dst.AlterTableAddColumnOperation = nil
-		} else {
-			if err = validator.Validate(dst.AlterTableAddColumnOperation); err != nil {
-				dst.AlterTableAddColumnOperation = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.AlterTableAddColumnOperation = nil
+	*dst = AlterTableOperation{}
+	var tag struct {
+		Discriminator *string `json:"op"`
 	}
-
-	// try to unmarshal data into AlterTableAddForeignKeyOperation
-	err = newStrictDecoder(data).Decode(&dst.AlterTableAddForeignKeyOperation)
-	if err == nil {
-		jsonAlterTableAddForeignKeyOperation, _ := json.Marshal(dst.AlterTableAddForeignKeyOperation)
-		if string(jsonAlterTableAddForeignKeyOperation) == "{}" { // empty struct
-			dst.AlterTableAddForeignKeyOperation = nil
-		} else {
-			if err = validator.Validate(dst.AlterTableAddForeignKeyOperation); err != nil {
-				dst.AlterTableAddForeignKeyOperation = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.AlterTableAddForeignKeyOperation = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into AlterTableDropColumnOperation
-	err = newStrictDecoder(data).Decode(&dst.AlterTableDropColumnOperation)
-	if err == nil {
-		jsonAlterTableDropColumnOperation, _ := json.Marshal(dst.AlterTableDropColumnOperation)
-		if string(jsonAlterTableDropColumnOperation) == "{}" { // empty struct
-			dst.AlterTableDropColumnOperation = nil
-		} else {
-			if err = validator.Validate(dst.AlterTableDropColumnOperation); err != nil {
-				dst.AlterTableDropColumnOperation = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.AlterTableDropColumnOperation = nil
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing AlterTableOperation op")
 	}
-
-	// try to unmarshal data into AlterTableDropForeignKeyOperation
-	err = newStrictDecoder(data).Decode(&dst.AlterTableDropForeignKeyOperation)
-	if err == nil {
-		jsonAlterTableDropForeignKeyOperation, _ := json.Marshal(dst.AlterTableDropForeignKeyOperation)
-		if string(jsonAlterTableDropForeignKeyOperation) == "{}" { // empty struct
-			dst.AlterTableDropForeignKeyOperation = nil
-		} else {
-			if err = validator.Validate(dst.AlterTableDropForeignKeyOperation); err != nil {
-				dst.AlterTableDropForeignKeyOperation = nil
-			} else {
-				match++
-			}
+	switch *tag.Discriminator {
+	case "add_column":
+		var value AlterTableAddColumnOperation
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.AlterTableDropForeignKeyOperation = nil
-	}
-
-	// try to unmarshal data into AlterTableModifyColumnOperation
-	err = newStrictDecoder(data).Decode(&dst.AlterTableModifyColumnOperation)
-	if err == nil {
-		jsonAlterTableModifyColumnOperation, _ := json.Marshal(dst.AlterTableModifyColumnOperation)
-		if string(jsonAlterTableModifyColumnOperation) == "{}" { // empty struct
-			dst.AlterTableModifyColumnOperation = nil
-		} else {
-			if err = validator.Validate(dst.AlterTableModifyColumnOperation); err != nil {
-				dst.AlterTableModifyColumnOperation = nil
-			} else {
-				match++
-			}
+		if err := validator.Validate(&value); err != nil {
+			return err
 		}
-	} else {
-		dst.AlterTableModifyColumnOperation = nil
-	}
-
-	// try to unmarshal data into AlterTableRenameColumnOperation
-	err = newStrictDecoder(data).Decode(&dst.AlterTableRenameColumnOperation)
-	if err == nil {
-		jsonAlterTableRenameColumnOperation, _ := json.Marshal(dst.AlterTableRenameColumnOperation)
-		if string(jsonAlterTableRenameColumnOperation) == "{}" { // empty struct
-			dst.AlterTableRenameColumnOperation = nil
-		} else {
-			if err = validator.Validate(dst.AlterTableRenameColumnOperation); err != nil {
-				dst.AlterTableRenameColumnOperation = nil
-			} else {
-				match++
-			}
+		dst.AlterTableAddColumnOperation = &value
+		return nil
+	case "drop_column":
+		var value AlterTableDropColumnOperation
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.AlterTableRenameColumnOperation = nil
-	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.AlterTableAddColumnOperation = nil
-		dst.AlterTableAddForeignKeyOperation = nil
-		dst.AlterTableDropColumnOperation = nil
-		dst.AlterTableDropForeignKeyOperation = nil
-		dst.AlterTableModifyColumnOperation = nil
-		dst.AlterTableRenameColumnOperation = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(AlterTableOperation)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(AlterTableOperation)")
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.AlterTableDropColumnOperation = &value
+		return nil
+	case "rename_column":
+		var value AlterTableRenameColumnOperation
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.AlterTableRenameColumnOperation = &value
+		return nil
+	case "modify_column":
+		var value AlterTableModifyColumnOperation
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.AlterTableModifyColumnOperation = &value
+		return nil
+	case "add_foreign_key":
+		var value AlterTableAddForeignKeyOperation
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.AlterTableAddForeignKeyOperation = &value
+		return nil
+	case "drop_foreign_key":
+		var value AlterTableDropForeignKeyOperation
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.AlterTableDropForeignKeyOperation = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -215,6 +175,10 @@ func (src AlterTableOperation) MarshalJSON() ([]byte, error) {
 
 	if src.AlterTableRenameColumnOperation != nil {
 		return json.Marshal(&src.AlterTableRenameColumnOperation)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -250,6 +214,10 @@ func (obj *AlterTableOperation) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -280,6 +248,10 @@ func (obj AlterTableOperation) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

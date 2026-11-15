@@ -48,7 +48,7 @@ func (v *JudgeOutcome) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = JUDGEOUTCOME_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

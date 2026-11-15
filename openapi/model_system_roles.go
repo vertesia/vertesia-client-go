@@ -76,7 +76,7 @@ func (v *SystemRoles) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = SYSTEMROLES_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

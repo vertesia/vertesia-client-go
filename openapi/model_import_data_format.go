@@ -48,7 +48,7 @@ func (v *ImportDataFormat) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = IMPORTDATAFORMAT_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

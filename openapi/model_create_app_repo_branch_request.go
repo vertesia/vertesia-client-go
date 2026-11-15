@@ -21,9 +21,9 @@ var _ MappedNullable = &CreateAppRepoBranchRequest{}
 // CreateAppRepoBranchRequest Request to create a branch from an existing branch, tag, or commit.
 type CreateAppRepoBranchRequest struct {
 	// The new branch name.
-	Name string `json:"name" validate:"regexp=\\\\S"`
+	Name string `json:"name" validate:"regexp=\\S"`
 	// The existing branch, tag or commit the new branch starts from.
-	SourceRef string `json:"source_ref" validate:"regexp=\\\\S"`
+	SourceRef string `json:"source_ref" validate:"regexp=\\S"`
 }
 
 type _CreateAppRepoBranchRequest CreateAppRepoBranchRequest
@@ -181,3 +181,5 @@ func (v *NullableCreateAppRepoBranchRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

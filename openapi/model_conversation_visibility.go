@@ -46,7 +46,7 @@ func (v *ConversationVisibility) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = CONVERSATIONVISIBILITY_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

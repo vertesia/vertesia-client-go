@@ -60,7 +60,7 @@ func (v *EventDeliveryIntentStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = EVENTDELIVERYINTENTSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

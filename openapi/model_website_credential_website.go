@@ -21,7 +21,7 @@ var _ MappedNullable = &WebsiteCredentialWebsite{}
 // WebsiteCredentialWebsite struct for WebsiteCredentialWebsite
 type WebsiteCredentialWebsite struct {
 	// Hostname this credential is allowed on, or a URL to take it from. Subdomains match. A value no hostname can be read from is refused.
-	Host string `json:"host" validate:"regexp=\\\\S"`
+	Host string `json:"host" validate:"regexp=\\S"`
 	// Optional login URL used by agents as a hint.
 	LoginUrl *string `json:"login_url,omitempty"`
 	// Optional narrower origin allowlist for this credential.
@@ -226,3 +226,5 @@ func (v *NullableWebsiteCredentialWebsite) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

@@ -596,3 +596,5 @@ func (v *NullableWorkflowDefinitionPayloadWithSteps) UnmarshalJSON(src []byte) e
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

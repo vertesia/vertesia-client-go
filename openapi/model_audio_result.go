@@ -21,8 +21,8 @@ var _ MappedNullable = &AudioResult{}
 // AudioResult struct for AudioResult
 type AudioResult struct {
 	Type                 string  `json:"type"`
-	Value                string  `json:"value" validate:"regexp=^(?:gs|s3):\\/\\/[^\\/]+\\/.+|^artifact:.+"`
-	MimeType             string  `json:"mime_type" validate:"regexp=^audio\\/.*"`
+	Value                string  `json:"value" validate:"regexp=^(?:gs|s3)://[^/]+/.+|^artifact:.+"`
+	MimeType             string  `json:"mime_type" validate:"regexp=^audio/.*"`
 	Container            *string `json:"container,omitempty"`
 	Codec                *string `json:"codec,omitempty"`
 	SampleRate           *int32  `json:"sample_rate,omitempty"`
@@ -444,3 +444,5 @@ func (v *NullableAudioResult) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

@@ -50,7 +50,7 @@ func (v *AppVersionGitRefType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = APPVERSIONGITREFTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

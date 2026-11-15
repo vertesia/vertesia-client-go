@@ -46,7 +46,7 @@ func (v *SigningAlgorithm) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = SIGNINGALGORITHM_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

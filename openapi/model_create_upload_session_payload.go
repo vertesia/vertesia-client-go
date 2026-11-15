@@ -22,7 +22,7 @@ var _ MappedNullable = &CreateUploadSessionPayload{}
 type CreateUploadSessionPayload struct {
 	Name string `json:"name"`
 	// The object name to upload to. A random name is chosen when omitted. It must not be empty, start with `/` or `\\`, or contain a `..` segment.
-	Id       *string `json:"id,omitempty" validate:"regexp=^(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*)(?:[\\\\\\/]+(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*))*[\\\\\\/]*$"`
+	Id       *string `json:"id,omitempty" validate:"regexp=^(?:\\.\\.[^\\/]+|\\.(?:[^\\/.][^\\/]*)?|[^\\/.][^\\/]*)(?:[\\/]+(?:\\.\\.[^\\/]+|\\.(?:[^\\/.][^\\/]*)?|[^\\/.][^\\/]*))*[\\/]*$"`
 	MimeType *string `json:"mime_type,omitempty"`
 }
 
@@ -224,3 +224,5 @@ func (v *NullableCreateUploadSessionPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

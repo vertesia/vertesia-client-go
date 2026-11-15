@@ -48,7 +48,7 @@ func (v *ScoreAggregationTypes) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = SCOREAGGREGATIONTYPES_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

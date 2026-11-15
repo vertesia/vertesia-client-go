@@ -62,7 +62,7 @@ func (v *ProcessNodeType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PROCESSNODETYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

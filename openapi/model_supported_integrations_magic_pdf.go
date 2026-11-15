@@ -44,7 +44,7 @@ func (v *SupportedIntegrationsMagicPdf) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = SUPPORTEDINTEGRATIONSMAGICPDF_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

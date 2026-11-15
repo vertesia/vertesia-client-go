@@ -54,7 +54,7 @@ func (v *AIModelStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = AIMODELSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

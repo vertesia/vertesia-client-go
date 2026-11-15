@@ -21,7 +21,7 @@ var _ MappedNullable = &UpdateInferenceProfilePayload{}
 // UpdateInferenceProfilePayload Replace editable profile fields, preserving its ID and references.
 type UpdateInferenceProfilePayload struct {
 	// Editable display name, independent of the stable profile ID.
-	Name         string        `json:"name" validate:"regexp=\\\\S"`
+	Name         string        `json:"name" validate:"regexp=\\S"`
 	Description  *string       `json:"description,omitempty"`
 	Environment  string        `json:"environment" validate:"regexp=^[a-fA-F0-9]{24}$"`
 	Model        *string       `json:"model,omitempty"`
@@ -288,3 +288,5 @@ func (v *NullableUpdateInferenceProfilePayload) UnmarshalJSON(src []byte) error 
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

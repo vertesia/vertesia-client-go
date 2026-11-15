@@ -74,7 +74,7 @@ func (v *ProjectRoles) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PROJECTROLES_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

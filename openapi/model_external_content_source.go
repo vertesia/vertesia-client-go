@@ -20,6 +20,9 @@ import (
 type ExternalContentSource struct {
 	BoxContentSource        *BoxContentSource
 	SharePointContentSource *SharePointContentSource
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // BoxContentSourceAsExternalContentSource is a convenience function that returns BoxContentSource wrapped in ExternalContentSource
@@ -38,52 +41,41 @@ func SharePointContentSourceAsExternalContentSource(v *SharePointContentSource) 
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *ExternalContentSource) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into BoxContentSource
-	err = newStrictDecoder(data).Decode(&dst.BoxContentSource)
-	if err == nil {
-		jsonBoxContentSource, _ := json.Marshal(dst.BoxContentSource)
-		if string(jsonBoxContentSource) == "{}" { // empty struct
-			dst.BoxContentSource = nil
-		} else {
-			if err = validator.Validate(dst.BoxContentSource); err != nil {
-				dst.BoxContentSource = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.BoxContentSource = nil
+	*dst = ExternalContentSource{}
+	var tag struct {
+		Discriminator *string `json:"type"`
 	}
-
-	// try to unmarshal data into SharePointContentSource
-	err = newStrictDecoder(data).Decode(&dst.SharePointContentSource)
-	if err == nil {
-		jsonSharePointContentSource, _ := json.Marshal(dst.SharePointContentSource)
-		if string(jsonSharePointContentSource) == "{}" { // empty struct
-			dst.SharePointContentSource = nil
-		} else {
-			if err = validator.Validate(dst.SharePointContentSource); err != nil {
-				dst.SharePointContentSource = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.SharePointContentSource = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.BoxContentSource = nil
-		dst.SharePointContentSource = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(ExternalContentSource)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(ExternalContentSource)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing ExternalContentSource type")
+	}
+	switch *tag.Discriminator {
+	case "sharepoint":
+		var value SharePointContentSource
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.SharePointContentSource = &value
+		return nil
+	case "box":
+		var value BoxContentSource
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.BoxContentSource = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src ExternalContentSource) MarshalJSON() ([]byte, error) {
 
 	if src.SharePointContentSource != nil {
 		return json.Marshal(&src.SharePointContentSource)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *ExternalContentSource) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj ExternalContentSource) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

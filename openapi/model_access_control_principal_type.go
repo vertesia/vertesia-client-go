@@ -50,7 +50,7 @@ func (v *AccessControlPrincipalType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = ACCESSCONTROLPRINCIPALTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

@@ -23,9 +23,9 @@ type UpsertAppVersionRequest struct {
 	// Existing version record to update in place, used by reproducible rebuilds, as 24 hexadecimal characters.
 	RecordId   *string           `json:"record_id,omitempty" validate:"regexp=^(?:[0-9a-fA-F]{24})?$"`
 	App        *string           `json:"app,omitempty"`
-	AppId      string            `json:"app_id" validate:"regexp=\\\\S"`
+	AppId      string            `json:"app_id" validate:"regexp=\\S"`
 	AppName    *string           `json:"app_name,omitempty"`
-	VersionId  string            `json:"version_id" validate:"regexp=\\\\S"`
+	VersionId  string            `json:"version_id" validate:"regexp=\\S"`
 	Kind       AppVersionKind    `json:"kind"`
 	State      *AppVersionState  `json:"state,omitempty"`
 	Target     *AppVersionTarget `json:"target,omitempty"`
@@ -1114,3 +1114,5 @@ func (v *NullableUpsertAppVersionRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

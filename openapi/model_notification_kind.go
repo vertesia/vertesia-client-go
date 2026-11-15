@@ -54,7 +54,7 @@ func (v *NotificationKind) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = NOTIFICATIONKIND_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

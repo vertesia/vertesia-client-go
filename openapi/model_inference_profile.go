@@ -21,7 +21,7 @@ var _ MappedNullable = &InferenceProfile{}
 // InferenceProfile A reusable environment, model and inference parameter preset. Credentials remain in the environment.
 type InferenceProfile struct {
 	// Editable display name.
-	Name         *string       `json:"name,omitempty" validate:"regexp=\\\\S"`
+	Name         *string       `json:"name,omitempty" validate:"regexp=\\S"`
 	Description  *string       `json:"description,omitempty"`
 	Environment  string        `json:"environment" validate:"regexp=^[a-fA-F0-9]{24}$"`
 	Model        *string       `json:"model,omitempty"`
@@ -296,3 +296,5 @@ func (v *NullableInferenceProfile) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

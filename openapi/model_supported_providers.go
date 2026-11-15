@@ -80,7 +80,7 @@ func (v *SupportedProviders) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = SUPPORTEDPROVIDERS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

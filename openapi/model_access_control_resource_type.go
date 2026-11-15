@@ -54,7 +54,7 @@ func (v *AccessControlResourceType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = ACCESSCONTROLRESOURCETYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

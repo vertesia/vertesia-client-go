@@ -46,7 +46,7 @@ func (v *AgentRunFeedbackRating) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = AGENTRUNFEEDBACKRATING_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

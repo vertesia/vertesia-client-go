@@ -50,7 +50,7 @@ func (v *AuditAggregationDetailField) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = AUDITAGGREGATIONDETAILFIELD_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

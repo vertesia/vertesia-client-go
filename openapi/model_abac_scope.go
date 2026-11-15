@@ -52,7 +52,7 @@ func (v *AbacScope) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = ABACSCOPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

@@ -50,7 +50,7 @@ func (v *FileProcessingStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = FILEPROCESSINGSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

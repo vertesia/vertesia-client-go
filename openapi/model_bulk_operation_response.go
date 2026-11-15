@@ -13,6 +13,7 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
+	"gopkg.in/validator.v2"
 )
 
 // BulkOperationResponse - struct for BulkOperationResponse
@@ -21,6 +22,9 @@ type BulkOperationResponse struct {
 	BulkObjectDeleteResult *BulkObjectDeleteResult
 	BulkObjectUpdateResult *BulkObjectUpdateResult
 	BulkOperationResult    *BulkOperationResult
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // BulkObjectCreateResultAsBulkOperationResponse is a convenience function that returns BulkObjectCreateResult wrapped in BulkOperationResponse
@@ -55,15 +59,21 @@ func BulkOperationResultAsBulkOperationResponse(v *BulkOperationResult) BulkOper
 func (dst *BulkOperationResponse) UnmarshalJSON(data []byte) error {
 	*dst = BulkOperationResponse{}
 	var tag struct {
-		Discriminator string `json:"operation"`
+		Discriminator *string `json:"operation"`
 	}
 	if err := json.Unmarshal(data, &tag); err != nil {
 		return err
 	}
-	switch tag.Discriminator {
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing BulkOperationResponse operation")
+	}
+	switch *tag.Discriminator {
 	case "generic":
 		var value BulkOperationResult
 		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
 			return err
 		}
 		dst.BulkOperationResult = &value
@@ -73,11 +83,17 @@ func (dst *BulkOperationResponse) UnmarshalJSON(data []byte) error {
 		if err := json.Unmarshal(data, &value); err != nil {
 			return err
 		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
 		dst.BulkObjectCreateResult = &value
 		return nil
 	case "update":
 		var value BulkObjectUpdateResult
 		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
 			return err
 		}
 		dst.BulkObjectUpdateResult = &value
@@ -87,10 +103,15 @@ func (dst *BulkOperationResponse) UnmarshalJSON(data []byte) error {
 		if err := json.Unmarshal(data, &value); err != nil {
 			return err
 		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
 		dst.BulkObjectDeleteResult = &value
 		return nil
 	default:
-		return fmt.Errorf("unknown BulkOperationResponse operation %q", tag.Discriminator)
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -110,6 +131,10 @@ func (src BulkOperationResponse) MarshalJSON() ([]byte, error) {
 
 	if src.BulkOperationResult != nil {
 		return json.Marshal(&src.BulkOperationResult)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -137,6 +162,10 @@ func (obj *BulkOperationResponse) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -159,6 +188,10 @@ func (obj BulkOperationResponse) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

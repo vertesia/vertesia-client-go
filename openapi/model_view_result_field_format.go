@@ -56,7 +56,7 @@ func (v *ViewResultFieldFormat) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = VIEWRESULTFIELDFORMAT_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

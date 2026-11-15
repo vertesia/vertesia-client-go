@@ -21,7 +21,7 @@ var _ MappedNullable = &McpApiKeyCredential{}
 // McpApiKeyCredential struct for McpApiKeyCredential
 type McpApiKeyCredential struct {
 	// The key the installer holds for this collection. Surrounding whitespace is stripped. Stored encrypted in the installing project and never returned.
-	ApiKey string `json:"api_key" validate:"regexp=\\\\S"`
+	ApiKey string `json:"api_key" validate:"regexp=\\S"`
 }
 
 type _McpApiKeyCredential McpApiKeyCredential
@@ -152,3 +152,5 @@ func (v *NullableMcpApiKeyCredential) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

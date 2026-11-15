@@ -46,7 +46,7 @@ func (v *EventIngestSignatureEncoding) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = EVENTINGESTSIGNATUREENCODING_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

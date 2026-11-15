@@ -23,7 +23,7 @@ type BulkUploadUrlsPayloadFilesInner struct {
 	Name     string  `json:"name"`
 	MimeType *string `json:"mime_type,omitempty"`
 	// The object name to upload to. A random name is chosen when omitted. It must not be empty, start with `/` or `\\`, or contain a `..` segment.
-	Id *string `json:"id,omitempty" validate:"regexp=^(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*)(?:[\\\\\\/]+(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*))*[\\\\\\/]*$"`
+	Id *string `json:"id,omitempty" validate:"regexp=^(?:\\.\\.[^\\/]+|\\.(?:[^\\/.][^\\/]*)?|[^\\/.][^\\/]*)(?:[\\/]+(?:\\.\\.[^\\/]+|\\.(?:[^\\/.][^\\/]*)?|[^\\/.][^\\/]*))*[\\/]*$"`
 }
 
 type _BulkUploadUrlsPayloadFilesInner BulkUploadUrlsPayloadFilesInner
@@ -224,3 +224,5 @@ func (v *NullableBulkUploadUrlsPayloadFilesInner) UnmarshalJSON(src []byte) erro
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
+// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

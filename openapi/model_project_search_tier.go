@@ -46,7 +46,7 @@ func (v *ProjectSearchTier) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PROJECTSEARCHTIER_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

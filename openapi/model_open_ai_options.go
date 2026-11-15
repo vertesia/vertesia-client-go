@@ -22,6 +22,9 @@ type OpenAiOptions struct {
 	OpenAiGptImageOptions *OpenAiGptImageOptions
 	OpenAiTextOptions     *OpenAiTextOptions
 	OpenAiThinkingOptions *OpenAiThinkingOptions
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // OpenAiDalleOptionsAsOpenAiOptions is a convenience function that returns OpenAiDalleOptions wrapped in OpenAiOptions
@@ -52,8 +55,27 @@ func OpenAiThinkingOptionsAsOpenAiOptions(v *OpenAiThinkingOptions) OpenAiOption
 	}
 }
 
-// Unmarshal JSON data into one of the pointers in the struct
+// UnmarshalJSON decodes a known variant, or keeps the payload in Raw when the generated
+// decoder cannot pick a single known variant.
 func (dst *OpenAiOptions) UnmarshalJSON(data []byte) error {
+	*dst = OpenAiOptions{}
+	err := dst.unmarshalVariantJSON(data)
+	if err == nil {
+		return nil
+	}
+	*dst = OpenAiOptions{}
+	if string(data) == "null" || !json.Valid(data) {
+		return err
+	}
+	// A variant added after this client was generated: keep it as the server sent it.
+	dst.Raw = append(json.RawMessage(nil), data...)
+	return nil
+}
+
+// unmarshalVariantJSON is the generated decoder of the known variants.
+//
+// Unmarshal JSON data into one of the pointers in the struct
+func (dst *OpenAiOptions) unmarshalVariantJSON(data []byte) error {
 	var err error
 	match := 0
 	// try to unmarshal data into OpenAiDalleOptions
@@ -157,6 +179,10 @@ func (src OpenAiOptions) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.OpenAiThinkingOptions)
 	}
 
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
+	}
+
 	return nil, nil // no data in oneOf schemas
 }
 
@@ -182,6 +208,10 @@ func (obj *OpenAiOptions) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -204,6 +234,10 @@ func (obj OpenAiOptions) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

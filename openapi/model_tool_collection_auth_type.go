@@ -50,7 +50,7 @@ func (v *ToolCollectionAuthType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = TOOLCOLLECTIONAUTHTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

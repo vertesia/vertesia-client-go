@@ -70,7 +70,7 @@ func (v *AppPackageScope) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = APPPACKAGESCOPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

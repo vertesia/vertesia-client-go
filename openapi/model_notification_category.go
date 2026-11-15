@@ -48,7 +48,7 @@ func (v *NotificationCategory) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = NOTIFICATIONCATEGORY_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

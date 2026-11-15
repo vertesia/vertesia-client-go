@@ -52,7 +52,7 @@ func (v *EventDeliveryQueueSortField) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = EVENTDELIVERYQUEUESORTFIELD_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

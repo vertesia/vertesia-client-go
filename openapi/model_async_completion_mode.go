@@ -46,7 +46,7 @@ func (v *AsyncCompletionMode) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = ASYNCCOMPLETIONMODE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

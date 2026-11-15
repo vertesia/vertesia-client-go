@@ -48,7 +48,7 @@ func (v *RunType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = RUNTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 
