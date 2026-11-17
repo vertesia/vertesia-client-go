@@ -684,6 +684,7 @@ model_indexing_status_response.go
 model_indexing_status_response_index.go
 model_indexing_status_response_reindex_progress.go
 model_inference_profile.go
+model_inference_profile_invocation.go
 model_inference_profile_record.go
 model_inference_profile_snapshot.go
 model_inference_profile_usage.go
