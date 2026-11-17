@@ -20,13 +20,14 @@ type NotificationKind string
 
 // List of NotificationKind
 const (
-	NOTIFICATIONKIND_AGENT_QUESTION           NotificationKind = "agent.question"
-	NOTIFICATIONKIND_AGENT_APPROVAL           NotificationKind = "agent.approval"
-	NOTIFICATIONKIND_AGENT_FINISHED           NotificationKind = "agent.finished"
-	NOTIFICATIONKIND_AGENT_TURN_FINISHED      NotificationKind = "agent.turn_finished"
-	NOTIFICATIONKIND_TASK_ASSIGNED            NotificationKind = "task.assigned"
-	NOTIFICATIONKIND_INTAKE_FINISHED          NotificationKind = "intake.finished"
-	NOTIFICATIONKIND_UNKNOWN_DEFAULT_OPEN_API NotificationKind = "unknown_default_open_api"
+	NOTIFICATIONKIND_AGENT_QUESTION            NotificationKind = "agent.question"
+	NOTIFICATIONKIND_AGENT_APPROVAL            NotificationKind = "agent.approval"
+	NOTIFICATIONKIND_AGENT_FINISHED            NotificationKind = "agent.finished"
+	NOTIFICATIONKIND_AGENT_TURN_FINISHED       NotificationKind = "agent.turn_finished"
+	NOTIFICATIONKIND_TASK_ASSIGNED             NotificationKind = "task.assigned"
+	NOTIFICATIONKIND_INTAKE_FINISHED           NotificationKind = "intake.finished"
+	NOTIFICATIONKIND_INFERENCE_BUDGET_EXCEEDED NotificationKind = "inference_budget.exceeded"
+	NOTIFICATIONKIND_UNKNOWN_DEFAULT_OPEN_API  NotificationKind = "unknown_default_open_api"
 )
 
 // All allowed values of NotificationKind enum
@@ -37,6 +38,7 @@ var AllowedNotificationKindEnumValues = []NotificationKind{
 	"agent.turn_finished",
 	"task.assigned",
 	"intake.finished",
+	"inference_budget.exceeded",
 	"unknown_default_open_api",
 }
 

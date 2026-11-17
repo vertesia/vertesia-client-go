@@ -683,6 +683,7 @@ model_in_code_view_definition.go
 model_indexing_status_response.go
 model_indexing_status_response_index.go
 model_indexing_status_response_reindex_progress.go
+model_inference_budget_settings.go
 model_inference_profile.go
 model_inference_profile_invocation.go
 model_inference_profile_record.go
@@ -1173,6 +1174,7 @@ model_update_email_route_response.go
 model_update_event_ingest_channel_payload.go
 model_update_event_subscription_payload.go
 model_update_execution_run_payload.go
+model_update_inference_budget.go
 model_update_inference_profile_payload.go
 model_update_interaction_configuration_payload.go
 model_update_o_auth_client_payload.go
