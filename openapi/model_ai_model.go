@@ -35,6 +35,8 @@ type AIModel struct {
 	InputModalities  []string       `json:"input_modalities,omitempty"`
 	OutputModalities []string       `json:"output_modalities,omitempty"`
 	ToolSupport      *bool          `json:"tool_support,omitempty"`
+	DeprecationDate  *string        `json:"deprecation_date,omitempty"`
+	RetirementDate   *string        `json:"retirement_date,omitempty"`
 	Environment      *string        `json:"environment,omitempty"`
 }
 
@@ -516,6 +518,70 @@ func (o *AIModel) SetToolSupport(v bool) {
 	o.ToolSupport = &v
 }
 
+// GetDeprecationDate returns the DeprecationDate field value if set, zero value otherwise.
+func (o *AIModel) GetDeprecationDate() string {
+	if o == nil || IsNil(o.DeprecationDate) {
+		var ret string
+		return ret
+	}
+	return *o.DeprecationDate
+}
+
+// GetDeprecationDateOk returns a tuple with the DeprecationDate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AIModel) GetDeprecationDateOk() (*string, bool) {
+	if o == nil || IsNil(o.DeprecationDate) {
+		return nil, false
+	}
+	return o.DeprecationDate, true
+}
+
+// HasDeprecationDate returns a boolean if a field has been set.
+func (o *AIModel) HasDeprecationDate() bool {
+	if o != nil && !IsNil(o.DeprecationDate) {
+		return true
+	}
+
+	return false
+}
+
+// SetDeprecationDate gets a reference to the given string and assigns it to the DeprecationDate field.
+func (o *AIModel) SetDeprecationDate(v string) {
+	o.DeprecationDate = &v
+}
+
+// GetRetirementDate returns the RetirementDate field value if set, zero value otherwise.
+func (o *AIModel) GetRetirementDate() string {
+	if o == nil || IsNil(o.RetirementDate) {
+		var ret string
+		return ret
+	}
+	return *o.RetirementDate
+}
+
+// GetRetirementDateOk returns a tuple with the RetirementDate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AIModel) GetRetirementDateOk() (*string, bool) {
+	if o == nil || IsNil(o.RetirementDate) {
+		return nil, false
+	}
+	return o.RetirementDate, true
+}
+
+// HasRetirementDate returns a boolean if a field has been set.
+func (o *AIModel) HasRetirementDate() bool {
+	if o != nil && !IsNil(o.RetirementDate) {
+		return true
+	}
+
+	return false
+}
+
+// SetRetirementDate gets a reference to the given string and assigns it to the RetirementDate field.
+func (o *AIModel) SetRetirementDate(v string) {
+	o.RetirementDate = &v
+}
+
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *AIModel) GetEnvironment() string {
 	if o == nil || IsNil(o.Environment) {
@@ -596,6 +662,12 @@ func (o AIModel) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ToolSupport) {
 		toSerialize["tool_support"] = o.ToolSupport
+	}
+	if !IsNil(o.DeprecationDate) {
+		toSerialize["deprecation_date"] = o.DeprecationDate
+	}
+	if !IsNil(o.RetirementDate) {
+		toSerialize["retirement_date"] = o.RetirementDate
 	}
 	if !IsNil(o.Environment) {
 		toSerialize["environment"] = o.Environment

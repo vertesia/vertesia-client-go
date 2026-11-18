@@ -60,6 +60,7 @@ const (
 	PERMISSION_CONTENT_DELETE                Permission = "content:delete"
 	PERMISSION_CONTENT_ADMIN                 Permission = "content:admin"
 	PERMISSION_CONTENT_SUPERADMIN            Permission = "content:superadmin"
+	PERMISSION_CONTENT_SOURCE_MANAGE         Permission = "content_source:manage"
 	PERMISSION_WORKFLOW_READ                 Permission = "workflow:read"
 	PERMISSION_WORKFLOW_RUN                  Permission = "workflow:run"
 	PERMISSION_WORKFLOW_ADMIN                Permission = "workflow:admin"
@@ -114,6 +115,7 @@ var AllowedPermissionEnumValues = []Permission{
 	"content:delete",
 	"content:admin",
 	"content:superadmin",
+	"content_source:manage",
 	"workflow:read",
 	"workflow:run",
 	"workflow:admin",

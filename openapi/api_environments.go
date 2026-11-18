@@ -1292,7 +1292,7 @@ func (r ApiListEnvironmentModelsRequest) Owner(owner string) ApiListEnvironmentM
 	return r
 }
 
-func (r ApiListEnvironmentModelsRequest) Execute() ([]AIModel, *http.Response, error) {
+func (r ApiListEnvironmentModelsRequest) Execute() ([]AvailableAIModel, *http.Response, error) {
 	return r.ApiService.ListEnvironmentModelsExecute(r)
 }
 
@@ -1317,13 +1317,13 @@ func (a *EnvironmentsAPIService) ListEnvironmentModels(ctx context.Context, envI
 
 // Execute executes the request
 //
-//	@return []AIModel
-func (a *EnvironmentsAPIService) ListEnvironmentModelsExecute(r ApiListEnvironmentModelsRequest) ([]AIModel, *http.Response, error) {
+//	@return []AvailableAIModel
+func (a *EnvironmentsAPIService) ListEnvironmentModelsExecute(r ApiListEnvironmentModelsRequest) ([]AvailableAIModel, *http.Response, error) {
 	var (
 		localVarHTTPMethod  = http.MethodGet
 		localVarPostBody    interface{}
 		formFiles           []formFile
-		localVarReturnValue []AIModel
+		localVarReturnValue []AvailableAIModel
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EnvironmentsAPIService.ListEnvironmentModels")

@@ -20,10 +20,12 @@ var _ MappedNullable = &NotificationPreferences{}
 
 // NotificationPreferences The user’s notification preferences in the project. Unset channels are on.
 type NotificationPreferences struct {
-	// Per category (`actions`, `failures`, `results`), the channels it is delivered to.
+	// Per-category inbox preferences for `actions`, `failures`, `results`, and `billing`.
 	Categories map[string]NotificationChannelPreferences `json:"categories"`
 	// Per kind, an override of its category. Today only `agent.turn_finished` is offered.
 	Kinds map[string]NotificationChannelPreferences `json:"kinds"`
+	// Master switch for inference budget alerts in the inbox and by email. Omit when updating to keep the saved choice.
+	BudgetAlertsEnabled *bool `json:"budget_alerts_enabled,omitempty"`
 }
 
 type _NotificationPreferences NotificationPreferences
@@ -95,6 +97,38 @@ func (o *NotificationPreferences) SetKinds(v map[string]NotificationChannelPrefe
 	o.Kinds = v
 }
 
+// GetBudgetAlertsEnabled returns the BudgetAlertsEnabled field value if set, zero value otherwise.
+func (o *NotificationPreferences) GetBudgetAlertsEnabled() bool {
+	if o == nil || IsNil(o.BudgetAlertsEnabled) {
+		var ret bool
+		return ret
+	}
+	return *o.BudgetAlertsEnabled
+}
+
+// GetBudgetAlertsEnabledOk returns a tuple with the BudgetAlertsEnabled field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NotificationPreferences) GetBudgetAlertsEnabledOk() (*bool, bool) {
+	if o == nil || IsNil(o.BudgetAlertsEnabled) {
+		return nil, false
+	}
+	return o.BudgetAlertsEnabled, true
+}
+
+// HasBudgetAlertsEnabled returns a boolean if a field has been set.
+func (o *NotificationPreferences) HasBudgetAlertsEnabled() bool {
+	if o != nil && !IsNil(o.BudgetAlertsEnabled) {
+		return true
+	}
+
+	return false
+}
+
+// SetBudgetAlertsEnabled gets a reference to the given bool and assigns it to the BudgetAlertsEnabled field.
+func (o *NotificationPreferences) SetBudgetAlertsEnabled(v bool) {
+	o.BudgetAlertsEnabled = &v
+}
+
 func (o NotificationPreferences) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -107,6 +141,9 @@ func (o NotificationPreferences) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["categories"] = o.Categories
 	toSerialize["kinds"] = o.Kinds
+	if !IsNil(o.BudgetAlertsEnabled) {
+		toSerialize["budget_alerts_enabled"] = o.BudgetAlertsEnabled
+	}
 	return toSerialize, nil
 }
 

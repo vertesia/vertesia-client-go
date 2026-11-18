@@ -32,8 +32,8 @@ type CreateBoxContentSourcePayload struct {
 	// Defaults to scheduled sync disabled, every 60 minutes once enabled.
 	Sync *ContentSourceSyncSettings `json:"sync,omitempty"`
 	Type string                     `json:"type"`
-	// The Box folder ID, shared with the Box app's service account.
-	FolderId string `json:"folder_id"`
+	// The Box folder ID, shared with the Box app's service account. Defaults to `0`, every folder shared with the app, to narrow before the first sync with an update.
+	FolderId *string `json:"folder_id,omitempty"`
 }
 
 type _CreateBoxContentSourcePayload CreateBoxContentSourcePayload
@@ -42,12 +42,11 @@ type _CreateBoxContentSourcePayload CreateBoxContentSourcePayload
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateBoxContentSourcePayload(name string, oauthProviderId string, type_ string, folderId string) *CreateBoxContentSourcePayload {
+func NewCreateBoxContentSourcePayload(name string, oauthProviderId string, type_ string) *CreateBoxContentSourcePayload {
 	this := CreateBoxContentSourcePayload{}
 	this.Name = name
 	this.OauthProviderId = oauthProviderId
 	this.Type = type_
-	this.FolderId = folderId
 	return &this
 }
 
@@ -259,28 +258,36 @@ func (o *CreateBoxContentSourcePayload) SetType(v string) {
 	o.Type = v
 }
 
-// GetFolderId returns the FolderId field value
+// GetFolderId returns the FolderId field value if set, zero value otherwise.
 func (o *CreateBoxContentSourcePayload) GetFolderId() string {
-	if o == nil {
+	if o == nil || IsNil(o.FolderId) {
 		var ret string
 		return ret
 	}
-
-	return o.FolderId
+	return *o.FolderId
 }
 
-// GetFolderIdOk returns a tuple with the FolderId field value
+// GetFolderIdOk returns a tuple with the FolderId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CreateBoxContentSourcePayload) GetFolderIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.FolderId) {
 		return nil, false
 	}
-	return &o.FolderId, true
+	return o.FolderId, true
 }
 
-// SetFolderId sets field value
+// HasFolderId returns a boolean if a field has been set.
+func (o *CreateBoxContentSourcePayload) HasFolderId() bool {
+	if o != nil && !IsNil(o.FolderId) {
+		return true
+	}
+
+	return false
+}
+
+// SetFolderId gets a reference to the given string and assigns it to the FolderId field.
 func (o *CreateBoxContentSourcePayload) SetFolderId(v string) {
-	o.FolderId = v
+	o.FolderId = &v
 }
 
 func (o CreateBoxContentSourcePayload) MarshalJSON() ([]byte, error) {
@@ -308,7 +315,9 @@ func (o CreateBoxContentSourcePayload) ToMap() (map[string]interface{}, error) {
 		toSerialize["sync"] = o.Sync
 	}
 	toSerialize["type"] = o.Type
-	toSerialize["folder_id"] = o.FolderId
+	if !IsNil(o.FolderId) {
+		toSerialize["folder_id"] = o.FolderId
+	}
 	return toSerialize, nil
 }
 
@@ -320,7 +329,6 @@ func (o *CreateBoxContentSourcePayload) UnmarshalJSON(data []byte) (err error) {
 		"name",
 		"oauth_provider_id",
 		"type",
-		"folder_id",
 	}
 
 	allProperties := make(map[string]interface{})
