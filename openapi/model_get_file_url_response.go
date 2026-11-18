@@ -20,10 +20,11 @@ var _ MappedNullable = &GetFileUrlResponse{}
 
 // GetFileUrlResponse struct for GetFileUrlResponse
 type GetFileUrlResponse struct {
-	Url      string  `json:"url"`
-	Id       string  `json:"id"`
-	MimeType *string `json:"mime_type,omitempty"`
-	Path     string  `json:"path"`
+	Url                    string  `json:"url"`
+	Id                     string  `json:"id"`
+	MimeType               *string `json:"mime_type,omitempty"`
+	Path                   string  `json:"path"`
+	AuthenticationRequired *bool   `json:"authentication_required,omitempty"`
 }
 
 type _GetFileUrlResponse GetFileUrlResponse
@@ -152,6 +153,38 @@ func (o *GetFileUrlResponse) SetPath(v string) {
 	o.Path = v
 }
 
+// GetAuthenticationRequired returns the AuthenticationRequired field value if set, zero value otherwise.
+func (o *GetFileUrlResponse) GetAuthenticationRequired() bool {
+	if o == nil || IsNil(o.AuthenticationRequired) {
+		var ret bool
+		return ret
+	}
+	return *o.AuthenticationRequired
+}
+
+// GetAuthenticationRequiredOk returns a tuple with the AuthenticationRequired field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *GetFileUrlResponse) GetAuthenticationRequiredOk() (*bool, bool) {
+	if o == nil || IsNil(o.AuthenticationRequired) {
+		return nil, false
+	}
+	return o.AuthenticationRequired, true
+}
+
+// HasAuthenticationRequired returns a boolean if a field has been set.
+func (o *GetFileUrlResponse) HasAuthenticationRequired() bool {
+	if o != nil && !IsNil(o.AuthenticationRequired) {
+		return true
+	}
+
+	return false
+}
+
+// SetAuthenticationRequired gets a reference to the given bool and assigns it to the AuthenticationRequired field.
+func (o *GetFileUrlResponse) SetAuthenticationRequired(v bool) {
+	o.AuthenticationRequired = &v
+}
+
 func (o GetFileUrlResponse) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -168,6 +201,9 @@ func (o GetFileUrlResponse) ToMap() (map[string]interface{}, error) {
 		toSerialize["mime_type"] = o.MimeType
 	}
 	toSerialize["path"] = o.Path
+	if !IsNil(o.AuthenticationRequired) {
+		toSerialize["authentication_required"] = o.AuthenticationRequired
+	}
 	return toSerialize, nil
 }
 

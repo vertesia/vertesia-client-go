@@ -19,9 +19,10 @@ var _ MappedNullable = &UpdateContentSourcePayload{}
 
 // UpdateContentSourcePayload Changes the name, description or sync settings, and, before the first sync, the root and folder to sync. Saving sync settings also hands the sync your credentials, which restarts a sync stopped because its previous credentials were refused.
 type UpdateContentSourcePayload struct {
-	Name        *string                    `json:"name,omitempty"`
-	Description *string                    `json:"description,omitempty"`
-	Sync        *ContentSourceSyncSettings `json:"sync,omitempty"`
+	Name        *string                          `json:"name,omitempty"`
+	Description *string                          `json:"description,omitempty"`
+	Sync        *ContentSourceSyncSettings       `json:"sync,omitempty"`
+	Permissions *ContentSourcePermissionSettings `json:"permissions,omitempty"`
 	// Only before the first sync: the root to sync, as `discover/roots` returned it (a SharePoint document library; for Box, a folder shared with the app). Answers 409 once the source has synced.
 	RootId *string `json:"root_id,omitempty"`
 	// Only before the first sync: the folder to sync, as a folder listing returned its `id`. Answers 409 once the source has synced.
@@ -143,6 +144,38 @@ func (o *UpdateContentSourcePayload) SetSync(v ContentSourceSyncSettings) {
 	o.Sync = &v
 }
 
+// GetPermissions returns the Permissions field value if set, zero value otherwise.
+func (o *UpdateContentSourcePayload) GetPermissions() ContentSourcePermissionSettings {
+	if o == nil || IsNil(o.Permissions) {
+		var ret ContentSourcePermissionSettings
+		return ret
+	}
+	return *o.Permissions
+}
+
+// GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateContentSourcePayload) GetPermissionsOk() (*ContentSourcePermissionSettings, bool) {
+	if o == nil || IsNil(o.Permissions) {
+		return nil, false
+	}
+	return o.Permissions, true
+}
+
+// HasPermissions returns a boolean if a field has been set.
+func (o *UpdateContentSourcePayload) HasPermissions() bool {
+	if o != nil && !IsNil(o.Permissions) {
+		return true
+	}
+
+	return false
+}
+
+// SetPermissions gets a reference to the given ContentSourcePermissionSettings and assigns it to the Permissions field.
+func (o *UpdateContentSourcePayload) SetPermissions(v ContentSourcePermissionSettings) {
+	o.Permissions = &v
+}
+
 // GetRootId returns the RootId field value if set, zero value otherwise.
 func (o *UpdateContentSourcePayload) GetRootId() string {
 	if o == nil || IsNil(o.RootId) {
@@ -257,6 +290,9 @@ func (o UpdateContentSourcePayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Sync) {
 		toSerialize["sync"] = o.Sync
+	}
+	if !IsNil(o.Permissions) {
+		toSerialize["permissions"] = o.Permissions
 	}
 	if !IsNil(o.RootId) {
 		toSerialize["root_id"] = o.RootId

@@ -22,9 +22,10 @@ var _ MappedNullable = &ContentSourceStatus{}
 // ContentSourceStatus A content source's sync state.
 type ContentSourceStatus struct {
 	// `waiting` between syncs, `running` during one, `stopped` when its credentials were refused or the source is being deleted.
-	State        string                  `json:"state"`
-	CurrentRound *ContentSourceSyncRound `json:"current_round,omitempty"`
-	LastRound    *ContentSourceSyncRound `json:"last_round,omitempty"`
+	State        string                         `json:"state"`
+	Permissions  *ContentSourcePermissionStatus `json:"permissions,omitempty"`
+	CurrentRound *ContentSourceSyncRound        `json:"current_round,omitempty"`
+	LastRound    *ContentSourceSyncRound        `json:"last_round,omitempty"`
 	// The last 10 finished rounds, newest first. Their reports are kept; older ones are deleted.
 	RecentRounds []ContentSourceSyncRound `json:"recent_rounds,omitempty"`
 	// When the change cursor in use was taken.
@@ -76,6 +77,38 @@ func (o *ContentSourceStatus) GetStateOk() (*string, bool) {
 // SetState sets field value
 func (o *ContentSourceStatus) SetState(v string) {
 	o.State = v
+}
+
+// GetPermissions returns the Permissions field value if set, zero value otherwise.
+func (o *ContentSourceStatus) GetPermissions() ContentSourcePermissionStatus {
+	if o == nil || IsNil(o.Permissions) {
+		var ret ContentSourcePermissionStatus
+		return ret
+	}
+	return *o.Permissions
+}
+
+// GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentSourceStatus) GetPermissionsOk() (*ContentSourcePermissionStatus, bool) {
+	if o == nil || IsNil(o.Permissions) {
+		return nil, false
+	}
+	return o.Permissions, true
+}
+
+// HasPermissions returns a boolean if a field has been set.
+func (o *ContentSourceStatus) HasPermissions() bool {
+	if o != nil && !IsNil(o.Permissions) {
+		return true
+	}
+
+	return false
+}
+
+// SetPermissions gets a reference to the given ContentSourcePermissionStatus and assigns it to the Permissions field.
+func (o *ContentSourceStatus) SetPermissions(v ContentSourcePermissionStatus) {
+	o.Permissions = &v
 }
 
 // GetCurrentRound returns the CurrentRound field value if set, zero value otherwise.
@@ -281,6 +314,9 @@ func (o ContentSourceStatus) MarshalJSON() ([]byte, error) {
 func (o ContentSourceStatus) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["state"] = o.State
+	if !IsNil(o.Permissions) {
+		toSerialize["permissions"] = o.Permissions
+	}
 	if !IsNil(o.CurrentRound) {
 		toSerialize["current_round"] = o.CurrentRound
 	}

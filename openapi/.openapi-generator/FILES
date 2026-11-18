@@ -382,6 +382,8 @@ model_content_source_content_type_count.go
 model_content_source_folder.go
 model_content_source_folders_discovery.go
 model_content_source_library.go
+model_content_source_permission_settings.go
+model_content_source_permission_status.go
 model_content_source_report.go
 model_content_source_report_action.go
 model_content_source_report_entry.go
@@ -960,6 +962,7 @@ model_project_configuration_embedding.go
 model_project_configuration_embedding_enable_payload.go
 model_project_configuration_embeddings.go
 model_project_configuration_oauth_clients.go
+model_project_content_source_permissions.go
 model_project_indexing_configuration.go
 model_project_inference_profiles.go
 model_project_inference_profiles_modality.go
@@ -1087,6 +1090,7 @@ model_set_mcp_api_key_request.go
 model_set_object_embeddings_response.go
 model_set_object_text_payload.go
 model_share_point_content_source.go
+model_share_point_content_source_permissions.go
 model_signal_agent_response.go
 model_signal_event_properties.go
 model_signal_event_properties_sender.go

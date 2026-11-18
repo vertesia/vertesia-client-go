@@ -21,8 +21,10 @@ var _ MappedNullable = &CreateAccountApiKeyPayload{}
 
 // CreateAccountApiKeyPayload struct for CreateAccountApiKeyPayload
 type CreateAccountApiKeyPayload struct {
-	Name      string     `json:"name"`
-	ExpiresAt *time.Time `json:"expires_at,omitempty"`
+	Name                    string     `json:"name"`
+	ExpiresAt               *time.Time `json:"expires_at,omitempty"`
+	ScimEntraTenantId       *string    `json:"scim_entra_tenant_id,omitempty"`
+	ScimEntraMembersGroupId *string    `json:"scim_entra_members_group_id,omitempty"`
 }
 
 type _CreateAccountApiKeyPayload CreateAccountApiKeyPayload
@@ -101,6 +103,70 @@ func (o *CreateAccountApiKeyPayload) SetExpiresAt(v time.Time) {
 	o.ExpiresAt = &v
 }
 
+// GetScimEntraTenantId returns the ScimEntraTenantId field value if set, zero value otherwise.
+func (o *CreateAccountApiKeyPayload) GetScimEntraTenantId() string {
+	if o == nil || IsNil(o.ScimEntraTenantId) {
+		var ret string
+		return ret
+	}
+	return *o.ScimEntraTenantId
+}
+
+// GetScimEntraTenantIdOk returns a tuple with the ScimEntraTenantId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAccountApiKeyPayload) GetScimEntraTenantIdOk() (*string, bool) {
+	if o == nil || IsNil(o.ScimEntraTenantId) {
+		return nil, false
+	}
+	return o.ScimEntraTenantId, true
+}
+
+// HasScimEntraTenantId returns a boolean if a field has been set.
+func (o *CreateAccountApiKeyPayload) HasScimEntraTenantId() bool {
+	if o != nil && !IsNil(o.ScimEntraTenantId) {
+		return true
+	}
+
+	return false
+}
+
+// SetScimEntraTenantId gets a reference to the given string and assigns it to the ScimEntraTenantId field.
+func (o *CreateAccountApiKeyPayload) SetScimEntraTenantId(v string) {
+	o.ScimEntraTenantId = &v
+}
+
+// GetScimEntraMembersGroupId returns the ScimEntraMembersGroupId field value if set, zero value otherwise.
+func (o *CreateAccountApiKeyPayload) GetScimEntraMembersGroupId() string {
+	if o == nil || IsNil(o.ScimEntraMembersGroupId) {
+		var ret string
+		return ret
+	}
+	return *o.ScimEntraMembersGroupId
+}
+
+// GetScimEntraMembersGroupIdOk returns a tuple with the ScimEntraMembersGroupId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAccountApiKeyPayload) GetScimEntraMembersGroupIdOk() (*string, bool) {
+	if o == nil || IsNil(o.ScimEntraMembersGroupId) {
+		return nil, false
+	}
+	return o.ScimEntraMembersGroupId, true
+}
+
+// HasScimEntraMembersGroupId returns a boolean if a field has been set.
+func (o *CreateAccountApiKeyPayload) HasScimEntraMembersGroupId() bool {
+	if o != nil && !IsNil(o.ScimEntraMembersGroupId) {
+		return true
+	}
+
+	return false
+}
+
+// SetScimEntraMembersGroupId gets a reference to the given string and assigns it to the ScimEntraMembersGroupId field.
+func (o *CreateAccountApiKeyPayload) SetScimEntraMembersGroupId(v string) {
+	o.ScimEntraMembersGroupId = &v
+}
+
 func (o CreateAccountApiKeyPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -114,6 +180,12 @@ func (o CreateAccountApiKeyPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize["name"] = o.Name
 	if !IsNil(o.ExpiresAt) {
 		toSerialize["expires_at"] = o.ExpiresAt
+	}
+	if !IsNil(o.ScimEntraTenantId) {
+		toSerialize["scim_entra_tenant_id"] = o.ScimEntraTenantId
+	}
+	if !IsNil(o.ScimEntraMembersGroupId) {
+		toSerialize["scim_entra_members_group_id"] = o.ScimEntraMembersGroupId
 	}
 	return toSerialize, nil
 }
