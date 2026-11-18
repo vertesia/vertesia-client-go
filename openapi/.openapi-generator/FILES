@@ -258,6 +258,7 @@ model_audit_usage_query.go
 model_audit_usage_response.go
 model_auth_token_response.go
 model_autonomous_run_response.go
+model_available_ai_model.go
 model_aws_configuration.go
 model_azure_block_blob_upload_session.go
 model_azure_foundry_chat_options.go
