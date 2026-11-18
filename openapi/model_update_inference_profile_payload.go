@@ -21,11 +21,16 @@ var _ MappedNullable = &UpdateInferenceProfilePayload{}
 // UpdateInferenceProfilePayload Replace editable profile fields, preserving its ID and references.
 type UpdateInferenceProfilePayload struct {
 	// Editable display name, independent of the stable profile ID.
-	Name         string        `json:"name" validate:"regexp=\\S"`
-	Description  *string       `json:"description,omitempty"`
-	Environment  string        `json:"environment" validate:"regexp=^[a-fA-F0-9]{24}$"`
-	Model        *string       `json:"model,omitempty"`
-	ModelOptions *ModelOptions `json:"model_options,omitempty"`
+	Name         string                      `json:"name" validate:"regexp=\\S"`
+	Description  *string                     `json:"description,omitempty"`
+	Environment  string                      `json:"environment" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Model        *string                     `json:"model,omitempty"`
+	ModelOptions *ModelOptions               `json:"model_options,omitempty"`
+	Invocation   *InferenceProfileInvocation `json:"invocation,omitempty"`
+	// Minimum confidence a decision answer needs to be used, overriding the interaction's own threshold. Confidence means different things per provider, so set it per profile.
+	DecisionThreshold *float32 `json:"decision_threshold,omitempty"`
+	// With invocation `decide`: the share of runs that also run regular inference, to compare the two after the switch. Absent means none.
+	AuditSampleRate *float32 `json:"audit_sample_rate,omitempty"`
 }
 
 type _UpdateInferenceProfilePayload UpdateInferenceProfilePayload
@@ -193,6 +198,102 @@ func (o *UpdateInferenceProfilePayload) SetModelOptions(v ModelOptions) {
 	o.ModelOptions = &v
 }
 
+// GetInvocation returns the Invocation field value if set, zero value otherwise.
+func (o *UpdateInferenceProfilePayload) GetInvocation() InferenceProfileInvocation {
+	if o == nil || IsNil(o.Invocation) {
+		var ret InferenceProfileInvocation
+		return ret
+	}
+	return *o.Invocation
+}
+
+// GetInvocationOk returns a tuple with the Invocation field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateInferenceProfilePayload) GetInvocationOk() (*InferenceProfileInvocation, bool) {
+	if o == nil || IsNil(o.Invocation) {
+		return nil, false
+	}
+	return o.Invocation, true
+}
+
+// HasInvocation returns a boolean if a field has been set.
+func (o *UpdateInferenceProfilePayload) HasInvocation() bool {
+	if o != nil && !IsNil(o.Invocation) {
+		return true
+	}
+
+	return false
+}
+
+// SetInvocation gets a reference to the given InferenceProfileInvocation and assigns it to the Invocation field.
+func (o *UpdateInferenceProfilePayload) SetInvocation(v InferenceProfileInvocation) {
+	o.Invocation = &v
+}
+
+// GetDecisionThreshold returns the DecisionThreshold field value if set, zero value otherwise.
+func (o *UpdateInferenceProfilePayload) GetDecisionThreshold() float32 {
+	if o == nil || IsNil(o.DecisionThreshold) {
+		var ret float32
+		return ret
+	}
+	return *o.DecisionThreshold
+}
+
+// GetDecisionThresholdOk returns a tuple with the DecisionThreshold field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateInferenceProfilePayload) GetDecisionThresholdOk() (*float32, bool) {
+	if o == nil || IsNil(o.DecisionThreshold) {
+		return nil, false
+	}
+	return o.DecisionThreshold, true
+}
+
+// HasDecisionThreshold returns a boolean if a field has been set.
+func (o *UpdateInferenceProfilePayload) HasDecisionThreshold() bool {
+	if o != nil && !IsNil(o.DecisionThreshold) {
+		return true
+	}
+
+	return false
+}
+
+// SetDecisionThreshold gets a reference to the given float32 and assigns it to the DecisionThreshold field.
+func (o *UpdateInferenceProfilePayload) SetDecisionThreshold(v float32) {
+	o.DecisionThreshold = &v
+}
+
+// GetAuditSampleRate returns the AuditSampleRate field value if set, zero value otherwise.
+func (o *UpdateInferenceProfilePayload) GetAuditSampleRate() float32 {
+	if o == nil || IsNil(o.AuditSampleRate) {
+		var ret float32
+		return ret
+	}
+	return *o.AuditSampleRate
+}
+
+// GetAuditSampleRateOk returns a tuple with the AuditSampleRate field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateInferenceProfilePayload) GetAuditSampleRateOk() (*float32, bool) {
+	if o == nil || IsNil(o.AuditSampleRate) {
+		return nil, false
+	}
+	return o.AuditSampleRate, true
+}
+
+// HasAuditSampleRate returns a boolean if a field has been set.
+func (o *UpdateInferenceProfilePayload) HasAuditSampleRate() bool {
+	if o != nil && !IsNil(o.AuditSampleRate) {
+		return true
+	}
+
+	return false
+}
+
+// SetAuditSampleRate gets a reference to the given float32 and assigns it to the AuditSampleRate field.
+func (o *UpdateInferenceProfilePayload) SetAuditSampleRate(v float32) {
+	o.AuditSampleRate = &v
+}
+
 func (o UpdateInferenceProfilePayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -213,6 +314,15 @@ func (o UpdateInferenceProfilePayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ModelOptions) {
 		toSerialize["model_options"] = o.ModelOptions
+	}
+	if !IsNil(o.Invocation) {
+		toSerialize["invocation"] = o.Invocation
+	}
+	if !IsNil(o.DecisionThreshold) {
+		toSerialize["decision_threshold"] = o.DecisionThreshold
+	}
+	if !IsNil(o.AuditSampleRate) {
+		toSerialize["audit_sample_rate"] = o.AuditSampleRate
 	}
 	return toSerialize, nil
 }

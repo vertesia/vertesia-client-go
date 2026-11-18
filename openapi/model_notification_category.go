@@ -15,7 +15,7 @@ import (
 	"fmt"
 )
 
-// NotificationCategory Preference group of a notification: `actions` need the user (questions, approvals, tasks), `failures` report failed runs or intakes, `results` report successful ones.
+// NotificationCategory Preference group of a notification: `actions` need the user (questions, approvals, tasks), `failures` report failed runs or intakes, `results` report successful ones, and `billing` reports budget alerts.
 type NotificationCategory string
 
 // List of NotificationCategory
@@ -23,6 +23,7 @@ const (
 	NOTIFICATIONCATEGORY_ACTIONS                  NotificationCategory = "actions"
 	NOTIFICATIONCATEGORY_FAILURES                 NotificationCategory = "failures"
 	NOTIFICATIONCATEGORY_RESULTS                  NotificationCategory = "results"
+	NOTIFICATIONCATEGORY_BILLING                  NotificationCategory = "billing"
 	NOTIFICATIONCATEGORY_UNKNOWN_DEFAULT_OPEN_API NotificationCategory = "unknown_default_open_api"
 )
 
@@ -31,6 +32,7 @@ var AllowedNotificationCategoryEnumValues = []NotificationCategory{
 	"actions",
 	"failures",
 	"results",
+	"billing",
 	"unknown_default_open_api",
 }
 

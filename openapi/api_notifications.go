@@ -1244,7 +1244,7 @@ func (r ApiUpdateNotificationPreferencesRequest) Execute() (*NotificationPrefere
 /*
 UpdateNotificationPreferences Replace notification preferences
 
-Replaces the current user’s notification preferences in the project. They apply to notifications written from now on.
+Replaces the current user’s notification preferences in the project. They apply to notifications written from now on. The budget_alerts_enabled switch controls both inbox and email budget alerts. Omitting it preserves the saved switch.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@return ApiUpdateNotificationPreferencesRequest
