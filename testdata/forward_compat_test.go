@@ -3,6 +3,7 @@ package openapi
 import (
 	"bytes"
 	"encoding/json"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -241,42 +242,121 @@ func TestForwardCompatLiteralTagSelectsTheBranch(t *testing.T) {
 	}
 }
 
-func TestForwardCompatDispatchedBranchIsValidated(t *testing.T) {
-	list := `{"type":"list","id":"ID","label":"Items","title":{"field":"name"}}`
+// The spec's patterns describe what the server accepts today, and a newer server can widen them. A
+// typed branch keeps a value that breaks the pattern this client was generated with, and one such
+// result does not fail the results beside it. The server validates what it receives.
+func TestForwardCompatPatternsAreLeftToTheServer(t *testing.T) {
+	// The id pattern is ^[a-z][a-z0-9_-]*$.
+	list := `{"type":"list","id":"INVALID ID","label":"Items","title":{"field":"document.title"}}`
 	var display ViewDisplayConfiguration
-	if err := json.Unmarshal([]byte(strings.Replace(list, `"ID"`, `"items"`, 1)), &display); err != nil {
+	if err := json.Unmarshal([]byte(list), &display); err != nil {
 		t.Fatal(err)
 	}
-	if display.ViewListDisplay == nil {
-		t.Fatalf("decoded as %T", display.GetActualInstance())
+	if display.ViewListDisplay == nil || display.ViewListDisplay.Id != "INVALID ID" {
+		t.Fatalf("decoded as %#v", display.GetActualInstance())
 	}
-	// The id pattern is ^[a-z][a-z0-9_-]*$.
-	if err := json.Unmarshal([]byte(strings.Replace(list, `"ID"`, `"INVALID ID"`, 1)), &display); err == nil {
-		t.Fatal("an invalid list display was accepted")
+	assertSameJSON(t, list, display)
+
+	// An audio result whose value and mime type are outside ^(?:gs|s3):\/\/... and ^audio\/.*
+	results := `[{"type":"text","value":"hello"},` +
+		`{"type":"audio","value":"https://cdn.example.com/a.ogg","mime_type":"application/ogg"},` +
+		`{"type":"image","value":"gs://bucket/image.png"}]`
+	var decoded []CompletionResult
+	if err := json.Unmarshal([]byte(results), &decoded); err != nil {
+		t.Fatal(err)
 	}
-	// The title field pattern is ^[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)*$, which the generated tag escaped twice.
-	dotted := strings.Replace(strings.Replace(list, `"ID"`, `"items"`, 1), `"name"`, `"document.title"`, 1)
-	if err := json.Unmarshal([]byte(dotted), &display); err != nil {
-		t.Fatalf("a dotted field was rejected: %v", err)
+	for i, result := range decoded {
+		if result.GetActualInstance() == nil || result.Raw != nil {
+			t.Fatalf("result %d is not typed: %#v", i, result)
+		}
+	}
+	assertSameJSON(t, results, decoded)
+
+	// Requests are not checked against the patterns either.
+	for _, payload := range []interface{}{
+		AuditAggregationMetric{Id: "bad id"},
+		CopyFilePayload{Source: "a/b.txt", Dest: "../d.txt"},
+	} {
+		if err := validator.Validate(payload); err != nil {
+			t.Errorf("%T rejected: %v", payload, err)
+		}
 	}
 }
 
-func TestForwardCompatValidateTagsMatchTheSpecPatterns(t *testing.T) {
-	cases := []struct {
-		name         string
-		valid, wrong interface{}
-	}{
-		// ^[A-Za-z0-9_-]{1,64}$: validator.v2 split the tag at the comma and failed every value.
-		{"comma", AuditAggregationMetric{Id: "count"}, AuditAggregationMetric{Id: "bad id"}},
-		// A \u escape, which Go's regexp does not accept, and a doubled backslash.
-		{"unicode", CopyFilePayload{Source: "a/b.txt", Dest: "c/d.txt"}, CopyFilePayload{Source: "a/b.txt", Dest: "../d.txt"}},
+// Types are still checked, and a required string, number or struct that the spec does not let be
+// null cannot be null: it would decode as its zero value and be written back as "".
+func TestForwardCompatRequiredPropertiesAreNotNull(t *testing.T) {
+	for _, body := range []string{
+		`{"type":"audio","value":"gs://bucket/a.wav","mime_type":null}`,
+		`{"type":"audio","value":null,"mime_type":"audio/wav"}`,
+		`[{"type":"text","value":"hello"},{"type":"audio","value":"gs://bucket/a.wav","mime_type":null}]`,
+		`{"status":"enabled","billing_method":null,"portal_url":null}`,
+		`{"type":"audio","value":"gs://bucket/a.wav","mime_type":7}`,
+	} {
+		var err error
+		switch {
+		case strings.HasPrefix(body, "["):
+			var results []CompletionResult
+			err = json.Unmarshal([]byte(body), &results)
+		case strings.Contains(body, "billing_method"):
+			var status StripeBillingStatusResponse
+			err = json.Unmarshal([]byte(body), &status)
+		default:
+			var result CompletionResult
+			err = json.Unmarshal([]byte(body), &result)
+		}
+		if err == nil {
+			t.Errorf("accepted %s", body)
+		}
 	}
-	for _, c := range cases {
-		if err := validator.Validate(c.valid); err != nil {
-			t.Errorf("%s: valid value rejected: %v", c.name, err)
-		}
-		if err := validator.Validate(c.wrong); err == nil {
-			t.Errorf("%s: invalid value accepted", c.name)
-		}
+	// A required property that is nullable can still be null.
+	enabled := `{"status":"enabled","billing_method":"stripe","portal_url":null}`
+	var status StripeBillingStatusResponse
+	if err := json.Unmarshal([]byte(enabled), &status); err != nil {
+		t.Fatal(err)
+	}
+	assertSameJSON(t, enabled, status)
+}
+
+// The spec decides which required properties can be null, whatever their Go type: a tool call
+// without input, and the payload that removes an installation's tool allowlist.
+func TestForwardCompatNullableRequiredPropertiesAcceptNull(t *testing.T) {
+	var calls []ToolUse
+	body := `[{"id":"1","tool_name":"search","tool_input":{"q":"a"}},{"id":"2","tool_name":"now","tool_input":null}]`
+	if err := json.Unmarshal([]byte(body), &calls); err != nil {
+		t.Fatal(err)
+	}
+	if len(calls) != 2 || calls[0].ToolInput["q"] != "a" || calls[1].ToolName != "now" || calls[1].ToolInput != nil {
+		t.Fatalf("decoded %#v", calls)
+	}
+
+	var payload UpdateAppInstallationToolAllowlistPayload
+	if err := json.Unmarshal([]byte(`{"tool_allowlist":null}`), &payload); err != nil {
+		t.Fatal(err)
+	}
+	if payload.ToolAllowlist != nil {
+		t.Fatalf("decoded %#v", payload)
+	}
+	// The property is still required.
+	if err := json.Unmarshal([]byte(`{}`), &payload); err == nil {
+		t.Fatal("accepted a payload without tool_allowlist")
+	}
+}
+
+func assertSameJSON(t *testing.T, want string, value interface{}) {
+	t.Helper()
+	encoded, err := json.Marshal(value)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var before, after interface{}
+	if err := json.Unmarshal([]byte(want), &before); err != nil {
+		t.Fatal(err)
+	}
+	if err := json.Unmarshal(encoded, &after); err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(before, after) {
+		t.Fatalf("written as %s, want %s", encoded, want)
 	}
 }

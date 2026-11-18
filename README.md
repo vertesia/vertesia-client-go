@@ -245,22 +245,25 @@ change, and a released client keeps decoding its responses:
   sends it back unchanged. `IsValid()` returns false for it.
 - An unknown union variant is kept in the union's `Raw` field as `json.RawMessage`.
   `GetActualInstance()` returns it, and `MarshalJSON` writes it back unchanged. A union with a
-  published discriminator dispatches on it: a known value decodes into its typed branch and still
-  fails if that branch is invalid, an unknown value goes to `Raw`, and a missing value is an error.
+  published discriminator dispatches on it: a known value decodes into its typed branch, an
+  unknown value goes to `Raw`, and a missing value is an error.
   A union without a discriminator whose branches each declare a distinct literal for one property
   (`McpConnectionParameter`'s `type`) dispatches on it the same way when the property is present.
-  Other unions keep the generated decoder and use `Raw` only when it cannot pick one branch. A
-  dispatched branch is validated as the generated decoder validated it.
+  Other unions keep the generated decoder and use `Raw` only when it cannot pick one branch.
+- A value outside a pattern of the spec is kept. The spec's patterns describe what the server
+  accepts today, and a newer server can widen them, so the generated models carry no
+  `validate:"regexp=..."` tags: a list of completion results decodes even when one of them holds a
+  value this client's copy of the pattern rejects. Types and required properties are still
+  checked. A required property cannot be `null` when the spec does not allow it and its Go type
+  would decode `null` as another value: `"mime_type": null` fails instead of decoding as `""`.
+  Properties the spec lets be `null`, such as a tool call's `tool_input`, and lists, maps and
+  pointers, which keep `null` as `nil`, accept it. The client does not check requests against the
+  patterns either; the server validates what it receives and answers 400 with the reason.
 
-`scripts/patch-unions` applies the union rule after generation; the tests in `testdata/` run
+`scripts/patch-unions` applies the union rule after generation, and
+`scripts/patch-openapi-permissive-decode.sh` drops the regexp tags and runs
+`scripts/patch-required-null`; the tests in `testdata/` run
 against a freshly patched copy of the generated package.
-
-The `validate:"regexp=..."` tags are checked by `gopkg.in/validator.v2`, which reads the pattern as
-written. OpenAPI Generator doubles each backslash of the spec pattern and keeps the commas validator.v2
-splits its parameters on, so the generated tags rejected valid values such as the dotted view field
-`document.title`, and every value of a field whose pattern has a `{m,n}` quantifier.
-`scripts/patch-validate-regexp` writes the spec pattern back into each tag, with `\uXXXX` as
-`\x{XXXX}` and commas escaped, and fails if a pattern does not compile.
 
 ## OIDC federation for provisioned users
 
