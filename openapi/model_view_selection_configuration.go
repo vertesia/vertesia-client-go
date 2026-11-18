@@ -140,6 +140,13 @@ func (o *ViewSelectionConfiguration) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"mode"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varViewSelectionConfiguration := _ViewSelectionConfiguration{}
 
 	err = json.Unmarshal(data, &varViewSelectionConfiguration)

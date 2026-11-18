@@ -448,6 +448,13 @@ func (o *WorkflowRunEvent) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"event_id", "event_type", "attempt"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varWorkflowRunEvent := _WorkflowRunEvent{}
 
 	err = json.Unmarshal(data, &varWorkflowRunEvent)

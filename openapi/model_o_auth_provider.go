@@ -748,6 +748,13 @@ func (o *OAuthProvider) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "display_name", "project", "client_id", "use_pkce", "created_at", "updated_at", "id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varOAuthProvider := _OAuthProvider{}
 
 	err = json.Unmarshal(data, &varOAuthProvider)

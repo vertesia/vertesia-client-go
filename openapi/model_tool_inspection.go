@@ -523,6 +523,13 @@ func (o *ToolInspection) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "source", "ready"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varToolInspection := _ToolInspection{}
 
 	err = json.Unmarshal(data, &varToolInspection)

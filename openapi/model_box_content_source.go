@@ -550,6 +550,13 @@ func (o *BoxContentSource) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "name", "oauth_provider_id", "location_root", "sync", "type", "folder_id", "folder_name", "folder_path"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varBoxContentSource := _BoxContentSource{}
 
 	err = json.Unmarshal(data, &varBoxContentSource)

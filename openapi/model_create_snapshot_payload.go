@@ -133,6 +133,13 @@ func (o *CreateSnapshotPayload) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "message"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCreateSnapshotPayload := _CreateSnapshotPayload{}
 
 	err = json.Unmarshal(data, &varCreateSnapshotPayload)

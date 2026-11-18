@@ -55,7 +55,7 @@ type NodeDefinition struct {
 	// Declarative successful-tool phases and completion behavior for this agent node. The Process owns this policy; the child conversation enforces it generically.
 	AgentPolicy *ProcessAgentExecutionPolicy `json:"agent_policy,omitempty"`
 	// Inference profile for this node, which supplies its environment, model and model options. Do not combine with `environment`, `model` or `model_options`. A node that selects nothing uses the process run config, then the process definition, then the interaction or agent defaults.
-	InferenceProfile *string `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	InferenceProfile *string `json:"inference_profile,omitempty"`
 	// Environment id for this node. Set it together with `model`, or alone to use the environment default model. Useful when one node needs heavier reasoning (e.g. Opus for legal flagging) while the rest of the process uses a cheaper default.
 	Environment *string `json:"environment,omitempty"`
 	// Model id for this node, in `environment`. A model without an environment is accepted only in definitions saved before environments were required; saving one is rejected.
@@ -1563,6 +1563,13 @@ func (o *NodeDefinition) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varNodeDefinition := _NodeDefinition{}
 
 	err = json.Unmarshal(data, &varNodeDefinition)
@@ -1658,5 +1665,3 @@ func (v *NullableNodeDefinition) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

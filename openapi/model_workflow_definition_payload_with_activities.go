@@ -28,7 +28,7 @@ type WorkflowDefinitionPayloadWithActivities struct {
 	Result      *string                `json:"result,omitempty"`
 	DebugMode   *bool                  `json:"debug_mode,omitempty"`
 	// Legacy upsert: update this definition instead of creating a new one, as 24 hexadecimal characters.
-	Id *string `json:"id,omitempty" validate:"regexp=^[0-9a-fA-F]{24}$"`
+	Id *string `json:"id,omitempty"`
 	// Legacy upsert: ignored, the stored value wins.
 	CreatedAt *string `json:"created_at,omitempty"`
 	// Legacy upsert: the value the definition was read with, for conflict detection.
@@ -470,9 +470,7 @@ func (o WorkflowDefinitionPayloadWithActivities) ToMap() (map[string]interface{}
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
-	if o.Vars != nil {
-		toSerialize["vars"] = o.Vars
-	}
+	toSerialize["vars"] = o.Vars
 	if !IsNil(o.Options) {
 		toSerialize["options"] = o.Options
 	}
@@ -526,6 +524,13 @@ func (o *WorkflowDefinitionPayloadWithActivities) UnmarshalJSON(data []byte) (er
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "spec_format"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 
@@ -596,5 +601,3 @@ func (v *NullableWorkflowDefinitionPayloadWithActivities) UnmarshalJSON(src []by
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

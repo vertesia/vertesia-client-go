@@ -205,6 +205,13 @@ func (o *GenericCommandResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"status", "message"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varGenericCommandResponse := _GenericCommandResponse{}
 
 	err = json.Unmarshal(data, &varGenericCommandResponse)

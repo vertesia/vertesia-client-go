@@ -35,7 +35,7 @@ type CreateContentObjectPayload struct {
 	// Inherited properties metadata - tracks which properties were inherited from parent collections. Used to display readonly inherited properties in the UI and enable incremental sync optimization.
 	InheritedProperties []InheritedPropertyMetadata `json:"inherited_properties,omitempty"`
 	// ID of the parent object (container or folder), as 24 hexadecimal characters.
-	Parent *string `json:"parent,omitempty" validate:"regexp=^[0-9a-fA-F]{24}$"`
+	Parent *string `json:"parent,omitempty"`
 	// An optional path based location for the object
 	Location *string `json:"location,omitempty"`
 	// Object status. - created: the object was created and is being processed - processing: the object is being processed - completed: the object was processed and is ready to use - failed: the object processing failed - archived: the object was archived and is no longer available
@@ -1357,5 +1357,3 @@ func (v *NullableCreateContentObjectPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

@@ -21,7 +21,7 @@ var _ MappedNullable = &ProcessTestTargetById{}
 // ProcessTestTargetById struct for ProcessTestTargetById
 type ProcessTestTargetById struct {
 	// An in-code process id, `app:<app>:<process>` or `sys:<process>`. A stored process definition is tested through `POST /processes/{processId}/test-runs`.
-	Id string `json:"id" validate:"regexp=^(app|sys):"`
+	Id string `json:"id"`
 	// Only for an `app:` id.
 	AppVersion *string `json:"app_version,omitempty"`
 }
@@ -141,6 +141,13 @@ func (o *ProcessTestTargetById) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varProcessTestTargetById := _ProcessTestTargetById{}
 
 	err = json.Unmarshal(data, &varProcessTestTargetById)
@@ -189,5 +196,3 @@ func (v *NullableProcessTestTargetById) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

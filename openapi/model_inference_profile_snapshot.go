@@ -21,9 +21,9 @@ var _ MappedNullable = &InferenceProfileSnapshot{}
 // InferenceProfileSnapshot The selected profile and content revision at execution creation. Effective overrides are recorded in the execution config.
 type InferenceProfileSnapshot struct {
 	// MongoDB ObjectId of the inference profile.
-	Id *string `json:"id,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Id *string `json:"id,omitempty"`
 	// Editable display name, independent of the stable profile ID.
-	Name     string           `json:"name" validate:"regexp=\\S"`
+	Name     string           `json:"name"`
 	Revision string           `json:"revision"`
 	Source   string           `json:"source"`
 	Profile  InferenceProfile `json:"profile"`
@@ -225,6 +225,13 @@ func (o *InferenceProfileSnapshot) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "revision", "source", "profile"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varInferenceProfileSnapshot := _InferenceProfileSnapshot{}
 
 	err = json.Unmarshal(data, &varInferenceProfileSnapshot)
@@ -273,5 +280,3 @@ func (v *NullableInferenceProfileSnapshot) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

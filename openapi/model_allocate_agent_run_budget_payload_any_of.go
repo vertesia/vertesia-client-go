@@ -104,6 +104,13 @@ func (o *AllocateAgentRunBudgetPayloadAnyOf) UnmarshalJSON(data []byte) (err err
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"additional_tokens"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAllocateAgentRunBudgetPayloadAnyOf := _AllocateAgentRunBudgetPayloadAnyOf{}
 
 	err = json.Unmarshal(data, &varAllocateAgentRunBudgetPayloadAnyOf)

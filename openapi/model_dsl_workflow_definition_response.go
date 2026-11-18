@@ -575,9 +575,7 @@ func (o DSLWorkflowDefinitionResponse) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Activities) {
 		toSerialize["activities"] = o.Activities
 	}
-	if o.Vars != nil {
-		toSerialize["vars"] = o.Vars
-	}
+	toSerialize["vars"] = o.Vars
 	if !IsNil(o.Options) {
 		toSerialize["options"] = o.Options
 	}
@@ -632,6 +630,13 @@ func (o *DSLWorkflowDefinitionResponse) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "id", "edit_revision", "updated_by", "created_by", "created_at", "updated_at", "spec_format"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

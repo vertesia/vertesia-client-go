@@ -1009,6 +1009,13 @@ func (o *IndexingStatusResponseReindexProgress) UnmarshalJSON(data []byte) (err 
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"total_shards", "completed_shards", "failed_shards", "status", "scanned", "written", "errors", "docs_per_second", "elapsed_seconds", "percent_complete", "alias", "target_index"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varIndexingStatusResponseReindexProgress := _IndexingStatusResponseReindexProgress{}
 
 	err = json.Unmarshal(data, &varIndexingStatusResponseReindexProgress)

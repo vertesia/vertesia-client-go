@@ -336,6 +336,13 @@ func (o *EmbeddingBatchRunSummary) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "state", "model", "created_at", "applied", "skipped", "failed", "stale"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varEmbeddingBatchRunSummary := _EmbeddingBatchRunSummary{}
 
 	err = json.Unmarshal(data, &varEmbeddingBatchRunSummary)

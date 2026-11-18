@@ -288,6 +288,13 @@ func (o *EnvironmentTokenRequest) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type", "environment_id", "environment_name", "project_id", "account_id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varEnvironmentTokenRequest := _EnvironmentTokenRequest{}
 
 	err = json.Unmarshal(data, &varEnvironmentTokenRequest)

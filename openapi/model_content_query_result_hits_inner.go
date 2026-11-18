@@ -133,9 +133,7 @@ func (o ContentQueryResultHitsInner) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
 	toSerialize["score"] = o.Score
-	if o.Source != nil {
-		toSerialize["source"] = o.Source
-	}
+	toSerialize["source"] = o.Source
 	return toSerialize, nil
 }
 
@@ -160,6 +158,13 @@ func (o *ContentQueryResultHitsInner) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "score"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

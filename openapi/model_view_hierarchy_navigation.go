@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewHierarchyNavigation{}
 
 // ViewHierarchyNavigation A drill-down hierarchy assembled from independently mapped properties.  Hierarchies represent one selected path, so multi_select may only be false. Selection ids are opaque runtime values and must not be constructed by clients.
 type ViewHierarchyNavigation struct {
-	Id           string               `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
+	Id           string               `json:"id"`
 	Label        string               `json:"label"`
 	Presentation *string              `json:"presentation,omitempty"`
 	MultiSelect  *bool                `json:"multi_select,omitempty"`
@@ -331,6 +331,13 @@ func (o *ViewHierarchyNavigation) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "label", "source"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varViewHierarchyNavigation := _ViewHierarchyNavigation{}
 
 	err = json.Unmarshal(data, &varViewHierarchyNavigation)
@@ -379,5 +386,3 @@ func (v *NullableViewHierarchyNavigation) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

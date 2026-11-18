@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewSearchFieldDefinition{}
 
 // ViewSearchFieldDefinition A mapped Elasticsearch field that a View may use for query planning and deterministic full-text fallback.
 type ViewSearchFieldDefinition struct {
-	Field string `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\.[A-Za-z0-9_]+)*$"`
+	Field string `json:"field"`
 	// Meaning of the field for query planners, for example \"Full OCR text\".
 	Description *string `json:"description,omitempty"`
 	// Mapping hint used only when the active index mapping does not expose a type.
@@ -251,6 +251,13 @@ func (o *ViewSearchFieldDefinition) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"field"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varViewSearchFieldDefinition := _ViewSearchFieldDefinition{}
 
 	err = json.Unmarshal(data, &varViewSearchFieldDefinition)
@@ -299,5 +306,3 @@ func (v *NullableViewSearchFieldDefinition) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

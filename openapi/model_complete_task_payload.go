@@ -80,9 +80,7 @@ func (o CompleteTaskPayload) MarshalJSON() ([]byte, error) {
 
 func (o CompleteTaskPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Result != nil {
-		toSerialize["result"] = o.Result
-	}
+	toSerialize["result"] = o.Result
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value

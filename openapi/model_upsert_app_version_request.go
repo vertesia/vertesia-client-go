@@ -21,11 +21,11 @@ var _ MappedNullable = &UpsertAppVersionRequest{}
 // UpsertAppVersionRequest struct for UpsertAppVersionRequest
 type UpsertAppVersionRequest struct {
 	// Existing version record to update in place, used by reproducible rebuilds, as 24 hexadecimal characters.
-	RecordId   *string           `json:"record_id,omitempty" validate:"regexp=^(?:[0-9a-fA-F]{24})?$"`
+	RecordId   *string           `json:"record_id,omitempty"`
 	App        *string           `json:"app,omitempty"`
-	AppId      string            `json:"app_id" validate:"regexp=\\S"`
+	AppId      string            `json:"app_id"`
 	AppName    *string           `json:"app_name,omitempty"`
-	VersionId  string            `json:"version_id" validate:"regexp=\\S"`
+	VersionId  string            `json:"version_id"`
 	Kind       AppVersionKind    `json:"kind"`
 	State      *AppVersionState  `json:"state,omitempty"`
 	Target     *AppVersionTarget `json:"target,omitempty"`
@@ -1033,6 +1033,13 @@ func (o *UpsertAppVersionRequest) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"app_id", "version_id", "kind"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varUpsertAppVersionRequest := _UpsertAppVersionRequest{}
 
 	err = json.Unmarshal(data, &varUpsertAppVersionRequest)
@@ -1114,5 +1121,3 @@ func (v *NullableUpsertAppVersionRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

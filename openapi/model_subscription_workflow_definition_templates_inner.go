@@ -187,6 +187,13 @@ func (o *SubscriptionWorkflowDefinitionTemplatesInner) UnmarshalJSON(data []byte
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "title", "description"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varSubscriptionWorkflowDefinitionTemplatesInner := _SubscriptionWorkflowDefinitionTemplatesInner{}
 
 	err = json.Unmarshal(data, &varSubscriptionWorkflowDefinitionTemplatesInner)

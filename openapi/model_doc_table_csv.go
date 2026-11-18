@@ -239,6 +239,13 @@ func (o *DocTableCsv) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"format", "data"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDocTableCsv := _DocTableCsv{}
 
 	err = json.Unmarshal(data, &varDocTableCsv)

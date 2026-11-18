@@ -663,6 +663,13 @@ func (o *ExecutionEnvironment) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "name", "provider", "account", "created_by", "updated_by", "created_at", "updated_at"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varExecutionEnvironment := _ExecutionEnvironment{}
 
 	err = json.Unmarshal(data, &varExecutionEnvironment)

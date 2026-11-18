@@ -21,9 +21,9 @@ var _ MappedNullable = &UpdateInferenceProfilePayload{}
 // UpdateInferenceProfilePayload Replace editable profile fields, preserving its ID and references.
 type UpdateInferenceProfilePayload struct {
 	// Editable display name, independent of the stable profile ID.
-	Name         string                      `json:"name" validate:"regexp=\\S"`
+	Name         string                      `json:"name"`
 	Description  *string                     `json:"description,omitempty"`
-	Environment  string                      `json:"environment" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Environment  string                      `json:"environment"`
 	Model        *string                     `json:"model,omitempty"`
 	ModelOptions *ModelOptions               `json:"model_options,omitempty"`
 	Invocation   *InferenceProfileInvocation `json:"invocation,omitempty"`
@@ -350,6 +350,13 @@ func (o *UpdateInferenceProfilePayload) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "environment"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varUpdateInferenceProfilePayload := _UpdateInferenceProfilePayload{}
 
 	err = json.Unmarshal(data, &varUpdateInferenceProfilePayload)
@@ -398,5 +405,3 @@ func (v *NullableUpdateInferenceProfilePayload) UnmarshalJSON(src []byte) error 
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

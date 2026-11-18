@@ -22,8 +22,8 @@ var _ MappedNullable = &AppInstallationPayload{}
 type AppInstallationPayload struct {
 	AppId string `json:"app_id"`
 	// Optional stable deployment alias to follow for this installation instead of the app's promoted version.
-	DeploymentAlias *string `json:"deployment_alias,omitempty" validate:"regexp=^[a-z0-9](?:[a-z0-9-]{0\\,61}[a-z0-9])?$"`
-	InstanceKey     *string `json:"instance_key,omitempty" validate:"regexp=^[a-z][a-z0-9_-]{0\\,31}$"`
+	DeploymentAlias *string `json:"deployment_alias,omitempty"`
+	InstanceKey     *string `json:"instance_key,omitempty"`
 	// Optional instance label. Send an empty string to clear the saved label; omit to preserve it.
 	DisplayName        *string           `json:"display_name,omitempty"`
 	NamespaceOverrides map[string]string `json:"namespace_overrides,omitempty"`
@@ -562,6 +562,13 @@ func (o *AppInstallationPayload) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"app_id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAppInstallationPayload := _AppInstallationPayload{}
 
 	err = json.Unmarshal(data, &varAppInstallationPayload)
@@ -629,5 +636,3 @@ func (v *NullableAppInstallationPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

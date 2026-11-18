@@ -316,6 +316,13 @@ func (o *PendingActivity) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"attempt", "maximumAttempts"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varPendingActivity := _PendingActivity{}
 
 	err = json.Unmarshal(data, &varPendingActivity)

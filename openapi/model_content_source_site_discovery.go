@@ -195,6 +195,13 @@ func (o *ContentSourceSiteDiscovery) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"site_id", "name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varContentSourceSiteDiscovery := _ContentSourceSiteDiscovery{}
 
 	err = json.Unmarshal(data, &varContentSourceSiteDiscovery)

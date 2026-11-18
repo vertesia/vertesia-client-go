@@ -20,9 +20,9 @@ var _ MappedNullable = &ProjectInferenceProfilesModality{}
 // ProjectInferenceProfilesModality struct for ProjectInferenceProfilesModality
 type ProjectInferenceProfilesModality struct {
 	// MongoDB ObjectId of the inference profile.
-	Image *string `json:"image,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Image *string `json:"image,omitempty"`
 	// MongoDB ObjectId of the inference profile.
-	Video *string `json:"video,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Video *string `json:"video,omitempty"`
 }
 
 // NewProjectInferenceProfilesModality instantiates a new ProjectInferenceProfilesModality object
@@ -160,5 +160,3 @@ func (v *NullableProjectInferenceProfilesModality) UnmarshalJSON(src []byte) err
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

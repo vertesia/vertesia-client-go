@@ -162,6 +162,13 @@ func (o *AppInstallationOAuthBinding) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"collection_id", "oauth_provider_id", "oauth_provider_name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAppInstallationOAuthBinding := _AppInstallationOAuthBinding{}
 
 	err = json.Unmarshal(data, &varAppInstallationOAuthBinding)

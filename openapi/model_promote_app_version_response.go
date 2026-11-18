@@ -139,6 +139,13 @@ func (o *PromoteAppVersionResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"version"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varPromoteAppVersionResponse := _PromoteAppVersionResponse{}
 
 	err = json.Unmarshal(data, &varPromoteAppVersionResponse)

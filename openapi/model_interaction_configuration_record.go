@@ -25,7 +25,7 @@ type InteractionConfigurationRecord struct {
 	InferenceProfile NullableString `json:"inference_profile"`
 	// Project-scoped agent budget override. Null restores the code-defined or project default; omission preserves the saved budget.
 	Budget      NullableAgentBudgetConfiguration `json:"budget,omitempty"`
-	Id          string                           `json:"id" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Id          string                           `json:"id"`
 	Project     string                           `json:"project"`
 	Interaction string                           `json:"interaction"`
 	CreatedAt   time.Time                        `json:"created_at"`
@@ -295,6 +295,13 @@ func (o *InteractionConfigurationRecord) UnmarshalJSON(data []byte) (err error) 
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "project", "interaction", "created_at", "updated_at"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varInteractionConfigurationRecord := _InteractionConfigurationRecord{}
 
 	err = json.Unmarshal(data, &varInteractionConfigurationRecord)
@@ -343,5 +350,3 @@ func (v *NullableInteractionConfigurationRecord) UnmarshalJSON(src []byte) error
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

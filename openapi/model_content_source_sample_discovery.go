@@ -262,6 +262,13 @@ func (o *ContentSourceSampleDiscovery) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"folders_read", "truncated"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varContentSourceSampleDiscovery := _ContentSourceSampleDiscovery{}
 
 	err = json.Unmarshal(data, &varContentSourceSampleDiscovery)

@@ -1076,6 +1076,13 @@ func (o *ExecutionRunRef) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "ttl", "status", "created_at", "updated_at", "account", "project", "config", "source", "created_by", "updated_by"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varExecutionRunRef := _ExecutionRunRef{}
 
 	err = json.Unmarshal(data, &varExecutionRunRef)

@@ -245,9 +245,7 @@ func (o FindPayload) MarshalJSON() ([]byte, error) {
 
 func (o FindPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Query != nil {
-		toSerialize["query"] = o.Query
-	}
+	toSerialize["query"] = o.Query
 	if !IsNil(o.Offset) {
 		toSerialize["offset"] = o.Offset
 	}

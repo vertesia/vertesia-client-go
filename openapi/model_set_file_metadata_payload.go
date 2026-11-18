@@ -21,7 +21,7 @@ var _ MappedNullable = &SetFileMetadataPayload{}
 // SetFileMetadataPayload struct for SetFileMetadataPayload
 type SetFileMetadataPayload struct {
 	// The file path (relative to bucket) or full URI. It must not be blank or contain control characters.
-	File string `json:"file" validate:"regexp=^[\\x{0020}\\x{00a0}\\x{1680}\\x{2000}-\\x{200a}\\x{2028}\\x{2029}\\x{202f}\\x{205f}\\x{3000}\\x{feff}]*[^\\x{0000}-\\x{001f}\\x{007f}\\x{0020}\\x{00a0}\\x{1680}\\x{2000}-\\x{200a}\\x{2028}\\x{2029}\\x{202f}\\x{205f}\\x{3000}\\x{feff}][^\\x{0000}-\\x{001f}\\x{007f}]*$"`
+	File string `json:"file"`
 	// Custom metadata key-value pairs to set on the file
 	Metadata map[string]string `json:"metadata"`
 }
@@ -133,6 +133,13 @@ func (o *SetFileMetadataPayload) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"file"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varSetFileMetadataPayload := _SetFileMetadataPayload{}
 
 	err = json.Unmarshal(data, &varSetFileMetadataPayload)
@@ -181,5 +188,3 @@ func (v *NullableSetFileMetadataPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

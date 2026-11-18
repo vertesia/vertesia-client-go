@@ -344,6 +344,13 @@ func (o *ContentSourceSyncRound) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"kind", "started_at", "counts"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varContentSourceSyncRound := _ContentSourceSyncRound{}
 
 	err = json.Unmarshal(data, &varContentSourceSyncRound)

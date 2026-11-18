@@ -167,9 +167,7 @@ func (o ToolUse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
 	toSerialize["tool_name"] = o.ToolName
-	if o.ToolInput != nil {
-		toSerialize["tool_input"] = o.ToolInput
-	}
+	toSerialize["tool_input"] = o.ToolInput
 	if !IsNil(o.ThoughtSignature) {
 		toSerialize["thought_signature"] = o.ThoughtSignature
 	}
@@ -197,6 +195,13 @@ func (o *ToolUse) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "tool_name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

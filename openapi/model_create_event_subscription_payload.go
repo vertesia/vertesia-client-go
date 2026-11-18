@@ -22,7 +22,7 @@ var _ MappedNullable = &CreateEventSubscriptionPayload{}
 type CreateEventSubscriptionPayload struct {
 	Name string `json:"name"`
 	// Fully replace this code-defined system subscription in the current project. Only one replacement per system subscription is allowed. Disabling the replacement keeps the default suppressed; deleting it restores the default. Immutable after creation.
-	OverridesSystemSubscriptionId *string                  `json:"overrides_system_subscription_id,omitempty" validate:"regexp=\\S"`
+	OverridesSystemSubscriptionId *string                  `json:"overrides_system_subscription_id,omitempty"`
 	Description                   *string                  `json:"description,omitempty"`
 	Scope                         *string                  `json:"scope,omitempty"`
 	Filter                        EventSubscriptionFilter  `json:"filter"`
@@ -369,6 +369,13 @@ func (o *CreateEventSubscriptionPayload) UnmarshalJSON(data []byte) (err error) 
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "filter", "target", "run_as_role"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCreateEventSubscriptionPayload := _CreateEventSubscriptionPayload{}
 
 	err = json.Unmarshal(data, &varCreateEventSubscriptionPayload)
@@ -417,5 +424,3 @@ func (v *NullableCreateEventSubscriptionPayload) UnmarshalJSON(src []byte) error
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

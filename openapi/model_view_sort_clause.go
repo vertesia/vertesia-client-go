@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewSortClause{}
 
 // ViewSortClause struct for ViewSortClause
 type ViewSortClause struct {
-	Field string `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\.[A-Za-z0-9_]+)*$"`
+	Field string `json:"field"`
 	Order string `json:"order"`
 }
 
@@ -131,6 +131,13 @@ func (o *ViewSortClause) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"field", "order"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varViewSortClause := _ViewSortClause{}
 
 	err = json.Unmarshal(data, &varViewSortClause)
@@ -179,5 +186,3 @@ func (v *NullableViewSortClause) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

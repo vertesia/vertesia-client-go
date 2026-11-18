@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewListDisplay{}
 
 // ViewListDisplay struct for ViewListDisplay
 type ViewListDisplay struct {
-	Id          string            `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
+	Id          string            `json:"id"`
 	Label       string            `json:"label"`
 	Renderer    *string           `json:"renderer,omitempty"`
 	PageSize    *float32          `json:"page_size,omitempty"`
@@ -403,6 +403,13 @@ func (o *ViewListDisplay) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "label", "type", "title"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varViewListDisplay := _ViewListDisplay{}
 
 	err = json.Unmarshal(data, &varViewListDisplay)
@@ -451,5 +458,3 @@ func (v *NullableViewListDisplay) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

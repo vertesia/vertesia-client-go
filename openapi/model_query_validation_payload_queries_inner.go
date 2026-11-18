@@ -131,6 +131,13 @@ func (o *QueryValidationPayloadQueriesInner) UnmarshalJSON(data []byte) (err err
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "sql"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varQueryValidationPayloadQueriesInner := _QueryValidationPayloadQueriesInner{}
 
 	err = json.Unmarshal(data, &varQueryValidationPayloadQueriesInner)

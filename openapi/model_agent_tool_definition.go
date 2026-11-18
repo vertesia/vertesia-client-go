@@ -381,9 +381,7 @@ func (o AgentToolDefinition) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
-	if o.InputSchema != nil {
-		toSerialize["input_schema"] = o.InputSchema
-	}
+	toSerialize["input_schema"] = o.InputSchema
 	if !IsNil(o.OutputSchema) {
 		toSerialize["output_schema"] = o.OutputSchema
 	}
@@ -433,6 +431,13 @@ func (o *AgentToolDefinition) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

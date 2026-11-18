@@ -167,6 +167,13 @@ func (o *AsyncExecutionResult) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"runId", "workflowId"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAsyncExecutionResult := _AsyncExecutionResult{}
 
 	err = json.Unmarshal(data, &varAsyncExecutionResult)

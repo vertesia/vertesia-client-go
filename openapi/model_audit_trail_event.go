@@ -1066,6 +1066,13 @@ func (o *AuditTrailEvent) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"event_type", "action", "resource_type", "resource_id", "timestamp", "request_id", "status", "success"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAuditTrailEvent := _AuditTrailEvent{}
 
 	err = json.Unmarshal(data, &varAuditTrailEvent)

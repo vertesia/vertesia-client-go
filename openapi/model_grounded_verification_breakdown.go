@@ -191,6 +191,13 @@ func (o *GroundedVerificationBreakdown) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"total", "digitally_verified", "ai_verified", "unverified"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varGroundedVerificationBreakdown := _GroundedVerificationBreakdown{}
 
 	err = json.Unmarshal(data, &varGroundedVerificationBreakdown)

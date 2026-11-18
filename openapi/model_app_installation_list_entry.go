@@ -29,7 +29,7 @@ type AppInstallationListEntry struct {
 	ReservedNamespaces  []string          `json:"reserved_namespaces,omitempty"`
 	NamespaceConflicts  []string          `json:"namespace_conflicts,omitempty"`
 	// Stable deployment alias selected for this installation. The alias is resolved to its current immutable app version at request time.
-	DeploymentAlias  *string                          `json:"deployment_alias,omitempty" validate:"regexp=^[a-z0-9](?:[a-z0-9-]{0\\,61}[a-z0-9])?$"`
+	DeploymentAlias  *string                          `json:"deployment_alias,omitempty"`
 	McpConfiguration *AppInstallationMcpConfiguration `json:"mcp_configuration,omitempty"`
 	OauthApproval    *AppInstallationOauthApproval    `json:"oauth_approval,omitempty"`
 	OauthClientId    *string                          `json:"oauth_client_id,omitempty"`
@@ -842,6 +842,13 @@ func (o *AppInstallationListEntry) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "project", "created_at", "updated_at"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAppInstallationListEntry := _AppInstallationListEntry{}
 
 	err = json.Unmarshal(data, &varAppInstallationListEntry)
@@ -918,5 +925,3 @@ func (v *NullableAppInstallationListEntry) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

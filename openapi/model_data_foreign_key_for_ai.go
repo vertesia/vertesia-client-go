@@ -133,6 +133,13 @@ func (o *DataForeignKeyForAI) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"column", "references"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDataForeignKeyForAI := _DataForeignKeyForAI{}
 
 	err = json.Unmarshal(data, &varDataForeignKeyForAI)

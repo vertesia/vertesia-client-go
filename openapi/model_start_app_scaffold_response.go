@@ -259,6 +259,13 @@ func (o *StartAppScaffoldResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"workflow_id", "run_id", "app_id", "create_version"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varStartAppScaffoldResponse := _StartAppScaffoldResponse{}
 
 	err = json.Unmarshal(data, &varStartAppScaffoldResponse)

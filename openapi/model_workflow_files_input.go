@@ -131,6 +131,13 @@ func (o *WorkflowFilesInput) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"inputType"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varWorkflowFilesInput := _WorkflowFilesInput{}
 
 	err = json.Unmarshal(data, &varWorkflowFilesInput)

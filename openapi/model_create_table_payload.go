@@ -21,7 +21,7 @@ var _ MappedNullable = &CreateTablePayload{}
 // CreateTablePayload Payload for creating a new table.
 type CreateTablePayload struct {
 	// Table name: a SQL identifier of letters, digits and underscores, starting with a letter or underscore, at most 64 characters, and not a reserved SQL keyword.
-	Name string `json:"name" validate:"regexp=^[a-zA-Z_][a-zA-Z0-9_]*$"`
+	Name string `json:"name"`
 	// Table description
 	Description *string `json:"description,omitempty"`
 	// Column definitions (at least one required)
@@ -318,6 +318,13 @@ func (o *CreateTablePayload) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCreateTablePayload := _CreateTablePayload{}
 
 	err = json.Unmarshal(data, &varCreateTablePayload)
@@ -366,5 +373,3 @@ func (v *NullableCreateTablePayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

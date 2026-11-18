@@ -107,9 +107,7 @@ func (o ProcessContextDefinition) MarshalJSON() ([]byte, error) {
 func (o ProcessContextDefinition) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["schema"] = o.Schema
-	if o.Initial != nil {
-		toSerialize["initial"] = o.Initial
-	}
+	toSerialize["initial"] = o.Initial
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -138,6 +136,13 @@ func (o *ProcessContextDefinition) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"schema"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

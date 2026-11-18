@@ -258,9 +258,7 @@ func (o ProcessState) MarshalJSON() ([]byte, error) {
 
 func (o ProcessState) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Context != nil {
-		toSerialize["context"] = o.Context
-	}
+	toSerialize["context"] = o.Context
 	toSerialize["current_node"] = o.CurrentNode
 	toSerialize["node_history"] = o.NodeHistory
 	if !IsNil(o.NodeHistoryRef) {
@@ -303,6 +301,13 @@ func (o *ProcessState) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"current_node", "sequence"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

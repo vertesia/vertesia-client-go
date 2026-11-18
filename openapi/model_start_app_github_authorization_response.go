@@ -109,6 +109,13 @@ func (o *StartAppGithubAuthorizationResponse) UnmarshalJSON(data []byte) (err er
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"authorization_url"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varStartAppGithubAuthorizationResponse := _StartAppGithubAuthorizationResponse{}
 
 	err = json.Unmarshal(data, &varStartAppGithubAuthorizationResponse)

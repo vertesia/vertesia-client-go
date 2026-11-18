@@ -187,6 +187,13 @@ func (o *ForwardEmailResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"success", "run_id", "workflow_id", "route_key"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varForwardEmailResponse := _ForwardEmailResponse{}
 
 	err = json.Unmarshal(data, &varForwardEmailResponse)

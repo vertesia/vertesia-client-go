@@ -21,10 +21,10 @@ var _ MappedNullable = &CreateDelegationGrantPayload{}
 
 // CreateDelegationGrantPayload struct for CreateDelegationGrantPayload
 type CreateDelegationGrantPayload struct {
-	ScheduleId         string       `json:"schedule_id" validate:"regexp=^[a-f0-9]{24}$"`
-	Subject            string       `json:"subject" validate:"regexp=^[a-f0-9]{24}$"`
-	OutputCollectionId string       `json:"output_collection_id" validate:"regexp=^[a-f0-9]{24}$"`
-	PolicyHash         string       `json:"policy_hash" validate:"regexp=^[a-f0-9]{64}$"`
+	ScheduleId         string       `json:"schedule_id"`
+	Subject            string       `json:"subject"`
+	OutputCollectionId string       `json:"output_collection_id"`
+	PolicyHash         string       `json:"policy_hash"`
 	ExpiresAt          NullableTime `json:"expires_at"`
 }
 
@@ -218,6 +218,13 @@ func (o *CreateDelegationGrantPayload) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"schedule_id", "subject", "output_collection_id", "policy_hash"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCreateDelegationGrantPayload := _CreateDelegationGrantPayload{}
 
 	err = json.Unmarshal(data, &varCreateDelegationGrantPayload)
@@ -266,5 +273,3 @@ func (v *NullableCreateDelegationGrantPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

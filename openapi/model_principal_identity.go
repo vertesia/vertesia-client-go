@@ -251,9 +251,7 @@ func (o PrincipalIdentity) ToMap() (map[string]interface{}, error) {
 		toSerialize["email"] = o.Email
 	}
 	toSerialize["tags"] = o.Tags
-	if o.Properties != nil {
-		toSerialize["properties"] = o.Properties
-	}
+	toSerialize["properties"] = o.Properties
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -286,6 +284,13 @@ func (o *PrincipalIdentity) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"kind", "id", "clearance"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

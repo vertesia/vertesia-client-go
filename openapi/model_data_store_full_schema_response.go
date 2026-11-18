@@ -293,6 +293,13 @@ func (o *DataStoreFullSchemaResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"version", "updated_at", "schema_format"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDataStoreFullSchemaResponse := _DataStoreFullSchemaResponse{}
 
 	err = json.Unmarshal(data, &varDataStoreFullSchemaResponse)

@@ -271,6 +271,13 @@ func (o *DashboardPanel) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"title", "position"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDashboardPanel := _DashboardPanel{}
 
 	err = json.Unmarshal(data, &varDashboardPanel)

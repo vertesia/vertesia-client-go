@@ -315,6 +315,13 @@ func (o *ProcessTestChildTrace) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"status", "coverage"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varProcessTestChildTrace := _ProcessTestChildTrace{}
 
 	err = json.Unmarshal(data, &varProcessTestChildTrace)

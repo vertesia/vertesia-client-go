@@ -20,13 +20,13 @@ var _ MappedNullable = &ViewTableColumn{}
 
 // ViewTableColumn struct for ViewTableColumn
 type ViewTableColumn struct {
-	Field      string                 `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\.[A-Za-z0-9_]+)*$"`
+	Field      string                 `json:"field"`
 	Label      *string                `json:"label,omitempty"`
 	Format     *ViewResultFieldFormat `json:"format,omitempty"`
 	Fallback   *string                `json:"fallback,omitempty"`
 	Width      *float32               `json:"width,omitempty"`
 	Sortable   *bool                  `json:"sortable,omitempty"`
-	SortOption *string                `json:"sort_option,omitempty" validate:"regexp=^[a-z][a-z0-9_-]*$"`
+	SortOption *string                `json:"sort_option,omitempty"`
 }
 
 type _ViewTableColumn ViewTableColumn
@@ -319,6 +319,13 @@ func (o *ViewTableColumn) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"field"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varViewTableColumn := _ViewTableColumn{}
 
 	err = json.Unmarshal(data, &varViewTableColumn)
@@ -367,5 +374,3 @@ func (v *NullableViewTableColumn) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

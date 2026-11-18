@@ -22,11 +22,11 @@ var _ MappedNullable = &UpdateExecutionRunPayload{}
 type UpdateExecutionRunPayload struct {
 	Id *string `json:"id,omitempty"`
 	// Only used by runs that were created by a virtual run to point toward the virtual run parent. The parent run ID, as 24 hexadecimal characters.
-	Parent     *string                 `json:"parent,omitempty" validate:"regexp=^[0-9a-fA-F]{24}$"`
+	Parent     *string                 `json:"parent,omitempty"`
 	Evaluation *ExecutionRunEvaluation `json:"evaluation,omitempty"`
 	Tags       []string                `json:"tags,omitempty"`
 	// The environment ID, as 24 hexadecimal characters.
-	Environment            *string                            `json:"environment,omitempty" validate:"regexp=^[0-9a-fA-F]{24}$"`
+	Environment            *string                            `json:"environment,omitempty"`
 	ModelId                *string                            `json:"modelId,omitempty"`
 	ResultSchema           *JSONSchema                        `json:"result_schema,omitempty"`
 	Ttl                    *float32                           `json:"ttl,omitempty"`
@@ -52,7 +52,7 @@ type UpdateExecutionRunPayload struct {
 	// The Vertesia Workflow related to this Interaction Run.  This is only set when the interaction is executed as part of a workflow.
 	Workflow *ExecutionRunWorkflow `json:"workflow,omitempty"`
 	// The interaction ID, as 24 hexadecimal characters.
-	Interaction          *string `json:"interaction,omitempty" validate:"regexp=^[0-9a-fA-F]{24}$"`
+	Interaction          *string `json:"interaction,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -1124,5 +1124,3 @@ func (v *NullableUpdateExecutionRunPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

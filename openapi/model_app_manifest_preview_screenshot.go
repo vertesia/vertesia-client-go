@@ -133,6 +133,13 @@ func (o *AppManifestPreviewScreenshot) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"agent_run_id", "artifact"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAppManifestPreviewScreenshot := _AppManifestPreviewScreenshot{}
 
 	err = json.Unmarshal(data, &varAppManifestPreviewScreenshot)

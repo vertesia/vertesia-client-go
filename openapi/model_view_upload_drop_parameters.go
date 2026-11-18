@@ -21,7 +21,7 @@ var _ MappedNullable = &ViewUploadDropParameters{}
 type ViewUploadDropParameters struct {
 	TypeId       *string                `json:"type_id,omitempty"`
 	CollectionId *string                `json:"collection_id,omitempty"`
-	Location     *string                `json:"location,omitempty" validate:"regexp=^/"`
+	Location     *string                `json:"location,omitempty"`
 	Properties   map[string]interface{} `json:"properties,omitempty"`
 	AllowFolders *bool                  `json:"allow_folders,omitempty"`
 }
@@ -266,5 +266,3 @@ func (v *NullableViewUploadDropParameters) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

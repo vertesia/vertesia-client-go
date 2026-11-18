@@ -20,7 +20,7 @@ var _ MappedNullable = &WebsiteCredentialMetadata{}
 
 // WebsiteCredentialMetadata struct for WebsiteCredentialMetadata
 type WebsiteCredentialMetadata struct {
-	Name           string                         `json:"name" validate:"regexp=\\S"`
+	Name           string                         `json:"name"`
 	Websites       []WebsiteCredentialWebsite     `json:"websites"`
 	Username       *string                        `json:"username,omitempty"`
 	UsernameHint   *string                        `json:"username_hint,omitempty"`
@@ -499,6 +499,13 @@ func (o *WebsiteCredentialMetadata) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varWebsiteCredentialMetadata := _WebsiteCredentialMetadata{}
 
 	err = json.Unmarshal(data, &varWebsiteCredentialMetadata)
@@ -565,5 +572,3 @@ func (v *NullableWebsiteCredentialMetadata) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

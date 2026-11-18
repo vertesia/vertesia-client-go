@@ -247,6 +247,13 @@ func (o *ViewBoardCardConfiguration) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"title"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varViewBoardCardConfiguration := _ViewBoardCardConfiguration{}
 
 	err = json.Unmarshal(data, &varViewBoardCardConfiguration)

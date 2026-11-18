@@ -131,6 +131,13 @@ func (o *ReindexAgentRunsResponseErrorsInner) UnmarshalJSON(data []byte) (err er
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "message"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varReindexAgentRunsResponseErrorsInner := _ReindexAgentRunsResponseErrorsInner{}
 
 	err = json.Unmarshal(data, &varReindexAgentRunsResponseErrorsInner)

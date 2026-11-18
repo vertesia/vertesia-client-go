@@ -21,7 +21,7 @@ var _ MappedNullable = &CreateAccountApiKeyPayload{}
 
 // CreateAccountApiKeyPayload struct for CreateAccountApiKeyPayload
 type CreateAccountApiKeyPayload struct {
-	Name      string     `json:"name" validate:"regexp=\\S"`
+	Name      string     `json:"name"`
 	ExpiresAt *time.Time `json:"expires_at,omitempty"`
 }
 
@@ -140,6 +140,13 @@ func (o *CreateAccountApiKeyPayload) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCreateAccountApiKeyPayload := _CreateAccountApiKeyPayload{}
 
 	err = json.Unmarshal(data, &varCreateAccountApiKeyPayload)
@@ -188,5 +195,3 @@ func (v *NullableCreateAccountApiKeyPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

@@ -21,7 +21,7 @@ var _ MappedNullable = &SetMcpApiKeyRequest{}
 // SetMcpApiKeyRequest struct for SetMcpApiKeyRequest
 type SetMcpApiKeyRequest struct {
 	// The static key issued by the remote MCP server. Surrounding whitespace is stripped. Stored encrypted in the project secret store and sent as the RFC 6750 bearer token on every request to the collection URL. Never returned by the API.
-	ApiKey string `json:"api_key" validate:"regexp=\\S"`
+	ApiKey string `json:"api_key"`
 }
 
 type _SetMcpApiKeyRequest SetMcpApiKeyRequest
@@ -104,6 +104,13 @@ func (o *SetMcpApiKeyRequest) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"api_key"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varSetMcpApiKeyRequest := _SetMcpApiKeyRequest{}
 
 	err = json.Unmarshal(data, &varSetMcpApiKeyRequest)
@@ -152,5 +159,3 @@ func (v *NullableSetMcpApiKeyRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

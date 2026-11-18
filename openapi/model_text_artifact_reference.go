@@ -243,6 +243,13 @@ func (o *TextArtifactReference) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"storage_id", "artifact_path", "display_ref", "sha256", "size_bytes", "content_type"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varTextArtifactReference := _TextArtifactReference{}
 
 	err = json.Unmarshal(data, &varTextArtifactReference)

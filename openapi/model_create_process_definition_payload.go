@@ -285,6 +285,13 @@ func (o *CreateProcessDefinitionPayload) UnmarshalJSON(data []byte) (err error) 
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "definition"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCreateProcessDefinitionPayload := _CreateProcessDefinitionPayload{}
 
 	err = json.Unmarshal(data, &varCreateProcessDefinitionPayload)

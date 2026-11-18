@@ -20,9 +20,9 @@ var _ MappedNullable = &ViewActionConfiguration{}
 
 // ViewActionConfiguration Declarative action exposed by a View. The handler name is resolved by the embedding application; persisted configuration never contains executable code.
 type ViewActionConfiguration struct {
-	Id                string                          `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
+	Id                string                          `json:"id"`
 	Label             string                          `json:"label"`
-	Handler           string                          `json:"handler" validate:"regexp=^[a-z][a-z0-9_-]*$"`
+	Handler           string                          `json:"handler"`
 	Placement         *ViewActionPlacement            `json:"placement,omitempty"`
 	RequiresSelection *ViewActionSelectionRequirement `json:"requires_selection,omitempty"`
 	Destructive       *bool                           `json:"destructive,omitempty"`
@@ -339,6 +339,13 @@ func (o *ViewActionConfiguration) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "label", "handler"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varViewActionConfiguration := _ViewActionConfiguration{}
 
 	err = json.Unmarshal(data, &varViewActionConfiguration)
@@ -387,5 +394,3 @@ func (v *NullableViewActionConfiguration) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

@@ -22,9 +22,9 @@ var _ MappedNullable = &InferenceProfileRecord{}
 // InferenceProfileRecord A project-scoped inference profile stored as a MongoDB document.
 type InferenceProfileRecord struct {
 	// Editable display name, independent of the stable profile ID.
-	Name         string                      `json:"name" validate:"regexp=\\S"`
+	Name         string                      `json:"name"`
 	Description  *string                     `json:"description,omitempty"`
-	Environment  string                      `json:"environment" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Environment  string                      `json:"environment"`
 	Model        *string                     `json:"model,omitempty"`
 	ModelOptions *ModelOptions               `json:"model_options,omitempty"`
 	Invocation   *InferenceProfileInvocation `json:"invocation,omitempty"`
@@ -32,7 +32,7 @@ type InferenceProfileRecord struct {
 	DecisionThreshold *float32 `json:"decision_threshold,omitempty"`
 	// With invocation `decide`: the share of runs that also run regular inference, to compare the two after the switch. Absent means none.
 	AuditSampleRate *float32  `json:"audit_sample_rate,omitempty"`
-	Id              string    `json:"id" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Id              string    `json:"id"`
 	Project         string    `json:"project"`
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
@@ -463,6 +463,13 @@ func (o *InferenceProfileRecord) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "environment", "id", "project", "created_at", "updated_at"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varInferenceProfileRecord := _InferenceProfileRecord{}
 
 	err = json.Unmarshal(data, &varInferenceProfileRecord)
@@ -511,5 +518,3 @@ func (v *NullableInferenceProfileRecord) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

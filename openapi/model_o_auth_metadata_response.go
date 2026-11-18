@@ -187,6 +187,13 @@ func (o *OAuthMetadataResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"collection_id", "collection_name", "mcp_server_url"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varOAuthMetadataResponse := _OAuthMetadataResponse{}
 
 	err = json.Unmarshal(data, &varOAuthMetadataResponse)

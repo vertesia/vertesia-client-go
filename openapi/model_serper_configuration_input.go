@@ -203,6 +203,13 @@ func (o *SerperConfigurationInput) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"integration", "enabled"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varSerperConfigurationInput := _SerperConfigurationInput{}
 
 	err = json.Unmarshal(data, &varSerperConfigurationInput)

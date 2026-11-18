@@ -22,7 +22,7 @@ var _ MappedNullable = &ExportPropertiesPayload{}
 type ExportPropertiesPayload struct {
 	ObjectIds []string `json:"objectIds"`
 	// The export format: `JSON` or `CSV`.
-	Type        string              `json:"type" validate:"regexp=^(?:JSON|CSV)$"`
+	Type        string              `json:"type"`
 	Query       *ComplexSearchQuery `json:"query,omitempty"`
 	TableLayout []ColumnLayout      `json:"table_layout,omitempty"`
 }
@@ -204,6 +204,13 @@ func (o *ExportPropertiesPayload) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varExportPropertiesPayload := _ExportPropertiesPayload{}
 
 	err = json.Unmarshal(data, &varExportPropertiesPayload)
@@ -252,5 +259,3 @@ func (v *NullableExportPropertiesPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

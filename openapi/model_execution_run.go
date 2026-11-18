@@ -963,9 +963,7 @@ func (o ExecutionRun) ToMap() (map[string]interface{}, error) {
 		toSerialize["evaluation"] = o.Evaluation
 	}
 	toSerialize["result"] = o.Result
-	if o.Parameters != nil {
-		toSerialize["parameters"] = o.Parameters
-	}
+	toSerialize["parameters"] = o.Parameters
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
@@ -1059,6 +1057,13 @@ func (o *ExecutionRun) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "environment", "ttl", "status", "created_at", "updated_at", "account", "project", "config", "source", "created_by", "updated_by"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

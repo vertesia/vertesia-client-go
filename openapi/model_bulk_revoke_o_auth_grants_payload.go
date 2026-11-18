@@ -19,9 +19,9 @@ var _ MappedNullable = &BulkRevokeOAuthGrantsPayload{}
 
 // BulkRevokeOAuthGrantsPayload struct for BulkRevokeOAuthGrantsPayload
 type BulkRevokeOAuthGrantsPayload struct {
-	AccountId      *string              `json:"account_id,omitempty" validate:"regexp=^(?:[0-9a-fA-F]{24})?$"`
-	ProjectId      *string              `json:"project_id,omitempty" validate:"regexp=^(?:[0-9a-fA-F]{24})?$"`
-	UserId         *string              `json:"user_id,omitempty" validate:"regexp=^(?:[0-9a-fA-F]{24})?$"`
+	AccountId      *string              `json:"account_id,omitempty"`
+	ProjectId      *string              `json:"project_id,omitempty"`
+	UserId         *string              `json:"user_id,omitempty"`
 	ClientId       *string              `json:"client_id,omitempty"`
 	Resource       *string              `json:"resource,omitempty"`
 	Status         *string              `json:"status,omitempty"`
@@ -518,5 +518,3 @@ func (v *NullableBulkRevokeOAuthGrantsPayload) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

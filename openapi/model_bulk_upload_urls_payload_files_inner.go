@@ -23,7 +23,7 @@ type BulkUploadUrlsPayloadFilesInner struct {
 	Name     string  `json:"name"`
 	MimeType *string `json:"mime_type,omitempty"`
 	// The object name to upload to. A random name is chosen when omitted. It must not be empty, start with `/` or `\\`, or contain a `..` segment.
-	Id *string `json:"id,omitempty" validate:"regexp=^(?:\\.\\.[^\\/]+|\\.(?:[^\\/.][^\\/]*)?|[^\\/.][^\\/]*)(?:[\\/]+(?:\\.\\.[^\\/]+|\\.(?:[^\\/.][^\\/]*)?|[^\\/.][^\\/]*))*[\\/]*$"`
+	Id *string `json:"id,omitempty"`
 }
 
 type _BulkUploadUrlsPayloadFilesInner BulkUploadUrlsPayloadFilesInner
@@ -176,6 +176,13 @@ func (o *BulkUploadUrlsPayloadFilesInner) UnmarshalJSON(data []byte) (err error)
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varBulkUploadUrlsPayloadFilesInner := _BulkUploadUrlsPayloadFilesInner{}
 
 	err = json.Unmarshal(data, &varBulkUploadUrlsPayloadFilesInner)
@@ -224,5 +231,3 @@ func (v *NullableBulkUploadUrlsPayloadFilesInner) UnmarshalJSON(src []byte) erro
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

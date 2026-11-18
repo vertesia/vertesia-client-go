@@ -46,7 +46,7 @@ type CatalogSearchInteractionRef struct {
 	// Only applies for stored interactions. The last update time.
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	// Only applies for in-code interactions. The inference profile the interaction pins; runs of one that pins none use the project default.
-	InferenceProfile     *string `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	InferenceProfile     *string `json:"inference_profile,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -523,6 +523,13 @@ func (o *CatalogSearchInteractionRef) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type", "id", "name", "title"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCatalogSearchInteractionRef := _CatalogSearchInteractionRef{}
 
 	err = json.Unmarshal(data, &varCatalogSearchInteractionRef)
@@ -590,5 +597,3 @@ func (v *NullableCatalogSearchInteractionRef) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

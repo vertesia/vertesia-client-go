@@ -162,6 +162,13 @@ func (o *CostAnalyticsResponsePricingCoverageCostBySource) UnmarshalJSON(data []
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"provider_billed", "run_time_estimate", "price_table"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCostAnalyticsResponsePricingCoverageCostBySource := _CostAnalyticsResponsePricingCoverageCostBySource{}
 
 	err = json.Unmarshal(data, &varCostAnalyticsResponsePricingCoverageCostBySource)

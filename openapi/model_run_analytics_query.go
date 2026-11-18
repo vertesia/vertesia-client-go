@@ -326,6 +326,13 @@ func (o *RunAnalyticsQuery) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"filterBy"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varRunAnalyticsQuery := _RunAnalyticsQuery{}
 
 	err = json.Unmarshal(data, &varRunAnalyticsQuery)

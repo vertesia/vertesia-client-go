@@ -131,6 +131,13 @@ func (o *ListContentObjectExportsResponse) UnmarshalJSON(data []byte) (err error
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"limit"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varListContentObjectExportsResponse := _ListContentObjectExportsResponse{}
 
 	err = json.Unmarshal(data, &varListContentObjectExportsResponse)

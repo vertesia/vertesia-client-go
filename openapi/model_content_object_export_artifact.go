@@ -287,6 +287,13 @@ func (o *ContentObjectExportArtifact) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"export_id", "path", "filename", "content_type", "bytes"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varContentObjectExportArtifact := _ContentObjectExportArtifact{}
 
 	err = json.Unmarshal(data, &varContentObjectExportArtifact)

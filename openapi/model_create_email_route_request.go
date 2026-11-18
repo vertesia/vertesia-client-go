@@ -167,6 +167,13 @@ func (o *CreateEmailRouteRequest) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"run_id", "user_email"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCreateEmailRouteRequest := _CreateEmailRouteRequest{}
 
 	err = json.Unmarshal(data, &varCreateEmailRouteRequest)

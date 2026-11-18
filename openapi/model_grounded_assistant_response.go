@@ -162,6 +162,13 @@ func (o *GroundedAssistantResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"agent_run_id", "workflow_id", "object_id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varGroundedAssistantResponse := _GroundedAssistantResponse{}
 
 	err = json.Unmarshal(data, &varGroundedAssistantResponse)

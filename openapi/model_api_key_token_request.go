@@ -204,6 +204,13 @@ func (o *ApiKeyTokenRequest) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type", "key"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varApiKeyTokenRequest := _ApiKeyTokenRequest{}
 
 	err = json.Unmarshal(data, &varApiKeyTokenRequest)

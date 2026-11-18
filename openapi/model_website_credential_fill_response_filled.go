@@ -187,6 +187,13 @@ func (o *WebsiteCredentialFillResponseFilled) UnmarshalJSON(data []byte) (err er
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"username", "password", "totp", "submitted"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varWebsiteCredentialFillResponseFilled := _WebsiteCredentialFillResponseFilled{}
 
 	err = json.Unmarshal(data, &varWebsiteCredentialFillResponseFilled)

@@ -27,8 +27,8 @@ type CreateViewExperienceRequest struct {
 	Navigation  []ViewNavigationItem         `json:"navigation,omitempty"`
 	Search      *ViewSearchConfiguration     `json:"search,omitempty"`
 	Results     *ViewResultsConfiguration    `json:"results,omitempty"`
-	Description string                       `json:"description" validate:"regexp=\\S"`
-	Id          string                       `json:"id" validate:"regexp=^[a-z0-9]+(?:-[a-z0-9]+)*$"`
+	Description string                       `json:"description"`
+	Id          string                       `json:"id"`
 	Version     *ViewExperienceSchemaVersion `json:"version,omitempty"`
 }
 
@@ -411,6 +411,13 @@ func (o *CreateViewExperienceRequest) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "description", "id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCreateViewExperienceRequest := _CreateViewExperienceRequest{}
 
 	err = json.Unmarshal(data, &varCreateViewExperienceRequest)
@@ -459,5 +466,3 @@ func (v *NullableCreateViewExperienceRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

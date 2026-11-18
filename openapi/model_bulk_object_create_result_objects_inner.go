@@ -175,6 +175,13 @@ func (o *BulkObjectCreateResultObjectsInner) UnmarshalJSON(data []byte) (err err
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varBulkObjectCreateResultObjectsInner := _BulkObjectCreateResultObjectsInner{}
 
 	err = json.Unmarshal(data, &varBulkObjectCreateResultObjectsInner)

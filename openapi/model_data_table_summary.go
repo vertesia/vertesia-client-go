@@ -273,6 +273,13 @@ func (o *DataTableSummary) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "column_count"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDataTableSummary := _DataTableSummary{}
 
 	err = json.Unmarshal(data, &varDataTableSummary)

@@ -195,6 +195,13 @@ func (o *ProcessTestVirtualActor) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varProcessTestVirtualActor := _ProcessTestVirtualActor{}
 
 	err = json.Unmarshal(data, &varProcessTestVirtualActor)

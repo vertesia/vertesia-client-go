@@ -402,9 +402,7 @@ func (o UpdateWorkflowDefinitionPayloadWithActivities) ToMap() (map[string]inter
 	if !IsNil(o.Tags) {
 		toSerialize["tags"] = o.Tags
 	}
-	if o.Vars != nil {
-		toSerialize["vars"] = o.Vars
-	}
+	toSerialize["vars"] = o.Vars
 	if !IsNil(o.Options) {
 		toSerialize["options"] = o.Options
 	}
@@ -452,6 +450,13 @@ func (o *UpdateWorkflowDefinitionPayloadWithActivities) UnmarshalJSON(data []byt
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "spec_format"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

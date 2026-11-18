@@ -24,7 +24,7 @@ type OidcFederationConnectionPayload struct {
 	Issuer  string  `json:"issuer"`
 	JwksUri *string `json:"jwks_uri,omitempty"`
 	// Exact top-level verified token claim matched to SCIM externalId within the owning provisioning account.
-	ExternalIdClaim   string   `json:"external_id_claim" validate:"regexp=\\S"`
+	ExternalIdClaim   string   `json:"external_id_claim"`
 	AllowedAudiences  []string `json:"allowed_audiences"`
 	AllowedAlgorithms []string `json:"allowed_algorithms"`
 	SubjectTokenType  string   `json:"subject_token_type"`
@@ -550,6 +550,13 @@ func (o *OidcFederationConnectionPayload) UnmarshalJSON(data []byte) (err error)
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "issuer", "external_id_claim", "subject_token_type", "max_token_ttl_seconds", "enabled"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varOidcFederationConnectionPayload := _OidcFederationConnectionPayload{}
 
 	err = json.Unmarshal(data, &varOidcFederationConnectionPayload)
@@ -598,5 +605,3 @@ func (v *NullableOidcFederationConnectionPayload) UnmarshalJSON(src []byte) erro
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-// The validate regexp tags of this file were unescaped by scripts/patch-validate-regexp.

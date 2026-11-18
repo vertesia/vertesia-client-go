@@ -106,9 +106,7 @@ func (o JsonResult) MarshalJSON() ([]byte, error) {
 func (o JsonResult) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["type"] = o.Type
-	if o.Value != nil {
-		toSerialize["value"] = o.Value
-	}
+	toSerialize["value"] = o.Value
 	return toSerialize, nil
 }
 
@@ -132,6 +130,13 @@ func (o *JsonResult) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

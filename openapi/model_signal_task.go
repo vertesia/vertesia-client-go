@@ -543,9 +543,7 @@ func (o SignalTask) ToMap() (map[string]interface{}, error) {
 	toSerialize["started"] = o.Started.Get()
 	toSerialize["completed"] = o.Completed.Get()
 	toSerialize["error"] = o.Error.Get()
-	if o.Result != nil {
-		toSerialize["result"] = o.Result
-	}
+	toSerialize["result"] = o.Result
 	if !IsNil(o.RunId) {
 		toSerialize["runId"] = o.RunId
 	}
@@ -596,6 +594,13 @@ func (o *SignalTask) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type", "activityId", "status", "attempts"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

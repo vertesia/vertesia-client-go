@@ -337,6 +337,13 @@ func (o *CompactMessage) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"t"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCompactMessage := _CompactMessage{}
 
 	err = json.Unmarshal(data, &varCompactMessage)

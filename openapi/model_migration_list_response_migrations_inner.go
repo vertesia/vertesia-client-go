@@ -103,6 +103,13 @@ func (o *MigrationListResponseMigrationsInner) UnmarshalJSON(data []byte) (err e
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varMigrationListResponseMigrationsInner := _MigrationListResponseMigrationsInner{}
 
 	err = json.Unmarshal(data, &varMigrationListResponseMigrationsInner)

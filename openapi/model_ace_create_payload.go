@@ -399,6 +399,13 @@ func (o *ACECreatePayload) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"role", "resource_type", "resource", "principal_type", "principal"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varACECreatePayload := _ACECreatePayload{}
 
 	err = json.Unmarshal(data, &varACECreatePayload)

@@ -352,6 +352,13 @@ func (o *IndexingStatusResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"infrastructure_enabled", "indexing_enabled", "query_enabled", "backend", "search_tier", "index", "mongo_document_count", "reindex_in_progress"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varIndexingStatusResponse := _IndexingStatusResponse{}
 
 	err = json.Unmarshal(data, &varIndexingStatusResponse)

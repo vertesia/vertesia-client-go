@@ -80,9 +80,7 @@ func (o UpdateAppInstallationToolAllowlistPayload) MarshalJSON() ([]byte, error)
 
 func (o UpdateAppInstallationToolAllowlistPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if o.ToolAllowlist != nil {
-		toSerialize["tool_allowlist"] = o.ToolAllowlist
-	}
+	toSerialize["tool_allowlist"] = o.ToolAllowlist
 	return toSerialize, nil
 }
 

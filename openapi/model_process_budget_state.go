@@ -451,6 +451,13 @@ func (o *ProcessBudgetState) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"limit_tokens", "used_units", "exhausted"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varProcessBudgetState := _ProcessBudgetState{}
 
 	err = json.Unmarshal(data, &varProcessBudgetState)

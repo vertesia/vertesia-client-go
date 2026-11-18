@@ -323,6 +323,13 @@ func (o *RenderingTemplateDefinition) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "name", "description", "type", "instructions"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varRenderingTemplateDefinition := _RenderingTemplateDefinition{}
 
 	err = json.Unmarshal(data, &varRenderingTemplateDefinition)
