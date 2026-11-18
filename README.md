@@ -265,6 +265,15 @@ change, and a released client keeps decoding its responses:
 `scripts/patch-required-null`; the tests in `testdata/` run
 against a freshly patched copy of the generated package.
 
+### Required nullable properties
+
+A required property that is nullable and is a list, a map or a free-form value is always written,
+and a nil value is sent as `null`: `UpdateAppInstallationToolAllowlistPayload{}` encodes as
+`{"tool_allowlist":null}`, which removes the installation's tool allowlist. OpenAPI Generator guards
+these properties with a nil check, so nil dropped a property the server requires.
+`scripts/patch-required-nullable-write` removes that guard for required properties only; a nil
+optional property is still omitted.
+
 ## OIDC federation for provisioned users
 
 Use a separate client for each user/project/resource/scope combination. The user must already be

@@ -47,7 +47,8 @@ func TestCompletionResultGenerationPatch(t *testing.T) {
 			first[model] = patched
 		}
 	}
-	for _, name := range []string{"completion_result_test.go", "forward_compat_test.go", "stripe_union_test.go"} {
+	for _, name := range []string{"completion_result_test.go", "forward_compat_test.go", "stripe_union_test.go",
+		"required_nullable_write_test.go"} {
 		tests, err := os.ReadFile(filepath.Join("testdata", name))
 		if err != nil {
 			t.Fatal(err)
