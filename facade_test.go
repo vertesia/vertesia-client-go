@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"regexp"
+	"runtime"
 	"strings"
 	"sync"
 	"testing"
@@ -15,6 +17,17 @@ import (
 
 	"github.com/vertesia/vertesia-client-go/openapi"
 )
+
+var userAgentPattern = regexp.MustCompile(`^vertesia-client-go/(devel|\d+\.\d+\.\d+\S*) go/\S+$`)
+
+func TestUserAgentIdentifiesSDKAndRuntime(t *testing.T) {
+	if !userAgentPattern.MatchString(userAgent) {
+		t.Fatalf("userAgent = %q, want %s", userAgent, userAgentPattern)
+	}
+	if want := " go/" + strings.TrimPrefix(runtime.Version(), "go"); !strings.HasSuffix(userAgent, want) {
+		t.Fatalf("userAgent = %q, want suffix %q", userAgent, want)
+	}
+}
 
 func TestResolveClientEndpoints(t *testing.T) {
 	tests := []struct {
@@ -171,6 +184,9 @@ func TestNewClientSetsVersionAndAliases(t *testing.T) {
 		if got := r.Header.Get("x-api-version"); got != "20260101" {
 			t.Fatalf("x-api-version = %q", got)
 		}
+		if got := r.Header.Get("User-Agent"); !userAgentPattern.MatchString(got) {
+			t.Fatalf("User-Agent = %q, want %s", got, userAgentPattern)
+		}
 		switch r.URL.Path {
 		case "/api/v1/account":
 			seenStudio = true
@@ -267,6 +283,9 @@ func TestNewClientExchangesSecretKeyForGeneratedClients(t *testing.T) {
 		}
 		if got := r.Header.Get("x-api-version"); got != "20260101" {
 			t.Fatalf("STS x-api-version = %q", got)
+		}
+		if got := r.Header.Get("User-Agent"); !userAgentPattern.MatchString(got) {
+			t.Fatalf("STS User-Agent = %q, want %s", got, userAgentPattern)
 		}
 		// STS validates a present body against IssueTokenRequest, so a JSON null is rejected.
 		var body map[string]any

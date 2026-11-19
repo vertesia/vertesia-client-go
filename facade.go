@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"runtime"
+	"runtime/debug"
 	"strings"
 	"sync"
 	"time"
@@ -22,6 +24,7 @@ const (
 	tokenRefreshWindow  = time.Minute
 	tokenIssueOperation = "TokenServiceAPIService.IssueToken"
 	apiKeyTokenType     = "apikey"
+	modulePath          = "github.com/vertesia/vertesia-client-go"
 )
 
 var (
@@ -389,8 +392,35 @@ func newGeneratedConfig(baseURL string, tokenURL string, httpClient *http.Client
 		tokenIssueOperation: {{URL: tokenURL, Description: "Vertesia STS"}},
 	}
 	cfg.HTTPClient = httpClient
+	cfg.UserAgent = userAgent
 	cfg.AddDefaultHeader("x-api-version", apiVersion)
 	return cfg
+}
+
+// userAgent identifies this SDK, its version and the Go runtime, for example
+// "vertesia-client-go/1.7.0 go/1.26.0".
+var userAgent = "vertesia-client-go/" + moduleVersion() + " go/" + strings.TrimPrefix(runtime.Version(), "go")
+
+// moduleVersion is the version of this module that the running binary was built with,
+// as resolved by the Go toolchain from the module's git tag, or "devel" when unknown.
+func moduleVersion() string {
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "devel"
+	}
+	modules := append([]*debug.Module{&info.Main}, info.Deps...)
+	for _, module := range modules {
+		if module.Path != modulePath {
+			continue
+		}
+		if module.Replace != nil {
+			module = module.Replace
+		}
+		if module.Version != "" && module.Version != "(devel)" {
+			return strings.TrimPrefix(module.Version, "v")
+		}
+	}
+	return "devel"
 }
 
 type bearerTokenSource interface {
