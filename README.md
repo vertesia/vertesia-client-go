@@ -36,7 +36,8 @@ func main() {
 
 `NewClient` is the recommended entry point. It configures the generated clients,
 routes Studio and Store APIs, exchanges secret keys for short-lived tokens, and
-sets the stable `x-api-version` header.
+sets the stable `x-api-version` header. Every request also sends a `User-Agent` naming the SDK,
+its version and the runtime, for example `vertesia-client-go/1.7.0 go/1.26.0`.
 
 ## Authentication
 
