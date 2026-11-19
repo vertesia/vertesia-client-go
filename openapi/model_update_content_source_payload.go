@@ -17,11 +17,18 @@ import (
 // checks if the UpdateContentSourcePayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &UpdateContentSourcePayload{}
 
-// UpdateContentSourcePayload Changes the name, description or sync settings. Saving sync settings also hands the sync your credentials, which restarts a sync stopped because its previous credentials were refused.
+// UpdateContentSourcePayload Changes the name, description or sync settings, and, before the first sync, the root and folder to sync. Saving sync settings also hands the sync your credentials, which restarts a sync stopped because its previous credentials were refused.
 type UpdateContentSourcePayload struct {
-	Name        *string                    `json:"name,omitempty"`
-	Description *string                    `json:"description,omitempty"`
-	Sync        *ContentSourceSyncSettings `json:"sync,omitempty"`
+	Name        *string                          `json:"name,omitempty"`
+	Description *string                          `json:"description,omitempty"`
+	Sync        *ContentSourceSyncSettings       `json:"sync,omitempty"`
+	Permissions *ContentSourcePermissionSettings `json:"permissions,omitempty"`
+	// Only before the first sync: the root to sync, as `discover/roots` returned it (a SharePoint document library; for Box, a folder shared with the app). Answers 409 once the source has synced.
+	RootId *string `json:"root_id,omitempty"`
+	// Only before the first sync: the folder to sync, as a folder listing returned its `id`. Answers 409 once the source has synced.
+	FolderId *string `json:"folder_id,omitempty"`
+	// SharePoint only, and only before the first sync: the folder to sync inside the library, e.g. `Contracts/2026`; empty for the whole library. Answers 409 once the source has synced.
+	FolderPath *string `json:"folder_path,omitempty"`
 }
 
 // NewUpdateContentSourcePayload instantiates a new UpdateContentSourcePayload object
@@ -137,6 +144,134 @@ func (o *UpdateContentSourcePayload) SetSync(v ContentSourceSyncSettings) {
 	o.Sync = &v
 }
 
+// GetPermissions returns the Permissions field value if set, zero value otherwise.
+func (o *UpdateContentSourcePayload) GetPermissions() ContentSourcePermissionSettings {
+	if o == nil || IsNil(o.Permissions) {
+		var ret ContentSourcePermissionSettings
+		return ret
+	}
+	return *o.Permissions
+}
+
+// GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateContentSourcePayload) GetPermissionsOk() (*ContentSourcePermissionSettings, bool) {
+	if o == nil || IsNil(o.Permissions) {
+		return nil, false
+	}
+	return o.Permissions, true
+}
+
+// HasPermissions returns a boolean if a field has been set.
+func (o *UpdateContentSourcePayload) HasPermissions() bool {
+	if o != nil && !IsNil(o.Permissions) {
+		return true
+	}
+
+	return false
+}
+
+// SetPermissions gets a reference to the given ContentSourcePermissionSettings and assigns it to the Permissions field.
+func (o *UpdateContentSourcePayload) SetPermissions(v ContentSourcePermissionSettings) {
+	o.Permissions = &v
+}
+
+// GetRootId returns the RootId field value if set, zero value otherwise.
+func (o *UpdateContentSourcePayload) GetRootId() string {
+	if o == nil || IsNil(o.RootId) {
+		var ret string
+		return ret
+	}
+	return *o.RootId
+}
+
+// GetRootIdOk returns a tuple with the RootId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateContentSourcePayload) GetRootIdOk() (*string, bool) {
+	if o == nil || IsNil(o.RootId) {
+		return nil, false
+	}
+	return o.RootId, true
+}
+
+// HasRootId returns a boolean if a field has been set.
+func (o *UpdateContentSourcePayload) HasRootId() bool {
+	if o != nil && !IsNil(o.RootId) {
+		return true
+	}
+
+	return false
+}
+
+// SetRootId gets a reference to the given string and assigns it to the RootId field.
+func (o *UpdateContentSourcePayload) SetRootId(v string) {
+	o.RootId = &v
+}
+
+// GetFolderId returns the FolderId field value if set, zero value otherwise.
+func (o *UpdateContentSourcePayload) GetFolderId() string {
+	if o == nil || IsNil(o.FolderId) {
+		var ret string
+		return ret
+	}
+	return *o.FolderId
+}
+
+// GetFolderIdOk returns a tuple with the FolderId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateContentSourcePayload) GetFolderIdOk() (*string, bool) {
+	if o == nil || IsNil(o.FolderId) {
+		return nil, false
+	}
+	return o.FolderId, true
+}
+
+// HasFolderId returns a boolean if a field has been set.
+func (o *UpdateContentSourcePayload) HasFolderId() bool {
+	if o != nil && !IsNil(o.FolderId) {
+		return true
+	}
+
+	return false
+}
+
+// SetFolderId gets a reference to the given string and assigns it to the FolderId field.
+func (o *UpdateContentSourcePayload) SetFolderId(v string) {
+	o.FolderId = &v
+}
+
+// GetFolderPath returns the FolderPath field value if set, zero value otherwise.
+func (o *UpdateContentSourcePayload) GetFolderPath() string {
+	if o == nil || IsNil(o.FolderPath) {
+		var ret string
+		return ret
+	}
+	return *o.FolderPath
+}
+
+// GetFolderPathOk returns a tuple with the FolderPath field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateContentSourcePayload) GetFolderPathOk() (*string, bool) {
+	if o == nil || IsNil(o.FolderPath) {
+		return nil, false
+	}
+	return o.FolderPath, true
+}
+
+// HasFolderPath returns a boolean if a field has been set.
+func (o *UpdateContentSourcePayload) HasFolderPath() bool {
+	if o != nil && !IsNil(o.FolderPath) {
+		return true
+	}
+
+	return false
+}
+
+// SetFolderPath gets a reference to the given string and assigns it to the FolderPath field.
+func (o *UpdateContentSourcePayload) SetFolderPath(v string) {
+	o.FolderPath = &v
+}
+
 func (o UpdateContentSourcePayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -155,6 +290,18 @@ func (o UpdateContentSourcePayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Sync) {
 		toSerialize["sync"] = o.Sync
+	}
+	if !IsNil(o.Permissions) {
+		toSerialize["permissions"] = o.Permissions
+	}
+	if !IsNil(o.RootId) {
+		toSerialize["root_id"] = o.RootId
+	}
+	if !IsNil(o.FolderId) {
+		toSerialize["folder_id"] = o.FolderId
+	}
+	if !IsNil(o.FolderPath) {
+		toSerialize["folder_path"] = o.FolderPath
 	}
 	return toSerialize, nil
 }

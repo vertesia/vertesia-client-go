@@ -40,7 +40,8 @@ type UpdateAppPayload struct {
 	PreviewScreenshot *AppManifestPreviewScreenshot `json:"preview_screenshot,omitempty"`
 	Status            string                        `json:"status"`
 	// The UI configuration of the app. If not specified and the app \"ui\" is in the app capabilities then the ui configuration will be fetched from the endpoint property.
-	Ui *AppUIConfig `json:"ui,omitempty"`
+	Ui         *AppUIConfig   `json:"ui,omitempty"`
+	McpProfile *AppMcpProfile `json:"mcp_profile,omitempty"`
 	// A list of tool collections endpoints to be used by this app. Prefer using endpoint over tool_collections.
 	ToolCollections []ToolCollectionObject `json:"tool_collections,omitempty"`
 	// Named OAuth providers shared across multiple MCP tool collections. Keys must be kebab-case identifiers. Each value is an MCPOAuthConfig blueprint. Collections reference a provider via MCPToolCollectionObject.oauth_provider. One OAuth provider is created per provider at install time; all referencing collections share that app via AppInstallation.provider_bindings.
@@ -460,6 +461,38 @@ func (o *UpdateAppPayload) HasUi() bool {
 // SetUi gets a reference to the given AppUIConfig and assigns it to the Ui field.
 func (o *UpdateAppPayload) SetUi(v AppUIConfig) {
 	o.Ui = &v
+}
+
+// GetMcpProfile returns the McpProfile field value if set, zero value otherwise.
+func (o *UpdateAppPayload) GetMcpProfile() AppMcpProfile {
+	if o == nil || IsNil(o.McpProfile) {
+		var ret AppMcpProfile
+		return ret
+	}
+	return *o.McpProfile
+}
+
+// GetMcpProfileOk returns a tuple with the McpProfile field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateAppPayload) GetMcpProfileOk() (*AppMcpProfile, bool) {
+	if o == nil || IsNil(o.McpProfile) {
+		return nil, false
+	}
+	return o.McpProfile, true
+}
+
+// HasMcpProfile returns a boolean if a field has been set.
+func (o *UpdateAppPayload) HasMcpProfile() bool {
+	if o != nil && !IsNil(o.McpProfile) {
+		return true
+	}
+
+	return false
+}
+
+// SetMcpProfile gets a reference to the given AppMcpProfile and assigns it to the McpProfile field.
+func (o *UpdateAppPayload) SetMcpProfile(v AppMcpProfile) {
+	o.McpProfile = &v
 }
 
 // GetToolCollections returns the ToolCollections field value if set, zero value otherwise.
@@ -886,6 +919,9 @@ func (o UpdateAppPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Ui) {
 		toSerialize["ui"] = o.Ui
 	}
+	if !IsNil(o.McpProfile) {
+		toSerialize["mcp_profile"] = o.McpProfile
+	}
 	if !IsNil(o.ToolCollections) {
 		toSerialize["tool_collections"] = o.ToolCollections
 	}
@@ -983,6 +1019,7 @@ func (o *UpdateAppPayload) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "preview_screenshot")
 		delete(additionalProperties, "status")
 		delete(additionalProperties, "ui")
+		delete(additionalProperties, "mcp_profile")
 		delete(additionalProperties, "tool_collections")
 		delete(additionalProperties, "oauth_providers")
 		delete(additionalProperties, "interactions")

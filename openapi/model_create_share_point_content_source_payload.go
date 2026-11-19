@@ -30,8 +30,9 @@ type CreateSharePointContentSourcePayload struct {
 	// A collection to add synced documents to.
 	CollectionId *string `json:"collection_id,omitempty"`
 	// Defaults to scheduled sync disabled, every 60 minutes once enabled.
-	Sync *ContentSourceSyncSettings `json:"sync,omitempty"`
-	Type string                     `json:"type"`
+	Sync        *ContentSourceSyncSettings       `json:"sync,omitempty"`
+	Type        string                           `json:"type"`
+	Permissions *ContentSourcePermissionSettings `json:"permissions,omitempty"`
 	// The SharePoint site URL, e.g. `https://contoso.sharepoint.com/sites/legal`.
 	SiteUrl string `json:"site_url"`
 	// The document library name. Defaults to the site’s default library.
@@ -263,6 +264,38 @@ func (o *CreateSharePointContentSourcePayload) SetType(v string) {
 	o.Type = v
 }
 
+// GetPermissions returns the Permissions field value if set, zero value otherwise.
+func (o *CreateSharePointContentSourcePayload) GetPermissions() ContentSourcePermissionSettings {
+	if o == nil || IsNil(o.Permissions) {
+		var ret ContentSourcePermissionSettings
+		return ret
+	}
+	return *o.Permissions
+}
+
+// GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSharePointContentSourcePayload) GetPermissionsOk() (*ContentSourcePermissionSettings, bool) {
+	if o == nil || IsNil(o.Permissions) {
+		return nil, false
+	}
+	return o.Permissions, true
+}
+
+// HasPermissions returns a boolean if a field has been set.
+func (o *CreateSharePointContentSourcePayload) HasPermissions() bool {
+	if o != nil && !IsNil(o.Permissions) {
+		return true
+	}
+
+	return false
+}
+
+// SetPermissions gets a reference to the given ContentSourcePermissionSettings and assigns it to the Permissions field.
+func (o *CreateSharePointContentSourcePayload) SetPermissions(v ContentSourcePermissionSettings) {
+	o.Permissions = &v
+}
+
 // GetSiteUrl returns the SiteUrl field value
 func (o *CreateSharePointContentSourcePayload) GetSiteUrl() string {
 	if o == nil {
@@ -376,6 +409,9 @@ func (o CreateSharePointContentSourcePayload) ToMap() (map[string]interface{}, e
 		toSerialize["sync"] = o.Sync
 	}
 	toSerialize["type"] = o.Type
+	if !IsNil(o.Permissions) {
+		toSerialize["permissions"] = o.Permissions
+	}
 	toSerialize["site_url"] = o.SiteUrl
 	if !IsNil(o.LibraryName) {
 		toSerialize["library_name"] = o.LibraryName

@@ -29,13 +29,14 @@ type SharePointContentSource struct {
 	// The `location` under which the source folder's tree is reproduced, e.g. `/sharepoint/legal`.
 	LocationRoot string `json:"location_root"`
 	// Collection that synced documents are added to, if any.
-	CollectionId *string                   `json:"collection_id,omitempty"`
-	Sync         ContentSourceSyncSettings `json:"sync"`
-	CreatedBy    *string                   `json:"created_by,omitempty"`
-	UpdatedBy    *string                   `json:"updated_by,omitempty"`
-	CreatedAt    *time.Time                `json:"created_at,omitempty"`
-	UpdatedAt    *time.Time                `json:"updated_at,omitempty"`
-	Type         string                    `json:"type"`
+	CollectionId *string                          `json:"collection_id,omitempty"`
+	Sync         ContentSourceSyncSettings        `json:"sync"`
+	CreatedBy    *string                          `json:"created_by,omitempty"`
+	UpdatedBy    *string                          `json:"updated_by,omitempty"`
+	CreatedAt    *time.Time                       `json:"created_at,omitempty"`
+	UpdatedAt    *time.Time                       `json:"updated_at,omitempty"`
+	Type         string                           `json:"type"`
+	Permissions  *ContentSourcePermissionSettings `json:"permissions,omitempty"`
 	// The SharePoint site URL the source was created from.
 	SiteUrl string `json:"site_url"`
 	// The Microsoft Graph site ID.
@@ -417,6 +418,38 @@ func (o *SharePointContentSource) SetType(v string) {
 	o.Type = v
 }
 
+// GetPermissions returns the Permissions field value if set, zero value otherwise.
+func (o *SharePointContentSource) GetPermissions() ContentSourcePermissionSettings {
+	if o == nil || IsNil(o.Permissions) {
+		var ret ContentSourcePermissionSettings
+		return ret
+	}
+	return *o.Permissions
+}
+
+// GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SharePointContentSource) GetPermissionsOk() (*ContentSourcePermissionSettings, bool) {
+	if o == nil || IsNil(o.Permissions) {
+		return nil, false
+	}
+	return o.Permissions, true
+}
+
+// HasPermissions returns a boolean if a field has been set.
+func (o *SharePointContentSource) HasPermissions() bool {
+	if o != nil && !IsNil(o.Permissions) {
+		return true
+	}
+
+	return false
+}
+
+// SetPermissions gets a reference to the given ContentSourcePermissionSettings and assigns it to the Permissions field.
+func (o *SharePointContentSource) SetPermissions(v ContentSourcePermissionSettings) {
+	o.Permissions = &v
+}
+
 // GetSiteUrl returns the SiteUrl field value
 func (o *SharePointContentSource) GetSiteUrl() string {
 	if o == nil {
@@ -595,6 +628,9 @@ func (o SharePointContentSource) ToMap() (map[string]interface{}, error) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
 	toSerialize["type"] = o.Type
+	if !IsNil(o.Permissions) {
+		toSerialize["permissions"] = o.Permissions
+	}
 	toSerialize["site_url"] = o.SiteUrl
 	toSerialize["site_id"] = o.SiteId
 	toSerialize["drive_id"] = o.DriveId
