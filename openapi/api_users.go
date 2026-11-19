@@ -631,7 +631,7 @@ func (r ApiUpdateUserRequest) Execute() (*User, *http.Response, error) {
 /*
 UpdateUser Update a user
 
-Updates profile fields for the caller or an administrator. Only account-role administrators may change authorization attributes (properties, clearance, or compartments).
+Updates profile fields for the caller or an administrator. Only account-role administrators may change authorization attributes (properties, clearance, or compartments). The username of a SCIM-provisioned user is its sign-in identifier and is managed by SCIM provisioning: changing it here returns 403, while sending its current value is accepted.
 
 **Required permissions:** Any of `account:member`, `account:user:manage`
 
