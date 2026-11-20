@@ -30,9 +30,11 @@ type CreateSharePointContentSourcePayload struct {
 	// A collection to add synced documents to.
 	CollectionId *string `json:"collection_id,omitempty"`
 	// Defaults to scheduled sync disabled, every 60 minutes once enabled.
-	Sync        *ContentSourceSyncSettings       `json:"sync,omitempty"`
-	Type        string                           `json:"type"`
-	Permissions *ContentSourcePermissionSettings `json:"permissions,omitempty"`
+	Sync *ContentSourceSyncSettings `json:"sync,omitempty"`
+	// Sample mode: syncs only about this percentage of the files, to look at real documents before importing them all. A file is in the sample by a hash of its ID, so the same files stay in it from one sync to the next, spread over every folder. A file outside the sample is not imported, and its document is deleted if it has one. Leave out to sync every file.
+	SamplePercent *int32                           `json:"sample_percent,omitempty"`
+	Type          string                           `json:"type"`
+	Permissions   *ContentSourcePermissionSettings `json:"permissions,omitempty"`
 	// The SharePoint site URL, e.g. `https://contoso.sharepoint.com/sites/legal`.
 	SiteUrl string `json:"site_url"`
 	// The document library name. Defaults to the site’s default library.
@@ -240,6 +242,38 @@ func (o *CreateSharePointContentSourcePayload) SetSync(v ContentSourceSyncSettin
 	o.Sync = &v
 }
 
+// GetSamplePercent returns the SamplePercent field value if set, zero value otherwise.
+func (o *CreateSharePointContentSourcePayload) GetSamplePercent() int32 {
+	if o == nil || IsNil(o.SamplePercent) {
+		var ret int32
+		return ret
+	}
+	return *o.SamplePercent
+}
+
+// GetSamplePercentOk returns a tuple with the SamplePercent field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSharePointContentSourcePayload) GetSamplePercentOk() (*int32, bool) {
+	if o == nil || IsNil(o.SamplePercent) {
+		return nil, false
+	}
+	return o.SamplePercent, true
+}
+
+// HasSamplePercent returns a boolean if a field has been set.
+func (o *CreateSharePointContentSourcePayload) HasSamplePercent() bool {
+	if o != nil && !IsNil(o.SamplePercent) {
+		return true
+	}
+
+	return false
+}
+
+// SetSamplePercent gets a reference to the given int32 and assigns it to the SamplePercent field.
+func (o *CreateSharePointContentSourcePayload) SetSamplePercent(v int32) {
+	o.SamplePercent = &v
+}
+
 // GetType returns the Type field value
 func (o *CreateSharePointContentSourcePayload) GetType() string {
 	if o == nil {
@@ -407,6 +441,9 @@ func (o CreateSharePointContentSourcePayload) ToMap() (map[string]interface{}, e
 	}
 	if !IsNil(o.Sync) {
 		toSerialize["sync"] = o.Sync
+	}
+	if !IsNil(o.SamplePercent) {
+		toSerialize["sample_percent"] = o.SamplePercent
 	}
 	toSerialize["type"] = o.Type
 	if !IsNil(o.Permissions) {

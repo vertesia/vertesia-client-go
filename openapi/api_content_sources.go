@@ -2298,7 +2298,7 @@ func (r ApiUpdateContentSourceRequest) Execute() (*ExternalContentSource, *http.
 /*
 UpdateContentSource Update a content source
 
-Changes the name, description or sync settings, and, before the first sync, the library and folder to sync (409 afterwards). Saving sync settings also hands the sync your credentials, which restarts a sync stopped because its previous credentials were refused.
+Changes the name, description, sync settings or sample, and, before the first sync, the library and folder to sync (409 afterwards). Saving sync settings also hands the sync your credentials, which restarts a sync stopped because its previous credentials were refused. Changing `sample_percent` makes the next sync an import.
 
 **Required permissions:** Any of `content_source:manage`, `project:settings_write`
 

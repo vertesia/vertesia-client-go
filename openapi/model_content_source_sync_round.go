@@ -28,7 +28,7 @@ type ContentSourceSyncRound struct {
 	StartedAt  time.Time               `json:"started_at"`
 	FinishedAt *time.Time              `json:"finished_at,omitempty"`
 	Counts     ContentSourceSyncCounts `json:"counts"`
-	// The skipped files by reason: `package`, `not_a_file`, `too_large`, `unsupported_type`, or another reason a system reports.
+	// The skipped files by reason: `package`, `not_a_file`, `too_large`, `unsupported_type`, `not_sampled` (outside the source's `sample_percent`; counted only, not listed in the report), or another reason a system reports.
 	SkippedByReason map[string]int32 `json:"skipped_by_reason,omitempty"`
 	// Whether an import ended by deleting the documents of files no longer listed.
 	Swept *bool   `json:"swept,omitempty"`

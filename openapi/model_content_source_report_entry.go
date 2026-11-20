@@ -32,7 +32,7 @@ type ContentSourceReportEntry struct {
 	ObjectId *string `json:"object_id,omitempty"`
 	// `updated`: what changed. `content` means the file is processed again.
 	Changes []string `json:"changes,omitempty"`
-	// `skipped`: why the file is not synced (`package`, `not_a_file`, `too_large`, `unsupported_type`). `deleted`: `file_deleted` (deleted, moved out or no longer synced) or `duplicate`.
+	// `skipped`: why the file is not synced (`package`, `not_a_file`, `too_large`, `unsupported_type`). `deleted`: `file_deleted` (deleted, moved out or no longer synced), `duplicate`, or `not_sampled` (outside the source's `sample_percent`).
 	Reason *string `json:"reason,omitempty"`
 	// `failed`: why.
 	Error *string `json:"error,omitempty"`

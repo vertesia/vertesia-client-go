@@ -29,14 +29,16 @@ type SharePointContentSource struct {
 	// The `location` under which the source folder's tree is reproduced, e.g. `/sharepoint/legal`.
 	LocationRoot string `json:"location_root"`
 	// Collection that synced documents are added to, if any.
-	CollectionId *string                          `json:"collection_id,omitempty"`
-	Sync         ContentSourceSyncSettings        `json:"sync"`
-	CreatedBy    *string                          `json:"created_by,omitempty"`
-	UpdatedBy    *string                          `json:"updated_by,omitempty"`
-	CreatedAt    *time.Time                       `json:"created_at,omitempty"`
-	UpdatedAt    *time.Time                       `json:"updated_at,omitempty"`
-	Type         string                           `json:"type"`
-	Permissions  *ContentSourcePermissionSettings `json:"permissions,omitempty"`
+	CollectionId *string                   `json:"collection_id,omitempty"`
+	Sync         ContentSourceSyncSettings `json:"sync"`
+	// Sample mode: syncs only about this percentage of the files, to look at real documents before importing them all. A file is in the sample by a hash of its ID, so the same files stay in it from one sync to the next, spread over every folder. A file outside the sample is not imported, and its document is deleted if it has one. Absent when the source syncs every file.
+	SamplePercent *int32                           `json:"sample_percent,omitempty"`
+	CreatedBy     *string                          `json:"created_by,omitempty"`
+	UpdatedBy     *string                          `json:"updated_by,omitempty"`
+	CreatedAt     *time.Time                       `json:"created_at,omitempty"`
+	UpdatedAt     *time.Time                       `json:"updated_at,omitempty"`
+	Type          string                           `json:"type"`
+	Permissions   *ContentSourcePermissionSettings `json:"permissions,omitempty"`
 	// The SharePoint site URL the source was created from.
 	SiteUrl string `json:"site_url"`
 	// The Microsoft Graph site ID.
@@ -264,6 +266,38 @@ func (o *SharePointContentSource) GetSyncOk() (*ContentSourceSyncSettings, bool)
 // SetSync sets field value
 func (o *SharePointContentSource) SetSync(v ContentSourceSyncSettings) {
 	o.Sync = v
+}
+
+// GetSamplePercent returns the SamplePercent field value if set, zero value otherwise.
+func (o *SharePointContentSource) GetSamplePercent() int32 {
+	if o == nil || IsNil(o.SamplePercent) {
+		var ret int32
+		return ret
+	}
+	return *o.SamplePercent
+}
+
+// GetSamplePercentOk returns a tuple with the SamplePercent field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SharePointContentSource) GetSamplePercentOk() (*int32, bool) {
+	if o == nil || IsNil(o.SamplePercent) {
+		return nil, false
+	}
+	return o.SamplePercent, true
+}
+
+// HasSamplePercent returns a boolean if a field has been set.
+func (o *SharePointContentSource) HasSamplePercent() bool {
+	if o != nil && !IsNil(o.SamplePercent) {
+		return true
+	}
+
+	return false
+}
+
+// SetSamplePercent gets a reference to the given int32 and assigns it to the SamplePercent field.
+func (o *SharePointContentSource) SetSamplePercent(v int32) {
+	o.SamplePercent = &v
 }
 
 // GetCreatedBy returns the CreatedBy field value if set, zero value otherwise.
@@ -615,6 +649,9 @@ func (o SharePointContentSource) ToMap() (map[string]interface{}, error) {
 		toSerialize["collection_id"] = o.CollectionId
 	}
 	toSerialize["sync"] = o.Sync
+	if !IsNil(o.SamplePercent) {
+		toSerialize["sample_percent"] = o.SamplePercent
+	}
 	if !IsNil(o.CreatedBy) {
 		toSerialize["created_by"] = o.CreatedBy
 	}

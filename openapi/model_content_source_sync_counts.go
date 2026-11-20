@@ -26,7 +26,7 @@ type ContentSourceSyncCounts struct {
 	Updated   int32 `json:"updated"`
 	Unchanged int32 `json:"unchanged"`
 	Deleted   int32 `json:"deleted"`
-	// Files that are not synced (unsupported types, packages).
+	// Files that are not synced (unsupported types, packages, files outside the sample).
 	Skipped int32 `json:"skipped"`
 	Failed  int32 `json:"failed"`
 }
