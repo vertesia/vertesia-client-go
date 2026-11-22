@@ -25,7 +25,8 @@ type GenerationRunMetadata struct {
 	Model  string  `json:"model"`
 	Target *string `json:"target,omitempty"`
 	// Fingerprint of the inputs used by property extraction (content etag, type + its object schema, source, instructions, interaction). Lets a later run skip re-extraction when nothing changed.
-	ExtractionFingerprint *string `json:"extraction_fingerprint,omitempty"`
+	ExtractionFingerprint *string           `json:"extraction_fingerprint,omitempty"`
+	ExtractionReport      *ExtractionReport `json:"extraction_report,omitempty"`
 }
 
 type _GenerationRunMetadata GenerationRunMetadata
@@ -186,6 +187,38 @@ func (o *GenerationRunMetadata) SetExtractionFingerprint(v string) {
 	o.ExtractionFingerprint = &v
 }
 
+// GetExtractionReport returns the ExtractionReport field value if set, zero value otherwise.
+func (o *GenerationRunMetadata) GetExtractionReport() ExtractionReport {
+	if o == nil || IsNil(o.ExtractionReport) {
+		var ret ExtractionReport
+		return ret
+	}
+	return *o.ExtractionReport
+}
+
+// GetExtractionReportOk returns a tuple with the ExtractionReport field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *GenerationRunMetadata) GetExtractionReportOk() (*ExtractionReport, bool) {
+	if o == nil || IsNil(o.ExtractionReport) {
+		return nil, false
+	}
+	return o.ExtractionReport, true
+}
+
+// HasExtractionReport returns a boolean if a field has been set.
+func (o *GenerationRunMetadata) HasExtractionReport() bool {
+	if o != nil && !IsNil(o.ExtractionReport) {
+		return true
+	}
+
+	return false
+}
+
+// SetExtractionReport gets a reference to the given ExtractionReport and assigns it to the ExtractionReport field.
+func (o *GenerationRunMetadata) SetExtractionReport(v ExtractionReport) {
+	o.ExtractionReport = &v
+}
+
 func (o GenerationRunMetadata) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -204,6 +237,9 @@ func (o GenerationRunMetadata) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ExtractionFingerprint) {
 		toSerialize["extraction_fingerprint"] = o.ExtractionFingerprint
+	}
+	if !IsNil(o.ExtractionReport) {
+		toSerialize["extraction_report"] = o.ExtractionReport
 	}
 	return toSerialize, nil
 }

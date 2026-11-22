@@ -650,6 +650,10 @@ model_exported_prompt_template_ref.go
 model_external_content_source.go
 model_externalized_tool_input_ref.go
 model_extract_app_version_git_ref_type_branch_tag_commit.go
+model_extraction_normalization.go
+model_extraction_repair.go
+model_extraction_report.go
+model_extraction_validation_error.go
 model_facet_spec.go
 model_file_bucket_response.go
 model_file_list_response.go
