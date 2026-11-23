@@ -9,11 +9,11 @@ import (
 	"testing"
 )
 
-// validator.v2 returns ErrUnsupported for a regexp rule on anything but string or *string.
-var unsupportedRegexpTag = regexp.MustCompile("(?m)^\t\\w+\\s+(\\S+)\\s+`[^`]*validate:\"regexp=")
+// The patch drops every regexp tag: responses are not checked against the spec's patterns.
+var regexpTag = regexp.MustCompile(`validate:"regexp=`)
 
 // Exercise the post-generation patch without changing committed generated files.
-func TestNonStringRegexpTagGenerationPatch(t *testing.T) {
+func TestRegexpTagGenerationPatch(t *testing.T) {
 	dir := t.TempDir()
 	for _, name := range []string{"openapi", "spec"} {
 		if err := os.CopyFS(filepath.Join(dir, name), os.DirFS(name)); err != nil {
@@ -49,10 +49,8 @@ func TestNonStringRegexpTagGenerationPatch(t *testing.T) {
 				t.Fatalf("patch is not idempotent for %s", filepath.Base(model))
 			}
 			first[model] = patched
-			for _, match := range unsupportedRegexpTag.FindAllSubmatch(patched, -1) {
-				if fieldType := string(match[1]); fieldType != "string" && fieldType != "*string" {
-					t.Fatalf("%s keeps a regexp tag on a %s field", filepath.Base(model), fieldType)
-				}
+			if regexpTag.Match(patched) {
+				t.Fatalf("%s keeps a regexp tag", filepath.Base(model))
 			}
 		}
 	}

@@ -231,9 +231,39 @@ map entry. Decoding a new payload resets both typed fields and extensions.
 This response-decoding tolerance does not relax server request validation.
 The patch runs with `go run` using only the Go standard library. It locates generated
 declarations with `go/parser` and `go/ast`, applies targeted source edits, and formats
-the output with `go/format`. Other unions' validation remains unchanged. Run
+the output with `go/format`. Run
 `go test ./...` to exercise the patch against every registered model option family
  without modifying generated files.
+
+### Forward-compatible decoding
+
+A newer server can add a property, an enum value, or a union variant without a breaking API
+change, and a released client keeps decoding its responses:
+
+- Unknown properties are ignored.
+- An unknown enum value is kept as received (the enum types are strings), so a read-modify-write
+  sends it back unchanged. `IsValid()` returns false for it.
+- An unknown union variant is kept in the union's `Raw` field as `json.RawMessage`.
+  `GetActualInstance()` returns it, and `MarshalJSON` writes it back unchanged. A union with a
+  published discriminator dispatches on it: a known value decodes into its typed branch, an
+  unknown value goes to `Raw`, and a missing value is an error.
+  A union without a discriminator whose branches each declare a distinct literal for one property
+  (`McpConnectionParameter`'s `type`) dispatches on it the same way when the property is present.
+  Other unions keep the generated decoder and use `Raw` only when it cannot pick one branch.
+- A value outside a pattern of the spec is kept. The spec's patterns describe what the server
+  accepts today, and a newer server can widen them, so the generated models carry no
+  `validate:"regexp=..."` tags: a list of completion results decodes even when one of them holds a
+  value this client's copy of the pattern rejects. Types and required properties are still
+  checked. A required property cannot be `null` when the spec does not allow it and its Go type
+  would decode `null` as another value: `"mime_type": null` fails instead of decoding as `""`.
+  Properties the spec lets be `null`, such as a tool call's `tool_input`, and lists, maps and
+  pointers, which keep `null` as `nil`, accept it. The client does not check requests against the
+  patterns either; the server validates what it receives and answers 400 with the reason.
+
+`scripts/patch-unions` applies the union rule after generation, and
+`scripts/patch-openapi-permissive-decode.sh` drops the regexp tags and runs
+`scripts/patch-required-null`; the tests in `testdata/` run
+against a freshly patched copy of the generated package.
 
 ## OIDC federation for provisioned users
 

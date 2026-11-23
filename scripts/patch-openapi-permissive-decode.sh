@@ -13,13 +13,27 @@ find "$openapi_dir" -name 'model_*.go' -print0 | xargs -0 perl -0pi -e '
   s/decoder := json\.NewDecoder\(bytes\.NewReader\(data\)\)\n\tdecoder\.DisallowUnknownFields\(\)\n\terr = decoder\.Decode\(&([A-Za-z0-9_]+)\)/err = json.Unmarshal(data, &$1)/g;
 '
 
-# gopkg.in/validator.v2 only applies regexp rules to string and *string fields; on any other
-# kind (NullableString, NullableTime, time.Time) it returns ErrUnsupported even when the field
-# is absent. oneOf decoders run validator.Validate on each candidate, so one such tag anywhere in
-# a branch makes that branch unmatchable (every AgentRunResponse failed on config.inference_profile).
-# The server already enforces these patterns, so drop the tags the validator cannot evaluate.
+# The validate:"regexp=..." tags copy the spec's patterns, which describe what the server accepts
+# today; a newer server can widen them. Union decoders run validator.Validate on the branch they
+# decode, which recurses into nested structs and lists, so one value outside a stale pattern failed
+# the whole response, such as a list of completion results holding an audio result with an https
+# value. Drop the tags: the server validates what it receives, and Go never validated requests.
 find "$openapi_dir" -name 'model_*.go' -print0 | xargs -0 perl -pi -e '
-  s{^(\t\w+\s+)(?!\*?string\s)(\S+\s+`[^`]*?)\s+validate:"regexp=(?:[^"\\]|\\.)*"}{$1$2};
+  s{\s+validate:"regexp=(?:[^"\\]|\\.)*"}{}g;
+'
+
+# The generated decoders check that each required property is present, but a null passed that check
+# and decoded as the zero value: "mime_type": null became "". The regexp tags happened to reject some
+# of those values. Reject null for each required property that the spec does not let be null and
+# whose Go type cannot hold it.
+go run "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/patch-required-null/main.go" -dir "$openapi_dir" \
+  -spec "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../spec/vertesia-openapi.json"
+
+# enumUnknownDefaultCase replaces a value added by a newer server with the unknown_default_open_api
+# placeholder, so a read-modify-write sends the placeholder back. The enum types are strings: keep
+# the value as received. IsValid() still reports it as unknown to this client version.
+find "$openapi_dir" -name 'model_*.go' -print0 | xargs -0 perl -0pi -e '
+  s/\n\n\t\*v = [A-Z0-9_]+_UNKNOWN_DEFAULT_OPEN_API\n\treturn nil\n\}/\n\n\t*v = enumTypeValue\n\treturn nil\n}/g;
 '
 
 if [[ -f "$openapi_dir/utils.go" ]]; then
@@ -56,13 +70,9 @@ find "$openapi_dir" -name 'api_*.go' -print0 | xargs -0 perl -0pi -e '
   s/\tif r\.xApiVersion == nil \{\n(\t\treturn [^\n]+\n)\t\}/\tif r.xApiVersion == nil {\n\t\tversion := a.client.cfg.DefaultHeader["x-api-version"]\n\t\tif version == "" {\n\t$1\t\t}\n\t\tr.xApiVersion = \&version\n\t}/g;
 '
 
-# Permissive object decoding must still honor published union discriminators.
-# AgentRunResponse also needs this because its supervised and programmatic branches
-# share every required field, so trial decoding matches both.
+# A newer server can return a union variant this client does not know. Keep it in a Raw field
+# instead of failing the whole response, and dispatch published discriminators: the generated
+# decoder fails when several branches match, which happens whenever they share required fields
+# (every AgentRunResponse matched both its supervised and programmatic branches).
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-for union in CompletionResult:completion_result AgentRunResponse:agent_run_response ContentObjectTypeRef:content_object_type_ref BulkOperationResponse:bulk_operation_response; do
-  model="$openapi_dir/model_${union#*:}.go"
-  if [[ -f "$model" ]]; then
-    go run "$script_dir/patch-discriminated-union/main.go" -union "${union%%:*}" -model "$model" -spec "$script_dir/../spec/vertesia-openapi.json"
-  fi
-done
+go run "$script_dir/patch-unions/main.go" -dir "$openapi_dir" -spec "$script_dir/../spec/vertesia-openapi.json"
