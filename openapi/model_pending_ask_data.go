@@ -519,6 +519,13 @@ func (o *PendingAskData) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"askId", "runId", "workflowId", "projectId", "accountId", "agentName", "timeoutHours", "createdAt", "expiresAt", "status"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varPendingAskData := _PendingAskData{}
 
 	err = json.Unmarshal(data, &varPendingAskData)

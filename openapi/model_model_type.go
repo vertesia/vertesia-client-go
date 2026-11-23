@@ -76,7 +76,7 @@ func (v *ModelType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = MODELTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

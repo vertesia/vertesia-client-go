@@ -21,15 +21,15 @@ var _ MappedNullable = &DelegationGrant{}
 
 // DelegationGrant struct for DelegationGrant
 type DelegationGrant struct {
-	ScheduleId         string       `json:"schedule_id" validate:"regexp=^[a-f0-9]{24}$"`
-	Subject            string       `json:"subject" validate:"regexp=^[a-f0-9]{24}$"`
-	OutputCollectionId string       `json:"output_collection_id" validate:"regexp=^[a-f0-9]{24}$"`
-	PolicyHash         string       `json:"policy_hash" validate:"regexp=^[a-f0-9]{64}$"`
+	ScheduleId         string       `json:"schedule_id"`
+	Subject            string       `json:"subject"`
+	OutputCollectionId string       `json:"output_collection_id"`
+	PolicyHash         string       `json:"policy_hash"`
 	ExpiresAt          NullableTime `json:"expires_at"`
-	Id                 string       `json:"id" validate:"regexp=^[a-f0-9]{24}$"`
-	AccountId          string       `json:"account_id" validate:"regexp=^[a-f0-9]{24}$"`
-	ProjectId          string       `json:"project_id" validate:"regexp=^[a-f0-9]{24}$"`
-	Granter            string       `json:"granter" validate:"regexp=^[a-f0-9]{24}$"`
+	Id                 string       `json:"id"`
+	AccountId          string       `json:"account_id"`
+	ProjectId          string       `json:"project_id"`
+	Granter            string       `json:"granter"`
 	CreatedAt          time.Time    `json:"created_at"`
 	RevokedAt          NullableTime `json:"revoked_at"`
 }
@@ -385,6 +385,13 @@ func (o *DelegationGrant) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"schedule_id", "subject", "output_collection_id", "policy_hash", "id", "account_id", "project_id", "granter", "created_at"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

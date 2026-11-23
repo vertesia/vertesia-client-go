@@ -54,7 +54,7 @@ func (v *RunAnalyticsGroupBy) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = RUNANALYTICSGROUPBY_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

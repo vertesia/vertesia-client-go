@@ -159,6 +159,13 @@ func (o *ProcessHistoryResponseNodeHistoryRef) UnmarshalJSON(data []byte) (err e
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"path", "latest_sequence", "count"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varProcessHistoryResponseNodeHistoryRef := _ProcessHistoryResponseNodeHistoryRef{}
 
 	err = json.Unmarshal(data, &varProcessHistoryResponseNodeHistoryRef)

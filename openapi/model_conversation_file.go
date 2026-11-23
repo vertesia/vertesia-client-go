@@ -508,6 +508,13 @@ func (o *ConversationFile) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "name", "content_type", "size", "status", "started_at"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varConversationFile := _ConversationFile{}
 
 	err = json.Unmarshal(data, &varConversationFile)

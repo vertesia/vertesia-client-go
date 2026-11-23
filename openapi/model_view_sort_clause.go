@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewSortClause{}
 
 // ViewSortClause struct for ViewSortClause
 type ViewSortClause struct {
-	Field string `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
+	Field string `json:"field"`
 	Order string `json:"order"`
 }
 
@@ -128,6 +128,13 @@ func (o *ViewSortClause) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"field", "order"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

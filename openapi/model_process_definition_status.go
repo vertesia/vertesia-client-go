@@ -48,7 +48,7 @@ func (v *ProcessDefinitionStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PROCESSDEFINITIONSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

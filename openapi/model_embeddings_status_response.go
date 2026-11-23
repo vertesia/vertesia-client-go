@@ -317,6 +317,13 @@ func (o *EmbeddingsStatusResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"status", "vectorIndex"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varEmbeddingsStatusResponse := _EmbeddingsStatusResponse{}
 
 	err = json.Unmarshal(data, &varEmbeddingsStatusResponse)

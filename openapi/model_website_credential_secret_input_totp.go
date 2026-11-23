@@ -21,7 +21,7 @@ var _ MappedNullable = &WebsiteCredentialSecretInputTotp{}
 // WebsiteCredentialSecretInputTotp struct for WebsiteCredentialSecretInputTotp
 type WebsiteCredentialSecretInputTotp struct {
 	// The base32 TOTP seed (`A`-`Z`, `2`-`7`, any case). Whitespace, `=` and `-` are ignored.
-	Seed      string                          `json:"seed" validate:"regexp=^[\\\\sA-Za-z2-7=-]*[A-Za-z2-7][\\\\sA-Za-z2-7=-]*$"`
+	Seed      string                          `json:"seed"`
 	Algorithm *WebsiteCredentialTotpAlgorithm `json:"algorithm,omitempty"`
 	Digits    *float32                        `json:"digits,omitempty"`
 	Period    *float32                        `json:"period,omitempty"`
@@ -281,6 +281,13 @@ func (o *WebsiteCredentialSecretInputTotp) UnmarshalJSON(data []byte) (err error
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"seed"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

@@ -103,6 +103,13 @@ func (o *QuotaStandingResponseLlm) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"note"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varQuotaStandingResponseLlm := _QuotaStandingResponseLlm{}
 
 	err = json.Unmarshal(data, &varQuotaStandingResponseLlm)

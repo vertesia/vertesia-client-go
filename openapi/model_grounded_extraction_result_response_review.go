@@ -175,6 +175,13 @@ func (o *GroundedExtractionResultResponseReview) UnmarshalJSON(data []byte) (err
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"assessment"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varGroundedExtractionResultResponseReview := _GroundedExtractionResultResponseReview{}
 
 	err = json.Unmarshal(data, &varGroundedExtractionResultResponseReview)

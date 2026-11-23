@@ -20,10 +20,10 @@ var _ MappedNullable = &ViewResultsConfiguration{}
 
 // ViewResultsConfiguration struct for ViewResultsConfiguration
 type ViewResultsConfiguration struct {
-	DefaultDisplay     string                      `json:"default_display" validate:"regexp=^[a-z][a-z0-9_-]*$"`
+	DefaultDisplay     string                      `json:"default_display"`
 	AllowDisplaySwitch *bool                       `json:"allow_display_switch,omitempty"`
 	Displays           []ViewDisplayConfiguration  `json:"displays"`
-	DefaultSort        *string                     `json:"default_sort,omitempty" validate:"regexp=^[a-z][a-z0-9_-]*$"`
+	DefaultSort        *string                     `json:"default_sort,omitempty"`
 	SortOptions        []ViewSortOption            `json:"sort_options,omitempty"`
 	Selection          *ViewSelectionConfiguration `json:"selection,omitempty"`
 	Actions            *ViewActionsConfiguration   `json:"actions,omitempty"`
@@ -344,6 +344,13 @@ func (o *ViewResultsConfiguration) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"default_display"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

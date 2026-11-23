@@ -188,6 +188,13 @@ func (o *AuditAdoptionBucket) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"from", "to", "partial", "active_users"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAuditAdoptionBucket := _AuditAdoptionBucket{}
 
 	err = json.Unmarshal(data, &varAuditAdoptionBucket)

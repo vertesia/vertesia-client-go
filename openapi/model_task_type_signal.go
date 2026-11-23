@@ -44,7 +44,7 @@ func (v *TaskTypeSIGNAL) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = TASKTYPESIGNAL_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

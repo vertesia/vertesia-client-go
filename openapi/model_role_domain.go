@@ -52,7 +52,7 @@ func (v *RoleDomain) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = ROLEDOMAIN_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

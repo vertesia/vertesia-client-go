@@ -159,6 +159,13 @@ func (o *AppWidgetInfo) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"collection", "skill", "url"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAppWidgetInfo := _AppWidgetInfo{}
 
 	err = json.Unmarshal(data, &varAppWidgetInfo)

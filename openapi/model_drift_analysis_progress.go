@@ -385,6 +385,13 @@ func (o *DriftAnalysisProgress) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"total", "processed", "missing", "stale", "status", "current_batch", "total_batches", "percent_complete", "docs_per_second", "elapsed_seconds"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDriftAnalysisProgress := _DriftAnalysisProgress{}
 
 	err = json.Unmarshal(data, &varDriftAnalysisProgress)

@@ -50,7 +50,7 @@ func (v *ViewActionSelectionRequirement) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = VIEWACTIONSELECTIONREQUIREMENT_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

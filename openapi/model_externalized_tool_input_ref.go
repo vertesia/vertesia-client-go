@@ -159,6 +159,13 @@ func (o *ExternalizedToolInputRef) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"tool_name", "ref"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varExternalizedToolInputRef := _ExternalizedToolInputRef{}
 
 	err = json.Unmarshal(data, &varExternalizedToolInputRef)

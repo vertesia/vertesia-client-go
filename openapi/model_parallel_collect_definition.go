@@ -177,6 +177,13 @@ func (o *ParallelCollectDefinition) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"into"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varParallelCollectDefinition := _ParallelCollectDefinition{}
 
 	err = json.Unmarshal(data, &varParallelCollectDefinition)

@@ -206,6 +206,13 @@ func (o *DashboardElasticsearchResultMappingOneOf1) UnmarshalJSON(data []byte) (
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type", "path"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDashboardElasticsearchResultMappingOneOf1 := _DashboardElasticsearchResultMappingOneOf1{}
 
 	err = json.Unmarshal(data, &varDashboardElasticsearchResultMappingOneOf1)

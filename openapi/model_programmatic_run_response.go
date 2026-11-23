@@ -1084,6 +1084,13 @@ func (o *ProgrammaticRunResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"run_type", "id", "run_kind", "account", "project", "status", "started_by", "started_at", "created_at", "updated_at", "process_definition_snapshot", "process_state"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varProgrammaticRunResponse := _ProgrammaticRunResponse{}
 
 	err = json.Unmarshal(data, &varProgrammaticRunResponse)

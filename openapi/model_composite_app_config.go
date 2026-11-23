@@ -625,6 +625,13 @@ func (o *CompositeAppConfig) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"edit_revision", "project"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCompositeAppConfig := _CompositeAppConfig{}
 
 	err = json.Unmarshal(data, &varCompositeAppConfig)

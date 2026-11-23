@@ -485,6 +485,13 @@ func (o *ChildWorkflowTask) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type", "activityId", "status", "attempts"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varChildWorkflowTask := _ChildWorkflowTask{}
 
 	err = json.Unmarshal(data, &varChildWorkflowTask)

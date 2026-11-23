@@ -20,6 +20,9 @@ import (
 type OAuthLoginNotFoundResponse struct {
 	OAuthLoginRequestNotFoundResponse *OAuthLoginRequestNotFoundResponse
 	OAuthLoginUserNotFoundResponse    *OAuthLoginUserNotFoundResponse
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // OAuthLoginRequestNotFoundResponseAsOAuthLoginNotFoundResponse is a convenience function that returns OAuthLoginRequestNotFoundResponse wrapped in OAuthLoginNotFoundResponse
@@ -38,52 +41,41 @@ func OAuthLoginUserNotFoundResponseAsOAuthLoginNotFoundResponse(v *OAuthLoginUse
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *OAuthLoginNotFoundResponse) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into OAuthLoginRequestNotFoundResponse
-	err = newStrictDecoder(data).Decode(&dst.OAuthLoginRequestNotFoundResponse)
-	if err == nil {
-		jsonOAuthLoginRequestNotFoundResponse, _ := json.Marshal(dst.OAuthLoginRequestNotFoundResponse)
-		if string(jsonOAuthLoginRequestNotFoundResponse) == "{}" { // empty struct
-			dst.OAuthLoginRequestNotFoundResponse = nil
-		} else {
-			if err = validator.Validate(dst.OAuthLoginRequestNotFoundResponse); err != nil {
-				dst.OAuthLoginRequestNotFoundResponse = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.OAuthLoginRequestNotFoundResponse = nil
+	*dst = OAuthLoginNotFoundResponse{}
+	var tag struct {
+		Discriminator *string `json:"error"`
 	}
-
-	// try to unmarshal data into OAuthLoginUserNotFoundResponse
-	err = newStrictDecoder(data).Decode(&dst.OAuthLoginUserNotFoundResponse)
-	if err == nil {
-		jsonOAuthLoginUserNotFoundResponse, _ := json.Marshal(dst.OAuthLoginUserNotFoundResponse)
-		if string(jsonOAuthLoginUserNotFoundResponse) == "{}" { // empty struct
-			dst.OAuthLoginUserNotFoundResponse = nil
-		} else {
-			if err = validator.Validate(dst.OAuthLoginUserNotFoundResponse); err != nil {
-				dst.OAuthLoginUserNotFoundResponse = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.OAuthLoginUserNotFoundResponse = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.OAuthLoginRequestNotFoundResponse = nil
-		dst.OAuthLoginUserNotFoundResponse = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(OAuthLoginNotFoundResponse)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(OAuthLoginNotFoundResponse)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing OAuthLoginNotFoundResponse error")
+	}
+	switch *tag.Discriminator {
+	case "user_not_found":
+		var value OAuthLoginUserNotFoundResponse
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.OAuthLoginUserNotFoundResponse = &value
+		return nil
+	case "not_found":
+		var value OAuthLoginRequestNotFoundResponse
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.OAuthLoginRequestNotFoundResponse = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src OAuthLoginNotFoundResponse) MarshalJSON() ([]byte, error) {
 
 	if src.OAuthLoginUserNotFoundResponse != nil {
 		return json.Marshal(&src.OAuthLoginUserNotFoundResponse)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *OAuthLoginNotFoundResponse) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj OAuthLoginNotFoundResponse) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

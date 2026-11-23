@@ -44,7 +44,7 @@ func (v *TaskTypeCHILDWORKFLOW) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = TASKTYPECHILDWORKFLOW_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

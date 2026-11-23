@@ -21,7 +21,7 @@ var _ MappedNullable = &AuditAggregationMetric{}
 // AuditAggregationMetric struct for AuditAggregationMetric
 type AuditAggregationMetric struct {
 	// Stable key used in response rows: 1 to 64 letters, numbers, underscores, or hyphens, unique within the query.
-	Id        string                    `json:"id" validate:"regexp=^[A-Za-z0-9_-]{1,64}$"`
+	Id        string                    `json:"id"`
 	Operation AuditAggregationOperation `json:"operation"`
 	// Required for count_distinct.
 	Field *AuditAggregationDistinctField `json:"field,omitempty"`
@@ -240,6 +240,13 @@ func (o *AuditAggregationMetric) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "operation"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

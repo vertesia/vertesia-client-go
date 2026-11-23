@@ -21,10 +21,10 @@ var _ MappedNullable = &SharePointContentSourcePermissions{}
 // SharePointContentSourcePermissions struct for SharePointContentSourcePermissions
 type SharePointContentSourcePermissions struct {
 	Mode                       string  `json:"mode"`
-	EntraTenantId              string  `json:"entra_tenant_id" validate:"regexp=^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"`
-	ScimConnectionId           string  `json:"scim_connection_id" validate:"regexp=^[0-9a-fA-F]{24}$"`
-	PermissionReaderProviderId string  `json:"permission_reader_provider_id" validate:"regexp=^[0-9a-fA-F]{24}$"`
-	TenantGroupId              *string `json:"tenant_group_id,omitempty" validate:"regexp=^[0-9a-fA-F]{24}$"`
+	EntraTenantId              string  `json:"entra_tenant_id"`
+	ScimConnectionId           string  `json:"scim_connection_id"`
+	PermissionReaderProviderId string  `json:"permission_reader_provider_id"`
+	TenantGroupId              *string `json:"tenant_group_id,omitempty"`
 	RefreshMinutes             *int32  `json:"refresh_minutes,omitempty"`
 	MaxStaleHours              *int32  `json:"max_stale_hours,omitempty"`
 }
@@ -292,6 +292,13 @@ func (o *SharePointContentSourcePermissions) UnmarshalJSON(data []byte) (err err
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"mode", "entra_tenant_id", "scim_connection_id", "permission_reader_provider_id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

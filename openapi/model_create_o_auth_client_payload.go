@@ -570,6 +570,13 @@ func (o *CreateOAuthClientPayload) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"client_name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCreateOAuthClientPayload := _CreateOAuthClientPayload{}
 
 	err = json.Unmarshal(data, &varCreateOAuthClientPayload)

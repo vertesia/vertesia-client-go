@@ -244,6 +244,13 @@ func (o *AppRepoRef) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "commit"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAppRepoRef := _AppRepoRef{}
 
 	err = json.Unmarshal(data, &varAppRepoRef)

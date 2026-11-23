@@ -22,7 +22,7 @@ var _ MappedNullable = &ICreateProjectPayload{}
 type ICreateProjectPayload struct {
 	Name string `json:"name"`
 	// Letters, digits, `-`, `_`, `[` and `]`. Must not be the namespace of another project, which the server answers with a 409.
-	Namespace   string  `json:"namespace" validate:"regexp=^[a-zA-Z0-9_[\\\\]-]+$"`
+	Namespace   string  `json:"namespace"`
 	Description *string `json:"description,omitempty"`
 	AutoConfig  *bool   `json:"auto_config,omitempty"`
 }
@@ -201,6 +201,13 @@ func (o *ICreateProjectPayload) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "namespace"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

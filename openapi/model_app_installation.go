@@ -29,7 +29,7 @@ type AppInstallation struct {
 	ReservedNamespaces  []string          `json:"reserved_namespaces,omitempty"`
 	NamespaceConflicts  []string          `json:"namespace_conflicts,omitempty"`
 	// Stable deployment alias selected for this installation. The alias is resolved to its current immutable app version at request time.
-	DeploymentAlias  *string                          `json:"deployment_alias,omitempty" validate:"regexp=^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"`
+	DeploymentAlias  *string                          `json:"deployment_alias,omitempty"`
 	Manifest         string                           `json:"manifest"`
 	McpConfiguration *AppInstallationMcpConfiguration `json:"mcp_configuration,omitempty"`
 	OauthApproval    *AppInstallationOauthApproval    `json:"oauth_approval,omitempty"`
@@ -801,6 +801,13 @@ func (o *AppInstallation) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "project", "manifest", "created_at", "updated_at"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

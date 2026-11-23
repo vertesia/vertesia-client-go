@@ -372,6 +372,13 @@ func (o *ViewExecutionResult) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"view", "revision", "definition", "search", "total", "took"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varViewExecutionResult := _ViewExecutionResult{}
 
 	err = json.Unmarshal(data, &varViewExecutionResult)

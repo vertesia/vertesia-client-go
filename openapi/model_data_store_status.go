@@ -50,7 +50,7 @@ func (v *DataStoreStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = DATASTORESTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

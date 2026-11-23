@@ -52,7 +52,7 @@ func (v *CompositeAppHeaderItemKind) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = COMPOSITEAPPHEADERITEMKIND_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

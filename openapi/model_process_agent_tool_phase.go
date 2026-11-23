@@ -352,6 +352,13 @@ func (o *ProcessAgentToolPhase) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "recovery_prompt"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varProcessAgentToolPhase := _ProcessAgentToolPhase{}
 
 	err = json.Unmarshal(data, &varProcessAgentToolPhase)

@@ -22,6 +22,9 @@ type WorkflowTask struct {
 	ChildWorkflowTask *ChildWorkflowTask
 	SignalTask        *SignalTask
 	TimerTask         *TimerTask
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // ActivityTaskAsWorkflowTask is a convenience function that returns ActivityTask wrapped in WorkflowTask
@@ -54,88 +57,61 @@ func TimerTaskAsWorkflowTask(v *TimerTask) WorkflowTask {
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *WorkflowTask) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into ActivityTask
-	err = newStrictDecoder(data).Decode(&dst.ActivityTask)
-	if err == nil {
-		jsonActivityTask, _ := json.Marshal(dst.ActivityTask)
-		if string(jsonActivityTask) == "{}" { // empty struct
-			dst.ActivityTask = nil
-		} else {
-			if err = validator.Validate(dst.ActivityTask); err != nil {
-				dst.ActivityTask = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ActivityTask = nil
+	*dst = WorkflowTask{}
+	var tag struct {
+		Discriminator *string `json:"type"`
 	}
-
-	// try to unmarshal data into ChildWorkflowTask
-	err = newStrictDecoder(data).Decode(&dst.ChildWorkflowTask)
-	if err == nil {
-		jsonChildWorkflowTask, _ := json.Marshal(dst.ChildWorkflowTask)
-		if string(jsonChildWorkflowTask) == "{}" { // empty struct
-			dst.ChildWorkflowTask = nil
-		} else {
-			if err = validator.Validate(dst.ChildWorkflowTask); err != nil {
-				dst.ChildWorkflowTask = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ChildWorkflowTask = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into SignalTask
-	err = newStrictDecoder(data).Decode(&dst.SignalTask)
-	if err == nil {
-		jsonSignalTask, _ := json.Marshal(dst.SignalTask)
-		if string(jsonSignalTask) == "{}" { // empty struct
-			dst.SignalTask = nil
-		} else {
-			if err = validator.Validate(dst.SignalTask); err != nil {
-				dst.SignalTask = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.SignalTask = nil
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing WorkflowTask type")
 	}
-
-	// try to unmarshal data into TimerTask
-	err = newStrictDecoder(data).Decode(&dst.TimerTask)
-	if err == nil {
-		jsonTimerTask, _ := json.Marshal(dst.TimerTask)
-		if string(jsonTimerTask) == "{}" { // empty struct
-			dst.TimerTask = nil
-		} else {
-			if err = validator.Validate(dst.TimerTask); err != nil {
-				dst.TimerTask = nil
-			} else {
-				match++
-			}
+	switch *tag.Discriminator {
+	case "activity":
+		var value ActivityTask
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.TimerTask = nil
-	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.ActivityTask = nil
-		dst.ChildWorkflowTask = nil
-		dst.SignalTask = nil
-		dst.TimerTask = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(WorkflowTask)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(WorkflowTask)")
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ActivityTask = &value
+		return nil
+	case "childWorkflow":
+		var value ChildWorkflowTask
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ChildWorkflowTask = &value
+		return nil
+	case "signal":
+		var value SignalTask
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.SignalTask = &value
+		return nil
+	case "timer":
+		var value TimerTask
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.TimerTask = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -155,6 +131,10 @@ func (src WorkflowTask) MarshalJSON() ([]byte, error) {
 
 	if src.TimerTask != nil {
 		return json.Marshal(&src.TimerTask)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -182,6 +162,10 @@ func (obj *WorkflowTask) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -204,6 +188,10 @@ func (obj WorkflowTask) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

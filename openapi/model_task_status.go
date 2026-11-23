@@ -60,7 +60,7 @@ func (v *TaskStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = TASKSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

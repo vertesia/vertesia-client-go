@@ -20,7 +20,7 @@ var _ MappedNullable = &CreateOAuthProviderPayload{}
 
 // CreateOAuthProviderPayload Payload for creating an OAuth Provider. The client_secret is accepted as plaintext on create and stored encrypted.
 type CreateOAuthProviderPayload struct {
-	Name                  string  `json:"name" validate:"regexp=^[a-z0-9][a-z0-9-]*[a-z0-9]$"`
+	Name                  string  `json:"name"`
 	DisplayName           string  `json:"display_name"`
 	GrantType             *string `json:"grant_type,omitempty"`
 	AuthorizationEndpoint *string `json:"authorization_endpoint,omitempty"`
@@ -668,6 +668,13 @@ func (o *CreateOAuthProviderPayload) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "display_name", "client_id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

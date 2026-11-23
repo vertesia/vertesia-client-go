@@ -20,6 +20,9 @@ import (
 type ContentSourcePermissionSettings struct {
 	ProjectContentSourcePermissions    *ProjectContentSourcePermissions
 	SharePointContentSourcePermissions *SharePointContentSourcePermissions
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // ProjectContentSourcePermissionsAsContentSourcePermissionSettings is a convenience function that returns ProjectContentSourcePermissions wrapped in ContentSourcePermissionSettings
@@ -38,52 +41,41 @@ func SharePointContentSourcePermissionsAsContentSourcePermissionSettings(v *Shar
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *ContentSourcePermissionSettings) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into ProjectContentSourcePermissions
-	err = newStrictDecoder(data).Decode(&dst.ProjectContentSourcePermissions)
-	if err == nil {
-		jsonProjectContentSourcePermissions, _ := json.Marshal(dst.ProjectContentSourcePermissions)
-		if string(jsonProjectContentSourcePermissions) == "{}" { // empty struct
-			dst.ProjectContentSourcePermissions = nil
-		} else {
-			if err = validator.Validate(dst.ProjectContentSourcePermissions); err != nil {
-				dst.ProjectContentSourcePermissions = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ProjectContentSourcePermissions = nil
+	*dst = ContentSourcePermissionSettings{}
+	var tag struct {
+		Discriminator *string `json:"mode"`
 	}
-
-	// try to unmarshal data into SharePointContentSourcePermissions
-	err = newStrictDecoder(data).Decode(&dst.SharePointContentSourcePermissions)
-	if err == nil {
-		jsonSharePointContentSourcePermissions, _ := json.Marshal(dst.SharePointContentSourcePermissions)
-		if string(jsonSharePointContentSourcePermissions) == "{}" { // empty struct
-			dst.SharePointContentSourcePermissions = nil
-		} else {
-			if err = validator.Validate(dst.SharePointContentSourcePermissions); err != nil {
-				dst.SharePointContentSourcePermissions = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.SharePointContentSourcePermissions = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.ProjectContentSourcePermissions = nil
-		dst.SharePointContentSourcePermissions = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(ContentSourcePermissionSettings)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(ContentSourcePermissionSettings)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing ContentSourcePermissionSettings mode")
+	}
+	switch *tag.Discriminator {
+	case "project":
+		var value ProjectContentSourcePermissions
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ProjectContentSourcePermissions = &value
+		return nil
+	case "source":
+		var value SharePointContentSourcePermissions
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.SharePointContentSourcePermissions = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src ContentSourcePermissionSettings) MarshalJSON() ([]byte, error) {
 
 	if src.SharePointContentSourcePermissions != nil {
 		return json.Marshal(&src.SharePointContentSourcePermissions)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *ContentSourcePermissionSettings) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj ContentSourcePermissionSettings) GetActualInstanceValue() interface{} 
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

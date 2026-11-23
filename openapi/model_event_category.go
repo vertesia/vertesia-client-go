@@ -54,7 +54,7 @@ func (v *EventCategory) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = EVENTCATEGORY_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

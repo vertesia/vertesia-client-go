@@ -103,6 +103,13 @@ func (o *OkBoolean) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"ok"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varOkBoolean := _OkBoolean{}
 
 	err = json.Unmarshal(data, &varOkBoolean)

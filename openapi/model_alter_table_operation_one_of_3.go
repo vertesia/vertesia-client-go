@@ -159,6 +159,13 @@ func (o *AlterTableOperationOneOf3) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"op", "column", "updates"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAlterTableOperationOneOf3 := _AlterTableOperationOneOf3{}
 
 	err = json.Unmarshal(data, &varAlterTableOperationOneOf3)

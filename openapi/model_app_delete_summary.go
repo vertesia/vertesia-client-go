@@ -340,6 +340,13 @@ func (o *AppDeleteSummary) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"confirmed", "app_id", "app_name", "versions", "installations", "storage_prefix", "deleted"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAppDeleteSummary := _AppDeleteSummary{}
 
 	err = json.Unmarshal(data, &varAppDeleteSummary)

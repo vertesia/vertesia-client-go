@@ -21,7 +21,7 @@ var _ MappedNullable = &AppEventSubscriptionDefinition{}
 // AppEventSubscriptionDefinition An app-owned event subscription. Studio derives its project scope and delivery target from the app installation and referenced event hook.
 type AppEventSubscriptionDefinition struct {
 	// Stable app-local subscription id in kebab case.
-	Id string `json:"id" validate:"regexp=^[a-z0-9]+(?:-[a-z0-9]+)*$"`
+	Id string `json:"id"`
 	// Human-readable subscription name.
 	Name string `json:"name"`
 	// Optional description of the subscription behavior.
@@ -333,6 +333,13 @@ func (o *AppEventSubscriptionDefinition) UnmarshalJSON(data []byte) (err error) 
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "name", "hook", "filter", "run_as_role"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

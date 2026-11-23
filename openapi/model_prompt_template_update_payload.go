@@ -28,7 +28,7 @@ type PromptTemplateUpdatePayload struct {
 	Status      *PromptStatus `json:"status,omitempty"`
 	Version     *float32      `json:"version,omitempty"`
 	// The ID of the prompt this one derives from, as 24 hexadecimal characters.
-	Parent          *string                `json:"parent,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Parent          *string                `json:"parent,omitempty"`
 	Description     *string                `json:"description,omitempty"`
 	TestData        map[string]interface{} `json:"test_data,omitempty"`
 	Script          *string                `json:"script,omitempty"`

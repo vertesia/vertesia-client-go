@@ -795,6 +795,13 @@ func (o *WebsiteCredentialRecord) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "credential_ref", "project", "name", "username_secret_enabled", "has_username_secret", "has_password", "has_totp", "has_oauth"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varWebsiteCredentialRecord := _WebsiteCredentialRecord{}
 
 	err = json.Unmarshal(data, &varWebsiteCredentialRecord)

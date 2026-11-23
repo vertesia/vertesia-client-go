@@ -48,7 +48,7 @@ func (v *DashboardExportStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = DASHBOARDEXPORTSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

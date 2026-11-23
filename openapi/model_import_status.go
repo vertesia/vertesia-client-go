@@ -52,7 +52,7 @@ func (v *ImportStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = IMPORTSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

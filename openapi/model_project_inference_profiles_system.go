@@ -20,15 +20,15 @@ var _ MappedNullable = &ProjectInferenceProfilesSystem{}
 // ProjectInferenceProfilesSystem struct for ProjectInferenceProfilesSystem
 type ProjectInferenceProfilesSystem struct {
 	// MongoDB ObjectId of the inference profile.
-	ContentType *string `json:"content_type,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	ContentType *string `json:"content_type,omitempty"`
 	// MongoDB ObjectId of the inference profile.
-	Intake *string `json:"intake,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Intake *string `json:"intake,omitempty"`
 	// MongoDB ObjectId of the inference profile.
-	Analysis *string `json:"analysis,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Analysis *string `json:"analysis,omitempty"`
 	// MongoDB ObjectId of the inference profile.
-	Agent *string `json:"agent,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Agent *string `json:"agent,omitempty"`
 	// MongoDB ObjectId of the inference profile.
-	NonApplicable *string `json:"non_applicable,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	NonApplicable *string `json:"non_applicable,omitempty"`
 }
 
 // NewProjectInferenceProfilesSystem instantiates a new ProjectInferenceProfilesSystem object

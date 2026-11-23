@@ -131,6 +131,13 @@ func (o *EmbeddingsApiImageInput) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type", "source"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varEmbeddingsApiImageInput := _EmbeddingsApiImageInput{}
 
 	err = json.Unmarshal(data, &varEmbeddingsApiImageInput)

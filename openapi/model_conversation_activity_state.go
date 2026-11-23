@@ -46,7 +46,7 @@ func (v *ConversationActivityState) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = CONVERSATIONACTIVITYSTATE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

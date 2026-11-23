@@ -48,7 +48,7 @@ func (v *BrowserUseScreenshotCapture) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = BROWSERUSESCREENSHOTCAPTURE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

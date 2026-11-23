@@ -21,7 +21,7 @@ var _ MappedNullable = &CustomRoleDefinition{}
 // CustomRoleDefinition struct for CustomRoleDefinition
 type CustomRoleDefinition struct {
 	// Immutable snake_case name without the c: prefix. References in ACEs and tokens use c:<name>.
-	Name        string  `json:"name" validate:"regexp=^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"`
+	Name        string  `json:"name"`
 	Title       string  `json:"title"`
 	Description *string `json:"description,omitempty"`
 	// Roles whose permissions are inherited, in addition to permissions below. Use built-in system role names or c:<name> references in this account. Cycles and ABAC roles are not allowed. Changes to a base role apply to newly minted tokens.
@@ -230,6 +230,13 @@ func (o *CustomRoleDefinition) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "title"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

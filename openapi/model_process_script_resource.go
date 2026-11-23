@@ -195,6 +195,13 @@ func (o *ProcessScriptResource) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"language", "entrypoint", "source"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varProcessScriptResource := _ProcessScriptResource{}
 
 	err = json.Unmarshal(data, &varProcessScriptResource)

@@ -455,6 +455,13 @@ func (o *UpdateWorkflowDefinitionPayloadWithActivities) UnmarshalJSON(data []byt
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "spec_format"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varUpdateWorkflowDefinitionPayloadWithActivities := _UpdateWorkflowDefinitionPayloadWithActivities{}
 
 	err = json.Unmarshal(data, &varUpdateWorkflowDefinitionPayloadWithActivities)

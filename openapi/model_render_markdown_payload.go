@@ -585,6 +585,13 @@ func (o *RenderMarkdownPayload) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"format"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varRenderMarkdownPayload := _RenderMarkdownPayload{}
 
 	err = json.Unmarshal(data, &varRenderMarkdownPayload)

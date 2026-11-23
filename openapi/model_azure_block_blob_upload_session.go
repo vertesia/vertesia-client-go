@@ -254,6 +254,13 @@ func (o *AzureBlockBlobUploadSession) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"protocol", "id", "path", "part_size", "url"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAzureBlockBlobUploadSession := _AzureBlockBlobUploadSession{}
 
 	err = json.Unmarshal(data, &varAzureBlockBlobUploadSession)

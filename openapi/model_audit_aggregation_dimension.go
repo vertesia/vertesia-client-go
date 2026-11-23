@@ -70,7 +70,7 @@ func (v *AuditAggregationDimension) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = AUDITAGGREGATIONDIMENSION_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

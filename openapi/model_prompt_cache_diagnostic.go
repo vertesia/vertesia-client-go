@@ -373,6 +373,13 @@ func (o *PromptCacheDiagnostic) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"path", "explicit_cache_used", "model", "preparation_latency_ms"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varPromptCacheDiagnostic := _PromptCacheDiagnostic{}
 
 	err = json.Unmarshal(data, &varPromptCacheDiagnostic)

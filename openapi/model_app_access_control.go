@@ -48,7 +48,7 @@ func (v *AppAccessControl) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = APPACCESSCONTROL_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

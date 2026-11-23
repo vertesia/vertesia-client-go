@@ -50,7 +50,7 @@ func (v *EvaluationGateReason) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = EVALUATIONGATEREASON_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

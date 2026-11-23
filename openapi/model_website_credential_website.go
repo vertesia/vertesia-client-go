@@ -21,7 +21,7 @@ var _ MappedNullable = &WebsiteCredentialWebsite{}
 // WebsiteCredentialWebsite struct for WebsiteCredentialWebsite
 type WebsiteCredentialWebsite struct {
 	// Hostname this credential is allowed on, or a URL to take it from. Subdomains match. A value no hostname can be read from is refused.
-	Host string `json:"host" validate:"regexp=\\\\S"`
+	Host string `json:"host"`
 	// Optional login URL used by agents as a hint.
 	LoginUrl *string `json:"login_url,omitempty"`
 	// Optional narrower origin allowlist for this credential.
@@ -175,6 +175,13 @@ func (o *WebsiteCredentialWebsite) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"host"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

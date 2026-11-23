@@ -27,7 +27,7 @@ type UpdateViewExperienceRequest struct {
 	Navigation  []ViewNavigationItem        `json:"navigation,omitempty"`
 	Search      *ViewSearchConfiguration    `json:"search,omitempty"`
 	Results     *ViewResultsConfiguration   `json:"results,omitempty"`
-	Description string                      `json:"description" validate:"regexp=\\\\S"`
+	Description string                      `json:"description"`
 	Version     ViewExperienceSchemaVersion `json:"version"`
 	Revision    float32                     `json:"revision"`
 }
@@ -400,6 +400,13 @@ func (o *UpdateViewExperienceRequest) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "description", "version", "revision"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

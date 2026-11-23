@@ -46,7 +46,7 @@ func (v *AppVersionKind) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = APPVERSIONKIND_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

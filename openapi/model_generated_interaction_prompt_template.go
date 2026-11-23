@@ -215,6 +215,13 @@ func (o *GeneratedInteractionPromptTemplate) UnmarshalJSON(data []byte) (err err
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"role", "name", "content", "content_type", "inputSchema"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varGeneratedInteractionPromptTemplate := _GeneratedInteractionPromptTemplate{}
 
 	err = json.Unmarshal(data, &varGeneratedInteractionPromptTemplate)

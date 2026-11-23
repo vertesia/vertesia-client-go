@@ -303,6 +303,13 @@ func (o *FileMetadataResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "size", "contentType"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varFileMetadataResponse := _FileMetadataResponse{}
 
 	err = json.Unmarshal(data, &varFileMetadataResponse)

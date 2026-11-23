@@ -501,6 +501,13 @@ func (o *WebhookEventDeliveryTargetInput) UnmarshalJSON(data []byte) (err error)
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type", "url"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varWebhookEventDeliveryTargetInput := _WebhookEventDeliveryTargetInput{}
 
 	err = json.Unmarshal(data, &varWebhookEventDeliveryTargetInput)

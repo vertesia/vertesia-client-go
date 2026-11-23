@@ -20,6 +20,9 @@ import (
 type ToolCollectionObject struct {
 	MCPToolCollectionObject         *MCPToolCollectionObject
 	VertesiaSDKToolCollectionObject *VertesiaSDKToolCollectionObject
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // MCPToolCollectionObjectAsToolCollectionObject is a convenience function that returns MCPToolCollectionObject wrapped in ToolCollectionObject
@@ -38,52 +41,41 @@ func VertesiaSDKToolCollectionObjectAsToolCollectionObject(v *VertesiaSDKToolCol
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *ToolCollectionObject) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into MCPToolCollectionObject
-	err = newStrictDecoder(data).Decode(&dst.MCPToolCollectionObject)
-	if err == nil {
-		jsonMCPToolCollectionObject, _ := json.Marshal(dst.MCPToolCollectionObject)
-		if string(jsonMCPToolCollectionObject) == "{}" { // empty struct
-			dst.MCPToolCollectionObject = nil
-		} else {
-			if err = validator.Validate(dst.MCPToolCollectionObject); err != nil {
-				dst.MCPToolCollectionObject = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.MCPToolCollectionObject = nil
+	*dst = ToolCollectionObject{}
+	var tag struct {
+		Discriminator *string `json:"type"`
 	}
-
-	// try to unmarshal data into VertesiaSDKToolCollectionObject
-	err = newStrictDecoder(data).Decode(&dst.VertesiaSDKToolCollectionObject)
-	if err == nil {
-		jsonVertesiaSDKToolCollectionObject, _ := json.Marshal(dst.VertesiaSDKToolCollectionObject)
-		if string(jsonVertesiaSDKToolCollectionObject) == "{}" { // empty struct
-			dst.VertesiaSDKToolCollectionObject = nil
-		} else {
-			if err = validator.Validate(dst.VertesiaSDKToolCollectionObject); err != nil {
-				dst.VertesiaSDKToolCollectionObject = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.VertesiaSDKToolCollectionObject = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.MCPToolCollectionObject = nil
-		dst.VertesiaSDKToolCollectionObject = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(ToolCollectionObject)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(ToolCollectionObject)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing ToolCollectionObject type")
+	}
+	switch *tag.Discriminator {
+	case "mcp":
+		var value MCPToolCollectionObject
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.MCPToolCollectionObject = &value
+		return nil
+	case "vertesia_sdk":
+		var value VertesiaSDKToolCollectionObject
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.VertesiaSDKToolCollectionObject = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src ToolCollectionObject) MarshalJSON() ([]byte, error) {
 
 	if src.VertesiaSDKToolCollectionObject != nil {
 		return json.Marshal(&src.VertesiaSDKToolCollectionObject)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *ToolCollectionObject) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj ToolCollectionObject) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

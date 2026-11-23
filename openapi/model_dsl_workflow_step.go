@@ -20,6 +20,9 @@ import (
 type DSLWorkflowStep struct {
 	DSLActivityStep      *DSLActivityStep
 	DSLChildWorkflowStep *DSLChildWorkflowStep
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // DSLActivityStepAsDSLWorkflowStep is a convenience function that returns DSLActivityStep wrapped in DSLWorkflowStep
@@ -38,52 +41,41 @@ func DSLChildWorkflowStepAsDSLWorkflowStep(v *DSLChildWorkflowStep) DSLWorkflowS
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *DSLWorkflowStep) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into DSLActivityStep
-	err = newStrictDecoder(data).Decode(&dst.DSLActivityStep)
-	if err == nil {
-		jsonDSLActivityStep, _ := json.Marshal(dst.DSLActivityStep)
-		if string(jsonDSLActivityStep) == "{}" { // empty struct
-			dst.DSLActivityStep = nil
-		} else {
-			if err = validator.Validate(dst.DSLActivityStep); err != nil {
-				dst.DSLActivityStep = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.DSLActivityStep = nil
+	*dst = DSLWorkflowStep{}
+	var tag struct {
+		Discriminator *string `json:"type"`
 	}
-
-	// try to unmarshal data into DSLChildWorkflowStep
-	err = newStrictDecoder(data).Decode(&dst.DSLChildWorkflowStep)
-	if err == nil {
-		jsonDSLChildWorkflowStep, _ := json.Marshal(dst.DSLChildWorkflowStep)
-		if string(jsonDSLChildWorkflowStep) == "{}" { // empty struct
-			dst.DSLChildWorkflowStep = nil
-		} else {
-			if err = validator.Validate(dst.DSLChildWorkflowStep); err != nil {
-				dst.DSLChildWorkflowStep = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.DSLChildWorkflowStep = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.DSLActivityStep = nil
-		dst.DSLChildWorkflowStep = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(DSLWorkflowStep)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(DSLWorkflowStep)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing DSLWorkflowStep type")
+	}
+	switch *tag.Discriminator {
+	case "activity":
+		var value DSLActivityStep
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.DSLActivityStep = &value
+		return nil
+	case "workflow":
+		var value DSLChildWorkflowStep
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.DSLChildWorkflowStep = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src DSLWorkflowStep) MarshalJSON() ([]byte, error) {
 
 	if src.DSLChildWorkflowStep != nil {
 		return json.Marshal(&src.DSLChildWorkflowStep)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *DSLWorkflowStep) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj DSLWorkflowStep) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

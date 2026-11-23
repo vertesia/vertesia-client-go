@@ -46,7 +46,7 @@ func (v *GroundedExtractionVerdict) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = GROUNDEDEXTRACTIONVERDICT_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

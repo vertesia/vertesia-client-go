@@ -302,6 +302,13 @@ func (o *DataColumnForAI) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type", "nullable", "primary_key", "auto_increment"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDataColumnForAI := _DataColumnForAI{}
 
 	err = json.Unmarshal(data, &varDataColumnForAI)

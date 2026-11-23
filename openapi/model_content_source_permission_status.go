@@ -234,6 +234,13 @@ func (o *ContentSourcePermissionStatus) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"state", "version", "unresolved"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varContentSourcePermissionStatus := _ContentSourcePermissionStatus{}
 
 	err = json.Unmarshal(data, &varContentSourcePermissionStatus)

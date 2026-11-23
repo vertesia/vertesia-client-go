@@ -48,7 +48,7 @@ func (v *AgentDeliveryMatchMode) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = AGENTDELIVERYMATCHMODE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

@@ -21,7 +21,7 @@ var _ MappedNullable = &AppGithubRepositoryCreation{}
 // AppGithubRepositoryCreation struct for AppGithubRepositoryCreation
 type AppGithubRepositoryCreation struct {
 	// Name of the empty GitHub repository to create in the verified installation.
-	Name string `json:"name" validate:"regexp=^[A-Za-z0-9][A-Za-z0-9._-]*$"`
+	Name string `json:"name"`
 	// Create a private repository. Defaults to true when omitted.
 	Private              *bool `json:"private,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -144,6 +144,13 @@ func (o *AppGithubRepositoryCreation) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

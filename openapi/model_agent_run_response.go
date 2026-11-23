@@ -13,6 +13,7 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
+	"gopkg.in/validator.v2"
 )
 
 // AgentRunResponse - struct for AgentRunResponse
@@ -20,6 +21,9 @@ type AgentRunResponse struct {
 	AutonomousRunResponse   *AutonomousRunResponse
 	ProgrammaticRunResponse *ProgrammaticRunResponse
 	SupervisedRunResponse   *SupervisedRunResponse
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // AutonomousRunResponseAsAgentRunResponse is a convenience function that returns AutonomousRunResponse wrapped in AgentRunResponse
@@ -47,15 +51,21 @@ func SupervisedRunResponseAsAgentRunResponse(v *SupervisedRunResponse) AgentRunR
 func (dst *AgentRunResponse) UnmarshalJSON(data []byte) error {
 	*dst = AgentRunResponse{}
 	var tag struct {
-		Discriminator string `json:"run_type"`
+		Discriminator *string `json:"run_type"`
 	}
 	if err := json.Unmarshal(data, &tag); err != nil {
 		return err
 	}
-	switch tag.Discriminator {
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing AgentRunResponse run_type")
+	}
+	switch *tag.Discriminator {
 	case "autonomous":
 		var value AutonomousRunResponse
 		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
 			return err
 		}
 		dst.AutonomousRunResponse = &value
@@ -65,6 +75,9 @@ func (dst *AgentRunResponse) UnmarshalJSON(data []byte) error {
 		if err := json.Unmarshal(data, &value); err != nil {
 			return err
 		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
 		dst.SupervisedRunResponse = &value
 		return nil
 	case "programmatic":
@@ -72,10 +85,15 @@ func (dst *AgentRunResponse) UnmarshalJSON(data []byte) error {
 		if err := json.Unmarshal(data, &value); err != nil {
 			return err
 		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
 		dst.ProgrammaticRunResponse = &value
 		return nil
 	default:
-		return fmt.Errorf("unknown AgentRunResponse run_type %q", tag.Discriminator)
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -91,6 +109,10 @@ func (src AgentRunResponse) MarshalJSON() ([]byte, error) {
 
 	if src.SupervisedRunResponse != nil {
 		return json.Marshal(&src.SupervisedRunResponse)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +136,10 @@ func (obj *AgentRunResponse) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -132,6 +158,10 @@ func (obj AgentRunResponse) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

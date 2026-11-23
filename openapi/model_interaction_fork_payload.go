@@ -23,7 +23,7 @@ type InteractionForkPayload struct {
 	KeepTags    *bool   `json:"keepTags,omitempty"`
 	ForkPrompts *bool   `json:"forkPrompts,omitempty"`
 	// The project to fork into, as its 24-hexadecimal-character ID. Defaults to the current one.
-	TargetProject *string `json:"targetProject,omitempty" validate:"regexp=^[0-9a-fA-F]{24}$"`
+	TargetProject *string `json:"targetProject,omitempty"`
 }
 
 // NewInteractionForkPayload instantiates a new InteractionForkPayload object

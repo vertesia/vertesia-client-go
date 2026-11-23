@@ -25,7 +25,7 @@ type RunSearchQuery struct {
 	Offset      *float32            `json:"offset,omitempty"`
 	Interaction *string             `json:"interaction,omitempty"`
 	// Environment id, as 24 hexadecimal characters. An empty string applies no filter.
-	Environment *string  `json:"environment,omitempty" validate:"regexp=^(?:[a-fA-F0-9]{24})?$"`
+	Environment *string  `json:"environment,omitempty"`
 	Model       *string  `json:"model,omitempty"`
 	Tags        []string `json:"tags,omitempty"`
 	// Tags to exclude. Runs carrying any of these tags are filtered out of the results, counts, and facet buckets. Combined with `tags` (which requires all of the listed tags) as an additional `$nin` constraint on the same field.

@@ -21,6 +21,9 @@ type WorkflowHistory struct {
 	WorkflowAgentHistory  *WorkflowAgentHistory
 	WorkflowEventsHistory *WorkflowEventsHistory
 	WorkflowTasksHistory  *WorkflowTasksHistory
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // WorkflowAgentHistoryAsWorkflowHistory is a convenience function that returns WorkflowAgentHistory wrapped in WorkflowHistory
@@ -46,70 +49,51 @@ func WorkflowTasksHistoryAsWorkflowHistory(v *WorkflowTasksHistory) WorkflowHist
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *WorkflowHistory) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into WorkflowAgentHistory
-	err = newStrictDecoder(data).Decode(&dst.WorkflowAgentHistory)
-	if err == nil {
-		jsonWorkflowAgentHistory, _ := json.Marshal(dst.WorkflowAgentHistory)
-		if string(jsonWorkflowAgentHistory) == "{}" { // empty struct
-			dst.WorkflowAgentHistory = nil
-		} else {
-			if err = validator.Validate(dst.WorkflowAgentHistory); err != nil {
-				dst.WorkflowAgentHistory = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.WorkflowAgentHistory = nil
+	*dst = WorkflowHistory{}
+	var tag struct {
+		Discriminator *string `json:"type"`
 	}
-
-	// try to unmarshal data into WorkflowEventsHistory
-	err = newStrictDecoder(data).Decode(&dst.WorkflowEventsHistory)
-	if err == nil {
-		jsonWorkflowEventsHistory, _ := json.Marshal(dst.WorkflowEventsHistory)
-		if string(jsonWorkflowEventsHistory) == "{}" { // empty struct
-			dst.WorkflowEventsHistory = nil
-		} else {
-			if err = validator.Validate(dst.WorkflowEventsHistory); err != nil {
-				dst.WorkflowEventsHistory = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.WorkflowEventsHistory = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into WorkflowTasksHistory
-	err = newStrictDecoder(data).Decode(&dst.WorkflowTasksHistory)
-	if err == nil {
-		jsonWorkflowTasksHistory, _ := json.Marshal(dst.WorkflowTasksHistory)
-		if string(jsonWorkflowTasksHistory) == "{}" { // empty struct
-			dst.WorkflowTasksHistory = nil
-		} else {
-			if err = validator.Validate(dst.WorkflowTasksHistory); err != nil {
-				dst.WorkflowTasksHistory = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.WorkflowTasksHistory = nil
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing WorkflowHistory type")
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.WorkflowAgentHistory = nil
-		dst.WorkflowEventsHistory = nil
-		dst.WorkflowTasksHistory = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(WorkflowHistory)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(WorkflowHistory)")
+	switch *tag.Discriminator {
+	case "events":
+		var value WorkflowEventsHistory
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.WorkflowEventsHistory = &value
+		return nil
+	case "tasks":
+		var value WorkflowTasksHistory
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.WorkflowTasksHistory = &value
+		return nil
+	case "agent":
+		var value WorkflowAgentHistory
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.WorkflowAgentHistory = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -125,6 +109,10 @@ func (src WorkflowHistory) MarshalJSON() ([]byte, error) {
 
 	if src.WorkflowTasksHistory != nil {
 		return json.Marshal(&src.WorkflowTasksHistory)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -148,6 +136,10 @@ func (obj *WorkflowHistory) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -166,6 +158,10 @@ func (obj WorkflowHistory) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

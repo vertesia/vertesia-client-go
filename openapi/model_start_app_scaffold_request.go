@@ -28,7 +28,7 @@ type StartAppScaffoldRequest struct {
 	// App permissions declared in generated source. Defaults to sign-in only.
 	OauthScopes []string `json:"oauth_scopes,omitempty"`
 	// Optional Vertesia SDK version or package track for this scaffold. Overrides the deployment default.
-	AppgenPackageSpec *string `json:"appgen_package_spec,omitempty" validate:"regexp=^(?:latest|dev|dev-[0-9]+\\\\.[0-9]+|snapshot-[0-9a-f]{7}|[0-9]+\\\\.[0-9]+\\\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\\\+[0-9A-Za-z.-]+)?)$"`
+	AppgenPackageSpec *string `json:"appgen_package_spec,omitempty"`
 	// Start an initial app version build after the source has been pushed. Defaults to true.
 	CreateVersion *bool `json:"create_version,omitempty"`
 	// Explicit source setup behavior for external repositories. Omit to retain the legacy automatic behavior.
@@ -468,6 +468,13 @@ func (o *StartAppScaffoldRequest) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"app_id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

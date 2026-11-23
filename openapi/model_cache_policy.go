@@ -187,6 +187,13 @@ func (o *CachePolicy) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type", "refresh_probability", "ttl"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCachePolicy := _CachePolicy{}
 
 	err = json.Unmarshal(data, &varCachePolicy)

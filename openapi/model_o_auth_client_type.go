@@ -46,7 +46,7 @@ func (v *OAuthClientType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = OAUTHCLIENTTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

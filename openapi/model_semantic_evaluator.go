@@ -20,6 +20,9 @@ import (
 type SemanticEvaluator struct {
 	AgentSemanticEvaluator       *AgentSemanticEvaluator
 	InteractionSemanticEvaluator *InteractionSemanticEvaluator
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // AgentSemanticEvaluatorAsSemanticEvaluator is a convenience function that returns AgentSemanticEvaluator wrapped in SemanticEvaluator
@@ -38,52 +41,41 @@ func InteractionSemanticEvaluatorAsSemanticEvaluator(v *InteractionSemanticEvalu
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *SemanticEvaluator) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into AgentSemanticEvaluator
-	err = newStrictDecoder(data).Decode(&dst.AgentSemanticEvaluator)
-	if err == nil {
-		jsonAgentSemanticEvaluator, _ := json.Marshal(dst.AgentSemanticEvaluator)
-		if string(jsonAgentSemanticEvaluator) == "{}" { // empty struct
-			dst.AgentSemanticEvaluator = nil
-		} else {
-			if err = validator.Validate(dst.AgentSemanticEvaluator); err != nil {
-				dst.AgentSemanticEvaluator = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.AgentSemanticEvaluator = nil
+	*dst = SemanticEvaluator{}
+	var tag struct {
+		Discriminator *string `json:"type"`
 	}
-
-	// try to unmarshal data into InteractionSemanticEvaluator
-	err = newStrictDecoder(data).Decode(&dst.InteractionSemanticEvaluator)
-	if err == nil {
-		jsonInteractionSemanticEvaluator, _ := json.Marshal(dst.InteractionSemanticEvaluator)
-		if string(jsonInteractionSemanticEvaluator) == "{}" { // empty struct
-			dst.InteractionSemanticEvaluator = nil
-		} else {
-			if err = validator.Validate(dst.InteractionSemanticEvaluator); err != nil {
-				dst.InteractionSemanticEvaluator = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.InteractionSemanticEvaluator = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.AgentSemanticEvaluator = nil
-		dst.InteractionSemanticEvaluator = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(SemanticEvaluator)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(SemanticEvaluator)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing SemanticEvaluator type")
+	}
+	switch *tag.Discriminator {
+	case "interaction":
+		var value InteractionSemanticEvaluator
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.InteractionSemanticEvaluator = &value
+		return nil
+	case "agent":
+		var value AgentSemanticEvaluator
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.AgentSemanticEvaluator = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src SemanticEvaluator) MarshalJSON() ([]byte, error) {
 
 	if src.InteractionSemanticEvaluator != nil {
 		return json.Marshal(&src.InteractionSemanticEvaluator)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *SemanticEvaluator) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj SemanticEvaluator) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

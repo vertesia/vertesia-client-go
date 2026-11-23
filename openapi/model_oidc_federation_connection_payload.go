@@ -24,7 +24,7 @@ type OidcFederationConnectionPayload struct {
 	Issuer  string  `json:"issuer"`
 	JwksUri *string `json:"jwks_uri,omitempty"`
 	// Exact top-level verified token claim matched to SCIM externalId within the owning provisioning account.
-	ExternalIdClaim   string   `json:"external_id_claim" validate:"regexp=\\\\S"`
+	ExternalIdClaim   string   `json:"external_id_claim"`
 	AllowedAudiences  []string `json:"allowed_audiences"`
 	AllowedAlgorithms []string `json:"allowed_algorithms"`
 	SubjectTokenType  string   `json:"subject_token_type"`
@@ -547,6 +547,13 @@ func (o *OidcFederationConnectionPayload) UnmarshalJSON(data []byte) (err error)
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "issuer", "external_id_claim", "subject_token_type", "max_token_ttl_seconds", "enabled"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

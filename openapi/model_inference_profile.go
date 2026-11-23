@@ -21,9 +21,9 @@ var _ MappedNullable = &InferenceProfile{}
 // InferenceProfile A reusable environment, model and inference parameter preset. Credentials remain in the environment.
 type InferenceProfile struct {
 	// Editable display name.
-	Name         *string       `json:"name,omitempty" validate:"regexp=\\\\S"`
+	Name         *string       `json:"name,omitempty"`
 	Description  *string       `json:"description,omitempty"`
-	Environment  string        `json:"environment" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Environment  string        `json:"environment"`
 	Model        *string       `json:"model,omitempty"`
 	ModelOptions *ModelOptions `json:"model_options,omitempty"`
 }
@@ -245,6 +245,13 @@ func (o *InferenceProfile) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"environment"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

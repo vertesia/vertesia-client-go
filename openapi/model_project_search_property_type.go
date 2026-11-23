@@ -58,7 +58,7 @@ func (v *ProjectSearchPropertyType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PROJECTSEARCHPROPERTYTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

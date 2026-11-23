@@ -20,9 +20,9 @@ var _ MappedNullable = &ViewKeyTermDefinition{}
 
 // ViewKeyTermDefinition struct for ViewKeyTermDefinition
 type ViewKeyTermDefinition struct {
-	Id       string              `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
+	Id       string              `json:"id"`
 	Label    string              `json:"label"`
-	Field    *string             `json:"field,omitempty" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
+	Field    *string             `json:"field,omitempty"`
 	Type     ViewSearchFieldType `json:"type"`
 	Multiple *bool               `json:"multiple,omitempty"`
 	Operator *string             `json:"operator,omitempty"`
@@ -264,6 +264,13 @@ func (o *ViewKeyTermDefinition) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "label", "type"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

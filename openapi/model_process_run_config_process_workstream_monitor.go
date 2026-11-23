@@ -175,6 +175,13 @@ func (o *ProcessRunConfigProcessWorkstreamMonitor) UnmarshalJSON(data []byte) (e
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"monitor_workflow_id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varProcessRunConfigProcessWorkstreamMonitor := _ProcessRunConfigProcessWorkstreamMonitor{}
 
 	err = json.Unmarshal(data, &varProcessRunConfigProcessWorkstreamMonitor)

@@ -492,6 +492,13 @@ func (o *AccountApiKeyWithValue) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "name", "account", "enabled", "created_by", "updated_by", "created_at", "updated_at", "scope", "profile", "value"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAccountApiKeyWithValue := _AccountApiKeyWithValue{}
 
 	err = json.Unmarshal(data, &varAccountApiKeyWithValue)

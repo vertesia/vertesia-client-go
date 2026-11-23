@@ -46,7 +46,7 @@ func (v *DynamicScalingTypes) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = DYNAMICSCALINGTYPES_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

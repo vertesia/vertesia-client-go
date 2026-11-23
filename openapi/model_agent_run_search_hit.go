@@ -1014,6 +1014,13 @@ func (o *AgentRunSearchHit) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "score", "status", "started_at", "started_by", "interactive", "created_at", "updated_at"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAgentRunSearchHit := _AgentRunSearchHit{}
 
 	err = json.Unmarshal(data, &varAgentRunSearchHit)

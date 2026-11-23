@@ -165,6 +165,13 @@ func (o *AppGithubRepositorySetup) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"default_branch", "selected_branch"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAppGithubRepositorySetup := _AppGithubRepositorySetup{}
 
 	err = json.Unmarshal(data, &varAppGithubRepositorySetup)

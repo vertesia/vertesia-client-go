@@ -21,10 +21,10 @@ var _ MappedNullable = &CreateDelegationGrantPayload{}
 
 // CreateDelegationGrantPayload struct for CreateDelegationGrantPayload
 type CreateDelegationGrantPayload struct {
-	ScheduleId         string       `json:"schedule_id" validate:"regexp=^[a-f0-9]{24}$"`
-	Subject            string       `json:"subject" validate:"regexp=^[a-f0-9]{24}$"`
-	OutputCollectionId string       `json:"output_collection_id" validate:"regexp=^[a-f0-9]{24}$"`
-	PolicyHash         string       `json:"policy_hash" validate:"regexp=^[a-f0-9]{64}$"`
+	ScheduleId         string       `json:"schedule_id"`
+	Subject            string       `json:"subject"`
+	OutputCollectionId string       `json:"output_collection_id"`
+	PolicyHash         string       `json:"policy_hash"`
 	ExpiresAt          NullableTime `json:"expires_at"`
 }
 
@@ -215,6 +215,13 @@ func (o *CreateDelegationGrantPayload) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"schedule_id", "subject", "output_collection_id", "policy_hash"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

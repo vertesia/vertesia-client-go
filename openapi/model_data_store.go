@@ -650,6 +650,13 @@ func (o *DataStore) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "name", "updated_by", "created_by", "created_at", "updated_at", "status", "schema_version", "table_count", "total_rows", "storage_bytes", "version_count", "schema", "gcs_bucket", "gcs_path"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDataStore := _DataStore{}
 
 	err = json.Unmarshal(data, &varDataStore)

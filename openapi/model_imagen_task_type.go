@@ -60,7 +60,7 @@ func (v *ImagenTaskType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = IMAGENTASKTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

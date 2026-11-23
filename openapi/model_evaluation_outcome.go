@@ -48,7 +48,7 @@ func (v *EvaluationOutcome) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = EVALUATIONOUTCOME_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

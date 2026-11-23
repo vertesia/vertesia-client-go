@@ -54,7 +54,7 @@ func (v *ContentNature) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = CONTENTNATURE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

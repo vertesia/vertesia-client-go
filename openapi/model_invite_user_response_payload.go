@@ -103,6 +103,13 @@ func (o *InviteUserResponsePayload) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"action"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varInviteUserResponsePayload := _InviteUserResponsePayload{}
 
 	err = json.Unmarshal(data, &varInviteUserResponsePayload)

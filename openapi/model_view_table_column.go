@@ -20,13 +20,13 @@ var _ MappedNullable = &ViewTableColumn{}
 
 // ViewTableColumn struct for ViewTableColumn
 type ViewTableColumn struct {
-	Field      string                 `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
+	Field      string                 `json:"field"`
 	Label      *string                `json:"label,omitempty"`
 	Format     *ViewResultFieldFormat `json:"format,omitempty"`
 	Fallback   *string                `json:"fallback,omitempty"`
 	Width      *float32               `json:"width,omitempty"`
 	Sortable   *bool                  `json:"sortable,omitempty"`
-	SortOption *string                `json:"sort_option,omitempty" validate:"regexp=^[a-z][a-z0-9_-]*$"`
+	SortOption *string                `json:"sort_option,omitempty"`
 }
 
 type _ViewTableColumn ViewTableColumn
@@ -316,6 +316,13 @@ func (o *ViewTableColumn) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"field"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

@@ -22,12 +22,12 @@ var _ MappedNullable = &InferenceProfileRecord{}
 // InferenceProfileRecord A project-scoped inference profile stored as a MongoDB document.
 type InferenceProfileRecord struct {
 	// Editable display name, independent of the stable profile ID.
-	Name         string        `json:"name" validate:"regexp=\\\\S"`
+	Name         string        `json:"name"`
 	Description  *string       `json:"description,omitempty"`
-	Environment  string        `json:"environment" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Environment  string        `json:"environment"`
 	Model        *string       `json:"model,omitempty"`
 	ModelOptions *ModelOptions `json:"model_options,omitempty"`
-	Id           string        `json:"id" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Id           string        `json:"id"`
 	Project      string        `json:"project"`
 	CreatedAt    time.Time     `json:"created_at"`
 	UpdatedAt    time.Time     `json:"updated_at"`
@@ -350,6 +350,13 @@ func (o *InferenceProfileRecord) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "environment", "id", "project", "created_at", "updated_at"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

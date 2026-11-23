@@ -23,7 +23,7 @@ var _ MappedNullable = &PromptTemplateCreatePayload{}
 type PromptTemplateCreatePayload struct {
 	Name string `json:"name"`
 	// The ID of the prompt this one derives from, as 24 hexadecimal characters.
-	Parent          *string                `json:"parent,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	Parent          *string                `json:"parent,omitempty"`
 	Description     *string                `json:"description,omitempty"`
 	TestData        map[string]interface{} `json:"test_data,omitempty"`
 	Script          *string                `json:"script,omitempty"`
@@ -438,6 +438,13 @@ func (o *PromptTemplateCreatePayload) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "role", "content", "content_type"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

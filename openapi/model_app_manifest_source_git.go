@@ -319,6 +319,13 @@ func (o *AppManifestSourceGit) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"url"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAppManifestSourceGit := _AppManifestSourceGit{}
 
 	err = json.Unmarshal(data, &varAppManifestSourceGit)

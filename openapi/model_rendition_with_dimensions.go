@@ -159,6 +159,13 @@ func (o *RenditionWithDimensions) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "content", "dimensions"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varRenditionWithDimensions := _RenditionWithDimensions{}
 
 	err = json.Unmarshal(data, &varRenditionWithDimensions)

@@ -48,7 +48,7 @@ func (v *WebsiteCredentialTotpAlgorithm) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = WEBSITECREDENTIALTOTPALGORITHM_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

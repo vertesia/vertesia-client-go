@@ -555,6 +555,13 @@ func (o *OAuthGrant) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"grant_id", "client_id", "client_name", "user_id", "account_id", "project_id", "resource", "status", "token_count", "granted_at", "created_at"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varOAuthGrant := _OAuthGrant{}
 
 	err = json.Unmarshal(data, &varOAuthGrant)

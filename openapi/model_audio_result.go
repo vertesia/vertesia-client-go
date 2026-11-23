@@ -21,8 +21,8 @@ var _ MappedNullable = &AudioResult{}
 // AudioResult struct for AudioResult
 type AudioResult struct {
 	Type                 string  `json:"type"`
-	Value                string  `json:"value" validate:"regexp=^(?:gs|s3):\\/\\/[^\\/]+\\/.+|^artifact:.+"`
-	MimeType             string  `json:"mime_type" validate:"regexp=^audio\\/.*"`
+	Value                string  `json:"value"`
+	MimeType             string  `json:"mime_type"`
 	Container            *string `json:"container,omitempty"`
 	Codec                *string `json:"codec,omitempty"`
 	SampleRate           *int32  `json:"sample_rate,omitempty"`
@@ -378,6 +378,13 @@ func (o *AudioResult) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type", "value", "mime_type"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

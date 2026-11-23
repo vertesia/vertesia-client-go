@@ -340,6 +340,13 @@ func (o *ServiceAccountTokenRequest) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type", "account_id", "project_id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varServiceAccountTokenRequest := _ServiceAccountTokenRequest{}
 
 	err = json.Unmarshal(data, &varServiceAccountTokenRequest)

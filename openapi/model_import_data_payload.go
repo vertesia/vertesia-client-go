@@ -21,7 +21,7 @@ var _ MappedNullable = &ImportDataPayload{}
 // ImportDataPayload Payload for importing data into tables.
 type ImportDataPayload struct {
 	// Optional client-generated Mongo ObjectId for idempotent retries. Generate once before submitting, then reuse with identical input. New IDs must be less than 24 hours old; existing jobs are returned without executing again, and reusing an ID with different input is rejected with 422. Poll GET /data/:storeId/import/:importId after a timeout.
-	ImportId *string `json:"import_id,omitempty" validate:"regexp=^[0-9a-f]{24}$"`
+	ImportId *string `json:"import_id,omitempty"`
 	// Map of table name to data specification
 	Tables map[string]ImportTableData `json:"tables"`
 	// Import mode
@@ -196,6 +196,13 @@ func (o *ImportDataPayload) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"mode", "message"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

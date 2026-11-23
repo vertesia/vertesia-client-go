@@ -254,6 +254,13 @@ func (o *S3MultipartUploadSession) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"protocol", "id", "path", "part_size", "upload_id"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varS3MultipartUploadSession := _S3MultipartUploadSession{}
 
 	err = json.Unmarshal(data, &varS3MultipartUploadSession)

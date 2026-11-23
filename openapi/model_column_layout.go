@@ -244,6 +244,13 @@ func (o *ColumnLayout) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"field", "name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varColumnLayout := _ColumnLayout{}
 
 	err = json.Unmarshal(data, &varColumnLayout)

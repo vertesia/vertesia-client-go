@@ -546,6 +546,13 @@ func (o *DSLActivityStep) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type", "name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDSLActivityStep := _DSLActivityStep{}
 
 	err = json.Unmarshal(data, &varDSLActivityStep)

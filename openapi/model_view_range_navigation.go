@@ -20,14 +20,14 @@ var _ MappedNullable = &ViewRangeNavigation{}
 
 // ViewRangeNavigation struct for ViewRangeNavigation
 type ViewRangeNavigation struct {
-	Id           string                `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
+	Id           string                `json:"id"`
 	Label        string                `json:"label"`
 	Presentation *string               `json:"presentation,omitempty"`
 	MultiSelect  *bool                 `json:"multi_select,omitempty"`
 	Order        *float32              `json:"order,omitempty"`
 	Renderer     *string               `json:"renderer,omitempty"`
 	Source       string                `json:"source"`
-	Field        string                `json:"field" validate:"regexp=^[A-Za-z0-9_]+(?:\\\\.[A-Za-z0-9_]+)*$"`
+	Field        string                `json:"field"`
 	Ranges       []ViewRangeDefinition `json:"ranges"`
 }
 
@@ -356,6 +356,13 @@ func (o *ViewRangeNavigation) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "label", "source", "field"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

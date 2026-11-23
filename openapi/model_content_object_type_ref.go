@@ -13,12 +13,16 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
+	"gopkg.in/validator.v2"
 )
 
 // ContentObjectTypeRef - struct for ContentObjectTypeRef
 type ContentObjectTypeRef struct {
 	InCodeTypeRef *InCodeTypeRef
 	StoredTypeRef *StoredTypeRef
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // InCodeTypeRefAsContentObjectTypeRef is a convenience function that returns InCodeTypeRef wrapped in ContentObjectTypeRef
@@ -39,15 +43,21 @@ func StoredTypeRefAsContentObjectTypeRef(v *StoredTypeRef) ContentObjectTypeRef 
 func (dst *ContentObjectTypeRef) UnmarshalJSON(data []byte) error {
 	*dst = ContentObjectTypeRef{}
 	var tag struct {
-		Discriminator string `json:"ref_type"`
+		Discriminator *string `json:"ref_type"`
 	}
 	if err := json.Unmarshal(data, &tag); err != nil {
 		return err
 	}
-	switch tag.Discriminator {
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing ContentObjectTypeRef ref_type")
+	}
+	switch *tag.Discriminator {
 	case "stored":
 		var value StoredTypeRef
 		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
 			return err
 		}
 		dst.StoredTypeRef = &value
@@ -57,10 +67,15 @@ func (dst *ContentObjectTypeRef) UnmarshalJSON(data []byte) error {
 		if err := json.Unmarshal(data, &value); err != nil {
 			return err
 		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
 		dst.InCodeTypeRef = &value
 		return nil
 	default:
-		return fmt.Errorf("unknown ContentObjectTypeRef ref_type %q", tag.Discriminator)
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -72,6 +87,10 @@ func (src ContentObjectTypeRef) MarshalJSON() ([]byte, error) {
 
 	if src.StoredTypeRef != nil {
 		return json.Marshal(&src.StoredTypeRef)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -91,6 +110,10 @@ func (obj *ContentObjectTypeRef) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -105,6 +128,10 @@ func (obj ContentObjectTypeRef) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

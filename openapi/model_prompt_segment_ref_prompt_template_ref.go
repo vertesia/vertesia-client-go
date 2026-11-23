@@ -204,6 +204,13 @@ func (o *PromptSegmentRefPromptTemplateRef) UnmarshalJSON(data []byte) (err erro
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "type"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varPromptSegmentRefPromptTemplateRef := _PromptSegmentRefPromptTemplateRef{}
 
 	err = json.Unmarshal(data, &varPromptSegmentRefPromptTemplateRef)

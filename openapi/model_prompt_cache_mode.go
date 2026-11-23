@@ -48,7 +48,7 @@ func (v *PromptCacheMode) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PROMPTCACHEMODE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

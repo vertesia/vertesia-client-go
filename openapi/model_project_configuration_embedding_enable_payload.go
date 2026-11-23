@@ -176,6 +176,13 @@ func (o *ProjectConfigurationEmbeddingEnablePayload) UnmarshalJSON(data []byte) 
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"environment"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varProjectConfigurationEmbeddingEnablePayload := _ProjectConfigurationEmbeddingEnablePayload{}
 
 	err = json.Unmarshal(data, &varProjectConfigurationEmbeddingEnablePayload)

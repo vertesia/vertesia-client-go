@@ -10,6 +10,8 @@ API version: 1.6.0-dev.20261120.123957Z
 
 package openapi
 
+import "gopkg.in/validator.v2"
+
 import (
 	"encoding/json"
 	"fmt"
@@ -19,10 +21,63 @@ import (
 type McpConnectionParameter struct {
 	McpPublicParameter *McpPublicParameter
 	McpSecretParameter *McpSecretParameter
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
-// Unmarshal JSON data into any of the pointers in the struct
+// UnmarshalJSON decodes a known variant, or keeps the payload in Raw when the generated
+// decoder cannot pick a single known variant.
 func (dst *McpConnectionParameter) UnmarshalJSON(data []byte) error {
+	*dst = McpConnectionParameter{}
+	var tag struct {
+		Value *string `json:"type"`
+	}
+	if json.Unmarshal(data, &tag) == nil && tag.Value != nil {
+		switch *tag.Value {
+		case "string":
+			var value McpPublicParameter
+			if err := json.Unmarshal(data, &value); err != nil {
+				return err
+			}
+			if err := validator.Validate(&value); err != nil {
+				return err
+			}
+			dst.McpPublicParameter = &value
+			return nil
+		case "secret":
+			var value McpSecretParameter
+			if err := json.Unmarshal(data, &value); err != nil {
+				return err
+			}
+			if err := validator.Validate(&value); err != nil {
+				return err
+			}
+			dst.McpSecretParameter = &value
+			return nil
+		default:
+			// A variant added after this client was generated: keep it as the server sent it.
+			dst.Raw = append(json.RawMessage(nil), data...)
+			return nil
+		}
+	}
+	err := dst.unmarshalVariantJSON(data)
+	if err == nil {
+		return nil
+	}
+	*dst = McpConnectionParameter{}
+	if string(data) == "null" || !json.Valid(data) {
+		return err
+	}
+	// A variant added after this client was generated: keep it as the server sent it.
+	dst.Raw = append(json.RawMessage(nil), data...)
+	return nil
+}
+
+// unmarshalVariantJSON is the generated decoder of the known variants.
+//
+// Unmarshal JSON data into any of the pointers in the struct
+func (dst *McpConnectionParameter) unmarshalVariantJSON(data []byte) error {
 	var err error
 	// try to unmarshal JSON data into McpPublicParameter
 	err = json.Unmarshal(data, &dst.McpPublicParameter)
@@ -61,6 +116,10 @@ func (src McpConnectionParameter) MarshalJSON() ([]byte, error) {
 
 	if src.McpSecretParameter != nil {
 		return json.Marshal(&src.McpSecretParameter)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in anyOf schemas

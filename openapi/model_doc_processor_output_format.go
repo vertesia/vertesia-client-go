@@ -44,7 +44,7 @@ func (v *DocProcessorOutputFormat) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = DOCPROCESSOROUTPUTFORMAT_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

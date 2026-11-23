@@ -20,6 +20,9 @@ import (
 type DashboardDataSource struct {
 	DashboardSqlDataSource                *DashboardSqlDataSource
 	DashboardStoreElasticsearchDataSource *DashboardStoreElasticsearchDataSource
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // DashboardSqlDataSourceAsDashboardDataSource is a convenience function that returns DashboardSqlDataSource wrapped in DashboardDataSource
@@ -38,52 +41,41 @@ func DashboardStoreElasticsearchDataSourceAsDashboardDataSource(v *DashboardStor
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *DashboardDataSource) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into DashboardSqlDataSource
-	err = newStrictDecoder(data).Decode(&dst.DashboardSqlDataSource)
-	if err == nil {
-		jsonDashboardSqlDataSource, _ := json.Marshal(dst.DashboardSqlDataSource)
-		if string(jsonDashboardSqlDataSource) == "{}" { // empty struct
-			dst.DashboardSqlDataSource = nil
-		} else {
-			if err = validator.Validate(dst.DashboardSqlDataSource); err != nil {
-				dst.DashboardSqlDataSource = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.DashboardSqlDataSource = nil
+	*dst = DashboardDataSource{}
+	var tag struct {
+		Discriminator *string `json:"kind"`
 	}
-
-	// try to unmarshal data into DashboardStoreElasticsearchDataSource
-	err = newStrictDecoder(data).Decode(&dst.DashboardStoreElasticsearchDataSource)
-	if err == nil {
-		jsonDashboardStoreElasticsearchDataSource, _ := json.Marshal(dst.DashboardStoreElasticsearchDataSource)
-		if string(jsonDashboardStoreElasticsearchDataSource) == "{}" { // empty struct
-			dst.DashboardStoreElasticsearchDataSource = nil
-		} else {
-			if err = validator.Validate(dst.DashboardStoreElasticsearchDataSource); err != nil {
-				dst.DashboardStoreElasticsearchDataSource = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.DashboardStoreElasticsearchDataSource = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.DashboardSqlDataSource = nil
-		dst.DashboardStoreElasticsearchDataSource = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(DashboardDataSource)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(DashboardDataSource)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing DashboardDataSource kind")
+	}
+	switch *tag.Discriminator {
+	case "data_sql":
+		var value DashboardSqlDataSource
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.DashboardSqlDataSource = &value
+		return nil
+	case "store_es_dsl":
+		var value DashboardStoreElasticsearchDataSource
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.DashboardStoreElasticsearchDataSource = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src DashboardDataSource) MarshalJSON() ([]byte, error) {
 
 	if src.DashboardStoreElasticsearchDataSource != nil {
 		return json.Marshal(&src.DashboardStoreElasticsearchDataSource)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *DashboardDataSource) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj DashboardDataSource) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

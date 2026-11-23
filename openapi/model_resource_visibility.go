@@ -48,7 +48,7 @@ func (v *ResourceVisibility) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = RESOURCEVISIBILITY_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

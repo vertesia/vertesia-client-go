@@ -19,7 +19,7 @@ var _ MappedNullable = &UpdateAccountApiKeyPayload{}
 
 // UpdateAccountApiKeyPayload struct for UpdateAccountApiKeyPayload
 type UpdateAccountApiKeyPayload struct {
-	Name    *string `json:"name,omitempty" validate:"regexp=\\\\S"`
+	Name    *string `json:"name,omitempty"`
 	Enabled *bool   `json:"enabled,omitempty"`
 }
 

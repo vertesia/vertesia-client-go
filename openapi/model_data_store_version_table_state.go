@@ -133,6 +133,13 @@ func (o *DataStoreVersionTableState) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"row_count", "checksum"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDataStoreVersionTableState := _DataStoreVersionTableState{}
 
 	err = json.Unmarshal(data, &varDataStoreVersionTableState)

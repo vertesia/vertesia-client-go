@@ -48,7 +48,7 @@ func (v *SupportedEmbeddingTypes) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = SUPPORTEDEMBEDDINGTYPES_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

@@ -177,6 +177,13 @@ func (o *EventIngestChannelMutationResponse) UnmarshalJSON(data []byte) (err err
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"channel"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varEventIngestChannelMutationResponse := _EventIngestChannelMutationResponse{}
 
 	err = json.Unmarshal(data, &varEventIngestChannelMutationResponse)

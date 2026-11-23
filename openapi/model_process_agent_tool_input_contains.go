@@ -213,6 +213,13 @@ func (o *ProcessAgentToolInputContains) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"field", "contains"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varProcessAgentToolInputContains := _ProcessAgentToolInputContains{}
 
 	err = json.Unmarshal(data, &varProcessAgentToolInputContains)

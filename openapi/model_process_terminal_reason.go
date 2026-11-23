@@ -44,7 +44,7 @@ func (v *ProcessTerminalReason) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PROCESSTERMINALREASON_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

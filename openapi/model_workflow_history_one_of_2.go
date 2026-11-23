@@ -205,6 +205,13 @@ func (o *WorkflowHistoryOneOf2) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"type"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varWorkflowHistoryOneOf2 := _WorkflowHistoryOneOf2{}
 
 	err = json.Unmarshal(data, &varWorkflowHistoryOneOf2)

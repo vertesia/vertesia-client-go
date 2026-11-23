@@ -48,7 +48,7 @@ func (v *IntakeVisionDetail) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = INTAKEVISIONDETAIL_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

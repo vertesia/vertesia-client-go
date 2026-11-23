@@ -635,6 +635,13 @@ func (o *DSLWorkflowDefinitionResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "id", "edit_revision", "updated_by", "created_by", "created_at", "updated_at", "spec_format"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDSLWorkflowDefinitionResponse := _DSLWorkflowDefinitionResponse{}
 
 	err = json.Unmarshal(data, &varDSLWorkflowDefinitionResponse)

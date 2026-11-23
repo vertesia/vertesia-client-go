@@ -48,7 +48,7 @@ func (v *ViewActionPlacement) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = VIEWACTIONPLACEMENT_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

@@ -23,6 +23,9 @@ type EventDeliveryTargetInput struct {
 	ProcessEventDeliveryTarget       *ProcessEventDeliveryTarget
 	WebhookEventDeliveryTargetInput  *WebhookEventDeliveryTargetInput
 	WorkflowEventDeliveryTargetInput *WorkflowEventDeliveryTargetInput
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // AgentEventDeliveryTargetAsEventDeliveryTargetInput is a convenience function that returns AgentEventDeliveryTarget wrapped in EventDeliveryTargetInput
@@ -62,106 +65,71 @@ func WorkflowEventDeliveryTargetInputAsEventDeliveryTargetInput(v *WorkflowEvent
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *EventDeliveryTargetInput) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into AgentEventDeliveryTarget
-	err = newStrictDecoder(data).Decode(&dst.AgentEventDeliveryTarget)
-	if err == nil {
-		jsonAgentEventDeliveryTarget, _ := json.Marshal(dst.AgentEventDeliveryTarget)
-		if string(jsonAgentEventDeliveryTarget) == "{}" { // empty struct
-			dst.AgentEventDeliveryTarget = nil
-		} else {
-			if err = validator.Validate(dst.AgentEventDeliveryTarget); err != nil {
-				dst.AgentEventDeliveryTarget = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.AgentEventDeliveryTarget = nil
+	*dst = EventDeliveryTargetInput{}
+	var tag struct {
+		Discriminator *string `json:"type"`
 	}
-
-	// try to unmarshal data into AppEventDeliveryTargetInput
-	err = newStrictDecoder(data).Decode(&dst.AppEventDeliveryTargetInput)
-	if err == nil {
-		jsonAppEventDeliveryTargetInput, _ := json.Marshal(dst.AppEventDeliveryTargetInput)
-		if string(jsonAppEventDeliveryTargetInput) == "{}" { // empty struct
-			dst.AppEventDeliveryTargetInput = nil
-		} else {
-			if err = validator.Validate(dst.AppEventDeliveryTargetInput); err != nil {
-				dst.AppEventDeliveryTargetInput = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.AppEventDeliveryTargetInput = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into ProcessEventDeliveryTarget
-	err = newStrictDecoder(data).Decode(&dst.ProcessEventDeliveryTarget)
-	if err == nil {
-		jsonProcessEventDeliveryTarget, _ := json.Marshal(dst.ProcessEventDeliveryTarget)
-		if string(jsonProcessEventDeliveryTarget) == "{}" { // empty struct
-			dst.ProcessEventDeliveryTarget = nil
-		} else {
-			if err = validator.Validate(dst.ProcessEventDeliveryTarget); err != nil {
-				dst.ProcessEventDeliveryTarget = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ProcessEventDeliveryTarget = nil
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing EventDeliveryTargetInput type")
 	}
-
-	// try to unmarshal data into WebhookEventDeliveryTargetInput
-	err = newStrictDecoder(data).Decode(&dst.WebhookEventDeliveryTargetInput)
-	if err == nil {
-		jsonWebhookEventDeliveryTargetInput, _ := json.Marshal(dst.WebhookEventDeliveryTargetInput)
-		if string(jsonWebhookEventDeliveryTargetInput) == "{}" { // empty struct
-			dst.WebhookEventDeliveryTargetInput = nil
-		} else {
-			if err = validator.Validate(dst.WebhookEventDeliveryTargetInput); err != nil {
-				dst.WebhookEventDeliveryTargetInput = nil
-			} else {
-				match++
-			}
+	switch *tag.Discriminator {
+	case "workflow":
+		var value WorkflowEventDeliveryTargetInput
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.WebhookEventDeliveryTargetInput = nil
-	}
-
-	// try to unmarshal data into WorkflowEventDeliveryTargetInput
-	err = newStrictDecoder(data).Decode(&dst.WorkflowEventDeliveryTargetInput)
-	if err == nil {
-		jsonWorkflowEventDeliveryTargetInput, _ := json.Marshal(dst.WorkflowEventDeliveryTargetInput)
-		if string(jsonWorkflowEventDeliveryTargetInput) == "{}" { // empty struct
-			dst.WorkflowEventDeliveryTargetInput = nil
-		} else {
-			if err = validator.Validate(dst.WorkflowEventDeliveryTargetInput); err != nil {
-				dst.WorkflowEventDeliveryTargetInput = nil
-			} else {
-				match++
-			}
+		if err := validator.Validate(&value); err != nil {
+			return err
 		}
-	} else {
-		dst.WorkflowEventDeliveryTargetInput = nil
-	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.AgentEventDeliveryTarget = nil
-		dst.AppEventDeliveryTargetInput = nil
-		dst.ProcessEventDeliveryTarget = nil
-		dst.WebhookEventDeliveryTargetInput = nil
-		dst.WorkflowEventDeliveryTargetInput = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(EventDeliveryTargetInput)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(EventDeliveryTargetInput)")
+		dst.WorkflowEventDeliveryTargetInput = &value
+		return nil
+	case "webhook":
+		var value WebhookEventDeliveryTargetInput
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.WebhookEventDeliveryTargetInput = &value
+		return nil
+	case "app":
+		var value AppEventDeliveryTargetInput
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.AppEventDeliveryTargetInput = &value
+		return nil
+	case "agent":
+		var value AgentEventDeliveryTarget
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.AgentEventDeliveryTarget = &value
+		return nil
+	case "process":
+		var value ProcessEventDeliveryTarget
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ProcessEventDeliveryTarget = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -185,6 +153,10 @@ func (src EventDeliveryTargetInput) MarshalJSON() ([]byte, error) {
 
 	if src.WorkflowEventDeliveryTargetInput != nil {
 		return json.Marshal(&src.WorkflowEventDeliveryTargetInput)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -216,6 +188,10 @@ func (obj *EventDeliveryTargetInput) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -242,6 +218,10 @@ func (obj EventDeliveryTargetInput) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

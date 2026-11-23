@@ -169,6 +169,13 @@ func (o *DashboardStoreElasticsearchDataSource) UnmarshalJSON(data []byte) (err 
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"kind", "dsl"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDashboardStoreElasticsearchDataSource := _DashboardStoreElasticsearchDataSource{}
 
 	err = json.Unmarshal(data, &varDashboardStoreElasticsearchDataSource)

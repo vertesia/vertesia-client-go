@@ -25,7 +25,7 @@ type ProcessDefinitionBody struct {
 	Description   *string                        `json:"description,omitempty"`
 	Initial       string                         `json:"initial"`
 	// Default inference profile for the LLM nodes and supervisor of this process. Do not combine with `environment`, `model` or `model_options`. A process run config selection and a node selection take precedence.
-	InferenceProfile *string `json:"inference_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	InferenceProfile *string `json:"inference_profile,omitempty"`
 	// Default environment id for the LLM nodes and supervisor of this process, set with `model` or alone.
 	Environment *string `json:"environment,omitempty"`
 	// Default model id, in `environment`. A model without an environment is accepted only in definitions saved before environments were required; saving one is rejected.
@@ -468,6 +468,13 @@ func (o *ProcessDefinitionBody) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"format_version", "process", "initial", "context"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

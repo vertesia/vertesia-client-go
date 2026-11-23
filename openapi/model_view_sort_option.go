@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewSortOption{}
 
 // ViewSortOption struct for ViewSortOption
 type ViewSortOption struct {
-	Id    string           `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
+	Id    string           `json:"id"`
 	Label string           `json:"label"`
 	Sort  []ViewSortClause `json:"sort"`
 }
@@ -156,6 +156,13 @@ func (o *ViewSortOption) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "label"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

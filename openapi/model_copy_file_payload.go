@@ -21,9 +21,9 @@ var _ MappedNullable = &CopyFilePayload{}
 // CopyFilePayload struct for CopyFilePayload
 type CopyFilePayload struct {
 	// The file to copy: a path relative to the bucket or a full URI. It must not be blank or contain control characters.
-	Source string `json:"source" validate:"regexp=^[\\\\u0020\\\\u00a0\\\\u1680\\\\u2000-\\\\u200a\\\\u2028\\\\u2029\\\\u202f\\\\u205f\\\\u3000\\\\ufeff]*[^\\\\u0000-\\\\u001f\\\\u007f\\\\u0020\\\\u00a0\\\\u1680\\\\u2000-\\\\u200a\\\\u2028\\\\u2029\\\\u202f\\\\u205f\\\\u3000\\\\ufeff][^\\\\u0000-\\\\u001f\\\\u007f]*$"`
+	Source string `json:"source"`
 	// The object name to copy to, in the source file's bucket. It must not be empty, start with `/` or `\\`, or contain a `..` segment.
-	Dest string `json:"dest" validate:"regexp=^(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*)(?:[\\\\\\/]+(?:\\\\.\\\\.[^\\\\\\/]+|\\\\.(?:[^\\\\\\/.][^\\\\\\/]*)?|[^\\\\\\/.][^\\\\\\/]*))*[\\\\\\/]*$"`
+	Dest string `json:"dest"`
 }
 
 type _CopyFilePayload CopyFilePayload
@@ -130,6 +130,13 @@ func (o *CopyFilePayload) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"source", "dest"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

@@ -176,6 +176,13 @@ func (o *AppPackageEventHook) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "path"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAppPackageEventHook := _AppPackageEventHook{}
 
 	err = json.Unmarshal(data, &varAppPackageEventHook)

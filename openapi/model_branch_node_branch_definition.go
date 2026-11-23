@@ -239,6 +239,13 @@ func (o *BranchNodeBranchDefinition) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "node"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varBranchNodeBranchDefinition := _BranchNodeBranchDefinition{}
 
 	err = json.Unmarshal(data, &varBranchNodeBranchDefinition)

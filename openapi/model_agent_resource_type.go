@@ -64,7 +64,7 @@ func (v *AgentResourceType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = AGENTRESOURCETYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

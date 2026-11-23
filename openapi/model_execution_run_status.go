@@ -50,7 +50,7 @@ func (v *ExecutionRunStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = EXECUTIONRUNSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

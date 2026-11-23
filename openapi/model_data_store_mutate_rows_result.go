@@ -191,6 +191,13 @@ func (o *DataStoreMutateRowsResult) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"version_id", "execution_time_ms"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDataStoreMutateRowsResult := _DataStoreMutateRowsResult{}
 
 	err = json.Unmarshal(data, &varDataStoreMutateRowsResult)

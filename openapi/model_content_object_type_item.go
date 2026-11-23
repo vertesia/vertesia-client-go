@@ -608,6 +608,13 @@ func (o *ContentObjectTypeItem) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "edit_revision", "name", "updated_by", "created_by", "created_at", "updated_at"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varContentObjectTypeItem := _ContentObjectTypeItem{}
 
 	err = json.Unmarshal(data, &varContentObjectTypeItem)

@@ -22,6 +22,9 @@ type EmbeddingsApiInput struct {
 	EmbeddingsApiImageInput *EmbeddingsApiImageInput
 	EmbeddingsApiTextInput  *EmbeddingsApiTextInput
 	EmbeddingsApiVideoInput *EmbeddingsApiVideoInput
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // EmbeddingsApiAudioInputAsEmbeddingsApiInput is a convenience function that returns EmbeddingsApiAudioInput wrapped in EmbeddingsApiInput
@@ -54,88 +57,61 @@ func EmbeddingsApiVideoInputAsEmbeddingsApiInput(v *EmbeddingsApiVideoInput) Emb
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *EmbeddingsApiInput) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into EmbeddingsApiAudioInput
-	err = newStrictDecoder(data).Decode(&dst.EmbeddingsApiAudioInput)
-	if err == nil {
-		jsonEmbeddingsApiAudioInput, _ := json.Marshal(dst.EmbeddingsApiAudioInput)
-		if string(jsonEmbeddingsApiAudioInput) == "{}" { // empty struct
-			dst.EmbeddingsApiAudioInput = nil
-		} else {
-			if err = validator.Validate(dst.EmbeddingsApiAudioInput); err != nil {
-				dst.EmbeddingsApiAudioInput = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.EmbeddingsApiAudioInput = nil
+	*dst = EmbeddingsApiInput{}
+	var tag struct {
+		Discriminator *string `json:"type"`
 	}
-
-	// try to unmarshal data into EmbeddingsApiImageInput
-	err = newStrictDecoder(data).Decode(&dst.EmbeddingsApiImageInput)
-	if err == nil {
-		jsonEmbeddingsApiImageInput, _ := json.Marshal(dst.EmbeddingsApiImageInput)
-		if string(jsonEmbeddingsApiImageInput) == "{}" { // empty struct
-			dst.EmbeddingsApiImageInput = nil
-		} else {
-			if err = validator.Validate(dst.EmbeddingsApiImageInput); err != nil {
-				dst.EmbeddingsApiImageInput = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.EmbeddingsApiImageInput = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into EmbeddingsApiTextInput
-	err = newStrictDecoder(data).Decode(&dst.EmbeddingsApiTextInput)
-	if err == nil {
-		jsonEmbeddingsApiTextInput, _ := json.Marshal(dst.EmbeddingsApiTextInput)
-		if string(jsonEmbeddingsApiTextInput) == "{}" { // empty struct
-			dst.EmbeddingsApiTextInput = nil
-		} else {
-			if err = validator.Validate(dst.EmbeddingsApiTextInput); err != nil {
-				dst.EmbeddingsApiTextInput = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.EmbeddingsApiTextInput = nil
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing EmbeddingsApiInput type")
 	}
-
-	// try to unmarshal data into EmbeddingsApiVideoInput
-	err = newStrictDecoder(data).Decode(&dst.EmbeddingsApiVideoInput)
-	if err == nil {
-		jsonEmbeddingsApiVideoInput, _ := json.Marshal(dst.EmbeddingsApiVideoInput)
-		if string(jsonEmbeddingsApiVideoInput) == "{}" { // empty struct
-			dst.EmbeddingsApiVideoInput = nil
-		} else {
-			if err = validator.Validate(dst.EmbeddingsApiVideoInput); err != nil {
-				dst.EmbeddingsApiVideoInput = nil
-			} else {
-				match++
-			}
+	switch *tag.Discriminator {
+	case "text":
+		var value EmbeddingsApiTextInput
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.EmbeddingsApiVideoInput = nil
-	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.EmbeddingsApiAudioInput = nil
-		dst.EmbeddingsApiImageInput = nil
-		dst.EmbeddingsApiTextInput = nil
-		dst.EmbeddingsApiVideoInput = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(EmbeddingsApiInput)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(EmbeddingsApiInput)")
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.EmbeddingsApiTextInput = &value
+		return nil
+	case "image":
+		var value EmbeddingsApiImageInput
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.EmbeddingsApiImageInput = &value
+		return nil
+	case "video":
+		var value EmbeddingsApiVideoInput
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.EmbeddingsApiVideoInput = &value
+		return nil
+	case "audio":
+		var value EmbeddingsApiAudioInput
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.EmbeddingsApiAudioInput = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -155,6 +131,10 @@ func (src EmbeddingsApiInput) MarshalJSON() ([]byte, error) {
 
 	if src.EmbeddingsApiVideoInput != nil {
 		return json.Marshal(&src.EmbeddingsApiVideoInput)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -182,6 +162,10 @@ func (obj *EmbeddingsApiInput) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -204,6 +188,10 @@ func (obj EmbeddingsApiInput) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

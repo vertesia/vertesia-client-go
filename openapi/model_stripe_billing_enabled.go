@@ -162,6 +162,13 @@ func (o *StripeBillingEnabled) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"status", "billing_method"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varStripeBillingEnabled := _StripeBillingEnabled{}
 
 	err = json.Unmarshal(data, &varStripeBillingEnabled)

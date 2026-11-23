@@ -20,7 +20,7 @@ var _ MappedNullable = &ProjectInferenceProfiles{}
 // ProjectInferenceProfiles Project defaults reference profile MongoDB IDs. Profile definitions are managed through the inference profiles API.
 type ProjectInferenceProfiles struct {
 	// MongoDB ObjectId of the inference profile.
-	DefaultProfile       *string                           `json:"default_profile,omitempty" validate:"regexp=^[a-fA-F0-9]{24}$"`
+	DefaultProfile       *string                           `json:"default_profile,omitempty"`
 	Modality             *ProjectInferenceProfilesModality `json:"modality,omitempty"`
 	System               *ProjectInferenceProfilesSystem   `json:"system,omitempty"`
 	AdditionalProperties map[string]interface{}

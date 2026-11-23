@@ -50,7 +50,7 @@ func (v *AgentToolApprovalClass) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = AGENTTOOLAPPROVALCLASS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

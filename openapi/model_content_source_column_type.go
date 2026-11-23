@@ -74,7 +74,7 @@ func (v *ContentSourceColumnType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = CONTENTSOURCECOLUMNTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

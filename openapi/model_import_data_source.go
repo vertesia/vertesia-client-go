@@ -50,7 +50,7 @@ func (v *ImportDataSource) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = IMPORTDATASOURCE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

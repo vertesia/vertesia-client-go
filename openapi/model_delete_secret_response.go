@@ -103,6 +103,13 @@ func (o *DeleteSecretResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"ok"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDeleteSecretResponse := _DeleteSecretResponse{}
 
 	err = json.Unmarshal(data, &varDeleteSecretResponse)

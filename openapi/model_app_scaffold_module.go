@@ -50,7 +50,7 @@ func (v *AppScaffoldModule) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = APPSCAFFOLDMODULE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

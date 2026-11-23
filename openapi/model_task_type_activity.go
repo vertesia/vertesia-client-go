@@ -44,7 +44,7 @@ func (v *TaskTypeACTIVITY) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = TASKTYPEACTIVITY_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

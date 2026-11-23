@@ -56,7 +56,7 @@ func (v *OAuthGrantSortField) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = OAUTHGRANTSORTFIELD_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

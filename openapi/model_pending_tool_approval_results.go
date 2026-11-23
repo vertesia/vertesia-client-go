@@ -187,6 +187,13 @@ func (o *PendingToolApprovalResults) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"reason", "message", "created_at"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varPendingToolApprovalResults := _PendingToolApprovalResults{}
 
 	err = json.Unmarshal(data, &varPendingToolApprovalResults)

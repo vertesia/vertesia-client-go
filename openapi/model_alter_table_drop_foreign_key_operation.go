@@ -132,6 +132,13 @@ func (o *AlterTableDropForeignKeyOperation) UnmarshalJSON(data []byte) (err erro
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"op", "column"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varAlterTableDropForeignKeyOperation := _AlterTableDropForeignKeyOperation{}
 
 	err = json.Unmarshal(data, &varAlterTableDropForeignKeyOperation)

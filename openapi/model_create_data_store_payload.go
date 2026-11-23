@@ -21,7 +21,7 @@ var _ MappedNullable = &CreateDataStorePayload{}
 // CreateDataStorePayload Payload for creating a new data store.
 type CreateDataStorePayload struct {
 	// Store name (unique within project). 1 to 128 characters; must not contain `/`, `\\` or control characters, start with a dot, or start or end with a space.
-	Name string `json:"name" validate:"regexp=^[^\\\\x00-\\\\x20\\\\x7f-\\\\x9f\\/\\\\\\\\.](?:[^\\\\x00-\\\\x1f\\\\x7f-\\\\x9f\\/\\\\\\\\]*[^\\\\x00-\\\\x20\\\\x7f-\\\\x9f\\/\\\\\\\\])?$"`
+	Name string `json:"name"`
 	// Store description
 	Description *string `json:"description,omitempty"`
 	// Tags for organization
@@ -175,6 +175,13 @@ func (o *CreateDataStorePayload) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

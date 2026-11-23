@@ -20,6 +20,9 @@ import (
 type NodeDefinitionBranchesInner struct {
 	BranchDefinition           *BranchDefinition
 	BranchNodeBranchDefinition *BranchNodeBranchDefinition
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // BranchDefinitionAsNodeDefinitionBranchesInner is a convenience function that returns BranchDefinition wrapped in NodeDefinitionBranchesInner
@@ -36,8 +39,27 @@ func BranchNodeBranchDefinitionAsNodeDefinitionBranchesInner(v *BranchNodeBranch
 	}
 }
 
-// Unmarshal JSON data into one of the pointers in the struct
+// UnmarshalJSON decodes a known variant, or keeps the payload in Raw when the generated
+// decoder cannot pick a single known variant.
 func (dst *NodeDefinitionBranchesInner) UnmarshalJSON(data []byte) error {
+	*dst = NodeDefinitionBranchesInner{}
+	err := dst.unmarshalVariantJSON(data)
+	if err == nil {
+		return nil
+	}
+	*dst = NodeDefinitionBranchesInner{}
+	if string(data) == "null" || !json.Valid(data) {
+		return err
+	}
+	// A variant added after this client was generated: keep it as the server sent it.
+	dst.Raw = append(json.RawMessage(nil), data...)
+	return nil
+}
+
+// unmarshalVariantJSON is the generated decoder of the known variants.
+//
+// Unmarshal JSON data into one of the pointers in the struct
+func (dst *NodeDefinitionBranchesInner) unmarshalVariantJSON(data []byte) error {
 	var err error
 	match := 0
 	// try to unmarshal data into BranchDefinition
@@ -97,6 +119,10 @@ func (src NodeDefinitionBranchesInner) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.BranchNodeBranchDefinition)
 	}
 
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
+	}
+
 	return nil, nil // no data in oneOf schemas
 }
 
@@ -114,6 +140,10 @@ func (obj *NodeDefinitionBranchesInner) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +158,10 @@ func (obj NodeDefinitionBranchesInner) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

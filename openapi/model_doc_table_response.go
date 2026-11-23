@@ -20,6 +20,9 @@ import (
 type DocTableResponse struct {
 	DocTableCsv  *DocTableCsv
 	DocTableJson *DocTableJson
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // DocTableCsvAsDocTableResponse is a convenience function that returns DocTableCsv wrapped in DocTableResponse
@@ -36,8 +39,27 @@ func DocTableJsonAsDocTableResponse(v *DocTableJson) DocTableResponse {
 	}
 }
 
-// Unmarshal JSON data into one of the pointers in the struct
+// UnmarshalJSON decodes a known variant, or keeps the payload in Raw when the generated
+// decoder cannot pick a single known variant.
 func (dst *DocTableResponse) UnmarshalJSON(data []byte) error {
+	*dst = DocTableResponse{}
+	err := dst.unmarshalVariantJSON(data)
+	if err == nil {
+		return nil
+	}
+	*dst = DocTableResponse{}
+	if string(data) == "null" || !json.Valid(data) {
+		return err
+	}
+	// A variant added after this client was generated: keep it as the server sent it.
+	dst.Raw = append(json.RawMessage(nil), data...)
+	return nil
+}
+
+// unmarshalVariantJSON is the generated decoder of the known variants.
+//
+// Unmarshal JSON data into one of the pointers in the struct
+func (dst *DocTableResponse) unmarshalVariantJSON(data []byte) error {
 	var err error
 	match := 0
 	// try to unmarshal data into DocTableCsv
@@ -97,6 +119,10 @@ func (src DocTableResponse) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.DocTableJson)
 	}
 
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
+	}
+
 	return nil, nil // no data in oneOf schemas
 }
 
@@ -114,6 +140,10 @@ func (obj *DocTableResponse) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +158,10 @@ func (obj DocTableResponse) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

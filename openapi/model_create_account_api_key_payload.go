@@ -21,10 +21,10 @@ var _ MappedNullable = &CreateAccountApiKeyPayload{}
 
 // CreateAccountApiKeyPayload struct for CreateAccountApiKeyPayload
 type CreateAccountApiKeyPayload struct {
-	Name                    string     `json:"name" validate:"regexp=\\\\S"`
+	Name                    string     `json:"name"`
 	ExpiresAt               *time.Time `json:"expires_at,omitempty"`
-	ScimEntraTenantId       *string    `json:"scim_entra_tenant_id,omitempty" validate:"regexp=^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"`
-	ScimEntraMembersGroupId *string    `json:"scim_entra_members_group_id,omitempty" validate:"regexp=^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"`
+	ScimEntraTenantId       *string    `json:"scim_entra_tenant_id,omitempty"`
+	ScimEntraMembersGroupId *string    `json:"scim_entra_members_group_id,omitempty"`
 }
 
 type _CreateAccountApiKeyPayload CreateAccountApiKeyPayload
@@ -209,6 +209,13 @@ func (o *CreateAccountApiKeyPayload) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

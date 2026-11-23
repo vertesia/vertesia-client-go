@@ -52,7 +52,7 @@ func (v *AuditAggregationDistinctField) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = AUDITAGGREGATIONDISTINCTFIELD_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

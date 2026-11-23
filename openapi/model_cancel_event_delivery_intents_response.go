@@ -192,6 +192,13 @@ func (o *CancelEventDeliveryIntentsResponse) UnmarshalJSON(data []byte) (err err
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"environment", "cleared_through", "cancelled", "active_untouched"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCancelEventDeliveryIntentsResponse := _CancelEventDeliveryIntentsResponse{}
 
 	err = json.Unmarshal(data, &varCancelEventDeliveryIntentsResponse)

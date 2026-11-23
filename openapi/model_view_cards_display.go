@@ -20,7 +20,7 @@ var _ MappedNullable = &ViewCardsDisplay{}
 
 // ViewCardsDisplay struct for ViewCardsDisplay
 type ViewCardsDisplay struct {
-	Id          string            `json:"id" validate:"regexp=^[a-z][a-z0-9_-]*$"`
+	Id          string            `json:"id"`
 	Label       string            `json:"label"`
 	Renderer    *string           `json:"renderer,omitempty"`
 	PageSize    *float32          `json:"page_size,omitempty"`
@@ -436,6 +436,13 @@ func (o *ViewCardsDisplay) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"id", "label", "type", "title"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

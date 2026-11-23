@@ -159,6 +159,13 @@ func (o *TextSection) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"description", "first_line_index", "last_line_index"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varTextSection := _TextSection{}
 
 	err = json.Unmarshal(data, &varTextSection)

@@ -269,6 +269,13 @@ func (o *InCodePrompt) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"role", "content", "content_type"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varInCodePrompt := _InCodePrompt{}
 
 	err = json.Unmarshal(data, &varInCodePrompt)

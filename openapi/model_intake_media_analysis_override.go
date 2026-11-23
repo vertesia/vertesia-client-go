@@ -20,7 +20,7 @@ var _ MappedNullable = &IntakeMediaAnalysisOverride{}
 // IntakeMediaAnalysisOverride struct for IntakeMediaAnalysisOverride
 type IntakeMediaAnalysisOverride struct {
 	// Interaction ID or qualified name for this media analysis step. Omit to inherit the type/project setting or built-in interaction; image analysis also inherits extraction.interaction.
-	Interaction *string `json:"interaction,omitempty" validate:"regexp=\\\\S"`
+	Interaction *string `json:"interaction,omitempty"`
 	// Execution configuration for this media analysis step only. Omitted fields inherit; inference_profile: null bypasses profile defaults.
 	Config *InteractionExecutionConfiguration `json:"config,omitempty"`
 }

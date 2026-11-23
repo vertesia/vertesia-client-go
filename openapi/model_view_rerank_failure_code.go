@@ -50,7 +50,7 @@ func (v *ViewRerankFailureCode) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = VIEWRERANKFAILURECODE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

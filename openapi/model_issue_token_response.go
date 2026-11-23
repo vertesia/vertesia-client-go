@@ -167,6 +167,13 @@ func (o *IssueTokenResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"token", "token_type"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varIssueTokenResponse := _IssueTokenResponse{}
 
 	err = json.Unmarshal(data, &varIssueTokenResponse)

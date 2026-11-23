@@ -20,6 +20,9 @@ import (
 type UpdateWorkflowDefinitionPayload struct {
 	UpdateWorkflowDefinitionPayloadWithActivities *UpdateWorkflowDefinitionPayloadWithActivities
 	UpdateWorkflowDefinitionPayloadWithSteps      *UpdateWorkflowDefinitionPayloadWithSteps
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // UpdateWorkflowDefinitionPayloadWithActivitiesAsUpdateWorkflowDefinitionPayload is a convenience function that returns UpdateWorkflowDefinitionPayloadWithActivities wrapped in UpdateWorkflowDefinitionPayload
@@ -38,52 +41,41 @@ func UpdateWorkflowDefinitionPayloadWithStepsAsUpdateWorkflowDefinitionPayload(v
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *UpdateWorkflowDefinitionPayload) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into UpdateWorkflowDefinitionPayloadWithActivities
-	err = newStrictDecoder(data).Decode(&dst.UpdateWorkflowDefinitionPayloadWithActivities)
-	if err == nil {
-		jsonUpdateWorkflowDefinitionPayloadWithActivities, _ := json.Marshal(dst.UpdateWorkflowDefinitionPayloadWithActivities)
-		if string(jsonUpdateWorkflowDefinitionPayloadWithActivities) == "{}" { // empty struct
-			dst.UpdateWorkflowDefinitionPayloadWithActivities = nil
-		} else {
-			if err = validator.Validate(dst.UpdateWorkflowDefinitionPayloadWithActivities); err != nil {
-				dst.UpdateWorkflowDefinitionPayloadWithActivities = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.UpdateWorkflowDefinitionPayloadWithActivities = nil
+	*dst = UpdateWorkflowDefinitionPayload{}
+	var tag struct {
+		Discriminator *string `json:"spec_format"`
 	}
-
-	// try to unmarshal data into UpdateWorkflowDefinitionPayloadWithSteps
-	err = newStrictDecoder(data).Decode(&dst.UpdateWorkflowDefinitionPayloadWithSteps)
-	if err == nil {
-		jsonUpdateWorkflowDefinitionPayloadWithSteps, _ := json.Marshal(dst.UpdateWorkflowDefinitionPayloadWithSteps)
-		if string(jsonUpdateWorkflowDefinitionPayloadWithSteps) == "{}" { // empty struct
-			dst.UpdateWorkflowDefinitionPayloadWithSteps = nil
-		} else {
-			if err = validator.Validate(dst.UpdateWorkflowDefinitionPayloadWithSteps); err != nil {
-				dst.UpdateWorkflowDefinitionPayloadWithSteps = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.UpdateWorkflowDefinitionPayloadWithSteps = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.UpdateWorkflowDefinitionPayloadWithActivities = nil
-		dst.UpdateWorkflowDefinitionPayloadWithSteps = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(UpdateWorkflowDefinitionPayload)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(UpdateWorkflowDefinitionPayload)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing UpdateWorkflowDefinitionPayload spec_format")
+	}
+	switch *tag.Discriminator {
+	case "steps":
+		var value UpdateWorkflowDefinitionPayloadWithSteps
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.UpdateWorkflowDefinitionPayloadWithSteps = &value
+		return nil
+	case "activities":
+		var value UpdateWorkflowDefinitionPayloadWithActivities
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.UpdateWorkflowDefinitionPayloadWithActivities = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src UpdateWorkflowDefinitionPayload) MarshalJSON() ([]byte, error) {
 
 	if src.UpdateWorkflowDefinitionPayloadWithSteps != nil {
 		return json.Marshal(&src.UpdateWorkflowDefinitionPayloadWithSteps)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *UpdateWorkflowDefinitionPayload) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj UpdateWorkflowDefinitionPayload) GetActualInstanceValue() interface{} 
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

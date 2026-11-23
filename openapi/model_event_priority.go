@@ -48,7 +48,7 @@ func (v *EventPriority) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = EVENTPRIORITY_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

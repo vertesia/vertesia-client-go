@@ -103,6 +103,13 @@ func (o *PostAgentRunUpdateResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"success"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varPostAgentRunUpdateResponse := _PostAgentRunUpdateResponse{}
 
 	err = json.Unmarshal(data, &varPostAgentRunUpdateResponse)

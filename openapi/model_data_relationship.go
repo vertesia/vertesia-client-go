@@ -286,6 +286,13 @@ func (o *DataRelationship) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "from_table", "from_column", "to_table", "to_column", "relationship_type"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDataRelationship := _DataRelationship{}
 
 	err = json.Unmarshal(data, &varDataRelationship)

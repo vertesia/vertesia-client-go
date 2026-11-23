@@ -20,6 +20,9 @@ import (
 type ProcessTestFixtureResponse struct {
 	ProcessTestFixtureError  *ProcessTestFixtureError
 	ProcessTestFixtureResult *ProcessTestFixtureResult
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // ProcessTestFixtureErrorAsProcessTestFixtureResponse is a convenience function that returns ProcessTestFixtureError wrapped in ProcessTestFixtureResponse
@@ -38,52 +41,41 @@ func ProcessTestFixtureResultAsProcessTestFixtureResponse(v *ProcessTestFixtureR
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *ProcessTestFixtureResponse) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into ProcessTestFixtureError
-	err = newStrictDecoder(data).Decode(&dst.ProcessTestFixtureError)
-	if err == nil {
-		jsonProcessTestFixtureError, _ := json.Marshal(dst.ProcessTestFixtureError)
-		if string(jsonProcessTestFixtureError) == "{}" { // empty struct
-			dst.ProcessTestFixtureError = nil
-		} else {
-			if err = validator.Validate(dst.ProcessTestFixtureError); err != nil {
-				dst.ProcessTestFixtureError = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ProcessTestFixtureError = nil
+	*dst = ProcessTestFixtureResponse{}
+	var tag struct {
+		Discriminator *string `json:"kind"`
 	}
-
-	// try to unmarshal data into ProcessTestFixtureResult
-	err = newStrictDecoder(data).Decode(&dst.ProcessTestFixtureResult)
-	if err == nil {
-		jsonProcessTestFixtureResult, _ := json.Marshal(dst.ProcessTestFixtureResult)
-		if string(jsonProcessTestFixtureResult) == "{}" { // empty struct
-			dst.ProcessTestFixtureResult = nil
-		} else {
-			if err = validator.Validate(dst.ProcessTestFixtureResult); err != nil {
-				dst.ProcessTestFixtureResult = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ProcessTestFixtureResult = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.ProcessTestFixtureError = nil
-		dst.ProcessTestFixtureResult = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(ProcessTestFixtureResponse)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(ProcessTestFixtureResponse)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing ProcessTestFixtureResponse kind")
+	}
+	switch *tag.Discriminator {
+	case "result":
+		var value ProcessTestFixtureResult
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ProcessTestFixtureResult = &value
+		return nil
+	case "error":
+		var value ProcessTestFixtureError
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ProcessTestFixtureError = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src ProcessTestFixtureResponse) MarshalJSON() ([]byte, error) {
 
 	if src.ProcessTestFixtureResult != nil {
 		return json.Marshal(&src.ProcessTestFixtureResult)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *ProcessTestFixtureResponse) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj ProcessTestFixtureResponse) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

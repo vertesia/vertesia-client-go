@@ -20,6 +20,9 @@ import (
 type AgentMessageDetailsFilesInner struct {
 	ConversationFile *ConversationFile
 	String           *string
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // ConversationFileAsAgentMessageDetailsFilesInner is a convenience function that returns ConversationFile wrapped in AgentMessageDetailsFilesInner
@@ -36,8 +39,27 @@ func StringAsAgentMessageDetailsFilesInner(v *string) AgentMessageDetailsFilesIn
 	}
 }
 
-// Unmarshal JSON data into one of the pointers in the struct
+// UnmarshalJSON decodes a known variant, or keeps the payload in Raw when the generated
+// decoder cannot pick a single known variant.
 func (dst *AgentMessageDetailsFilesInner) UnmarshalJSON(data []byte) error {
+	*dst = AgentMessageDetailsFilesInner{}
+	err := dst.unmarshalVariantJSON(data)
+	if err == nil {
+		return nil
+	}
+	*dst = AgentMessageDetailsFilesInner{}
+	if string(data) == "null" || !json.Valid(data) {
+		return err
+	}
+	// A variant added after this client was generated: keep it as the server sent it.
+	dst.Raw = append(json.RawMessage(nil), data...)
+	return nil
+}
+
+// unmarshalVariantJSON is the generated decoder of the known variants.
+//
+// Unmarshal JSON data into one of the pointers in the struct
+func (dst *AgentMessageDetailsFilesInner) unmarshalVariantJSON(data []byte) error {
 	var err error
 	match := 0
 	// try to unmarshal data into ConversationFile
@@ -97,6 +119,10 @@ func (src AgentMessageDetailsFilesInner) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.String)
 	}
 
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
+	}
+
 	return nil, nil // no data in oneOf schemas
 }
 
@@ -114,6 +140,10 @@ func (obj *AgentMessageDetailsFilesInner) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +158,10 @@ func (obj AgentMessageDetailsFilesInner) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

@@ -44,7 +44,7 @@ func (v *ApiKeyTypes) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = APIKEYTYPES_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

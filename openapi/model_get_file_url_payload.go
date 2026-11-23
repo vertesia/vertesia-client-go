@@ -21,7 +21,7 @@ var _ MappedNullable = &GetFileUrlPayload{}
 // GetFileUrlPayload struct for GetFileUrlPayload
 type GetFileUrlPayload struct {
 	// The file path (relative to bucket) or full URI. It must not be blank or contain control characters.
-	File        string  `json:"file" validate:"regexp=^[\\\\u0020\\\\u00a0\\\\u1680\\\\u2000-\\\\u200a\\\\u2028\\\\u2029\\\\u202f\\\\u205f\\\\u3000\\\\ufeff]*[^\\\\u0000-\\\\u001f\\\\u007f\\\\u0020\\\\u00a0\\\\u1680\\\\u2000-\\\\u200a\\\\u2028\\\\u2029\\\\u202f\\\\u205f\\\\u3000\\\\ufeff][^\\\\u0000-\\\\u001f\\\\u007f]*$"`
+	File        string  `json:"file"`
 	Name        *string `json:"name,omitempty"`
 	Disposition *string `json:"disposition,omitempty"`
 }
@@ -173,6 +173,13 @@ func (o *GetFileUrlPayload) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"file"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

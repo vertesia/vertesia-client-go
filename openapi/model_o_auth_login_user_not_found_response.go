@@ -131,6 +131,13 @@ func (o *OAuthLoginUserNotFoundResponse) UnmarshalJSON(data []byte) (err error) 
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"error", "ensure_user_url"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varOAuthLoginUserNotFoundResponse := _OAuthLoginUserNotFoundResponse{}
 
 	err = json.Unmarshal(data, &varOAuthLoginUserNotFoundResponse)

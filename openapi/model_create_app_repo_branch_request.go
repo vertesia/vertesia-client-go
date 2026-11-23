@@ -21,9 +21,9 @@ var _ MappedNullable = &CreateAppRepoBranchRequest{}
 // CreateAppRepoBranchRequest Request to create a branch from an existing branch, tag, or commit.
 type CreateAppRepoBranchRequest struct {
 	// The new branch name.
-	Name string `json:"name" validate:"regexp=\\\\S"`
+	Name string `json:"name"`
 	// The existing branch, tag or commit the new branch starts from.
-	SourceRef string `json:"source_ref" validate:"regexp=\\\\S"`
+	SourceRef string `json:"source_ref"`
 }
 
 type _CreateAppRepoBranchRequest CreateAppRepoBranchRequest
@@ -130,6 +130,13 @@ func (o *CreateAppRepoBranchRequest) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "source_ref"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

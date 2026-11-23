@@ -131,6 +131,13 @@ func (o *OAuthGrantRevokeResponse) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"revoked_tokens", "revoked_consents"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varOAuthGrantRevokeResponse := _OAuthGrantRevokeResponse{}
 
 	err = json.Unmarshal(data, &varOAuthGrantRevokeResponse)

@@ -48,7 +48,7 @@ func (v *WorkflowRuleInputType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = WORKFLOWRULEINPUTTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

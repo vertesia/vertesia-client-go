@@ -159,6 +159,13 @@ func (o *DeleteContentObjectExportResponse) UnmarshalJSON(data []byte) (err erro
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"success", "export_id", "path"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varDeleteContentObjectExportResponse := _DeleteContentObjectExportResponse{}
 
 	err = json.Unmarshal(data, &varDeleteContentObjectExportResponse)

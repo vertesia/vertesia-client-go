@@ -50,7 +50,7 @@ func (v *BrowserUseRiskPolicy) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = BROWSERUSERISKPOLICY_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

@@ -54,7 +54,7 @@ func (v *EventOutboxStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = EVENTOUTBOXSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

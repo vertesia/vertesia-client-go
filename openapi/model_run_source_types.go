@@ -56,7 +56,7 @@ func (v *RunSourceTypes) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = RUNSOURCETYPES_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

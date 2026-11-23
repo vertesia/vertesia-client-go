@@ -20,7 +20,7 @@ var _ MappedNullable = &WebsiteCredentialMetadata{}
 
 // WebsiteCredentialMetadata struct for WebsiteCredentialMetadata
 type WebsiteCredentialMetadata struct {
-	Name           string                         `json:"name" validate:"regexp=\\\\S"`
+	Name           string                         `json:"name"`
 	Websites       []WebsiteCredentialWebsite     `json:"websites"`
 	Username       *string                        `json:"username,omitempty"`
 	UsernameHint   *string                        `json:"username_hint,omitempty"`
@@ -496,6 +496,13 @@ func (o *WebsiteCredentialMetadata) UnmarshalJSON(data []byte) (err error) {
 	for _, requiredProperty := range requiredProperties {
 		if _, exists := allProperties[requiredProperty]; !exists {
 			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
 	}
 

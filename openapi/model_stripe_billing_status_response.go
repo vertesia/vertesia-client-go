@@ -20,6 +20,9 @@ import (
 type StripeBillingStatusResponse struct {
 	StripeBillingDisabled *StripeBillingDisabled
 	StripeBillingEnabled  *StripeBillingEnabled
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // StripeBillingDisabledAsStripeBillingStatusResponse is a convenience function that returns StripeBillingDisabled wrapped in StripeBillingStatusResponse
@@ -38,52 +41,41 @@ func StripeBillingEnabledAsStripeBillingStatusResponse(v *StripeBillingEnabled) 
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *StripeBillingStatusResponse) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into StripeBillingDisabled
-	err = newStrictDecoder(data).Decode(&dst.StripeBillingDisabled)
-	if err == nil {
-		jsonStripeBillingDisabled, _ := json.Marshal(dst.StripeBillingDisabled)
-		if string(jsonStripeBillingDisabled) == "{}" { // empty struct
-			dst.StripeBillingDisabled = nil
-		} else {
-			if err = validator.Validate(dst.StripeBillingDisabled); err != nil {
-				dst.StripeBillingDisabled = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.StripeBillingDisabled = nil
+	*dst = StripeBillingStatusResponse{}
+	var tag struct {
+		Discriminator *string `json:"status"`
 	}
-
-	// try to unmarshal data into StripeBillingEnabled
-	err = newStrictDecoder(data).Decode(&dst.StripeBillingEnabled)
-	if err == nil {
-		jsonStripeBillingEnabled, _ := json.Marshal(dst.StripeBillingEnabled)
-		if string(jsonStripeBillingEnabled) == "{}" { // empty struct
-			dst.StripeBillingEnabled = nil
-		} else {
-			if err = validator.Validate(dst.StripeBillingEnabled); err != nil {
-				dst.StripeBillingEnabled = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.StripeBillingEnabled = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.StripeBillingDisabled = nil
-		dst.StripeBillingEnabled = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(StripeBillingStatusResponse)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(StripeBillingStatusResponse)")
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing StripeBillingStatusResponse status")
+	}
+	switch *tag.Discriminator {
+	case "enabled":
+		var value StripeBillingEnabled
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.StripeBillingEnabled = &value
+		return nil
+	case "disabled":
+		var value StripeBillingDisabled
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.StripeBillingDisabled = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -95,6 +87,10 @@ func (src StripeBillingStatusResponse) MarshalJSON() ([]byte, error) {
 
 	if src.StripeBillingEnabled != nil {
 		return json.Marshal(&src.StripeBillingEnabled)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -114,6 +110,10 @@ func (obj *StripeBillingStatusResponse) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -128,6 +128,10 @@ func (obj StripeBillingStatusResponse) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

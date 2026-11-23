@@ -44,7 +44,7 @@ func (v *SecretKind) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = SECRETKIND_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

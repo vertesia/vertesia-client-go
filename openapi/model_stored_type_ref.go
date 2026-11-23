@@ -197,6 +197,13 @@ func (o *StoredTypeRef) UnmarshalJSON(data []byte) (err error) {
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"ref_type", "id", "name"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varStoredTypeRef := _StoredTypeRef{}
 
 	err = json.Unmarshal(data, &varStoredTypeRef)

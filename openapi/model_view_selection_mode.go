@@ -46,7 +46,7 @@ func (v *ViewSelectionMode) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = VIEWSELECTIONMODE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

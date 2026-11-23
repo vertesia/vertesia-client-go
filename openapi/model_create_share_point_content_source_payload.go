@@ -447,6 +447,13 @@ func (o *CreateSharePointContentSourcePayload) UnmarshalJSON(data []byte) (err e
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"name", "oauth_provider_id", "type", "site_url"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varCreateSharePointContentSourcePayload := _CreateSharePointContentSourcePayload{}
 
 	err = json.Unmarshal(data, &varCreateSharePointContentSourcePayload)

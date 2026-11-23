@@ -52,7 +52,7 @@ func (v *ViewSearchFieldType) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = VIEWSEARCHFIELDTYPE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

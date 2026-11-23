@@ -187,6 +187,13 @@ func (o *ForwardEmailRequestAttachmentsInner) UnmarshalJSON(data []byte) (err er
 		}
 	}
 
+	// A required property that is not nullable cannot be null: it would decode as its zero value.
+	for _, requiredProperty := range []string{"filename", "content_type", "size", "download_url"} {
+		if allProperties[requiredProperty] == nil {
+			return fmt.Errorf("required property %v is null", requiredProperty)
+		}
+	}
+
 	varForwardEmailRequestAttachmentsInner := _ForwardEmailRequestAttachmentsInner{}
 
 	err = json.Unmarshal(data, &varForwardEmailRequestAttachmentsInner)

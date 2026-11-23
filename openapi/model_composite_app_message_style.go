@@ -52,7 +52,7 @@ func (v *CompositeAppMessageStyle) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = COMPOSITEAPPMESSAGESTYLE_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

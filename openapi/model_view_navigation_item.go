@@ -23,6 +23,9 @@ type ViewNavigationItem struct {
 	ViewLocationNavigation   *ViewLocationNavigation
 	ViewRangeNavigation      *ViewRangeNavigation
 	ViewTermsNavigation      *ViewTermsNavigation
+	// Raw holds a variant this client version does not know, as the server sent it.
+	// It is nil for known variants, and MarshalJSON writes it back unchanged.
+	Raw json.RawMessage `json:"-"`
 }
 
 // ViewCollectionNavigationAsViewNavigationItem is a convenience function that returns ViewCollectionNavigation wrapped in ViewNavigationItem
@@ -62,106 +65,71 @@ func ViewTermsNavigationAsViewNavigationItem(v *ViewTermsNavigation) ViewNavigat
 
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *ViewNavigationItem) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into ViewCollectionNavigation
-	err = newStrictDecoder(data).Decode(&dst.ViewCollectionNavigation)
-	if err == nil {
-		jsonViewCollectionNavigation, _ := json.Marshal(dst.ViewCollectionNavigation)
-		if string(jsonViewCollectionNavigation) == "{}" { // empty struct
-			dst.ViewCollectionNavigation = nil
-		} else {
-			if err = validator.Validate(dst.ViewCollectionNavigation); err != nil {
-				dst.ViewCollectionNavigation = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ViewCollectionNavigation = nil
+	*dst = ViewNavigationItem{}
+	var tag struct {
+		Discriminator *string `json:"source"`
 	}
-
-	// try to unmarshal data into ViewHierarchyNavigation
-	err = newStrictDecoder(data).Decode(&dst.ViewHierarchyNavigation)
-	if err == nil {
-		jsonViewHierarchyNavigation, _ := json.Marshal(dst.ViewHierarchyNavigation)
-		if string(jsonViewHierarchyNavigation) == "{}" { // empty struct
-			dst.ViewHierarchyNavigation = nil
-		} else {
-			if err = validator.Validate(dst.ViewHierarchyNavigation); err != nil {
-				dst.ViewHierarchyNavigation = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ViewHierarchyNavigation = nil
+	if err := json.Unmarshal(data, &tag); err != nil {
+		return err
 	}
-
-	// try to unmarshal data into ViewLocationNavigation
-	err = newStrictDecoder(data).Decode(&dst.ViewLocationNavigation)
-	if err == nil {
-		jsonViewLocationNavigation, _ := json.Marshal(dst.ViewLocationNavigation)
-		if string(jsonViewLocationNavigation) == "{}" { // empty struct
-			dst.ViewLocationNavigation = nil
-		} else {
-			if err = validator.Validate(dst.ViewLocationNavigation); err != nil {
-				dst.ViewLocationNavigation = nil
-			} else {
-				match++
-			}
-		}
-	} else {
-		dst.ViewLocationNavigation = nil
+	if tag.Discriminator == nil || *tag.Discriminator == "" {
+		return fmt.Errorf("missing ViewNavigationItem source")
 	}
-
-	// try to unmarshal data into ViewRangeNavigation
-	err = newStrictDecoder(data).Decode(&dst.ViewRangeNavigation)
-	if err == nil {
-		jsonViewRangeNavigation, _ := json.Marshal(dst.ViewRangeNavigation)
-		if string(jsonViewRangeNavigation) == "{}" { // empty struct
-			dst.ViewRangeNavigation = nil
-		} else {
-			if err = validator.Validate(dst.ViewRangeNavigation); err != nil {
-				dst.ViewRangeNavigation = nil
-			} else {
-				match++
-			}
+	switch *tag.Discriminator {
+	case "location":
+		var value ViewLocationNavigation
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
 		}
-	} else {
-		dst.ViewRangeNavigation = nil
-	}
-
-	// try to unmarshal data into ViewTermsNavigation
-	err = newStrictDecoder(data).Decode(&dst.ViewTermsNavigation)
-	if err == nil {
-		jsonViewTermsNavigation, _ := json.Marshal(dst.ViewTermsNavigation)
-		if string(jsonViewTermsNavigation) == "{}" { // empty struct
-			dst.ViewTermsNavigation = nil
-		} else {
-			if err = validator.Validate(dst.ViewTermsNavigation); err != nil {
-				dst.ViewTermsNavigation = nil
-			} else {
-				match++
-			}
+		if err := validator.Validate(&value); err != nil {
+			return err
 		}
-	} else {
-		dst.ViewTermsNavigation = nil
-	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.ViewCollectionNavigation = nil
-		dst.ViewHierarchyNavigation = nil
-		dst.ViewLocationNavigation = nil
-		dst.ViewRangeNavigation = nil
-		dst.ViewTermsNavigation = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(ViewNavigationItem)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-		return fmt.Errorf("data failed to match schemas in oneOf(ViewNavigationItem)")
+		dst.ViewLocationNavigation = &value
+		return nil
+	case "collection":
+		var value ViewCollectionNavigation
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ViewCollectionNavigation = &value
+		return nil
+	case "terms":
+		var value ViewTermsNavigation
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ViewTermsNavigation = &value
+		return nil
+	case "hierarchy":
+		var value ViewHierarchyNavigation
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ViewHierarchyNavigation = &value
+		return nil
+	case "range":
+		var value ViewRangeNavigation
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.ViewRangeNavigation = &value
+		return nil
+	default:
+		// A variant added after this client was generated: keep it as the server sent it.
+		dst.Raw = append(json.RawMessage(nil), data...)
+		return nil
 	}
 }
 
@@ -185,6 +153,10 @@ func (src ViewNavigationItem) MarshalJSON() ([]byte, error) {
 
 	if src.ViewTermsNavigation != nil {
 		return json.Marshal(&src.ViewTermsNavigation)
+	}
+
+	if src.Raw != nil {
+		return []byte(src.Raw), nil
 	}
 
 	return nil, nil // no data in oneOf schemas
@@ -216,6 +188,10 @@ func (obj *ViewNavigationItem) GetActualInstance() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 
@@ -242,6 +218,10 @@ func (obj ViewNavigationItem) GetActualInstanceValue() interface{} {
 	}
 
 	// all schemas are nil
+	if obj.Raw != nil {
+		return obj.Raw
+	}
+
 	return nil
 }
 

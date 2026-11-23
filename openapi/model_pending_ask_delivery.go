@@ -46,7 +46,7 @@ func (v *PendingAskDelivery) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = PENDINGASKDELIVERY_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 

@@ -52,7 +52,7 @@ func (v *AgentRunStatus) UnmarshalJSON(src []byte) error {
 		}
 	}
 
-	*v = AGENTRUNSTATUS_UNKNOWN_DEFAULT_OPEN_API
+	*v = enumTypeValue
 	return nil
 }
 
