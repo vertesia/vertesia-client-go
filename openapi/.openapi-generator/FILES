@@ -869,6 +869,7 @@ model_oidc_federation_connection.go
 model_oidc_federation_connection_payload.go
 model_onboarding_progress.go
 model_open_ai_audio_options.go
+model_open_ai_compatible_api.go
 model_open_ai_dalle_options.go
 model_open_ai_gpt_image_options.go
 model_open_ai_image_generation_mask.go

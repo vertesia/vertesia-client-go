@@ -20,7 +20,8 @@ var _ MappedNullable = &ExecutionEnvironmentSettings{}
 // ExecutionEnvironmentSettings struct for ExecutionEnvironmentSettings
 type ExecutionEnvironmentSettings struct {
 	// Custom HTTP headers sent by OpenAI-compatible environments.
-	DefaultHeaders       map[string]string `json:"default_headers,omitempty"`
+	DefaultHeaders       map[string]string    `json:"default_headers,omitempty"`
+	OpenaiApi            *OpenAICompatibleApi `json:"openai_api,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -75,6 +76,38 @@ func (o *ExecutionEnvironmentSettings) SetDefaultHeaders(v map[string]string) {
 	o.DefaultHeaders = v
 }
 
+// GetOpenaiApi returns the OpenaiApi field value if set, zero value otherwise.
+func (o *ExecutionEnvironmentSettings) GetOpenaiApi() OpenAICompatibleApi {
+	if o == nil || IsNil(o.OpenaiApi) {
+		var ret OpenAICompatibleApi
+		return ret
+	}
+	return *o.OpenaiApi
+}
+
+// GetOpenaiApiOk returns a tuple with the OpenaiApi field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ExecutionEnvironmentSettings) GetOpenaiApiOk() (*OpenAICompatibleApi, bool) {
+	if o == nil || IsNil(o.OpenaiApi) {
+		return nil, false
+	}
+	return o.OpenaiApi, true
+}
+
+// HasOpenaiApi returns a boolean if a field has been set.
+func (o *ExecutionEnvironmentSettings) HasOpenaiApi() bool {
+	if o != nil && !IsNil(o.OpenaiApi) {
+		return true
+	}
+
+	return false
+}
+
+// SetOpenaiApi gets a reference to the given OpenAICompatibleApi and assigns it to the OpenaiApi field.
+func (o *ExecutionEnvironmentSettings) SetOpenaiApi(v OpenAICompatibleApi) {
+	o.OpenaiApi = &v
+}
+
 func (o ExecutionEnvironmentSettings) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -87,6 +120,9 @@ func (o ExecutionEnvironmentSettings) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.DefaultHeaders) {
 		toSerialize["default_headers"] = o.DefaultHeaders
+	}
+	if !IsNil(o.OpenaiApi) {
+		toSerialize["openai_api"] = o.OpenaiApi
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -111,6 +147,7 @@ func (o *ExecutionEnvironmentSettings) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "default_headers")
+		delete(additionalProperties, "openai_api")
 		o.AdditionalProperties = additionalProperties
 	}
 
