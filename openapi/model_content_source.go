@@ -23,6 +23,8 @@ type ContentSource struct {
 	Type   *string `json:"type,omitempty"`
 	Name   *string `json:"name,omitempty"`
 	Etag   *string `json:"etag,omitempty"`
+	// Lowercase hex SHA-256 of the content bytes, as computed by the uploader. Unlike `etag`, it does not depend on how the storage provider stores the file: an S3 object encrypted with a KMS key, or uploaded in parts, has an etag that is not a hash of its bytes. Omitted when the uploader did not compute it.
+	Sha256 *string `json:"sha256,omitempty"`
 }
 
 // NewContentSource instantiates a new ContentSource object
@@ -170,6 +172,38 @@ func (o *ContentSource) SetEtag(v string) {
 	o.Etag = &v
 }
 
+// GetSha256 returns the Sha256 field value if set, zero value otherwise.
+func (o *ContentSource) GetSha256() string {
+	if o == nil || IsNil(o.Sha256) {
+		var ret string
+		return ret
+	}
+	return *o.Sha256
+}
+
+// GetSha256Ok returns a tuple with the Sha256 field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentSource) GetSha256Ok() (*string, bool) {
+	if o == nil || IsNil(o.Sha256) {
+		return nil, false
+	}
+	return o.Sha256, true
+}
+
+// HasSha256 returns a boolean if a field has been set.
+func (o *ContentSource) HasSha256() bool {
+	if o != nil && !IsNil(o.Sha256) {
+		return true
+	}
+
+	return false
+}
+
+// SetSha256 gets a reference to the given string and assigns it to the Sha256 field.
+func (o *ContentSource) SetSha256(v string) {
+	o.Sha256 = &v
+}
+
 func (o ContentSource) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -191,6 +225,9 @@ func (o ContentSource) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Etag) {
 		toSerialize["etag"] = o.Etag
+	}
+	if !IsNil(o.Sha256) {
+		toSerialize["sha256"] = o.Sha256
 	}
 	return toSerialize, nil
 }
