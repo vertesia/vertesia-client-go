@@ -21,6 +21,7 @@ var _ MappedNullable = &NotificationOccurrenceAck{}
 
 // NotificationOccurrenceAck An occurrence the client rendered.
 type NotificationOccurrenceAck struct {
+	// The occurrence type: agent_request, task, agent_run_end, agent_turn, object, inference_budget.
 	Type string `json:"type"`
 	Id   string `json:"id"`
 	// For an occurrence that happens again (`agent_turn`, `object`): the version the client displayed. Only notifications that occurred by then are read, now or when written later. Defaults to now.

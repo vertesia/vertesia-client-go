@@ -1110,7 +1110,7 @@ Pages through the files a sync round created, updated, deleted, skipped or faile
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param sourceId
-	@param roundId
+	@param roundId The sync round ID: 1 to 64 letters, digits, `_` or `-`.
 	@return ApiGetContentSourceRoundReportRequest
 */
 func (a *ContentSourcesAPIService) GetContentSourceRoundReport(ctx context.Context, sourceId string, roundId string) ApiGetContentSourceRoundReportRequest {

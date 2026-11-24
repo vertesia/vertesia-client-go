@@ -20,6 +20,7 @@ var _ MappedNullable = &ExportPropertiesPayload{}
 
 // ExportPropertiesPayload Each `table_layout` column reads its `field` as a dotted path of non-empty field names, none starting with `$`, except an `objectLink` column, which exports the object title.
 type ExportPropertiesPayload struct {
+	// Content object IDs, as 24 hexadecimal characters. Empty exports all objects.
 	ObjectIds []string `json:"objectIds"`
 	// The export format: `JSON` or `CSV`.
 	Type        string              `json:"type"`

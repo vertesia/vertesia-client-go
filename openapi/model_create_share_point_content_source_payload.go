@@ -23,7 +23,7 @@ type CreateSharePointContentSourcePayload struct {
 	// Unique within the project.
 	Name        string  `json:"name"`
 	Description *string `json:"description,omitempty"`
-	// An OAuth provider of this project with grant type `client_credentials` for the system.
+	// An OAuth provider of this project with grant type `client_credentials` for the system, as 24 hexadecimal characters.
 	OauthProviderId string `json:"oauth_provider_id"`
 	// The `location` root for synced documents. Defaults to `/<type>/<name>`.
 	LocationRoot *string `json:"location_root,omitempty"`

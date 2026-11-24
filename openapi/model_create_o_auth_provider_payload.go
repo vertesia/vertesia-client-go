@@ -18,7 +18,7 @@ import (
 // checks if the CreateOAuthProviderPayload type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &CreateOAuthProviderPayload{}
 
-// CreateOAuthProviderPayload Payload for creating an OAuth Provider. The client_secret is accepted as plaintext on create and stored encrypted.
+// CreateOAuthProviderPayload Payload for creating an OAuth Provider. The client_secret is accepted as plaintext on create and stored encrypted. `private_key_jwt` and a non-empty `allowed_scopes` require the `client_credentials` grant; the grant defaults to `authorization_code`.
 type CreateOAuthProviderPayload struct {
 	Name                  string  `json:"name"`
 	DisplayName           string  `json:"display_name"`

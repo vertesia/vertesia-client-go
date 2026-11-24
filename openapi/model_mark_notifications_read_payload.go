@@ -19,6 +19,7 @@ var _ MappedNullable = &MarkNotificationsReadPayload{}
 
 // MarkNotificationsReadPayload struct for MarkNotificationsReadPayload
 type MarkNotificationsReadPayload struct {
+	// Notification IDs, as 24 hexadecimal characters.
 	Ids []string `json:"ids,omitempty"`
 	// Occurrences the client rendered. An occurrence with no notification yet is remembered for a day and applied when its notification is written.
 	Occurrences []NotificationOccurrenceAck `json:"occurrences,omitempty"`

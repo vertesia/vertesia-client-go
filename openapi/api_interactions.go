@@ -4170,6 +4170,7 @@ func (r ApiListInteractionTagsRequest) Model(model string) ApiListInteractionTag
 	return r
 }
 
+// Environment ID, as 24 hexadecimal characters. An empty string applies no filter.
 func (r ApiListInteractionTagsRequest) Environment(environment string) ApiListInteractionTagsRequest {
 	r.environment = &environment
 	return r
@@ -4745,6 +4746,7 @@ func (r ApiListInteractionsRequest) Model(model string) ApiListInteractionsReque
 	return r
 }
 
+// Environment ID, as 24 hexadecimal characters. An empty string applies no filter.
 func (r ApiListInteractionsRequest) Environment(environment string) ApiListInteractionsRequest {
 	r.environment = &environment
 	return r

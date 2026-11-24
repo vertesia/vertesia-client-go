@@ -20,6 +20,7 @@ var _ MappedNullable = &ArchiveNotificationsPayload{}
 
 // ArchiveNotificationsPayload struct for ArchiveNotificationsPayload
 type ArchiveNotificationsPayload struct {
+	// Notification IDs, as 24 hexadecimal characters.
 	Ids []string `json:"ids"`
 }
 

@@ -22,7 +22,7 @@ var _ MappedNullable = &DiscoverContentSourceSchemaPayload{}
 type DiscoverContentSourceSchemaPayload struct {
 	// The system to inspect. Only SharePoint can be inspected.
 	Type string `json:"type"`
-	// An OAuth provider of this project with grant type `client_credentials` for the system.
+	// An OAuth provider of this project with grant type `client_credentials` for the system, as 24 hexadecimal characters.
 	OauthProviderId string `json:"oauth_provider_id"`
 	// The SharePoint site URL, e.g. `https://contoso.sharepoint.com/sites/legal`.
 	SiteUrl string `json:"site_url"`

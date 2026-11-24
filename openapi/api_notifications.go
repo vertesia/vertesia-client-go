@@ -195,7 +195,7 @@ GetNotification Get a notification
 Returns one of the current user’s notifications.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param notificationId
+	@param notificationId The notification ID, as 24 hexadecimal characters.
 	@return ApiGetNotificationRequest
 */
 func (a *NotificationsAPIService) GetNotification(ctx context.Context, notificationId string) ApiGetNotificationRequest {
