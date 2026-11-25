@@ -22,6 +22,8 @@ type OAuthAuthorizeResponse struct {
 	AuthorizationUrl *string `json:"authorization_url,omitempty"`
 	State            *string `json:"state,omitempty"`
 	Connected        *bool   `json:"connected,omitempty"`
+	// Set when the request asked for `required_scope`: an id for this reconnect. Once the user completes it, the collection status reports it as `step_up_attempt`, so the caller can confirm that the grant is the one it started, even without a message from the callback page.
+	StepUpAttempt *string `json:"step_up_attempt,omitempty"`
 }
 
 // NewOAuthAuthorizeResponse instantiates a new OAuthAuthorizeResponse object
@@ -137,6 +139,38 @@ func (o *OAuthAuthorizeResponse) SetConnected(v bool) {
 	o.Connected = &v
 }
 
+// GetStepUpAttempt returns the StepUpAttempt field value if set, zero value otherwise.
+func (o *OAuthAuthorizeResponse) GetStepUpAttempt() string {
+	if o == nil || IsNil(o.StepUpAttempt) {
+		var ret string
+		return ret
+	}
+	return *o.StepUpAttempt
+}
+
+// GetStepUpAttemptOk returns a tuple with the StepUpAttempt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OAuthAuthorizeResponse) GetStepUpAttemptOk() (*string, bool) {
+	if o == nil || IsNil(o.StepUpAttempt) {
+		return nil, false
+	}
+	return o.StepUpAttempt, true
+}
+
+// HasStepUpAttempt returns a boolean if a field has been set.
+func (o *OAuthAuthorizeResponse) HasStepUpAttempt() bool {
+	if o != nil && !IsNil(o.StepUpAttempt) {
+		return true
+	}
+
+	return false
+}
+
+// SetStepUpAttempt gets a reference to the given string and assigns it to the StepUpAttempt field.
+func (o *OAuthAuthorizeResponse) SetStepUpAttempt(v string) {
+	o.StepUpAttempt = &v
+}
+
 func (o OAuthAuthorizeResponse) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -155,6 +189,9 @@ func (o OAuthAuthorizeResponse) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Connected) {
 		toSerialize["connected"] = o.Connected
+	}
+	if !IsNil(o.StepUpAttempt) {
+		toSerialize["step_up_attempt"] = o.StepUpAttempt
 	}
 	return toSerialize, nil
 }

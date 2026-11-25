@@ -21,6 +21,8 @@ var _ MappedNullable = &McpOAuthConnectResponse{}
 // McpOAuthConnectResponse struct for McpOAuthConnectResponse
 type McpOAuthConnectResponse struct {
 	Success bool `json:"success"`
+	// After a reconnect that asked for a scope the server had refused a call for: the part of that scope the authorization server did not grant. The account may lack the permission, or an administrator may need to consent to it.
+	MissingScope *string `json:"missing_scope,omitempty"`
 }
 
 type _McpOAuthConnectResponse McpOAuthConnectResponse
@@ -67,6 +69,38 @@ func (o *McpOAuthConnectResponse) SetSuccess(v bool) {
 	o.Success = v
 }
 
+// GetMissingScope returns the MissingScope field value if set, zero value otherwise.
+func (o *McpOAuthConnectResponse) GetMissingScope() string {
+	if o == nil || IsNil(o.MissingScope) {
+		var ret string
+		return ret
+	}
+	return *o.MissingScope
+}
+
+// GetMissingScopeOk returns a tuple with the MissingScope field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *McpOAuthConnectResponse) GetMissingScopeOk() (*string, bool) {
+	if o == nil || IsNil(o.MissingScope) {
+		return nil, false
+	}
+	return o.MissingScope, true
+}
+
+// HasMissingScope returns a boolean if a field has been set.
+func (o *McpOAuthConnectResponse) HasMissingScope() bool {
+	if o != nil && !IsNil(o.MissingScope) {
+		return true
+	}
+
+	return false
+}
+
+// SetMissingScope gets a reference to the given string and assigns it to the MissingScope field.
+func (o *McpOAuthConnectResponse) SetMissingScope(v string) {
+	o.MissingScope = &v
+}
+
 func (o McpOAuthConnectResponse) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -78,6 +112,9 @@ func (o McpOAuthConnectResponse) MarshalJSON() ([]byte, error) {
 func (o McpOAuthConnectResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["success"] = o.Success
+	if !IsNil(o.MissingScope) {
+		toSerialize["missing_scope"] = o.MissingScope
+	}
 	return toSerialize, nil
 }
 

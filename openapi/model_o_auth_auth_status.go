@@ -26,6 +26,8 @@ type OAuthAuthStatus struct {
 	McpServerUrl   string  `json:"mcp_server_url"`
 	ExpiresAt      *string `json:"expires_at,omitempty"`
 	Scope          *string `json:"scope,omitempty"`
+	// The `step_up_attempt` of the reconnect that stored the user's grant, when that reconnect asked for a scope the MCP server had refused a call for.
+	StepUpAttempt *string `json:"step_up_attempt,omitempty"`
 }
 
 type _OAuthAuthStatus OAuthAuthStatus
@@ -211,6 +213,38 @@ func (o *OAuthAuthStatus) SetScope(v string) {
 	o.Scope = &v
 }
 
+// GetStepUpAttempt returns the StepUpAttempt field value if set, zero value otherwise.
+func (o *OAuthAuthStatus) GetStepUpAttempt() string {
+	if o == nil || IsNil(o.StepUpAttempt) {
+		var ret string
+		return ret
+	}
+	return *o.StepUpAttempt
+}
+
+// GetStepUpAttemptOk returns a tuple with the StepUpAttempt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OAuthAuthStatus) GetStepUpAttemptOk() (*string, bool) {
+	if o == nil || IsNil(o.StepUpAttempt) {
+		return nil, false
+	}
+	return o.StepUpAttempt, true
+}
+
+// HasStepUpAttempt returns a boolean if a field has been set.
+func (o *OAuthAuthStatus) HasStepUpAttempt() bool {
+	if o != nil && !IsNil(o.StepUpAttempt) {
+		return true
+	}
+
+	return false
+}
+
+// SetStepUpAttempt gets a reference to the given string and assigns it to the StepUpAttempt field.
+func (o *OAuthAuthStatus) SetStepUpAttempt(v string) {
+	o.StepUpAttempt = &v
+}
+
 func (o OAuthAuthStatus) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -230,6 +264,9 @@ func (o OAuthAuthStatus) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Scope) {
 		toSerialize["scope"] = o.Scope
+	}
+	if !IsNil(o.StepUpAttempt) {
+		toSerialize["step_up_attempt"] = o.StepUpAttempt
 	}
 	return toSerialize, nil
 }

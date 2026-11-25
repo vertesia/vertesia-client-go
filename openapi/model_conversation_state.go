@@ -93,6 +93,8 @@ type ConversationState struct {
 	DisabledMcpCollections []string `json:"disabled_mcp_collections,omitempty"`
 	// MCP servers that are active (not disabled) and accessible to the user but not yet OAuth-connected. Surfaced to the agent (via discover_tools) so it can offer to connect.
 	PendingMcpConnections []PendingMcpConnection `json:"pending_mcp_connections,omitempty"`
+	// MCP reconnects held after a server refused a tool (`refused_tool`) again although the user reconnected to grant `required_scope`; the agent asked the user whether to reconnect, continue without it, or stop. Until the user answers, that tool does not run again and its server is not offered for reconnection; once they answer, the hold is offered as a reconnect.
+	HeldMcpReconnects []HeldMcpReconnect `json:"held_mcp_reconnects,omitempty"`
 	// Current activity group ID for internal tool-execution progress messages. All updates emitted during one tool-execution cycle should share this ID.
 	ActiveActivityGroupId *string `json:"active_activity_group_id,omitempty"`
 	// LLM stop reason from the latest call (e.g., \"stop\", \"length\", \"tool_use\")
@@ -1276,6 +1278,38 @@ func (o *ConversationState) SetPendingMcpConnections(v []PendingMcpConnection) {
 	o.PendingMcpConnections = v
 }
 
+// GetHeldMcpReconnects returns the HeldMcpReconnects field value if set, zero value otherwise.
+func (o *ConversationState) GetHeldMcpReconnects() []HeldMcpReconnect {
+	if o == nil || IsNil(o.HeldMcpReconnects) {
+		var ret []HeldMcpReconnect
+		return ret
+	}
+	return o.HeldMcpReconnects
+}
+
+// GetHeldMcpReconnectsOk returns a tuple with the HeldMcpReconnects field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ConversationState) GetHeldMcpReconnectsOk() ([]HeldMcpReconnect, bool) {
+	if o == nil || IsNil(o.HeldMcpReconnects) {
+		return nil, false
+	}
+	return o.HeldMcpReconnects, true
+}
+
+// HasHeldMcpReconnects returns a boolean if a field has been set.
+func (o *ConversationState) HasHeldMcpReconnects() bool {
+	if o != nil && !IsNil(o.HeldMcpReconnects) {
+		return true
+	}
+
+	return false
+}
+
+// SetHeldMcpReconnects gets a reference to the given []HeldMcpReconnect and assigns it to the HeldMcpReconnects field.
+func (o *ConversationState) SetHeldMcpReconnects(v []HeldMcpReconnect) {
+	o.HeldMcpReconnects = v
+}
+
 // GetActiveActivityGroupId returns the ActiveActivityGroupId field value if set, zero value otherwise.
 func (o *ConversationState) GetActiveActivityGroupId() string {
 	if o == nil || IsNil(o.ActiveActivityGroupId) {
@@ -1579,6 +1613,9 @@ func (o ConversationState) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.PendingMcpConnections) {
 		toSerialize["pending_mcp_connections"] = o.PendingMcpConnections
 	}
+	if !IsNil(o.HeldMcpReconnects) {
+		toSerialize["held_mcp_reconnects"] = o.HeldMcpReconnects
+	}
 	if !IsNil(o.ActiveActivityGroupId) {
 		toSerialize["active_activity_group_id"] = o.ActiveActivityGroupId
 	}
@@ -1688,6 +1725,7 @@ func (o *ConversationState) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "initialization_call_ids")
 		delete(additionalProperties, "disabled_mcp_collections")
 		delete(additionalProperties, "pending_mcp_connections")
+		delete(additionalProperties, "held_mcp_reconnects")
 		delete(additionalProperties, "active_activity_group_id")
 		delete(additionalProperties, "finish_reason")
 		delete(additionalProperties, "llm_attempt")

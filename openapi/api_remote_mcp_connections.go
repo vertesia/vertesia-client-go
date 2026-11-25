@@ -23,16 +23,36 @@ import (
 type RemoteMCPConnectionsAPIService service
 
 type ApiAuthorizeRemoteMcpConnectionRequest struct {
-	ctx          context.Context
-	ApiService   *RemoteMCPConnectionsAPIService
-	appInstallId string
-	collectionId string
-	xApiVersion  *string
+	ctx           context.Context
+	ApiService    *RemoteMCPConnectionsAPIService
+	appInstallId  string
+	collectionId  string
+	xApiVersion   *string
+	requiredScope *string
+	refusedTool   *string
+	scopeMode     *string
 }
 
 // Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
 func (r ApiAuthorizeRemoteMcpConnectionRequest) XApiVersion(xApiVersion string) ApiAuthorizeRemoteMcpConnectionRequest {
 	r.xApiVersion = &xApiVersion
+	return r
+}
+
+// A scope the MCP server refused a tool call for (&#x60;insufficient_scope&#x60;). The authorization request asks for it too, unless the collection uses a shared OAuth provider, whose scope is configured by an administrator. A malformed scope is refused with 400.
+func (r ApiAuthorizeRemoteMcpConnectionRequest) RequiredScope(requiredScope string) ApiAuthorizeRemoteMcpConnectionRequest {
+	r.requiredScope = &requiredScope
+	return r
+}
+
+// The tool the server refused, recorded with the step-up.
+func (r ApiAuthorizeRemoteMcpConnectionRequest) RefusedTool(refusedTool string) ApiAuthorizeRemoteMcpConnectionRequest {
+	r.refusedTool = &refusedTool
+	return r
+}
+
+func (r ApiAuthorizeRemoteMcpConnectionRequest) ScopeMode(scopeMode string) ApiAuthorizeRemoteMcpConnectionRequest {
+	r.scopeMode = &scopeMode
 	return r
 }
 
@@ -43,7 +63,7 @@ func (r ApiAuthorizeRemoteMcpConnectionRequest) Execute() (*OAuthAuthorizeRespon
 /*
 AuthorizeRemoteMcpConnection Authorize a remote MCP connection
 
-Starts the OAuth flow for an OAuth-enabled MCP collection and returns the authorization URL or immediate connected status.
+Starts the OAuth flow for an OAuth-enabled MCP collection and returns the authorization URL or immediate connected status. After the MCP server refused a tool call with `insufficient_scope`, `required_scope` asks for that scope too, together with the scope already granted and the server's advertised scopes.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param appInstallId
@@ -93,6 +113,15 @@ func (a *RemoteMCPConnectionsAPIService) AuthorizeRemoteMcpConnectionExecute(r A
 		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
 	}
 
+	if r.requiredScope != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "required_scope", r.requiredScope, "form", "")
+	}
+	if r.refusedTool != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "refused_tool", r.refusedTool, "form", "")
+	}
+	if r.scopeMode != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "scope_mode", r.scopeMode, "form", "")
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

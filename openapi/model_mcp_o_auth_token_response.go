@@ -21,6 +21,14 @@ var _ MappedNullable = &McpOAuthTokenResponse{}
 // McpOAuthTokenResponse struct for McpOAuthTokenResponse
 type McpOAuthTokenResponse struct {
 	AccessToken string `json:"access_token"`
+	// True when the token is the user's own OAuth grant for this server, which the user can renew with more scope by reconnecting. Absent for project credentials (client credentials, API keys) and from servers older than this field.
+	UserGrant *bool `json:"user_grant,omitempty"`
+	// The scope the stored grant was last requested for after the server refused a call with `insufficient_scope`. A second refusal for this scope means the grant did not include it, so the user should not be asked to reconnect again.
+	StepUpScope *string `json:"step_up_scope,omitempty"`
+	// The tool whose refusal led to `step_up_scope`.
+	StepUpTool *string `json:"step_up_tool,omitempty"`
+	// The id of the reconnect that recorded `step_up_scope`, to send back when reporting its outcome.
+	StepUpAttempt *string `json:"step_up_attempt,omitempty"`
 }
 
 type _McpOAuthTokenResponse McpOAuthTokenResponse
@@ -67,6 +75,134 @@ func (o *McpOAuthTokenResponse) SetAccessToken(v string) {
 	o.AccessToken = v
 }
 
+// GetUserGrant returns the UserGrant field value if set, zero value otherwise.
+func (o *McpOAuthTokenResponse) GetUserGrant() bool {
+	if o == nil || IsNil(o.UserGrant) {
+		var ret bool
+		return ret
+	}
+	return *o.UserGrant
+}
+
+// GetUserGrantOk returns a tuple with the UserGrant field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *McpOAuthTokenResponse) GetUserGrantOk() (*bool, bool) {
+	if o == nil || IsNil(o.UserGrant) {
+		return nil, false
+	}
+	return o.UserGrant, true
+}
+
+// HasUserGrant returns a boolean if a field has been set.
+func (o *McpOAuthTokenResponse) HasUserGrant() bool {
+	if o != nil && !IsNil(o.UserGrant) {
+		return true
+	}
+
+	return false
+}
+
+// SetUserGrant gets a reference to the given bool and assigns it to the UserGrant field.
+func (o *McpOAuthTokenResponse) SetUserGrant(v bool) {
+	o.UserGrant = &v
+}
+
+// GetStepUpScope returns the StepUpScope field value if set, zero value otherwise.
+func (o *McpOAuthTokenResponse) GetStepUpScope() string {
+	if o == nil || IsNil(o.StepUpScope) {
+		var ret string
+		return ret
+	}
+	return *o.StepUpScope
+}
+
+// GetStepUpScopeOk returns a tuple with the StepUpScope field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *McpOAuthTokenResponse) GetStepUpScopeOk() (*string, bool) {
+	if o == nil || IsNil(o.StepUpScope) {
+		return nil, false
+	}
+	return o.StepUpScope, true
+}
+
+// HasStepUpScope returns a boolean if a field has been set.
+func (o *McpOAuthTokenResponse) HasStepUpScope() bool {
+	if o != nil && !IsNil(o.StepUpScope) {
+		return true
+	}
+
+	return false
+}
+
+// SetStepUpScope gets a reference to the given string and assigns it to the StepUpScope field.
+func (o *McpOAuthTokenResponse) SetStepUpScope(v string) {
+	o.StepUpScope = &v
+}
+
+// GetStepUpTool returns the StepUpTool field value if set, zero value otherwise.
+func (o *McpOAuthTokenResponse) GetStepUpTool() string {
+	if o == nil || IsNil(o.StepUpTool) {
+		var ret string
+		return ret
+	}
+	return *o.StepUpTool
+}
+
+// GetStepUpToolOk returns a tuple with the StepUpTool field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *McpOAuthTokenResponse) GetStepUpToolOk() (*string, bool) {
+	if o == nil || IsNil(o.StepUpTool) {
+		return nil, false
+	}
+	return o.StepUpTool, true
+}
+
+// HasStepUpTool returns a boolean if a field has been set.
+func (o *McpOAuthTokenResponse) HasStepUpTool() bool {
+	if o != nil && !IsNil(o.StepUpTool) {
+		return true
+	}
+
+	return false
+}
+
+// SetStepUpTool gets a reference to the given string and assigns it to the StepUpTool field.
+func (o *McpOAuthTokenResponse) SetStepUpTool(v string) {
+	o.StepUpTool = &v
+}
+
+// GetStepUpAttempt returns the StepUpAttempt field value if set, zero value otherwise.
+func (o *McpOAuthTokenResponse) GetStepUpAttempt() string {
+	if o == nil || IsNil(o.StepUpAttempt) {
+		var ret string
+		return ret
+	}
+	return *o.StepUpAttempt
+}
+
+// GetStepUpAttemptOk returns a tuple with the StepUpAttempt field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *McpOAuthTokenResponse) GetStepUpAttemptOk() (*string, bool) {
+	if o == nil || IsNil(o.StepUpAttempt) {
+		return nil, false
+	}
+	return o.StepUpAttempt, true
+}
+
+// HasStepUpAttempt returns a boolean if a field has been set.
+func (o *McpOAuthTokenResponse) HasStepUpAttempt() bool {
+	if o != nil && !IsNil(o.StepUpAttempt) {
+		return true
+	}
+
+	return false
+}
+
+// SetStepUpAttempt gets a reference to the given string and assigns it to the StepUpAttempt field.
+func (o *McpOAuthTokenResponse) SetStepUpAttempt(v string) {
+	o.StepUpAttempt = &v
+}
+
 func (o McpOAuthTokenResponse) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -78,6 +214,18 @@ func (o McpOAuthTokenResponse) MarshalJSON() ([]byte, error) {
 func (o McpOAuthTokenResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["access_token"] = o.AccessToken
+	if !IsNil(o.UserGrant) {
+		toSerialize["user_grant"] = o.UserGrant
+	}
+	if !IsNil(o.StepUpScope) {
+		toSerialize["step_up_scope"] = o.StepUpScope
+	}
+	if !IsNil(o.StepUpTool) {
+		toSerialize["step_up_tool"] = o.StepUpTool
+	}
+	if !IsNil(o.StepUpAttempt) {
+		toSerialize["step_up_attempt"] = o.StepUpAttempt
+	}
 	return toSerialize, nil
 }
 

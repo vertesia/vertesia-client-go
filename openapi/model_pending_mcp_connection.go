@@ -30,6 +30,10 @@ type PendingMcpConnection struct {
 	Description *string `json:"description,omitempty"`
 	// Tool-name prefix for this collection.
 	Namespace *string `json:"namespace,omitempty"`
+	// The scope the server refused a tool call for (`insufficient_scope`): reconnecting asks for it too.
+	RequiredScope *string `json:"required_scope,omitempty"`
+	// The tool the server refused for `required_scope`.
+	RefusedTool *string `json:"refused_tool,omitempty"`
 }
 
 type _PendingMcpConnection PendingMcpConnection
@@ -190,6 +194,70 @@ func (o *PendingMcpConnection) SetNamespace(v string) {
 	o.Namespace = &v
 }
 
+// GetRequiredScope returns the RequiredScope field value if set, zero value otherwise.
+func (o *PendingMcpConnection) GetRequiredScope() string {
+	if o == nil || IsNil(o.RequiredScope) {
+		var ret string
+		return ret
+	}
+	return *o.RequiredScope
+}
+
+// GetRequiredScopeOk returns a tuple with the RequiredScope field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PendingMcpConnection) GetRequiredScopeOk() (*string, bool) {
+	if o == nil || IsNil(o.RequiredScope) {
+		return nil, false
+	}
+	return o.RequiredScope, true
+}
+
+// HasRequiredScope returns a boolean if a field has been set.
+func (o *PendingMcpConnection) HasRequiredScope() bool {
+	if o != nil && !IsNil(o.RequiredScope) {
+		return true
+	}
+
+	return false
+}
+
+// SetRequiredScope gets a reference to the given string and assigns it to the RequiredScope field.
+func (o *PendingMcpConnection) SetRequiredScope(v string) {
+	o.RequiredScope = &v
+}
+
+// GetRefusedTool returns the RefusedTool field value if set, zero value otherwise.
+func (o *PendingMcpConnection) GetRefusedTool() string {
+	if o == nil || IsNil(o.RefusedTool) {
+		var ret string
+		return ret
+	}
+	return *o.RefusedTool
+}
+
+// GetRefusedToolOk returns a tuple with the RefusedTool field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *PendingMcpConnection) GetRefusedToolOk() (*string, bool) {
+	if o == nil || IsNil(o.RefusedTool) {
+		return nil, false
+	}
+	return o.RefusedTool, true
+}
+
+// HasRefusedTool returns a boolean if a field has been set.
+func (o *PendingMcpConnection) HasRefusedTool() bool {
+	if o != nil && !IsNil(o.RefusedTool) {
+		return true
+	}
+
+	return false
+}
+
+// SetRefusedTool gets a reference to the given string and assigns it to the RefusedTool field.
+func (o *PendingMcpConnection) SetRefusedTool(v string) {
+	o.RefusedTool = &v
+}
+
 func (o PendingMcpConnection) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -208,6 +276,12 @@ func (o PendingMcpConnection) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Namespace) {
 		toSerialize["namespace"] = o.Namespace
+	}
+	if !IsNil(o.RequiredScope) {
+		toSerialize["required_scope"] = o.RequiredScope
+	}
+	if !IsNil(o.RefusedTool) {
+		toSerialize["refused_tool"] = o.RefusedTool
 	}
 	return toSerialize, nil
 }
