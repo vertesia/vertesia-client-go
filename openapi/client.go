@@ -132,6 +132,8 @@ type APIClient struct {
 
 	SecretsAPI *SecretsAPIService
 
+	SharePointOnboardingAPI *SharePointOnboardingAPIService
+
 	TasksAPI *TasksAPIService
 
 	TokenServiceAPI *TokenServiceAPIService
@@ -208,6 +210,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.RenderingAPI = (*RenderingAPIService)(&c.common)
 	c.RolesAPI = (*RolesAPIService)(&c.common)
 	c.SecretsAPI = (*SecretsAPIService)(&c.common)
+	c.SharePointOnboardingAPI = (*SharePointOnboardingAPIService)(&c.common)
 	c.TasksAPI = (*TasksAPIService)(&c.common)
 	c.TokenServiceAPI = (*TokenServiceAPIService)(&c.common)
 	c.ToolsAPI = (*ToolsAPIService)(&c.common)

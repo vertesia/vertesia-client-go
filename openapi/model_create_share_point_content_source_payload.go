@@ -23,8 +23,8 @@ type CreateSharePointContentSourcePayload struct {
 	// Unique within the project.
 	Name        string  `json:"name"`
 	Description *string `json:"description,omitempty"`
-	// An OAuth provider of this project with grant type `client_credentials` for the system, as 24 hexadecimal characters.
-	OauthProviderId string `json:"oauth_provider_id"`
+	// Required for a project OAuth source. Omitted for trusted registration of an organization-managed library.
+	OauthProviderId *string `json:"oauth_provider_id,omitempty"`
 	// The `location` root for synced documents. Defaults to `/<type>/<name>`.
 	LocationRoot *string `json:"location_root,omitempty"`
 	// A collection to add synced documents to.
@@ -32,9 +32,11 @@ type CreateSharePointContentSourcePayload struct {
 	// Defaults to scheduled sync disabled, every 60 minutes once enabled.
 	Sync *ContentSourceSyncSettings `json:"sync,omitempty"`
 	// Sample mode: syncs only about this percentage of the files, to look at real documents before importing them all. A file is in the sample by a hash of its ID, so the same files stay in it from one sync to the next, spread over every folder. A file outside the sample is not imported, and its document is deleted if it has one. Leave out to sync every file.
-	SamplePercent *int32                           `json:"sample_percent,omitempty"`
-	Type          string                           `json:"type"`
-	Permissions   *ContentSourcePermissionSettings `json:"permissions,omitempty"`
+	SamplePercent *int32 `json:"sample_percent,omitempty"`
+	Type          string `json:"type"`
+	// The approved SharePoint library binding this source is registered for.
+	SharepointLibraryBindingId *string                          `json:"sharepoint_library_binding_id,omitempty"`
+	Permissions                *ContentSourcePermissionSettings `json:"permissions,omitempty"`
 	// The SharePoint site URL, e.g. `https://contoso.sharepoint.com/sites/legal`.
 	SiteUrl string `json:"site_url"`
 	// The document library name. Defaults to the site’s default library.
@@ -49,10 +51,9 @@ type _CreateSharePointContentSourcePayload CreateSharePointContentSourcePayload
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCreateSharePointContentSourcePayload(name string, oauthProviderId string, type_ string, siteUrl string) *CreateSharePointContentSourcePayload {
+func NewCreateSharePointContentSourcePayload(name string, type_ string, siteUrl string) *CreateSharePointContentSourcePayload {
 	this := CreateSharePointContentSourcePayload{}
 	this.Name = name
-	this.OauthProviderId = oauthProviderId
 	this.Type = type_
 	this.SiteUrl = siteUrl
 	return &this
@@ -122,28 +123,36 @@ func (o *CreateSharePointContentSourcePayload) SetDescription(v string) {
 	o.Description = &v
 }
 
-// GetOauthProviderId returns the OauthProviderId field value
+// GetOauthProviderId returns the OauthProviderId field value if set, zero value otherwise.
 func (o *CreateSharePointContentSourcePayload) GetOauthProviderId() string {
-	if o == nil {
+	if o == nil || IsNil(o.OauthProviderId) {
 		var ret string
 		return ret
 	}
-
-	return o.OauthProviderId
+	return *o.OauthProviderId
 }
 
-// GetOauthProviderIdOk returns a tuple with the OauthProviderId field value
+// GetOauthProviderIdOk returns a tuple with the OauthProviderId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CreateSharePointContentSourcePayload) GetOauthProviderIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.OauthProviderId) {
 		return nil, false
 	}
-	return &o.OauthProviderId, true
+	return o.OauthProviderId, true
 }
 
-// SetOauthProviderId sets field value
+// HasOauthProviderId returns a boolean if a field has been set.
+func (o *CreateSharePointContentSourcePayload) HasOauthProviderId() bool {
+	if o != nil && !IsNil(o.OauthProviderId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOauthProviderId gets a reference to the given string and assigns it to the OauthProviderId field.
 func (o *CreateSharePointContentSourcePayload) SetOauthProviderId(v string) {
-	o.OauthProviderId = v
+	o.OauthProviderId = &v
 }
 
 // GetLocationRoot returns the LocationRoot field value if set, zero value otherwise.
@@ -298,6 +307,38 @@ func (o *CreateSharePointContentSourcePayload) SetType(v string) {
 	o.Type = v
 }
 
+// GetSharepointLibraryBindingId returns the SharepointLibraryBindingId field value if set, zero value otherwise.
+func (o *CreateSharePointContentSourcePayload) GetSharepointLibraryBindingId() string {
+	if o == nil || IsNil(o.SharepointLibraryBindingId) {
+		var ret string
+		return ret
+	}
+	return *o.SharepointLibraryBindingId
+}
+
+// GetSharepointLibraryBindingIdOk returns a tuple with the SharepointLibraryBindingId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSharePointContentSourcePayload) GetSharepointLibraryBindingIdOk() (*string, bool) {
+	if o == nil || IsNil(o.SharepointLibraryBindingId) {
+		return nil, false
+	}
+	return o.SharepointLibraryBindingId, true
+}
+
+// HasSharepointLibraryBindingId returns a boolean if a field has been set.
+func (o *CreateSharePointContentSourcePayload) HasSharepointLibraryBindingId() bool {
+	if o != nil && !IsNil(o.SharepointLibraryBindingId) {
+		return true
+	}
+
+	return false
+}
+
+// SetSharepointLibraryBindingId gets a reference to the given string and assigns it to the SharepointLibraryBindingId field.
+func (o *CreateSharePointContentSourcePayload) SetSharepointLibraryBindingId(v string) {
+	o.SharepointLibraryBindingId = &v
+}
+
 // GetPermissions returns the Permissions field value if set, zero value otherwise.
 func (o *CreateSharePointContentSourcePayload) GetPermissions() ContentSourcePermissionSettings {
 	if o == nil || IsNil(o.Permissions) {
@@ -432,7 +473,9 @@ func (o CreateSharePointContentSourcePayload) ToMap() (map[string]interface{}, e
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
-	toSerialize["oauth_provider_id"] = o.OauthProviderId
+	if !IsNil(o.OauthProviderId) {
+		toSerialize["oauth_provider_id"] = o.OauthProviderId
+	}
 	if !IsNil(o.LocationRoot) {
 		toSerialize["location_root"] = o.LocationRoot
 	}
@@ -446,6 +489,9 @@ func (o CreateSharePointContentSourcePayload) ToMap() (map[string]interface{}, e
 		toSerialize["sample_percent"] = o.SamplePercent
 	}
 	toSerialize["type"] = o.Type
+	if !IsNil(o.SharepointLibraryBindingId) {
+		toSerialize["sharepoint_library_binding_id"] = o.SharepointLibraryBindingId
+	}
 	if !IsNil(o.Permissions) {
 		toSerialize["permissions"] = o.Permissions
 	}
@@ -465,7 +511,6 @@ func (o *CreateSharePointContentSourcePayload) UnmarshalJSON(data []byte) (err e
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"name",
-		"oauth_provider_id",
 		"type",
 		"site_url",
 	}
@@ -485,7 +530,7 @@ func (o *CreateSharePointContentSourcePayload) UnmarshalJSON(data []byte) (err e
 	}
 
 	// A required property that is not nullable cannot be null: it would decode as its zero value.
-	for _, requiredProperty := range []string{"name", "oauth_provider_id", "type", "site_url"} {
+	for _, requiredProperty := range []string{"name", "type", "site_url"} {
 		if allProperties[requiredProperty] == nil {
 			return fmt.Errorf("required property %v is null", requiredProperty)
 		}

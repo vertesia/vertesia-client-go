@@ -47,8 +47,7 @@ type OAuthProvider struct {
 	// Default scopes to request during authorization.
 	DefaultScopes []string `json:"default_scopes,omitempty"`
 	// Scopes a token request may ask for instead of default_scopes (POST /oauth-providers/{id}/token with a scope), in addition to default_scopes, which are always allowed. Only used for the client_credentials grant. Set by the provider admin: a caller cannot request a scope outside this list and default_scopes. On update, an empty array clears it.
-	AllowedScopes            []string `json:"allowed_scopes,omitempty"`
-	SharepointPermissionSite *string  `json:"sharepoint_permission_site,omitempty"`
+	AllowedScopes []string `json:"allowed_scopes,omitempty"`
 	// Whether to use PKCE (Proof Key for Code Exchange) in the authorization flow. Only applies to authorization_code flow. Defaults to true.
 	UsePkce bool `json:"use_pkce"`
 	// Optional OAuth 2.0 revocation endpoint URL.
@@ -503,38 +502,6 @@ func (o *OAuthProvider) SetAllowedScopes(v []string) {
 	o.AllowedScopes = v
 }
 
-// GetSharepointPermissionSite returns the SharepointPermissionSite field value if set, zero value otherwise.
-func (o *OAuthProvider) GetSharepointPermissionSite() string {
-	if o == nil || IsNil(o.SharepointPermissionSite) {
-		var ret string
-		return ret
-	}
-	return *o.SharepointPermissionSite
-}
-
-// GetSharepointPermissionSiteOk returns a tuple with the SharepointPermissionSite field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *OAuthProvider) GetSharepointPermissionSiteOk() (*string, bool) {
-	if o == nil || IsNil(o.SharepointPermissionSite) {
-		return nil, false
-	}
-	return o.SharepointPermissionSite, true
-}
-
-// HasSharepointPermissionSite returns a boolean if a field has been set.
-func (o *OAuthProvider) HasSharepointPermissionSite() bool {
-	if o != nil && !IsNil(o.SharepointPermissionSite) {
-		return true
-	}
-
-	return false
-}
-
-// SetSharepointPermissionSite gets a reference to the given string and assigns it to the SharepointPermissionSite field.
-func (o *OAuthProvider) SetSharepointPermissionSite(v string) {
-	o.SharepointPermissionSite = &v
-}
-
 // GetUsePkce returns the UsePkce field value
 func (o *OAuthProvider) GetUsePkce() bool {
 	if o == nil {
@@ -738,9 +705,6 @@ func (o OAuthProvider) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.AllowedScopes) {
 		toSerialize["allowed_scopes"] = o.AllowedScopes
-	}
-	if !IsNil(o.SharepointPermissionSite) {
-		toSerialize["sharepoint_permission_site"] = o.SharepointPermissionSite
 	}
 	toSerialize["use_pkce"] = o.UsePkce
 	if !IsNil(o.RevocationEndpoint) {

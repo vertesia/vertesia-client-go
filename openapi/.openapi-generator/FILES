@@ -40,6 +40,7 @@ api_remote_mcp_connections.go
 api_rendering.go
 api_roles.go
 api_secrets.go
+api_share_point_onboarding.go
 api_tasks.go
 api_token_service.go
 api_tools.go
@@ -213,6 +214,9 @@ model_app_version_storage.go
 model_app_version_target.go
 model_app_version_urls.go
 model_app_widget_info.go
+model_approve_share_point_library_payload.go
+model_approve_share_point_library_payload_any_of.go
+model_approve_share_point_library_payload_any_of_1.go
 model_archive_notifications_payload.go
 model_ask_user_webhook_configuration.go
 model_ask_user_webhook_configuration_input.go
@@ -277,6 +281,7 @@ model_bedrock_mantle_responses_options.go
 model_bedrock_mistral_options.go
 model_bedrock_nova_options.go
 model_bedrock_palmyra_options.go
+model_begin_share_point_organization_link_payload.go
 model_billing_method.go
 model_box_content_source.go
 model_branch_definition.go
@@ -316,6 +321,7 @@ model_collection_security_settings_response.go
 model_collection_status.go
 model_column_layout.go
 model_compact_message.go
+model_complete_share_point_organization_link_payload.go
 model_complete_task_payload.go
 model_complete_upload_session_payload.go
 model_complete_upload_session_response.go
@@ -349,6 +355,8 @@ model_compute_object_facet_payload.go
 model_compute_prompt_facet_payload.go
 model_computed_facet_response.go
 model_config_modes.go
+model_configure_share_point_library_reader_payload.go
+model_configure_share_point_organization_reader_payload.go
 model_content_embedding_map.go
 model_content_object_api_response.go
 model_content_object_api_response_search_type_result_inner.go
@@ -797,6 +805,7 @@ model_llm_call_type.go
 model_load_balancing_env_config.go
 model_load_balancing_env_entry_config.go
 model_magic_pdf_configuration.go
+model_managed_share_point_library.go
 model_mark_all_notifications_read_payload.go
 model_mark_notifications_read_payload.go
 model_markdown_rendition_format.go
@@ -987,6 +996,7 @@ model_project_ref.go
 model_project_search_property_mapping.go
 model_project_search_property_type.go
 model_project_search_tier.go
+model_project_share_point_library_response.go
 model_project_token_request.go
 model_project_tool_info.go
 model_projected_content_object_api_response.go
@@ -1099,6 +1109,18 @@ model_set_object_embeddings_response.go
 model_set_object_text_payload.go
 model_share_point_content_source.go
 model_share_point_content_source_permissions.go
+model_share_point_library_approval.go
+model_share_point_library_connection.go
+model_share_point_library_context.go
+model_share_point_library_receipt.go
+model_share_point_library_request.go
+model_share_point_library_requests.go
+model_share_point_organization.go
+model_share_point_organization_link_attempt.go
+model_share_point_organization_reader.go
+model_share_point_organizations.go
+model_share_point_region.go
+model_share_point_request_project.go
 model_signal_agent_response.go
 model_signal_event_properties.go
 model_signal_event_properties_sender.go

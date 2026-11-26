@@ -25,20 +25,22 @@ type SharePointContentSource struct {
 	Name        string  `json:"name"`
 	Description *string `json:"description,omitempty"`
 	// The project's OAuth provider (grant type `client_credentials`) that issues the system's tokens.
-	OauthProviderId string `json:"oauth_provider_id"`
+	OauthProviderId *string `json:"oauth_provider_id,omitempty"`
 	// The `location` under which the source folder's tree is reproduced, e.g. `/sharepoint/legal`.
 	LocationRoot string `json:"location_root"`
 	// Collection that synced documents are added to, if any.
 	CollectionId *string                   `json:"collection_id,omitempty"`
 	Sync         ContentSourceSyncSettings `json:"sync"`
 	// Sample mode: syncs only about this percentage of the files, to look at real documents before importing them all. A file is in the sample by a hash of its ID, so the same files stay in it from one sync to the next, spread over every folder. A file outside the sample is not imported, and its document is deleted if it has one. Absent when the source syncs every file.
-	SamplePercent *int32                           `json:"sample_percent,omitempty"`
-	CreatedBy     *string                          `json:"created_by,omitempty"`
-	UpdatedBy     *string                          `json:"updated_by,omitempty"`
-	CreatedAt     *time.Time                       `json:"created_at,omitempty"`
-	UpdatedAt     *time.Time                       `json:"updated_at,omitempty"`
-	Type          string                           `json:"type"`
-	Permissions   *ContentSourcePermissionSettings `json:"permissions,omitempty"`
+	SamplePercent *int32     `json:"sample_percent,omitempty"`
+	CreatedBy     *string    `json:"created_by,omitempty"`
+	UpdatedBy     *string    `json:"updated_by,omitempty"`
+	CreatedAt     *time.Time `json:"created_at,omitempty"`
+	UpdatedAt     *time.Time `json:"updated_at,omitempty"`
+	Type          string     `json:"type"`
+	// The managed library uses its organization reader, without a project OAuth provider.
+	ReaderMode  *string                          `json:"reader_mode,omitempty"`
+	Permissions *ContentSourcePermissionSettings `json:"permissions,omitempty"`
 	// The SharePoint site URL the source was created from.
 	SiteUrl string `json:"site_url"`
 	// The Microsoft Graph site ID.
@@ -59,11 +61,10 @@ type _SharePointContentSource SharePointContentSource
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSharePointContentSource(id string, name string, oauthProviderId string, locationRoot string, sync ContentSourceSyncSettings, type_ string, siteUrl string, siteId string, driveId string, libraryName string, folderPath string, folderItemId string) *SharePointContentSource {
+func NewSharePointContentSource(id string, name string, locationRoot string, sync ContentSourceSyncSettings, type_ string, siteUrl string, siteId string, driveId string, libraryName string, folderPath string, folderItemId string) *SharePointContentSource {
 	this := SharePointContentSource{}
 	this.Id = id
 	this.Name = name
-	this.OauthProviderId = oauthProviderId
 	this.LocationRoot = locationRoot
 	this.Sync = sync
 	this.Type = type_
@@ -164,28 +165,36 @@ func (o *SharePointContentSource) SetDescription(v string) {
 	o.Description = &v
 }
 
-// GetOauthProviderId returns the OauthProviderId field value
+// GetOauthProviderId returns the OauthProviderId field value if set, zero value otherwise.
 func (o *SharePointContentSource) GetOauthProviderId() string {
-	if o == nil {
+	if o == nil || IsNil(o.OauthProviderId) {
 		var ret string
 		return ret
 	}
-
-	return o.OauthProviderId
+	return *o.OauthProviderId
 }
 
-// GetOauthProviderIdOk returns a tuple with the OauthProviderId field value
+// GetOauthProviderIdOk returns a tuple with the OauthProviderId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SharePointContentSource) GetOauthProviderIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.OauthProviderId) {
 		return nil, false
 	}
-	return &o.OauthProviderId, true
+	return o.OauthProviderId, true
 }
 
-// SetOauthProviderId sets field value
+// HasOauthProviderId returns a boolean if a field has been set.
+func (o *SharePointContentSource) HasOauthProviderId() bool {
+	if o != nil && !IsNil(o.OauthProviderId) {
+		return true
+	}
+
+	return false
+}
+
+// SetOauthProviderId gets a reference to the given string and assigns it to the OauthProviderId field.
 func (o *SharePointContentSource) SetOauthProviderId(v string) {
-	o.OauthProviderId = v
+	o.OauthProviderId = &v
 }
 
 // GetLocationRoot returns the LocationRoot field value
@@ -452,6 +461,38 @@ func (o *SharePointContentSource) SetType(v string) {
 	o.Type = v
 }
 
+// GetReaderMode returns the ReaderMode field value if set, zero value otherwise.
+func (o *SharePointContentSource) GetReaderMode() string {
+	if o == nil || IsNil(o.ReaderMode) {
+		var ret string
+		return ret
+	}
+	return *o.ReaderMode
+}
+
+// GetReaderModeOk returns a tuple with the ReaderMode field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SharePointContentSource) GetReaderModeOk() (*string, bool) {
+	if o == nil || IsNil(o.ReaderMode) {
+		return nil, false
+	}
+	return o.ReaderMode, true
+}
+
+// HasReaderMode returns a boolean if a field has been set.
+func (o *SharePointContentSource) HasReaderMode() bool {
+	if o != nil && !IsNil(o.ReaderMode) {
+		return true
+	}
+
+	return false
+}
+
+// SetReaderMode gets a reference to the given string and assigns it to the ReaderMode field.
+func (o *SharePointContentSource) SetReaderMode(v string) {
+	o.ReaderMode = &v
+}
+
 // GetPermissions returns the Permissions field value if set, zero value otherwise.
 func (o *SharePointContentSource) GetPermissions() ContentSourcePermissionSettings {
 	if o == nil || IsNil(o.Permissions) {
@@ -643,7 +684,9 @@ func (o SharePointContentSource) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
-	toSerialize["oauth_provider_id"] = o.OauthProviderId
+	if !IsNil(o.OauthProviderId) {
+		toSerialize["oauth_provider_id"] = o.OauthProviderId
+	}
 	toSerialize["location_root"] = o.LocationRoot
 	if !IsNil(o.CollectionId) {
 		toSerialize["collection_id"] = o.CollectionId
@@ -665,6 +708,9 @@ func (o SharePointContentSource) ToMap() (map[string]interface{}, error) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
 	toSerialize["type"] = o.Type
+	if !IsNil(o.ReaderMode) {
+		toSerialize["reader_mode"] = o.ReaderMode
+	}
 	if !IsNil(o.Permissions) {
 		toSerialize["permissions"] = o.Permissions
 	}
@@ -684,7 +730,6 @@ func (o *SharePointContentSource) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"id",
 		"name",
-		"oauth_provider_id",
 		"location_root",
 		"sync",
 		"type",
@@ -711,7 +756,7 @@ func (o *SharePointContentSource) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	// A required property that is not nullable cannot be null: it would decode as its zero value.
-	for _, requiredProperty := range []string{"id", "name", "oauth_provider_id", "location_root", "sync", "type", "site_url", "site_id", "drive_id", "library_name", "folder_path", "folder_item_id"} {
+	for _, requiredProperty := range []string{"id", "name", "location_root", "sync", "type", "site_url", "site_id", "drive_id", "library_name", "folder_path", "folder_item_id"} {
 		if allProperties[requiredProperty] == nil {
 			return fmt.Errorf("required property %v is null", requiredProperty)
 		}

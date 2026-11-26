@@ -21,14 +21,16 @@ var _ MappedNullable = &Project{}
 
 // Project struct for Project
 type Project struct {
-	Id            string                 `json:"id"`
-	Name          string                 `json:"name"`
-	Namespace     string                 `json:"namespace"`
-	Description   *string                `json:"description,omitempty"`
-	Account       string                 `json:"account"`
-	Configuration ProjectConfiguration   `json:"configuration"`
-	Integrations  map[string]interface{} `json:"integrations,omitempty"`
-	Plugins       []string               `json:"plugins"`
+	Id                           string                     `json:"id"`
+	Name                         string                     `json:"name"`
+	Namespace                    string                     `json:"namespace"`
+	Description                  *string                    `json:"description,omitempty"`
+	Account                      string                     `json:"account"`
+	SharepointLibraryBinding     *ManagedSharePointLibrary  `json:"sharepoint_library_binding,omitempty"`
+	SharepointLibraryAttachments []ManagedSharePointLibrary `json:"sharepoint_library_attachments,omitempty"`
+	Configuration                ProjectConfiguration       `json:"configuration"`
+	Integrations                 map[string]interface{}     `json:"integrations,omitempty"`
+	Plugins                      []string                   `json:"plugins"`
 	// Classification annotations
 	Annotations []string `json:"annotations,omitempty"`
 	// When the project last saw activity. Not yet populated.
@@ -195,6 +197,70 @@ func (o *Project) GetAccountOk() (*string, bool) {
 // SetAccount sets field value
 func (o *Project) SetAccount(v string) {
 	o.Account = v
+}
+
+// GetSharepointLibraryBinding returns the SharepointLibraryBinding field value if set, zero value otherwise.
+func (o *Project) GetSharepointLibraryBinding() ManagedSharePointLibrary {
+	if o == nil || IsNil(o.SharepointLibraryBinding) {
+		var ret ManagedSharePointLibrary
+		return ret
+	}
+	return *o.SharepointLibraryBinding
+}
+
+// GetSharepointLibraryBindingOk returns a tuple with the SharepointLibraryBinding field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Project) GetSharepointLibraryBindingOk() (*ManagedSharePointLibrary, bool) {
+	if o == nil || IsNil(o.SharepointLibraryBinding) {
+		return nil, false
+	}
+	return o.SharepointLibraryBinding, true
+}
+
+// HasSharepointLibraryBinding returns a boolean if a field has been set.
+func (o *Project) HasSharepointLibraryBinding() bool {
+	if o != nil && !IsNil(o.SharepointLibraryBinding) {
+		return true
+	}
+
+	return false
+}
+
+// SetSharepointLibraryBinding gets a reference to the given ManagedSharePointLibrary and assigns it to the SharepointLibraryBinding field.
+func (o *Project) SetSharepointLibraryBinding(v ManagedSharePointLibrary) {
+	o.SharepointLibraryBinding = &v
+}
+
+// GetSharepointLibraryAttachments returns the SharepointLibraryAttachments field value if set, zero value otherwise.
+func (o *Project) GetSharepointLibraryAttachments() []ManagedSharePointLibrary {
+	if o == nil || IsNil(o.SharepointLibraryAttachments) {
+		var ret []ManagedSharePointLibrary
+		return ret
+	}
+	return o.SharepointLibraryAttachments
+}
+
+// GetSharepointLibraryAttachmentsOk returns a tuple with the SharepointLibraryAttachments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Project) GetSharepointLibraryAttachmentsOk() ([]ManagedSharePointLibrary, bool) {
+	if o == nil || IsNil(o.SharepointLibraryAttachments) {
+		return nil, false
+	}
+	return o.SharepointLibraryAttachments, true
+}
+
+// HasSharepointLibraryAttachments returns a boolean if a field has been set.
+func (o *Project) HasSharepointLibraryAttachments() bool {
+	if o != nil && !IsNil(o.SharepointLibraryAttachments) {
+		return true
+	}
+
+	return false
+}
+
+// SetSharepointLibraryAttachments gets a reference to the given []ManagedSharePointLibrary and assigns it to the SharepointLibraryAttachments field.
+func (o *Project) SetSharepointLibraryAttachments(v []ManagedSharePointLibrary) {
+	o.SharepointLibraryAttachments = v
 }
 
 // GetConfiguration returns the Configuration field value
@@ -455,6 +521,12 @@ func (o Project) ToMap() (map[string]interface{}, error) {
 		toSerialize["description"] = o.Description
 	}
 	toSerialize["account"] = o.Account
+	if !IsNil(o.SharepointLibraryBinding) {
+		toSerialize["sharepoint_library_binding"] = o.SharepointLibraryBinding
+	}
+	if !IsNil(o.SharepointLibraryAttachments) {
+		toSerialize["sharepoint_library_attachments"] = o.SharepointLibraryAttachments
+	}
 	toSerialize["configuration"] = o.Configuration
 	if o.Integrations != nil {
 		toSerialize["integrations"] = o.Integrations
@@ -534,6 +606,8 @@ func (o *Project) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "namespace")
 		delete(additionalProperties, "description")
 		delete(additionalProperties, "account")
+		delete(additionalProperties, "sharepoint_library_binding")
+		delete(additionalProperties, "sharepoint_library_attachments")
 		delete(additionalProperties, "configuration")
 		delete(additionalProperties, "integrations")
 		delete(additionalProperties, "plugins")

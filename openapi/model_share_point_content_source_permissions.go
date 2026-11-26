@@ -20,13 +20,13 @@ var _ MappedNullable = &SharePointContentSourcePermissions{}
 
 // SharePointContentSourcePermissions struct for SharePointContentSourcePermissions
 type SharePointContentSourcePermissions struct {
-	Mode                       string  `json:"mode"`
-	EntraTenantId              string  `json:"entra_tenant_id"`
-	ScimConnectionId           string  `json:"scim_connection_id"`
-	PermissionReaderProviderId string  `json:"permission_reader_provider_id"`
-	TenantGroupId              *string `json:"tenant_group_id,omitempty"`
-	RefreshMinutes             *int32  `json:"refresh_minutes,omitempty"`
-	MaxStaleHours              *int32  `json:"max_stale_hours,omitempty"`
+	Mode          string `json:"mode"`
+	EntraTenantId string `json:"entra_tenant_id"`
+	// Optional verified Entra SCIM connection. Required for tenant_group_id.
+	ScimConnectionId *string `json:"scim_connection_id,omitempty"`
+	TenantGroupId    *string `json:"tenant_group_id,omitempty"`
+	RefreshMinutes   *int32  `json:"refresh_minutes,omitempty"`
+	MaxStaleHours    *int32  `json:"max_stale_hours,omitempty"`
 }
 
 type _SharePointContentSourcePermissions SharePointContentSourcePermissions
@@ -35,12 +35,10 @@ type _SharePointContentSourcePermissions SharePointContentSourcePermissions
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSharePointContentSourcePermissions(mode string, entraTenantId string, scimConnectionId string, permissionReaderProviderId string) *SharePointContentSourcePermissions {
+func NewSharePointContentSourcePermissions(mode string, entraTenantId string) *SharePointContentSourcePermissions {
 	this := SharePointContentSourcePermissions{}
 	this.Mode = mode
 	this.EntraTenantId = entraTenantId
-	this.ScimConnectionId = scimConnectionId
-	this.PermissionReaderProviderId = permissionReaderProviderId
 	return &this
 }
 
@@ -100,52 +98,36 @@ func (o *SharePointContentSourcePermissions) SetEntraTenantId(v string) {
 	o.EntraTenantId = v
 }
 
-// GetScimConnectionId returns the ScimConnectionId field value
+// GetScimConnectionId returns the ScimConnectionId field value if set, zero value otherwise.
 func (o *SharePointContentSourcePermissions) GetScimConnectionId() string {
-	if o == nil {
+	if o == nil || IsNil(o.ScimConnectionId) {
 		var ret string
 		return ret
 	}
-
-	return o.ScimConnectionId
+	return *o.ScimConnectionId
 }
 
-// GetScimConnectionIdOk returns a tuple with the ScimConnectionId field value
+// GetScimConnectionIdOk returns a tuple with the ScimConnectionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SharePointContentSourcePermissions) GetScimConnectionIdOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.ScimConnectionId) {
 		return nil, false
 	}
-	return &o.ScimConnectionId, true
+	return o.ScimConnectionId, true
 }
 
-// SetScimConnectionId sets field value
+// HasScimConnectionId returns a boolean if a field has been set.
+func (o *SharePointContentSourcePermissions) HasScimConnectionId() bool {
+	if o != nil && !IsNil(o.ScimConnectionId) {
+		return true
+	}
+
+	return false
+}
+
+// SetScimConnectionId gets a reference to the given string and assigns it to the ScimConnectionId field.
 func (o *SharePointContentSourcePermissions) SetScimConnectionId(v string) {
-	o.ScimConnectionId = v
-}
-
-// GetPermissionReaderProviderId returns the PermissionReaderProviderId field value
-func (o *SharePointContentSourcePermissions) GetPermissionReaderProviderId() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.PermissionReaderProviderId
-}
-
-// GetPermissionReaderProviderIdOk returns a tuple with the PermissionReaderProviderId field value
-// and a boolean to check if the value has been set.
-func (o *SharePointContentSourcePermissions) GetPermissionReaderProviderIdOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.PermissionReaderProviderId, true
-}
-
-// SetPermissionReaderProviderId sets field value
-func (o *SharePointContentSourcePermissions) SetPermissionReaderProviderId(v string) {
-	o.PermissionReaderProviderId = v
+	o.ScimConnectionId = &v
 }
 
 // GetTenantGroupId returns the TenantGroupId field value if set, zero value otherwise.
@@ -256,8 +238,9 @@ func (o SharePointContentSourcePermissions) ToMap() (map[string]interface{}, err
 	toSerialize := map[string]interface{}{}
 	toSerialize["mode"] = o.Mode
 	toSerialize["entra_tenant_id"] = o.EntraTenantId
-	toSerialize["scim_connection_id"] = o.ScimConnectionId
-	toSerialize["permission_reader_provider_id"] = o.PermissionReaderProviderId
+	if !IsNil(o.ScimConnectionId) {
+		toSerialize["scim_connection_id"] = o.ScimConnectionId
+	}
 	if !IsNil(o.TenantGroupId) {
 		toSerialize["tenant_group_id"] = o.TenantGroupId
 	}
@@ -277,8 +260,6 @@ func (o *SharePointContentSourcePermissions) UnmarshalJSON(data []byte) (err err
 	requiredProperties := []string{
 		"mode",
 		"entra_tenant_id",
-		"scim_connection_id",
-		"permission_reader_provider_id",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -296,7 +277,7 @@ func (o *SharePointContentSourcePermissions) UnmarshalJSON(data []byte) (err err
 	}
 
 	// A required property that is not nullable cannot be null: it would decode as its zero value.
-	for _, requiredProperty := range []string{"mode", "entra_tenant_id", "scim_connection_id", "permission_reader_provider_id"} {
+	for _, requiredProperty := range []string{"mode", "entra_tenant_id"} {
 		if allProperties[requiredProperty] == nil {
 			return fmt.Errorf("required property %v is null", requiredProperty)
 		}
