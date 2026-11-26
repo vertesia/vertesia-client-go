@@ -612,6 +612,156 @@ func (a *ContentSourcesAPIService) DisconnectGoogleDriveReaderExecute(r ApiDisco
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
+type ApiDiscoverContentSourceFileRequest struct {
+	ctx                              context.Context
+	ApiService                       *ContentSourcesAPIService
+	xApiVersion                      *string
+	discoverContentSourceFilePayload *DiscoverContentSourceFilePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiDiscoverContentSourceFileRequest) XApiVersion(xApiVersion string) ApiDiscoverContentSourceFileRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiDiscoverContentSourceFileRequest) DiscoverContentSourceFilePayload(discoverContentSourceFilePayload DiscoverContentSourceFilePayload) ApiDiscoverContentSourceFileRequest {
+	r.discoverContentSourceFilePayload = &discoverContentSourceFilePayload
+	return r
+}
+
+func (r ApiDiscoverContentSourceFileRequest) Execute() (*ContentSourceFileDownload, *http.Response, error) {
+	return r.ApiService.DiscoverContentSourceFileExecute(r)
+}
+
+/*
+DiscoverContentSourceFile Get the download URL of a file of a document library
+
+**Required permissions:** Any of `content_source:manage`, `project:settings_write`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiDiscoverContentSourceFileRequest
+*/
+func (a *ContentSourcesAPIService) DiscoverContentSourceFile(ctx context.Context) ApiDiscoverContentSourceFileRequest {
+	return ApiDiscoverContentSourceFileRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return ContentSourceFileDownload
+func (a *ContentSourcesAPIService) DiscoverContentSourceFileExecute(r ApiDiscoverContentSourceFileRequest) (*ContentSourceFileDownload, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ContentSourceFileDownload
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ContentSourcesAPIService.DiscoverContentSourceFile")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/content-sources/discover/file"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+	if r.discoverContentSourceFilePayload == nil {
+		return localVarReturnValue, nil, reportError("discoverContentSourceFilePayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.discoverContentSourceFilePayload
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiDiscoverContentSourceFoldersRequest struct {
 	ctx                                 context.Context
 	ApiService                          *ContentSourcesAPIService
@@ -1619,6 +1769,160 @@ func (a *ContentSourcesAPIService) GetContentSourceStatusExecute(r ApiGetContent
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiInspectContentSourceFileRequest struct {
+	ctx                             context.Context
+	ApiService                      *ContentSourcesAPIService
+	sourceId                        string
+	xApiVersion                     *string
+	inspectContentSourceFilePayload *InspectContentSourceFilePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiInspectContentSourceFileRequest) XApiVersion(xApiVersion string) ApiInspectContentSourceFileRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiInspectContentSourceFileRequest) InspectContentSourceFilePayload(inspectContentSourceFilePayload InspectContentSourceFilePayload) ApiInspectContentSourceFileRequest {
+	r.inspectContentSourceFilePayload = &inspectContentSourceFilePayload
+	return r
+}
+
+func (r ApiInspectContentSourceFileRequest) Execute() (*ContentSourceFileDownload, *http.Response, error) {
+	return r.ApiService.InspectContentSourceFileExecute(r)
+}
+
+/*
+InspectContentSourceFile Get the download URL of a file a source reaches
+
+**Required permissions:** Any of `content_source:manage`, `project:settings_write`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param sourceId
+	@return ApiInspectContentSourceFileRequest
+*/
+func (a *ContentSourcesAPIService) InspectContentSourceFile(ctx context.Context, sourceId string) ApiInspectContentSourceFileRequest {
+	return ApiInspectContentSourceFileRequest{
+		ApiService: a,
+		ctx:        ctx,
+		sourceId:   sourceId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return ContentSourceFileDownload
+func (a *ContentSourcesAPIService) InspectContentSourceFileExecute(r ApiInspectContentSourceFileRequest) (*ContentSourceFileDownload, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ContentSourceFileDownload
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ContentSourcesAPIService.InspectContentSourceFile")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/content-sources/{sourceId}/discover/file"
+	localVarPath = strings.Replace(localVarPath, "{"+"sourceId"+"}", url.PathEscape(parameterValueToString(r.sourceId, "sourceId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+	if r.inspectContentSourceFilePayload == nil {
+		return localVarReturnValue, nil, reportError("inspectContentSourceFilePayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.inspectContentSourceFilePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -3029,7 +3333,7 @@ func (r ApiUpdateContentSourceRequest) Execute() (*ExternalContentSource, *http.
 /*
 UpdateContentSource Update a content source
 
-Changes the name, description, sync settings or sample, and, before the first sync, the library and folder to sync (409 afterwards). Saving sync settings also hands the sync your credentials, which restarts a sync stopped because its previous credentials were refused. Changing `sample_percent` makes the next sync an import.
+Changes the name, description, sync settings or sample, and, before the first sync, the library and folder to sync (409 afterwards). Saving sync settings also hands the sync your credentials, which restarts a sync stopped because its previous credentials were refused. Changing `sample_percent` or `sample_item_ids` makes the next sync an import; giving both in one request answers 400.
 
 **Required permissions:** Any of `content_source:manage`, `project:settings_write`
 

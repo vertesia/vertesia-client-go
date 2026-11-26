@@ -24,6 +24,8 @@ type ContentSourceSyncSettings struct {
 	Enabled bool `json:"enabled"`
 	// Minutes between two scheduled syncs, from one scheduled time to the next.
 	IntervalMinutes int32 `json:"interval_minutes"`
+	// Also sync as soon as the system notifies a change, instead of waiting for the next scheduled sync. Off unless set to `true`. Needs `enabled`, a system that sends change notifications (SharePoint) and a region where they are available: the status says whether they are active. When absent in an update, the stored value is kept.
+	Notifications *bool `json:"notifications,omitempty"`
 }
 
 type _ContentSourceSyncSettings ContentSourceSyncSettings
@@ -95,6 +97,38 @@ func (o *ContentSourceSyncSettings) SetIntervalMinutes(v int32) {
 	o.IntervalMinutes = v
 }
 
+// GetNotifications returns the Notifications field value if set, zero value otherwise.
+func (o *ContentSourceSyncSettings) GetNotifications() bool {
+	if o == nil || IsNil(o.Notifications) {
+		var ret bool
+		return ret
+	}
+	return *o.Notifications
+}
+
+// GetNotificationsOk returns a tuple with the Notifications field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentSourceSyncSettings) GetNotificationsOk() (*bool, bool) {
+	if o == nil || IsNil(o.Notifications) {
+		return nil, false
+	}
+	return o.Notifications, true
+}
+
+// HasNotifications returns a boolean if a field has been set.
+func (o *ContentSourceSyncSettings) HasNotifications() bool {
+	if o != nil && !IsNil(o.Notifications) {
+		return true
+	}
+
+	return false
+}
+
+// SetNotifications gets a reference to the given bool and assigns it to the Notifications field.
+func (o *ContentSourceSyncSettings) SetNotifications(v bool) {
+	o.Notifications = &v
+}
+
 func (o ContentSourceSyncSettings) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -107,6 +141,9 @@ func (o ContentSourceSyncSettings) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["enabled"] = o.Enabled
 	toSerialize["interval_minutes"] = o.IntervalMinutes
+	if !IsNil(o.Notifications) {
+		toSerialize["notifications"] = o.Notifications
+	}
 	return toSerialize, nil
 }
 

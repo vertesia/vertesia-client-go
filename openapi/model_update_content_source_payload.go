@@ -23,8 +23,10 @@ type UpdateContentSourcePayload struct {
 	Name        *string                    `json:"name,omitempty"`
 	Description *string                    `json:"description,omitempty"`
 	Sync        *ContentSourceSyncSettings `json:"sync,omitempty"`
-	// Sample mode: syncs only about this percentage of the files, to look at real documents before importing them all. A file is in the sample by a hash of its ID, so the same files stay in it from one sync to the next, spread over every folder. A file outside the sample is not imported, and its document is deleted if it has one. `null` removes the sample, so that every file is synced. A change, before or after the first sync, makes the next sync an import that lists the whole folder: it imports the files that entered the sample and deletes the documents of those that left it.
-	SamplePercent NullableInt32                    `json:"sample_percent,omitempty"`
+	// Sample mode: syncs only about this percentage of the files, to look at real documents before importing them all. A file is in the sample by a hash of its ID, so the same files stay in it from one sync to the next, spread over every folder. A file outside the sample is not imported, and its document is deleted if it has one. `null` removes the sample, of either kind, so that every file is synced. A change, before or after the first sync, makes the next sync an import that lists the whole folder: it imports the files that entered the sample and deletes the documents of those that left it. A percentage replaces a sample of chosen files.
+	SamplePercent NullableInt32 `json:"sample_percent,omitempty"`
+	// Sample mode with chosen files: syncs only the files with these IDs, as a sample or a file listing returned them, at most 200. A file outside the list is not imported, and its document is deleted if it has one. The list replaces a percentage, and `sample_percent: null` removes either kind of sample; giving both fields in one request is refused. A change makes the next sync an import, as for `sample_percent`.
+	SampleItemIds []string                         `json:"sample_item_ids,omitempty"`
 	Permissions   *ContentSourcePermissionSettings `json:"permissions,omitempty"`
 	// Only before the first sync: the root to sync, as `discover/roots` returned it (a SharePoint document library; for Box, a folder shared with the app). Answers 409 once the source has synced.
 	RootId *string `json:"root_id,omitempty"`
@@ -222,6 +224,38 @@ func (o *UpdateContentSourcePayload) UnsetSamplePercent() {
 	o.SamplePercent.Unset()
 }
 
+// GetSampleItemIds returns the SampleItemIds field value if set, zero value otherwise.
+func (o *UpdateContentSourcePayload) GetSampleItemIds() []string {
+	if o == nil || IsNil(o.SampleItemIds) {
+		var ret []string
+		return ret
+	}
+	return o.SampleItemIds
+}
+
+// GetSampleItemIdsOk returns a tuple with the SampleItemIds field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateContentSourcePayload) GetSampleItemIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.SampleItemIds) {
+		return nil, false
+	}
+	return o.SampleItemIds, true
+}
+
+// HasSampleItemIds returns a boolean if a field has been set.
+func (o *UpdateContentSourcePayload) HasSampleItemIds() bool {
+	if o != nil && !IsNil(o.SampleItemIds) {
+		return true
+	}
+
+	return false
+}
+
+// SetSampleItemIds gets a reference to the given []string and assigns it to the SampleItemIds field.
+func (o *UpdateContentSourcePayload) SetSampleItemIds(v []string) {
+	o.SampleItemIds = v
+}
+
 // GetPermissions returns the Permissions field value if set, zero value otherwise.
 func (o *UpdateContentSourcePayload) GetPermissions() ContentSourcePermissionSettings {
 	if o == nil || IsNil(o.Permissions) {
@@ -374,6 +408,9 @@ func (o UpdateContentSourcePayload) ToMap() (map[string]interface{}, error) {
 	}
 	if o.SamplePercent.IsSet() {
 		toSerialize["sample_percent"] = o.SamplePercent.Get()
+	}
+	if !IsNil(o.SampleItemIds) {
+		toSerialize["sample_item_ids"] = o.SampleItemIds
 	}
 	if !IsNil(o.Permissions) {
 		toSerialize["permissions"] = o.Permissions

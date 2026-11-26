@@ -29,8 +29,10 @@ type GoogleDriveContentSource struct {
 	// Collection that synced documents are added to, if any.
 	CollectionId *string                   `json:"collection_id,omitempty"`
 	Sync         ContentSourceSyncSettings `json:"sync"`
-	// Sample mode: syncs only about this percentage of the files, to look at real documents before importing them all. A file is in the sample by a hash of its ID, so the same files stay in it from one sync to the next, spread over every folder. A file outside the sample is not imported, and its document is deleted if it has one. Absent when the source syncs every file.
-	SamplePercent   *int32                        `json:"sample_percent,omitempty"`
+	// Sample mode: syncs only about this percentage of the files, to look at real documents before importing them all. A file is in the sample by a hash of its ID, so the same files stay in it from one sync to the next, spread over every folder. A file outside the sample is not imported, and its document is deleted if it has one. Absent when the source syncs every file. 1 beside `sample_item_ids`, for clients that predate the list: the list decides.
+	SamplePercent *int32 `json:"sample_percent,omitempty"`
+	// Sample mode with chosen files: syncs only the files with these IDs, as a sample or a file listing returned them, at most 200. A file outside the list is not imported, and its document is deleted if it has one. Absent unless the sample is of chosen files.
+	SampleItemIds   []string                      `json:"sample_item_ids,omitempty"`
 	CreatedBy       *string                       `json:"created_by,omitempty"`
 	UpdatedBy       *string                       `json:"updated_by,omitempty"`
 	CreatedAt       *time.Time                    `json:"created_at,omitempty"`
@@ -258,6 +260,38 @@ func (o *GoogleDriveContentSource) HasSamplePercent() bool {
 // SetSamplePercent gets a reference to the given int32 and assigns it to the SamplePercent field.
 func (o *GoogleDriveContentSource) SetSamplePercent(v int32) {
 	o.SamplePercent = &v
+}
+
+// GetSampleItemIds returns the SampleItemIds field value if set, zero value otherwise.
+func (o *GoogleDriveContentSource) GetSampleItemIds() []string {
+	if o == nil || IsNil(o.SampleItemIds) {
+		var ret []string
+		return ret
+	}
+	return o.SampleItemIds
+}
+
+// GetSampleItemIdsOk returns a tuple with the SampleItemIds field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *GoogleDriveContentSource) GetSampleItemIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.SampleItemIds) {
+		return nil, false
+	}
+	return o.SampleItemIds, true
+}
+
+// HasSampleItemIds returns a boolean if a field has been set.
+func (o *GoogleDriveContentSource) HasSampleItemIds() bool {
+	if o != nil && !IsNil(o.SampleItemIds) {
+		return true
+	}
+
+	return false
+}
+
+// SetSampleItemIds gets a reference to the given []string and assigns it to the SampleItemIds field.
+func (o *GoogleDriveContentSource) SetSampleItemIds(v []string) {
+	o.SampleItemIds = v
 }
 
 // GetCreatedBy returns the CreatedBy field value if set, zero value otherwise.
@@ -546,6 +580,9 @@ func (o GoogleDriveContentSource) ToMap() (map[string]interface{}, error) {
 	toSerialize["sync"] = o.Sync
 	if !IsNil(o.SamplePercent) {
 		toSerialize["sample_percent"] = o.SamplePercent
+	}
+	if !IsNil(o.SampleItemIds) {
+		toSerialize["sample_item_ids"] = o.SampleItemIds
 	}
 	if !IsNil(o.CreatedBy) {
 		toSerialize["created_by"] = o.CreatedBy

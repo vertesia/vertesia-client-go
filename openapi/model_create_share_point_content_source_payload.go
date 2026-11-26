@@ -31,9 +31,11 @@ type CreateSharePointContentSourcePayload struct {
 	CollectionId *string `json:"collection_id,omitempty"`
 	// Defaults to scheduled sync disabled, every 60 minutes once enabled.
 	Sync *ContentSourceSyncSettings `json:"sync,omitempty"`
-	// Sample mode: syncs only about this percentage of the files, to look at real documents before importing them all. A file is in the sample by a hash of its ID, so the same files stay in it from one sync to the next, spread over every folder. A file outside the sample is not imported, and its document is deleted if it has one. Leave out to sync every file.
+	// Sample mode: syncs only about this percentage of the files, to look at real documents before importing them all. A file is in the sample by a hash of its ID, so the same files stay in it from one sync to the next, spread over every folder. A file outside the sample is not imported, and its document is deleted if it has one. Leave out to sync every file. Not with `sample_item_ids`.
 	SamplePercent *int32 `json:"sample_percent,omitempty"`
-	Type          string `json:"type"`
+	// Sample mode with chosen files: syncs only the files with these IDs, as a sample or a file listing returned them, at most 200. A file outside the list is not imported, and its document is deleted if it has one. Leave out to sync every file. Not with `sample_percent`.
+	SampleItemIds []string `json:"sample_item_ids,omitempty"`
+	Type          string   `json:"type"`
 	// The approved SharePoint library binding this source is registered for.
 	SharepointLibraryBindingId *string                      `json:"sharepoint_library_binding_id,omitempty"`
 	Permissions                *SharePointPermissionOptions `json:"permissions,omitempty"`
@@ -283,6 +285,38 @@ func (o *CreateSharePointContentSourcePayload) SetSamplePercent(v int32) {
 	o.SamplePercent = &v
 }
 
+// GetSampleItemIds returns the SampleItemIds field value if set, zero value otherwise.
+func (o *CreateSharePointContentSourcePayload) GetSampleItemIds() []string {
+	if o == nil || IsNil(o.SampleItemIds) {
+		var ret []string
+		return ret
+	}
+	return o.SampleItemIds
+}
+
+// GetSampleItemIdsOk returns a tuple with the SampleItemIds field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateSharePointContentSourcePayload) GetSampleItemIdsOk() ([]string, bool) {
+	if o == nil || IsNil(o.SampleItemIds) {
+		return nil, false
+	}
+	return o.SampleItemIds, true
+}
+
+// HasSampleItemIds returns a boolean if a field has been set.
+func (o *CreateSharePointContentSourcePayload) HasSampleItemIds() bool {
+	if o != nil && !IsNil(o.SampleItemIds) {
+		return true
+	}
+
+	return false
+}
+
+// SetSampleItemIds gets a reference to the given []string and assigns it to the SampleItemIds field.
+func (o *CreateSharePointContentSourcePayload) SetSampleItemIds(v []string) {
+	o.SampleItemIds = v
+}
+
 // GetType returns the Type field value
 func (o *CreateSharePointContentSourcePayload) GetType() string {
 	if o == nil {
@@ -487,6 +521,9 @@ func (o CreateSharePointContentSourcePayload) ToMap() (map[string]interface{}, e
 	}
 	if !IsNil(o.SamplePercent) {
 		toSerialize["sample_percent"] = o.SamplePercent
+	}
+	if !IsNil(o.SampleItemIds) {
+		toSerialize["sample_item_ids"] = o.SampleItemIds
 	}
 	toSerialize["type"] = o.Type
 	if !IsNil(o.SharepointLibraryBindingId) {

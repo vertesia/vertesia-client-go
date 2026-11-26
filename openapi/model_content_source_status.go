@@ -22,10 +22,12 @@ var _ MappedNullable = &ContentSourceStatus{}
 // ContentSourceStatus A content source's sync state.
 type ContentSourceStatus struct {
 	// `waiting` between syncs, `running` during one, `stopped` when its credentials were refused or the source is being deleted.
-	State        string                         `json:"state"`
-	Permissions  *ContentSourcePermissionStatus `json:"permissions,omitempty"`
-	CurrentRound *ContentSourceSyncRound        `json:"current_round,omitempty"`
-	LastRound    *ContentSourceSyncRound        `json:"last_round,omitempty"`
+	State       string                         `json:"state"`
+	Permissions *ContentSourcePermissionStatus `json:"permissions,omitempty"`
+	// The state of the source's change notifications. Absent unless the source asks for them with `sync.notifications`, and before the first attempt to subscribe.
+	Notifications *ContentSourceNotificationStatus `json:"notifications,omitempty"`
+	CurrentRound  *ContentSourceSyncRound          `json:"current_round,omitempty"`
+	LastRound     *ContentSourceSyncRound          `json:"last_round,omitempty"`
 	// The last 10 finished rounds, newest first. Their reports are kept; older ones are deleted.
 	RecentRounds []ContentSourceSyncRound `json:"recent_rounds,omitempty"`
 	// When the change cursor in use was taken.
@@ -109,6 +111,38 @@ func (o *ContentSourceStatus) HasPermissions() bool {
 // SetPermissions gets a reference to the given ContentSourcePermissionStatus and assigns it to the Permissions field.
 func (o *ContentSourceStatus) SetPermissions(v ContentSourcePermissionStatus) {
 	o.Permissions = &v
+}
+
+// GetNotifications returns the Notifications field value if set, zero value otherwise.
+func (o *ContentSourceStatus) GetNotifications() ContentSourceNotificationStatus {
+	if o == nil || IsNil(o.Notifications) {
+		var ret ContentSourceNotificationStatus
+		return ret
+	}
+	return *o.Notifications
+}
+
+// GetNotificationsOk returns a tuple with the Notifications field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ContentSourceStatus) GetNotificationsOk() (*ContentSourceNotificationStatus, bool) {
+	if o == nil || IsNil(o.Notifications) {
+		return nil, false
+	}
+	return o.Notifications, true
+}
+
+// HasNotifications returns a boolean if a field has been set.
+func (o *ContentSourceStatus) HasNotifications() bool {
+	if o != nil && !IsNil(o.Notifications) {
+		return true
+	}
+
+	return false
+}
+
+// SetNotifications gets a reference to the given ContentSourceNotificationStatus and assigns it to the Notifications field.
+func (o *ContentSourceStatus) SetNotifications(v ContentSourceNotificationStatus) {
+	o.Notifications = &v
 }
 
 // GetCurrentRound returns the CurrentRound field value if set, zero value otherwise.
@@ -316,6 +350,9 @@ func (o ContentSourceStatus) ToMap() (map[string]interface{}, error) {
 	toSerialize["state"] = o.State
 	if !IsNil(o.Permissions) {
 		toSerialize["permissions"] = o.Permissions
+	}
+	if !IsNil(o.Notifications) {
+		toSerialize["notifications"] = o.Notifications
 	}
 	if !IsNil(o.CurrentRound) {
 		toSerialize["current_round"] = o.CurrentRound
