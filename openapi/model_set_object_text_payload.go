@@ -22,6 +22,8 @@ var _ MappedNullable = &SetObjectTextPayload{}
 type SetObjectTextPayload struct {
 	// The extracted text to store for the object.
 	Text string `json:"text"`
+	// Reject stale text when the current content etag differs.
+	ExpectedContentEtag *string `json:"expected_content_etag,omitempty"`
 	// The etag of the content the text was extracted from. When provided, the server records it as the object text_etag so extraction can be skipped while the content is unchanged.
 	Etag *string `json:"etag,omitempty"`
 }
@@ -70,6 +72,38 @@ func (o *SetObjectTextPayload) SetText(v string) {
 	o.Text = v
 }
 
+// GetExpectedContentEtag returns the ExpectedContentEtag field value if set, zero value otherwise.
+func (o *SetObjectTextPayload) GetExpectedContentEtag() string {
+	if o == nil || IsNil(o.ExpectedContentEtag) {
+		var ret string
+		return ret
+	}
+	return *o.ExpectedContentEtag
+}
+
+// GetExpectedContentEtagOk returns a tuple with the ExpectedContentEtag field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SetObjectTextPayload) GetExpectedContentEtagOk() (*string, bool) {
+	if o == nil || IsNil(o.ExpectedContentEtag) {
+		return nil, false
+	}
+	return o.ExpectedContentEtag, true
+}
+
+// HasExpectedContentEtag returns a boolean if a field has been set.
+func (o *SetObjectTextPayload) HasExpectedContentEtag() bool {
+	if o != nil && !IsNil(o.ExpectedContentEtag) {
+		return true
+	}
+
+	return false
+}
+
+// SetExpectedContentEtag gets a reference to the given string and assigns it to the ExpectedContentEtag field.
+func (o *SetObjectTextPayload) SetExpectedContentEtag(v string) {
+	o.ExpectedContentEtag = &v
+}
+
 // GetEtag returns the Etag field value if set, zero value otherwise.
 func (o *SetObjectTextPayload) GetEtag() string {
 	if o == nil || IsNil(o.Etag) {
@@ -113,6 +147,9 @@ func (o SetObjectTextPayload) MarshalJSON() ([]byte, error) {
 func (o SetObjectTextPayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["text"] = o.Text
+	if !IsNil(o.ExpectedContentEtag) {
+		toSerialize["expected_content_etag"] = o.ExpectedContentEtag
+	}
 	if !IsNil(o.Etag) {
 		toSerialize["etag"] = o.Etag
 	}

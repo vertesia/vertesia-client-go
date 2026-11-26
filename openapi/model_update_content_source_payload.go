@@ -19,6 +19,7 @@ var _ MappedNullable = &UpdateContentSourcePayload{}
 
 // UpdateContentSourcePayload Changes the name, description, sync settings or sample, and, before the first sync, the root and folder to sync. Saving sync settings also hands the sync your credentials, which restarts a sync stopped because its previous credentials were refused.
 type UpdateContentSourcePayload struct {
+	Selection   *GoogleDriveSelection      `json:"selection,omitempty"`
 	Name        *string                    `json:"name,omitempty"`
 	Description *string                    `json:"description,omitempty"`
 	Sync        *ContentSourceSyncSettings `json:"sync,omitempty"`
@@ -48,6 +49,38 @@ func NewUpdateContentSourcePayload() *UpdateContentSourcePayload {
 func NewUpdateContentSourcePayloadWithDefaults() *UpdateContentSourcePayload {
 	this := UpdateContentSourcePayload{}
 	return &this
+}
+
+// GetSelection returns the Selection field value if set, zero value otherwise.
+func (o *UpdateContentSourcePayload) GetSelection() GoogleDriveSelection {
+	if o == nil || IsNil(o.Selection) {
+		var ret GoogleDriveSelection
+		return ret
+	}
+	return *o.Selection
+}
+
+// GetSelectionOk returns a tuple with the Selection field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateContentSourcePayload) GetSelectionOk() (*GoogleDriveSelection, bool) {
+	if o == nil || IsNil(o.Selection) {
+		return nil, false
+	}
+	return o.Selection, true
+}
+
+// HasSelection returns a boolean if a field has been set.
+func (o *UpdateContentSourcePayload) HasSelection() bool {
+	if o != nil && !IsNil(o.Selection) {
+		return true
+	}
+
+	return false
+}
+
+// SetSelection gets a reference to the given GoogleDriveSelection and assigns it to the Selection field.
+func (o *UpdateContentSourcePayload) SetSelection(v GoogleDriveSelection) {
+	o.Selection = &v
 }
 
 // GetName returns the Name field value if set, zero value otherwise.
@@ -327,6 +360,9 @@ func (o UpdateContentSourcePayload) MarshalJSON() ([]byte, error) {
 
 func (o UpdateContentSourcePayload) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Selection) {
+		toSerialize["selection"] = o.Selection
+	}
 	if !IsNil(o.Name) {
 		toSerialize["name"] = o.Name
 	}

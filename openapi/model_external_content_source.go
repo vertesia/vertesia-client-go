@@ -18,8 +18,9 @@ import (
 
 // ExternalContentSource - A folder of an external content system whose files are synced into the project without copies.
 type ExternalContentSource struct {
-	BoxContentSource        *BoxContentSource
-	SharePointContentSource *SharePointContentSource
+	BoxContentSource         *BoxContentSource
+	GoogleDriveContentSource *GoogleDriveContentSource
+	SharePointContentSource  *SharePointContentSource
 	// Raw holds a variant this client version does not know, as the server sent it.
 	// It is nil for known variants, and MarshalJSON writes it back unchanged.
 	Raw json.RawMessage `json:"-"`
@@ -29,6 +30,13 @@ type ExternalContentSource struct {
 func BoxContentSourceAsExternalContentSource(v *BoxContentSource) ExternalContentSource {
 	return ExternalContentSource{
 		BoxContentSource: v,
+	}
+}
+
+// GoogleDriveContentSourceAsExternalContentSource is a convenience function that returns GoogleDriveContentSource wrapped in ExternalContentSource
+func GoogleDriveContentSourceAsExternalContentSource(v *GoogleDriveContentSource) ExternalContentSource {
+	return ExternalContentSource{
+		GoogleDriveContentSource: v,
 	}
 }
 
@@ -72,6 +80,16 @@ func (dst *ExternalContentSource) UnmarshalJSON(data []byte) error {
 		}
 		dst.BoxContentSource = &value
 		return nil
+	case "google-drive":
+		var value GoogleDriveContentSource
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.GoogleDriveContentSource = &value
+		return nil
 	default:
 		// A variant added after this client was generated: keep it as the server sent it.
 		dst.Raw = append(json.RawMessage(nil), data...)
@@ -83,6 +101,10 @@ func (dst *ExternalContentSource) UnmarshalJSON(data []byte) error {
 func (src ExternalContentSource) MarshalJSON() ([]byte, error) {
 	if src.BoxContentSource != nil {
 		return json.Marshal(&src.BoxContentSource)
+	}
+
+	if src.GoogleDriveContentSource != nil {
+		return json.Marshal(&src.GoogleDriveContentSource)
 	}
 
 	if src.SharePointContentSource != nil {
@@ -105,6 +127,10 @@ func (obj *ExternalContentSource) GetActualInstance() interface{} {
 		return obj.BoxContentSource
 	}
 
+	if obj.GoogleDriveContentSource != nil {
+		return obj.GoogleDriveContentSource
+	}
+
 	if obj.SharePointContentSource != nil {
 		return obj.SharePointContentSource
 	}
@@ -121,6 +147,10 @@ func (obj *ExternalContentSource) GetActualInstance() interface{} {
 func (obj ExternalContentSource) GetActualInstanceValue() interface{} {
 	if obj.BoxContentSource != nil {
 		return *obj.BoxContentSource
+	}
+
+	if obj.GoogleDriveContentSource != nil {
+		return *obj.GoogleDriveContentSource
 	}
 
 	if obj.SharePointContentSource != nil {

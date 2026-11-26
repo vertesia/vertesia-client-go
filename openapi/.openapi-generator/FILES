@@ -119,6 +119,7 @@ model_agentic_view_search_configuration.go
 model_aggregated_tool.go
 model_ai_model.go
 model_ai_model_status.go
+model_all_google_drives_selection.go
 model_allocate_agent_run_budget_payload.go
 model_allocate_agent_run_budget_payload_any_of.go
 model_allocate_agent_run_budget_payload_any_of_1.go
@@ -461,6 +462,7 @@ model_create_email_route_request.go
 model_create_email_route_response.go
 model_create_event_ingest_channel_payload.go
 model_create_event_subscription_payload.go
+model_create_google_drive_content_source_payload.go
 model_create_inference_profile_payload.go
 model_create_o_auth_client_payload.go
 model_create_o_auth_provider_payload.go
@@ -690,6 +692,12 @@ model_github_configuration.go
 model_github_configuration_input.go
 model_gladia_configuration.go
 model_gladia_configuration_input.go
+model_google_drive_content_source.go
+model_google_drive_content_source_permissions.go
+model_google_drive_permission_options.go
+model_google_drive_reader.go
+model_google_drive_reader_config.go
+model_google_drive_selection.go
 model_groq_options.go
 model_grounded_assistant_response.go
 model_grounded_extraction_request.go
@@ -1119,6 +1127,7 @@ model_share_point_organization.go
 model_share_point_organization_link_attempt.go
 model_share_point_organization_reader.go
 model_share_point_organizations.go
+model_share_point_permission_options.go
 model_share_point_region.go
 model_share_point_request_project.go
 model_signal_agent_response.go
@@ -1126,6 +1135,7 @@ model_signal_event_properties.go
 model_signal_event_properties_sender.go
 model_signal_task.go
 model_signing_algorithm.go
+model_single_google_drive_selection.go
 model_skill_context_triggers.go
 model_sort_option.go
 model_sort_order.go

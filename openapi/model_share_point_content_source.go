@@ -39,8 +39,8 @@ type SharePointContentSource struct {
 	UpdatedAt     *time.Time `json:"updated_at,omitempty"`
 	Type          string     `json:"type"`
 	// The managed library uses its organization reader, without a project OAuth provider.
-	ReaderMode  *string                          `json:"reader_mode,omitempty"`
-	Permissions *ContentSourcePermissionSettings `json:"permissions,omitempty"`
+	ReaderMode  *string                      `json:"reader_mode,omitempty"`
+	Permissions *SharePointPermissionOptions `json:"permissions,omitempty"`
 	// The SharePoint site URL the source was created from.
 	SiteUrl string `json:"site_url"`
 	// The Microsoft Graph site ID.
@@ -494,9 +494,9 @@ func (o *SharePointContentSource) SetReaderMode(v string) {
 }
 
 // GetPermissions returns the Permissions field value if set, zero value otherwise.
-func (o *SharePointContentSource) GetPermissions() ContentSourcePermissionSettings {
+func (o *SharePointContentSource) GetPermissions() SharePointPermissionOptions {
 	if o == nil || IsNil(o.Permissions) {
-		var ret ContentSourcePermissionSettings
+		var ret SharePointPermissionOptions
 		return ret
 	}
 	return *o.Permissions
@@ -504,7 +504,7 @@ func (o *SharePointContentSource) GetPermissions() ContentSourcePermissionSettin
 
 // GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *SharePointContentSource) GetPermissionsOk() (*ContentSourcePermissionSettings, bool) {
+func (o *SharePointContentSource) GetPermissionsOk() (*SharePointPermissionOptions, bool) {
 	if o == nil || IsNil(o.Permissions) {
 		return nil, false
 	}
@@ -520,8 +520,8 @@ func (o *SharePointContentSource) HasPermissions() bool {
 	return false
 }
 
-// SetPermissions gets a reference to the given ContentSourcePermissionSettings and assigns it to the Permissions field.
-func (o *SharePointContentSource) SetPermissions(v ContentSourcePermissionSettings) {
+// SetPermissions gets a reference to the given SharePointPermissionOptions and assigns it to the Permissions field.
+func (o *SharePointContentSource) SetPermissions(v SharePointPermissionOptions) {
 	o.Permissions = &v
 }
 

@@ -13,74 +13,88 @@ package openapi
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
-// ContentSourcePermissionSettings - struct for ContentSourcePermissionSettings
+// ContentSourcePermissionSettings struct for ContentSourcePermissionSettings
 type ContentSourcePermissionSettings struct {
-	ProjectContentSourcePermissions    *ProjectContentSourcePermissions
-	SharePointContentSourcePermissions *SharePointContentSourcePermissions
+	GoogleDriveContentSourcePermissions *GoogleDriveContentSourcePermissions
+	ProjectContentSourcePermissions     *ProjectContentSourcePermissions
+	SharePointContentSourcePermissions  *SharePointContentSourcePermissions
 	// Raw holds a variant this client version does not know, as the server sent it.
 	// It is nil for known variants, and MarshalJSON writes it back unchanged.
 	Raw json.RawMessage `json:"-"`
 }
 
-// ProjectContentSourcePermissionsAsContentSourcePermissionSettings is a convenience function that returns ProjectContentSourcePermissions wrapped in ContentSourcePermissionSettings
-func ProjectContentSourcePermissionsAsContentSourcePermissionSettings(v *ProjectContentSourcePermissions) ContentSourcePermissionSettings {
-	return ContentSourcePermissionSettings{
-		ProjectContentSourcePermissions: v,
-	}
-}
-
-// SharePointContentSourcePermissionsAsContentSourcePermissionSettings is a convenience function that returns SharePointContentSourcePermissions wrapped in ContentSourcePermissionSettings
-func SharePointContentSourcePermissionsAsContentSourcePermissionSettings(v *SharePointContentSourcePermissions) ContentSourcePermissionSettings {
-	return ContentSourcePermissionSettings{
-		SharePointContentSourcePermissions: v,
-	}
-}
-
-// Unmarshal JSON data into one of the pointers in the struct
+// UnmarshalJSON decodes a known variant, or keeps the payload in Raw when the generated
+// decoder cannot pick a single known variant.
 func (dst *ContentSourcePermissionSettings) UnmarshalJSON(data []byte) error {
 	*dst = ContentSourcePermissionSettings{}
-	var tag struct {
-		Discriminator *string `json:"mode"`
+	err := dst.unmarshalVariantJSON(data)
+	if err == nil {
+		return nil
 	}
-	if err := json.Unmarshal(data, &tag); err != nil {
+	*dst = ContentSourcePermissionSettings{}
+	if string(data) == "null" || !json.Valid(data) {
 		return err
 	}
-	if tag.Discriminator == nil || *tag.Discriminator == "" {
-		return fmt.Errorf("missing ContentSourcePermissionSettings mode")
+	// A variant added after this client was generated: keep it as the server sent it.
+	dst.Raw = append(json.RawMessage(nil), data...)
+	return nil
+}
+
+// unmarshalVariantJSON is the generated decoder of the known variants.
+//
+// Unmarshal JSON data into any of the pointers in the struct
+func (dst *ContentSourcePermissionSettings) unmarshalVariantJSON(data []byte) error {
+	var err error
+	// try to unmarshal JSON data into GoogleDriveContentSourcePermissions
+	err = json.Unmarshal(data, &dst.GoogleDriveContentSourcePermissions)
+	if err == nil {
+		jsonGoogleDriveContentSourcePermissions, _ := json.Marshal(dst.GoogleDriveContentSourcePermissions)
+		if string(jsonGoogleDriveContentSourcePermissions) == "{}" { // empty struct
+			dst.GoogleDriveContentSourcePermissions = nil
+		} else {
+			return nil // data stored in dst.GoogleDriveContentSourcePermissions, return on the first match
+		}
+	} else {
+		dst.GoogleDriveContentSourcePermissions = nil
 	}
-	switch *tag.Discriminator {
-	case "project":
-		var value ProjectContentSourcePermissions
-		if err := json.Unmarshal(data, &value); err != nil {
-			return err
+
+	// try to unmarshal JSON data into ProjectContentSourcePermissions
+	err = json.Unmarshal(data, &dst.ProjectContentSourcePermissions)
+	if err == nil {
+		jsonProjectContentSourcePermissions, _ := json.Marshal(dst.ProjectContentSourcePermissions)
+		if string(jsonProjectContentSourcePermissions) == "{}" { // empty struct
+			dst.ProjectContentSourcePermissions = nil
+		} else {
+			return nil // data stored in dst.ProjectContentSourcePermissions, return on the first match
 		}
-		if err := validator.Validate(&value); err != nil {
-			return err
-		}
-		dst.ProjectContentSourcePermissions = &value
-		return nil
-	case "source":
-		var value SharePointContentSourcePermissions
-		if err := json.Unmarshal(data, &value); err != nil {
-			return err
-		}
-		if err := validator.Validate(&value); err != nil {
-			return err
-		}
-		dst.SharePointContentSourcePermissions = &value
-		return nil
-	default:
-		// A variant added after this client was generated: keep it as the server sent it.
-		dst.Raw = append(json.RawMessage(nil), data...)
-		return nil
+	} else {
+		dst.ProjectContentSourcePermissions = nil
 	}
+
+	// try to unmarshal JSON data into SharePointContentSourcePermissions
+	err = json.Unmarshal(data, &dst.SharePointContentSourcePermissions)
+	if err == nil {
+		jsonSharePointContentSourcePermissions, _ := json.Marshal(dst.SharePointContentSourcePermissions)
+		if string(jsonSharePointContentSourcePermissions) == "{}" { // empty struct
+			dst.SharePointContentSourcePermissions = nil
+		} else {
+			return nil // data stored in dst.SharePointContentSourcePermissions, return on the first match
+		}
+	} else {
+		dst.SharePointContentSourcePermissions = nil
+	}
+
+	return fmt.Errorf("data failed to match schemas in anyOf(ContentSourcePermissionSettings)")
 }
 
 // Marshal data from the first non-nil pointers in the struct to JSON
 func (src ContentSourcePermissionSettings) MarshalJSON() ([]byte, error) {
+	if src.GoogleDriveContentSourcePermissions != nil {
+		return json.Marshal(&src.GoogleDriveContentSourcePermissions)
+	}
+
 	if src.ProjectContentSourcePermissions != nil {
 		return json.Marshal(&src.ProjectContentSourcePermissions)
 	}
@@ -93,46 +107,7 @@ func (src ContentSourcePermissionSettings) MarshalJSON() ([]byte, error) {
 		return []byte(src.Raw), nil
 	}
 
-	return nil, nil // no data in oneOf schemas
-}
-
-// Get the actual instance
-func (obj *ContentSourcePermissionSettings) GetActualInstance() interface{} {
-	if obj == nil {
-		return nil
-	}
-	if obj.ProjectContentSourcePermissions != nil {
-		return obj.ProjectContentSourcePermissions
-	}
-
-	if obj.SharePointContentSourcePermissions != nil {
-		return obj.SharePointContentSourcePermissions
-	}
-
-	// all schemas are nil
-	if obj.Raw != nil {
-		return obj.Raw
-	}
-
-	return nil
-}
-
-// Get the actual instance value
-func (obj ContentSourcePermissionSettings) GetActualInstanceValue() interface{} {
-	if obj.ProjectContentSourcePermissions != nil {
-		return *obj.ProjectContentSourcePermissions
-	}
-
-	if obj.SharePointContentSourcePermissions != nil {
-		return *obj.SharePointContentSourcePermissions
-	}
-
-	// all schemas are nil
-	if obj.Raw != nil {
-		return obj.Raw
-	}
-
-	return nil
+	return nil, nil // no data in anyOf schemas
 }
 
 type NullableContentSourcePermissionSettings struct {

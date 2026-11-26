@@ -25,6 +25,7 @@ type CreateAccountApiKeyPayload struct {
 	ExpiresAt               *time.Time `json:"expires_at,omitempty"`
 	ScimEntraTenantId       *string    `json:"scim_entra_tenant_id,omitempty"`
 	ScimEntraMembersGroupId *string    `json:"scim_entra_members_group_id,omitempty"`
+	ScimGoogleDriveReaderId *string    `json:"scim_google_drive_reader_id,omitempty"`
 }
 
 type _CreateAccountApiKeyPayload CreateAccountApiKeyPayload
@@ -167,6 +168,38 @@ func (o *CreateAccountApiKeyPayload) SetScimEntraMembersGroupId(v string) {
 	o.ScimEntraMembersGroupId = &v
 }
 
+// GetScimGoogleDriveReaderId returns the ScimGoogleDriveReaderId field value if set, zero value otherwise.
+func (o *CreateAccountApiKeyPayload) GetScimGoogleDriveReaderId() string {
+	if o == nil || IsNil(o.ScimGoogleDriveReaderId) {
+		var ret string
+		return ret
+	}
+	return *o.ScimGoogleDriveReaderId
+}
+
+// GetScimGoogleDriveReaderIdOk returns a tuple with the ScimGoogleDriveReaderId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CreateAccountApiKeyPayload) GetScimGoogleDriveReaderIdOk() (*string, bool) {
+	if o == nil || IsNil(o.ScimGoogleDriveReaderId) {
+		return nil, false
+	}
+	return o.ScimGoogleDriveReaderId, true
+}
+
+// HasScimGoogleDriveReaderId returns a boolean if a field has been set.
+func (o *CreateAccountApiKeyPayload) HasScimGoogleDriveReaderId() bool {
+	if o != nil && !IsNil(o.ScimGoogleDriveReaderId) {
+		return true
+	}
+
+	return false
+}
+
+// SetScimGoogleDriveReaderId gets a reference to the given string and assigns it to the ScimGoogleDriveReaderId field.
+func (o *CreateAccountApiKeyPayload) SetScimGoogleDriveReaderId(v string) {
+	o.ScimGoogleDriveReaderId = &v
+}
+
 func (o CreateAccountApiKeyPayload) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -186,6 +219,9 @@ func (o CreateAccountApiKeyPayload) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ScimEntraMembersGroupId) {
 		toSerialize["scim_entra_members_group_id"] = o.ScimEntraMembersGroupId
+	}
+	if !IsNil(o.ScimGoogleDriveReaderId) {
+		toSerialize["scim_google_drive_reader_id"] = o.ScimGoogleDriveReaderId
 	}
 	return toSerialize, nil
 }

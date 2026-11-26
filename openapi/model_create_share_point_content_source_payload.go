@@ -35,8 +35,8 @@ type CreateSharePointContentSourcePayload struct {
 	SamplePercent *int32 `json:"sample_percent,omitempty"`
 	Type          string `json:"type"`
 	// The approved SharePoint library binding this source is registered for.
-	SharepointLibraryBindingId *string                          `json:"sharepoint_library_binding_id,omitempty"`
-	Permissions                *ContentSourcePermissionSettings `json:"permissions,omitempty"`
+	SharepointLibraryBindingId *string                      `json:"sharepoint_library_binding_id,omitempty"`
+	Permissions                *SharePointPermissionOptions `json:"permissions,omitempty"`
 	// The SharePoint site URL, e.g. `https://contoso.sharepoint.com/sites/legal`.
 	SiteUrl string `json:"site_url"`
 	// The document library name. Defaults to the site’s default library.
@@ -340,9 +340,9 @@ func (o *CreateSharePointContentSourcePayload) SetSharepointLibraryBindingId(v s
 }
 
 // GetPermissions returns the Permissions field value if set, zero value otherwise.
-func (o *CreateSharePointContentSourcePayload) GetPermissions() ContentSourcePermissionSettings {
+func (o *CreateSharePointContentSourcePayload) GetPermissions() SharePointPermissionOptions {
 	if o == nil || IsNil(o.Permissions) {
-		var ret ContentSourcePermissionSettings
+		var ret SharePointPermissionOptions
 		return ret
 	}
 	return *o.Permissions
@@ -350,7 +350,7 @@ func (o *CreateSharePointContentSourcePayload) GetPermissions() ContentSourcePer
 
 // GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *CreateSharePointContentSourcePayload) GetPermissionsOk() (*ContentSourcePermissionSettings, bool) {
+func (o *CreateSharePointContentSourcePayload) GetPermissionsOk() (*SharePointPermissionOptions, bool) {
 	if o == nil || IsNil(o.Permissions) {
 		return nil, false
 	}
@@ -366,8 +366,8 @@ func (o *CreateSharePointContentSourcePayload) HasPermissions() bool {
 	return false
 }
 
-// SetPermissions gets a reference to the given ContentSourcePermissionSettings and assigns it to the Permissions field.
-func (o *CreateSharePointContentSourcePayload) SetPermissions(v ContentSourcePermissionSettings) {
+// SetPermissions gets a reference to the given SharePointPermissionOptions and assigns it to the Permissions field.
+func (o *CreateSharePointContentSourcePayload) SetPermissions(v SharePointPermissionOptions) {
 	o.Permissions = &v
 }
 

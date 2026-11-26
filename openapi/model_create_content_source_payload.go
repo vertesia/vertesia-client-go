@@ -18,8 +18,9 @@ import (
 
 // CreateContentSourcePayload - Registers a content source. The server checks the folder with the system before saving, answers 409 when the name is already used in the project. Nothing is imported until a sync is requested.
 type CreateContentSourcePayload struct {
-	CreateBoxContentSourcePayload        *CreateBoxContentSourcePayload
-	CreateSharePointContentSourcePayload *CreateSharePointContentSourcePayload
+	CreateBoxContentSourcePayload         *CreateBoxContentSourcePayload
+	CreateGoogleDriveContentSourcePayload *CreateGoogleDriveContentSourcePayload
+	CreateSharePointContentSourcePayload  *CreateSharePointContentSourcePayload
 	// Raw holds a variant this client version does not know, as the server sent it.
 	// It is nil for known variants, and MarshalJSON writes it back unchanged.
 	Raw json.RawMessage `json:"-"`
@@ -29,6 +30,13 @@ type CreateContentSourcePayload struct {
 func CreateBoxContentSourcePayloadAsCreateContentSourcePayload(v *CreateBoxContentSourcePayload) CreateContentSourcePayload {
 	return CreateContentSourcePayload{
 		CreateBoxContentSourcePayload: v,
+	}
+}
+
+// CreateGoogleDriveContentSourcePayloadAsCreateContentSourcePayload is a convenience function that returns CreateGoogleDriveContentSourcePayload wrapped in CreateContentSourcePayload
+func CreateGoogleDriveContentSourcePayloadAsCreateContentSourcePayload(v *CreateGoogleDriveContentSourcePayload) CreateContentSourcePayload {
+	return CreateContentSourcePayload{
+		CreateGoogleDriveContentSourcePayload: v,
 	}
 }
 
@@ -72,6 +80,16 @@ func (dst *CreateContentSourcePayload) UnmarshalJSON(data []byte) error {
 		}
 		dst.CreateBoxContentSourcePayload = &value
 		return nil
+	case "google-drive":
+		var value CreateGoogleDriveContentSourcePayload
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		if err := validator.Validate(&value); err != nil {
+			return err
+		}
+		dst.CreateGoogleDriveContentSourcePayload = &value
+		return nil
 	default:
 		// A variant added after this client was generated: keep it as the server sent it.
 		dst.Raw = append(json.RawMessage(nil), data...)
@@ -83,6 +101,10 @@ func (dst *CreateContentSourcePayload) UnmarshalJSON(data []byte) error {
 func (src CreateContentSourcePayload) MarshalJSON() ([]byte, error) {
 	if src.CreateBoxContentSourcePayload != nil {
 		return json.Marshal(&src.CreateBoxContentSourcePayload)
+	}
+
+	if src.CreateGoogleDriveContentSourcePayload != nil {
+		return json.Marshal(&src.CreateGoogleDriveContentSourcePayload)
 	}
 
 	if src.CreateSharePointContentSourcePayload != nil {
@@ -105,6 +127,10 @@ func (obj *CreateContentSourcePayload) GetActualInstance() interface{} {
 		return obj.CreateBoxContentSourcePayload
 	}
 
+	if obj.CreateGoogleDriveContentSourcePayload != nil {
+		return obj.CreateGoogleDriveContentSourcePayload
+	}
+
 	if obj.CreateSharePointContentSourcePayload != nil {
 		return obj.CreateSharePointContentSourcePayload
 	}
@@ -121,6 +147,10 @@ func (obj *CreateContentSourcePayload) GetActualInstance() interface{} {
 func (obj CreateContentSourcePayload) GetActualInstanceValue() interface{} {
 	if obj.CreateBoxContentSourcePayload != nil {
 		return *obj.CreateBoxContentSourcePayload
+	}
+
+	if obj.CreateGoogleDriveContentSourcePayload != nil {
+		return *obj.CreateGoogleDriveContentSourcePayload
 	}
 
 	if obj.CreateSharePointContentSourcePayload != nil {

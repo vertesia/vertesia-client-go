@@ -22,6 +22,156 @@ import (
 // ContentSourcesAPIService ContentSourcesAPI service
 type ContentSourcesAPIService service
 
+type ApiConfigureGoogleDriveReaderRequest struct {
+	ctx                     context.Context
+	ApiService              *ContentSourcesAPIService
+	xApiVersion             *string
+	googleDriveReaderConfig *GoogleDriveReaderConfig
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiConfigureGoogleDriveReaderRequest) XApiVersion(xApiVersion string) ApiConfigureGoogleDriveReaderRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiConfigureGoogleDriveReaderRequest) GoogleDriveReaderConfig(googleDriveReaderConfig GoogleDriveReaderConfig) ApiConfigureGoogleDriveReaderRequest {
+	r.googleDriveReaderConfig = &googleDriveReaderConfig
+	return r
+}
+
+func (r ApiConfigureGoogleDriveReaderRequest) Execute() (*GoogleDriveReader, *http.Response, error) {
+	return r.ApiService.ConfigureGoogleDriveReaderExecute(r)
+}
+
+/*
+ConfigureGoogleDriveReader Register a federated shared-drive reader
+
+**Required permissions:** `project:settings_write`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiConfigureGoogleDriveReaderRequest
+*/
+func (a *ContentSourcesAPIService) ConfigureGoogleDriveReader(ctx context.Context) ApiConfigureGoogleDriveReaderRequest {
+	return ApiConfigureGoogleDriveReaderRequest{
+		ApiService: a,
+		ctx:        ctx,
+	}
+}
+
+// Execute executes the request
+//
+//	@return GoogleDriveReader
+func (a *ContentSourcesAPIService) ConfigureGoogleDriveReaderExecute(r ApiConfigureGoogleDriveReaderRequest) (*GoogleDriveReader, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GoogleDriveReader
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ContentSourcesAPIService.ConfigureGoogleDriveReader")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/google-drive-readers"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+	if r.googleDriveReaderConfig == nil {
+		return localVarReturnValue, nil, reportError("googleDriveReaderConfig is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.googleDriveReaderConfig
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiCreateContentSourceRequest struct {
 	ctx                        context.Context
 	ApiService                 *ContentSourcesAPIService
@@ -228,6 +378,149 @@ func (a *ContentSourcesAPIService) DeleteContentSourceExecute(r ApiDeleteContent
 
 	localVarPath := localBasePath + "/content-sources/{sourceId}"
 	localVarPath = strings.Replace(localVarPath, "{"+"sourceId"+"}", url.PathEscape(parameterValueToString(r.sourceId, "sourceId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiDisconnectGoogleDriveReaderRequest struct {
+	ctx         context.Context
+	ApiService  *ContentSourcesAPIService
+	id          string
+	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiDisconnectGoogleDriveReaderRequest) XApiVersion(xApiVersion string) ApiDisconnectGoogleDriveReaderRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiDisconnectGoogleDriveReaderRequest) Execute() (*SuccessResponse, *http.Response, error) {
+	return r.ApiService.DisconnectGoogleDriveReaderExecute(r)
+}
+
+/*
+DisconnectGoogleDriveReader Disconnect the federated reader from all its sources
+
+**Required permissions:** `project:settings_write`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param id
+	@return ApiDisconnectGoogleDriveReaderRequest
+*/
+func (a *ContentSourcesAPIService) DisconnectGoogleDriveReader(ctx context.Context, id string) ApiDisconnectGoogleDriveReaderRequest {
+	return ApiDisconnectGoogleDriveReaderRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+// Execute executes the request
+//
+//	@return SuccessResponse
+func (a *ContentSourcesAPIService) DisconnectGoogleDriveReaderExecute(r ApiDisconnectGoogleDriveReaderRequest) (*SuccessResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *SuccessResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ContentSourcesAPIService.DisconnectGoogleDriveReader")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/google-drive-readers/{id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(parameterValueToString(r.id, "id")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -2202,6 +2495,303 @@ func (a *ContentSourcesAPIService) ListContentSourcesExecute(r ApiListContentSou
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiListGoogleDriveReaderDrivesRequest struct {
+	ctx         context.Context
+	ApiService  *ContentSourcesAPIService
+	id          string
+	xApiVersion *string
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiListGoogleDriveReaderDrivesRequest) XApiVersion(xApiVersion string) ApiListGoogleDriveReaderDrivesRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiListGoogleDriveReaderDrivesRequest) Execute() (*ContentSourceRootsDiscovery, *http.Response, error) {
+	return r.ApiService.ListGoogleDriveReaderDrivesExecute(r)
+}
+
+/*
+ListGoogleDriveReaderDrives Discover shared drives the federated reader belongs to
+
+**Required permissions:** Any of `content_source:manage`, `project:settings_write`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param id
+	@return ApiListGoogleDriveReaderDrivesRequest
+*/
+func (a *ContentSourcesAPIService) ListGoogleDriveReaderDrives(ctx context.Context, id string) ApiListGoogleDriveReaderDrivesRequest {
+	return ApiListGoogleDriveReaderDrivesRequest{
+		ApiService: a,
+		ctx:        ctx,
+		id:         id,
+	}
+}
+
+// Execute executes the request
+//
+//	@return ContentSourceRootsDiscovery
+func (a *ContentSourcesAPIService) ListGoogleDriveReaderDrivesExecute(r ApiListGoogleDriveReaderDrivesRequest) (*ContentSourceRootsDiscovery, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ContentSourceRootsDiscovery
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ContentSourcesAPIService.ListGoogleDriveReaderDrives")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/google-drive-readers/{id}/drives"
+	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", url.PathEscape(parameterValueToString(r.id, "id")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+			var v ErrorResponse
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiReconcileGoogleSharedDrivesRequest struct {
+	ctx                      context.Context
+	ApiService               *ContentSourcesAPIService
+	sourceId                 string
+	xApiVersion              *string
+	syncContentSourcePayload *SyncContentSourcePayload
+}
+
+// Required Vertesia API version header. Use &#x60;20260803&#x60; for the current stable API shape.
+func (r ApiReconcileGoogleSharedDrivesRequest) XApiVersion(xApiVersion string) ApiReconcileGoogleSharedDrivesRequest {
+	r.xApiVersion = &xApiVersion
+	return r
+}
+
+func (r ApiReconcileGoogleSharedDrivesRequest) SyncContentSourcePayload(syncContentSourcePayload SyncContentSourcePayload) ApiReconcileGoogleSharedDrivesRequest {
+	r.syncContentSourcePayload = &syncContentSourcePayload
+	return r
+}
+
+func (r ApiReconcileGoogleSharedDrivesRequest) Execute() (*SuccessResponse, *http.Response, error) {
+	return r.ApiService.ReconcileGoogleSharedDrivesExecute(r)
+}
+
+/*
+ReconcileGoogleSharedDrives Discover selected shared drives and start their sync rounds
+
+**Required permissions:** Any of `content_source:manage`, `project:settings_write`
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param sourceId
+	@return ApiReconcileGoogleSharedDrivesRequest
+*/
+func (a *ContentSourcesAPIService) ReconcileGoogleSharedDrives(ctx context.Context, sourceId string) ApiReconcileGoogleSharedDrivesRequest {
+	return ApiReconcileGoogleSharedDrivesRequest{
+		ApiService: a,
+		ctx:        ctx,
+		sourceId:   sourceId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return SuccessResponse
+func (a *ContentSourcesAPIService) ReconcileGoogleSharedDrivesExecute(r ApiReconcileGoogleSharedDrivesRequest) (*SuccessResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *SuccessResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ContentSourcesAPIService.ReconcileGoogleSharedDrives")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/content-sources/{sourceId}/reconcile-drives"
+	localVarPath = strings.Replace(localVarPath, "{"+"sourceId"+"}", url.PathEscape(parameterValueToString(r.sourceId, "sourceId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.xApiVersion == nil {
+		version := a.client.cfg.DefaultHeader["x-api-version"]
+		if version == "" {
+			return localVarReturnValue, nil, reportError("xApiVersion is required and must be specified")
+		}
+		r.xApiVersion = &version
+	}
+	if strlen(*r.xApiVersion) < 1 {
+		return localVarReturnValue, nil, reportError("xApiVersion must have at least 1 elements")
+	}
+	if r.syncContentSourcePayload == nil {
+		return localVarReturnValue, nil, reportError("syncContentSourcePayload is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "x-api-version", r.xApiVersion, "simple", "")
+	// body params
+	localVarPostBody = r.syncContentSourcePayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
