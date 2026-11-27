@@ -32,6 +32,8 @@ type AgentTokenRequest struct {
 	Name      *string           `json:"name,omitempty"`
 	// User information.  The value of this field can be either:   - a signed Vertesia token used to verify the user context   - a user ID prefixed with `user:` to indicate the user on behalf of whom the agent is     acting.
 	OnBehalfOf string `json:"on_behalf_of"`
+	// Shortens the lifetime of the issued token to this many seconds. It never extends it: the token expires at the earliest of this lifetime, the default lifetime and, when `on_behalf_of` is a signed token, the expiry of that token.
+	TtlSeconds *int32 `json:"ttl_seconds,omitempty"`
 }
 
 type _AgentTokenRequest AgentTokenRequest
@@ -345,6 +347,38 @@ func (o *AgentTokenRequest) SetOnBehalfOf(v string) {
 	o.OnBehalfOf = v
 }
 
+// GetTtlSeconds returns the TtlSeconds field value if set, zero value otherwise.
+func (o *AgentTokenRequest) GetTtlSeconds() int32 {
+	if o == nil || IsNil(o.TtlSeconds) {
+		var ret int32
+		return ret
+	}
+	return *o.TtlSeconds
+}
+
+// GetTtlSecondsOk returns a tuple with the TtlSeconds field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AgentTokenRequest) GetTtlSecondsOk() (*int32, bool) {
+	if o == nil || IsNil(o.TtlSeconds) {
+		return nil, false
+	}
+	return o.TtlSeconds, true
+}
+
+// HasTtlSeconds returns a boolean if a field has been set.
+func (o *AgentTokenRequest) HasTtlSeconds() bool {
+	if o != nil && !IsNil(o.TtlSeconds) {
+		return true
+	}
+
+	return false
+}
+
+// SetTtlSeconds gets a reference to the given int32 and assigns it to the TtlSeconds field.
+func (o *AgentTokenRequest) SetTtlSeconds(v int32) {
+	o.TtlSeconds = &v
+}
+
 func (o AgentTokenRequest) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -377,6 +411,9 @@ func (o AgentTokenRequest) ToMap() (map[string]interface{}, error) {
 		toSerialize["name"] = o.Name
 	}
 	toSerialize["on_behalf_of"] = o.OnBehalfOf
+	if !IsNil(o.TtlSeconds) {
+		toSerialize["ttl_seconds"] = o.TtlSeconds
+	}
 	return toSerialize, nil
 }
 
